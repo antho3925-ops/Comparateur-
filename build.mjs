@@ -39,9 +39,13 @@ for (const p of catalogue.prestations) {
   if (!['LAMal', 'LCA', 'MIXTE'].includes(p.categorie)) {
     erreurs.push(`Prestation "${p.id}" : categorie invalide "${p.categorie}"`);
   }
+  if (!['remboursement', 'prestation_versee'].includes(p.nature)) {
+    erreurs.push(`Prestation "${p.id}" : nature invalide "${p.nature}"`);
+  }
 }
 
 const vusAssureurs = new Set();
+let aCompleterTotal = 0;
 for (const a of assureurs) {
   if (vusAssureurs.has(a.id)) erreurs.push(`Assureur en double : "${a.id}"`);
   vusAssureurs.add(a.id);
@@ -55,14 +59,28 @@ for (const a of assureurs) {
       if (c.enveloppe_id && !enveloppes.has(c.enveloppe_id)) {
         erreurs.push(`${a.id} / ${prod.id} : enveloppe_id inconnu "${c.enveloppe_id}"`);
       }
-      if (typeof c.taux_remboursement !== 'number' || c.taux_remboursement < 0 || c.taux_remboursement > 1) {
-        erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : taux_remboursement doit etre entre 0 et 1`);
+      // Une couverture "a_completer" vient d'une brochure qui dit QUE la prestation
+      // est couverte sans dire COMBIEN : taux inconnu, donc null exige et jamais 0.
+      const aCompleter = c.statut === 'a_completer';
+      if (aCompleter) {
+        if (c.taux_remboursement !== null) {
+          erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : statut "a_completer" impose taux_remboursement: null`);
+        }
+        aCompleterTotal++;
+      } else if (typeof c.taux_remboursement !== 'number' || c.taux_remboursement < 0 || c.taux_remboursement > 1) {
+        erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : taux_remboursement doit etre entre 0 et 1, ou statut "a_completer"`);
       }
     }
   }
 
   if (a.source?.fiabilite && a.source.fiabilite !== 'verifie') {
     alertes.push(`${a.id} : source marquee "${a.source.fiabilite}"`);
+  }
+  const trous = (a.produits_lca ?? []).flatMap((prod) =>
+    (prod.couvertures ?? []).filter((c) => c.statut === 'a_completer').map(() => prod.id)
+  );
+  if (trous.length) {
+    alertes.push(`${a.id} : ${trous.length} couverture(s) sans taux ni plafond, a completer depuis les conditions particulieres`);
   }
 }
 
@@ -81,6 +99,7 @@ window.DB = ${JSON.stringify(db, null, 2)};
 writeFileSync(join(DATA, 'db.js'), sortie);
 
 console.log(`OK - ${assureurs.length} assureur(s), ${catalogue.prestations.length} prestations -> data/db.js`);
+if (aCompleterTotal) console.log(`     dont ${aCompleterTotal} couverture(s) au statut "a_completer"`);
 if (alertes.length) {
   console.log('\nA verifier :');
   alertes.forEach((a) => console.log('  ! ' + a));

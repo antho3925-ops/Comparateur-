@@ -3,7 +3,6 @@
   "id": "identifiant_court_sans_espace",
   "nom": "Nom commercial de la caisse",
   "actif": true,
-
   "source": {
     "origine": "capture d'ecran",
     "reference": "nom du fichier ou description de la capture fournie",
@@ -12,7 +11,6 @@
     "fiabilite": "a_verifier",
     "remarque": "Champ libre : ce qui etait lisible ou non sur la capture."
   },
-
   "lamal": {
     "franchises_adulte": null,
     "franchises_enfant": null,
@@ -20,20 +18,36 @@
     "quote_part_plafond_annuel_adulte": null,
     "quote_part_plafond_annuel_enfant": null,
     "contribution_hospitaliere_par_jour_adulte": null,
-    "modeles_proposes": ["standard", "medecin_famille", "telmed"],
+    "modeles_proposes": [
+      "standard",
+      "medecin_famille",
+      "telmed"
+    ],
     "remarque": "Laisser a null tout ce qui est identique aux valeurs de data/meta.json : l'outil prendra le defaut legal. Ne remplir que les rares specificites de l'assureur."
   },
-
   "produits_lca": [
     {
       "id": "identifiant_du_produit",
+      "code_produit": "GO",
       "nom": "Nom commercial du produit complementaire",
       "type": "ambulatoire",
       "niveau": null,
-      "prime_mensuelle_indicative": null,
-      "franchise_produit": 0,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
       "delai_attente_mois": 0,
-
+      "delais_attente_specifiques": [
+        {
+          "motif": "protheses dentaires",
+          "mois": 12
+        }
+      ],
+      "duree_min_contrat_ans": null,
+      "hors_perimetre_facture": false,
+      "exclusions": [],
+      "prime_mensuelle_indicative": null,
       "enveloppes": [
         {
           "id": "env_med_alt",
@@ -42,7 +56,6 @@
           "remarque": "Utiliser une enveloppe quand plusieurs prestations se partagent UN SEUL plafond annuel."
         }
       ],
-
       "couvertures": [
         {
           "prestation_id": "osteopathie",
@@ -54,11 +67,17 @@
           "enveloppe_id": "env_med_alt",
           "conditions": "Therapeute reconnu ASCA / RME",
           "source_page": "capture 2, ligne Osteopathie"
+        },
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Couverte d'apres la brochure, taux et plafond non indiques.",
+          "source_page": "brochure apercu, page 3"
         }
       ]
     }
   ],
-
   "_aide_remplissage": {
     "type": "ambulatoire | hospitalisation | dentaire | indemnites | voyage | global",
     "taux_remboursement": "Fraction entre 0 et 1. 0.9 = 90%. 1 = pris en charge integralement.",
@@ -69,6 +88,10 @@
     "enveloppe_id": "Renvoie a une enveloppe declaree plus haut si le plafond est partage.",
     "niveau": "Pour les produits a paliers : 'basic', 'plus', 'top'... Un objet produit par palier.",
     "regle_de_calcul": "L'outil applique dans cet ordre : taux -> plafond par seance/jour -> plafond annuel de la prestation -> plafond de l'enveloppe.",
-    "prestation_absente": "Une prestation qui ne figure PAS dans 'couvertures' est consideree comme non remboursee par ce produit."
+    "prestation_absente": "Une prestation qui ne figure PAS dans 'couvertures' est consideree comme non remboursee par ce produit.",
+    "statut": "'a_completer' quand on sait que la prestation est couverte mais pas a quel taux. Impose taux_remboursement: null. L'outil affiche alors 'couvert, conditions a preciser' au lieu de calculer un montant faux.",
+    "hors_perimetre_facture": "true pour les produits qui ne remboursent pas une facture medicale (protection juridique, capitaux, indemnites journalieres). Ils restent dans la base pour le conseil mais sont exclus du comparatif de reste a charge.",
+    "franchises_produit": "Liste des franchises proposees par le produit, par exemple [0, 150].",
+    "delais_attente_specifiques": "Carences differentes du delai general, par motif."
   }
 }

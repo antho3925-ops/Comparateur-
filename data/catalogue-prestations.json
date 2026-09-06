@@ -1,6 +1,6 @@
 {
   "schema_version": "1.0",
-  "commentaire": "Nomenclature commune. Chaque ligne de facture saisie dans l'outil pointe vers un 'id' de cette liste, et chaque assureur decrit ses remboursements en reference aux memes 'id'. C'est ce qui rend la comparaison possible entre caisses. Ne jamais renommer un 'id' existant : ajouter un nouvel id et marquer l'ancien 'actif': false.",
+  "commentaire": "Nomenclature commune. Chaque ligne de facture saisie dans l'outil pointe vers un 'id' de cette liste, et chaque assureur decrit ses remboursements en reference aux memes 'id'. C'est ce qui rend la comparaison possible entre caisses. Ne jamais renommer un 'id' existant : ajouter un nouvel id et marquer l'ancien 'actif': false. Le champ 'nature' distingue un remboursement de facture d'une prestation versee (capital, rente, indemnite journaliere) : ces dernieres n'entrent pas dans le calcul du reste a charge et sont presentees a part.",
   "groupes": [
     {
       "id": "ambulatoire",
@@ -45,6 +45,14 @@
     {
       "id": "incapacite",
       "libelle": "Incapacite de travail"
+    },
+    {
+      "id": "juridique",
+      "libelle": "Protection juridique"
+    },
+    {
+      "id": "capitaux",
+      "libelle": "Capitaux et rentes"
     }
   ],
   "prestations": [
@@ -54,7 +62,8 @@
       "groupe": "ambulatoire",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "consultation_specialiste",
@@ -62,7 +71,8 @@
       "groupe": "ambulatoire",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "urgence_ambulatoire",
@@ -70,7 +80,8 @@
       "groupe": "ambulatoire",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "analyses_laboratoire",
@@ -78,7 +89,8 @@
       "groupe": "ambulatoire",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "imagerie_medicale",
@@ -86,7 +98,8 @@
       "groupe": "ambulatoire",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "physiotherapie_prescrite",
@@ -95,7 +108,8 @@
       "categorie": "LAMal",
       "unite_saisie": "montant",
       "remarque": "Prise en charge LAMal sur ordonnance, par series. Au-dela des series prescrites, bascule possible sur la LCA.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "psychotherapie_medicale",
@@ -103,7 +117,8 @@
       "groupe": "ambulatoire",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "psychotherapie_non_medicale",
@@ -111,7 +126,8 @@
       "groupe": "ambulatoire",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "logopedie_ergotherapie",
@@ -119,7 +135,8 @@
       "groupe": "ambulatoire",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "medicaments_liste",
@@ -129,7 +146,8 @@
       "unite_saisie": "montant",
       "quote_part_taux_override": null,
       "remarque": "Quote-part 20% possible si un generique existe et que l'original est delivre. Mettre quote_part_taux_override a 0.20 sur la ligne de facture si le cas se presente.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "medicaments_hors_liste",
@@ -137,7 +155,8 @@
       "groupe": "medicaments",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "vaccins_lamal",
@@ -145,7 +164,8 @@
       "groupe": "prevention",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "vaccins_voyage",
@@ -153,7 +173,8 @@
       "groupe": "prevention",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "checkup_preventif",
@@ -161,7 +182,8 @@
       "groupe": "prevention",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "depistage_lamal",
@@ -169,7 +191,8 @@
       "groupe": "prevention",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "fitness_prevention",
@@ -177,7 +200,8 @@
       "groupe": "prevention",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "sevrage_tabagique",
@@ -185,7 +209,8 @@
       "groupe": "prevention",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "hospitalisation_commune",
@@ -194,7 +219,8 @@
       "categorie": "LAMal",
       "unite_saisie": "montant_et_jours",
       "remarque": "Soumise a la franchise, a la quote-part et a la contribution journaliere aux frais de sejour.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "hospitalisation_demi_privee",
@@ -203,7 +229,8 @@
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_jours",
       "remarque": "La LAMal prend en charge le tarif de la division commune ; la LCA couvre le surcout. Saisir si possible les deux montants separement (montant_part_lamal).",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "hospitalisation_privee",
@@ -211,7 +238,8 @@
       "groupe": "hospitalier",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_jours",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "hospitalisation_hors_canton",
@@ -219,7 +247,8 @@
       "groupe": "hospitalier",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_jours",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "libre_choix_medecin_hopital",
@@ -227,7 +256,8 @@
       "groupe": "hospitalier",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "confort_hospitalier",
@@ -235,7 +265,8 @@
       "groupe": "hospitalier",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "readaptation_cure",
@@ -243,7 +274,8 @@
       "groupe": "hospitalier",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_jours",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "dentaire_soins",
@@ -252,7 +284,8 @@
       "categorie": "LCA",
       "unite_saisie": "montant",
       "remarque": "Hors LAMal sauf accident ou maladie grave non evitable.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "dentaire_orthodontie",
@@ -260,7 +293,8 @@
       "groupe": "dentaire",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "dentaire_prothese_implant",
@@ -268,7 +302,8 @@
       "groupe": "dentaire",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "dentaire_accident",
@@ -277,7 +312,8 @@
       "categorie": "LAMal",
       "unite_saisie": "montant",
       "remarque": "Pris en charge par la LAMal si l'accident n'est pas couvert par la LAA.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "osteopathie",
@@ -285,7 +321,8 @@
       "groupe": "med_alternatives",
       "categorie": "LCA",
       "unite_saisie": "montant_et_seances",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "acupuncture",
@@ -294,7 +331,8 @@
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_seances",
       "remarque": "Prise en charge LAMal uniquement si pratiquee par un medecin titulaire du titre reconnu ; sinon LCA.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "homeopathie",
@@ -302,7 +340,8 @@
       "groupe": "med_alternatives",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_seances",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "naturopathie_phytotherapie",
@@ -310,7 +349,8 @@
       "groupe": "med_alternatives",
       "categorie": "LCA",
       "unite_saisie": "montant_et_seances",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "medecine_chinoise",
@@ -318,7 +358,8 @@
       "groupe": "med_alternatives",
       "categorie": "LCA",
       "unite_saisie": "montant_et_seances",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "chiropratique",
@@ -327,7 +368,8 @@
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_seances",
       "remarque": "Chiropraticien reconnu : prise en charge LAMal. Complements et depassements : LCA.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "massage_therapeutique",
@@ -335,7 +377,8 @@
       "groupe": "med_alternatives",
       "categorie": "LCA",
       "unite_saisie": "montant_et_seances",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "autres_med_alternatives",
@@ -343,7 +386,8 @@
       "groupe": "med_alternatives",
       "categorie": "LCA",
       "unite_saisie": "montant_et_seances",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "lunettes_lentilles_adulte",
@@ -351,7 +395,8 @@
       "groupe": "optique",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "lunettes_lentilles_enfant",
@@ -360,7 +405,8 @@
       "categorie": "MIXTE",
       "unite_saisie": "montant",
       "remarque": "Forfait LAMal annuel limite jusqu'a 18 ans, complete par la LCA.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "chirurgie_refractive",
@@ -368,7 +414,8 @@
       "groupe": "optique",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "maternite_controles",
@@ -377,7 +424,8 @@
       "categorie": "LAMal",
       "unite_saisie": "montant",
       "exoneration_id": "maternite",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "accouchement",
@@ -386,7 +434,8 @@
       "categorie": "LAMal",
       "unite_saisie": "montant_et_jours",
       "exoneration_id": "maternite",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "maternite_complements",
@@ -394,7 +443,8 @@
       "groupe": "maternite",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "transport_urgence",
@@ -403,7 +453,8 @@
       "categorie": "MIXTE",
       "unite_saisie": "montant",
       "remarque": "La LAMal ne prend en charge qu'une part limitee et plafonnee ; le solde releve de la LCA.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "sauvetage",
@@ -411,7 +462,8 @@
       "groupe": "etranger_urgence",
       "categorie": "MIXTE",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "rapatriement",
@@ -419,7 +471,8 @@
       "groupe": "etranger_urgence",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "soins_etranger_urgence",
@@ -428,7 +481,8 @@
       "categorie": "MIXTE",
       "unite_saisie": "montant",
       "remarque": "La LAMal rembourse au maximum le double de ce que couterait le traitement en Suisse ; la LCA couvre generalement le surplus.",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "assistance_voyage",
@@ -436,7 +490,8 @@
       "groupe": "etranger_urgence",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "soins_domicile_lamal",
@@ -444,7 +499,8 @@
       "groupe": "aides_soins",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "aide_menage",
@@ -452,7 +508,8 @@
       "groupe": "aides_soins",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "moyens_auxiliaires_lamal",
@@ -460,7 +517,8 @@
       "groupe": "aides_soins",
       "categorie": "LAMal",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "moyens_auxiliaires_lca",
@@ -468,7 +526,8 @@
       "groupe": "aides_soins",
       "categorie": "LCA",
       "unite_saisie": "montant",
-      "actif": true
+      "actif": true,
+      "nature": "remboursement"
     },
     {
       "id": "indemnite_journaliere",
@@ -477,6 +536,197 @@
       "categorie": "LCA",
       "unite_saisie": "montant_et_jours",
       "remarque": "Prestation versee, pas un remboursement de facture. Traitee separement dans le comparatif.",
+      "actif": true,
+      "nature": "prestation_versee"
+    },
+    {
+      "id": "contraception",
+      "libelle": "Contraception (pilule, sterilet, implant)",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "sterilisation",
+      "libelle": "Sterilisation",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "gynecologie_preventive",
+      "libelle": "Gynecologie preventive (complement au-dela de la LAMal)",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "depistage_lca",
+      "libelle": "Depistage complementaire (mammographie, echographie hors LAMal)",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "garde_enfants_malades",
+      "libelle": "Garde d'enfants malades a domicile",
+      "groupe": "aides_soins",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "rattrapage_scolaire",
+      "libelle": "Rattrapage scolaire apres accident ou maladie",
+      "groupe": "aides_soins",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "chirurgie_esthetique_reconstructive",
+      "libelle": "Chirurgie esthetique reconstructive (cicatrices, oreilles decollees)",
+      "groupe": "ambulatoire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "confort_chirurgie_ambulatoire",
+      "libelle": "Confort lors d'une chirurgie ambulatoire (hotel, taxi, repas)",
+      "groupe": "ambulatoire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "chirurgie_ambulatoire",
+      "libelle": "Chirurgie ambulatoire",
+      "groupe": "ambulatoire",
+      "categorie": "MIXTE",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "indemnite_hospitalisation",
+      "libelle": "Indemnite journaliere d'hospitalisation",
+      "groupe": "hospitalier",
+      "categorie": "LCA",
+      "unite_saisie": "montant_et_jours",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "indemnite_hospitalisation_etranger",
+      "libelle": "Indemnite journaliere d'hospitalisation a l'etranger",
+      "groupe": "etranger_urgence",
+      "categorie": "LCA",
+      "unite_saisie": "montant_et_jours",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "capital_hospitalisation",
+      "libelle": "Capital forfaitaire par hospitalisation",
+      "groupe": "hospitalier",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "capital_invalidite_accident",
+      "libelle": "Capital invalidite suite a accident",
+      "groupe": "capitaux",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "capital_deces_accident",
+      "libelle": "Capital deces suite a accident",
+      "groupe": "capitaux",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "rente_cancer_enfant",
+      "libelle": "Rente mensuelle en cas de cancer de l'enfant",
+      "groupe": "capitaux",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "indemnite_travail_menager",
+      "libelle": "Indemnite journaliere d'incapacite de travail menager",
+      "groupe": "incapacite",
+      "categorie": "LCA",
+      "unite_saisie": "montant_et_jours",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "protection_juridique",
+      "libelle": "Protection juridique (frais et honoraires d'avocat)",
+      "groupe": "juridique",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true,
+      "remarque": "Prise en charge de frais de litige, sans lien avec une facture medicale."
+    },
+    {
+      "id": "libre_choix_specialiste",
+      "libelle": "Libre choix du specialiste",
+      "groupe": "hospitalier",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "recherche_sauvetage_etranger",
+      "libelle": "Recherche et sauvetage a l'etranger",
+      "groupe": "etranger_urgence",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "dentaire_prophylaxie",
+      "libelle": "Controle prophylactique dentaire (detartrage, hygiene)",
+      "groupe": "dentaire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "gardiennage_domicile",
+      "libelle": "Gardiennage du domicile / des animaux pendant une hospitalisation",
+      "groupe": "aides_soins",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
       "actif": true
     }
   ]

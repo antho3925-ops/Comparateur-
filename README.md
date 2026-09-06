@@ -23,7 +23,8 @@ hors ligne en ouvrant `index.html` directement.
 ├── index.html                     Page unique de l'application
 ├── build.mjs                      Compile data/*.json -> data/db.js (+ validation)
 ├── tools/
-│   └── sources.py                 Téléchargement des PDF assureurs + extraction du texte
+│   ├── sources.py                 Téléchargement des PDF assureurs + extraction du texte
+│   └── trous.mjs                  Liste les couvertures connues mais non chiffrées
 ├── assets/
 │   └── styles.css
 ├── js/
@@ -82,4 +83,6 @@ cas seule une capture d'écran permet de lire la grille.
 - [ ] Moteurs LAMal / LCA
 - [ ] Interface de saisie et écran de comparaison
 - [x] Chaîne d'ingestion des PDF assureurs (téléchargement + extraction)
-- [ ] Saisie des vraies caisses (Groupe Mutuel : URL repérées, PDF non accessibles)
+- [x] Groupe Mutuel : 28 produits saisis depuis l'aperçu LCA 2.26
+- [ ] Groupe Mutuel : 112 couvertures à chiffrer (`node tools/trous.mjs groupe_mutuel`)
+- [ ] Autres caisses

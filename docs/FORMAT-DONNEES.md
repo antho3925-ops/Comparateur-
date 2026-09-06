@@ -109,11 +109,39 @@ Champs d'une couverture :
 | `plafond_annuel` | max par an pour cette prestation | pas de plafond propre |
 | `nb_seances_max_annuel` | nombre de séances remboursées par an | illimité |
 | `enveloppe_id` | plafond partagé avec d'autres prestations | plafond non partagé |
+| `statut` | `a_completer` si le taux est inconnu (voir plus bas) | couverture chiffrée |
 | `conditions` | texte libre affiché en clientèle | — |
-| `source_page` | où c'était écrit sur la capture | — |
+| `source_page` | où c'était écrit dans le document source | — |
 
 **Règle importante : une prestation absente de `couvertures` est considérée
 comme non remboursée par ce produit.** Pas besoin de lister les exclusions.
+
+### Couvertures « à compléter » — le cas le plus fréquent
+
+Une brochure d'aperçu dit presque toujours **quelles** prestations sont couvertes,
+et presque jamais **à quel taux**. Plutôt que d'inventer un chiffre ou de laisser
+croire à une non-couverture, on écrit :
+
+```json
+{ "prestation_id": "dentaire_soins", "taux_remboursement": null,
+  "statut": "a_completer",
+  "conditions": "Couverte d'après la brochure, taux et plafond non indiqués.",
+  "source_page": "Aperçu LCA 2.26, page 3" }
+```
+
+Le build impose `taux_remboursement: null` dès que `statut` vaut `a_completer`,
+et l'interface affichera **« couvert, conditions à préciser »** — jamais 0 CHF,
+jamais un montant estimé. `node tools/trous.mjs [assureur]` liste tout ce qui
+reste à compléter, produit par produit : c'est la liste des conditions
+particulières à aller chercher.
+
+### Produits hors périmètre facture
+
+Protection juridique, capitaux invalidité ou décès, rentes, indemnités
+journalières : ces produits ne remboursent pas une facture médicale. Ils portent
+`"hors_perimetre_facture": true`, restent dans la base pour le conseil, mais sont
+exclus du comparatif de reste à charge. Au catalogue, les prestations
+correspondantes portent `"nature": "prestation_versee"`.
 
 **Les enveloppes** servent au cas très fréquent où plusieurs prestations se
 partagent un seul plafond annuel — typiquement « médecines alternatives :
@@ -127,6 +155,13 @@ distincts** (`niveau`: `"basic"`, `"plus"`, `"top"`), pas un produit à variante
 C'est plus verbeux mais ça évite toute ambiguïté au moment de comparer.
 
 ---
+
+### Autres champs d'un produit
+
+`code_produit` (le code interne de la caisse, ex. `GO`, `DP`), `age_adhesion_min`
+et `age_adhesion_max`, `franchises_produit` (liste, ex. `[0, 150]`),
+`delai_attente_mois` et `delais_attente_specifiques` (carences par motif),
+`duree_min_contrat_ans`, `exclusions`, `prime_mensuelle_indicative`.
 
 ## 3. Ce que je peux lire sur une capture
 
@@ -148,7 +183,15 @@ combler.
 
 ---
 
-## 4. Mise à jour
+## 4. Ce que l'aperçu produits ne suffit pas à faire
+
+Une brochure d'aperçu permet de savoir **quels produits d'une caisse couvrent
+quoi** — assez pour orienter un conseil, pas assez pour chiffrer un
+remboursement. Pour qu'une prestation entre réellement dans le comparatif, il
+faut les **conditions particulières du produit**, qui donnent le taux, le
+plafond annuel, le plafond par séance et le nombre de séances.
+
+## 5. Mise à jour
 
 1. Tu m'envoies les nouvelles captures (ou tu édites le JSON).
 2. `node build.mjs` régénère `data/db.js` et **valide** les données : identifiants
