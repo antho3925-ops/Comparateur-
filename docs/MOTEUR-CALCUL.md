@@ -1,0 +1,100 @@
+# Moteur de calcul — ordre d'application
+
+Ce document fige la logique métier pour qu'elle soit vérifiable et discutable
+avant d'être codée.
+
+## Entrée : une ligne de facture
+
+```json
+{
+  "prestation_id": "osteopathie",
+  "libelle_facture": "3 seances - Cabinet Dupont",
+  "montant": 270.00,
+  "nb_seances": 3,
+  "nb_jours": null,
+  "montant_part_lamal": null,
+  "quote_part_taux_override": null,
+  "date": "2026-03-04"
+}
+```
+
+`montant_part_lamal` ne concerne que les prestations `MIXTE` : quand la facture
+distingue le tarif de base du surcoût (typiquement une hospitalisation
+mi-privée), on saisit les deux. Si l'information n'est pas disponible, l'outil
+demande explicitement la répartition plutôt que de l'inventer.
+
+## Étape 1 — Ventilation base / complémentaire
+
+Pour chaque ligne, selon la catégorie de la prestation au catalogue :
+
+- `LAMal` → tout le montant part au calcul LAMal ;
+- `LCA` → tout le montant part au calcul complémentaire ;
+- `MIXTE` → `montant_part_lamal` va au calcul LAMal, le solde au calcul LCA.
+
+## Étape 2 — Part LAMal (identique chez tous les assureurs)
+
+Sur le cumul annuel des montants LAMal, dans cet ordre :
+
+1. **Exonérations** — les prestations portant `exoneration_id: "maternite"` sont
+   sorties du calcul de franchise et de quote-part.
+2. **Franchise** — le client paie 100 % jusqu'à épuisement de la franchise
+   choisie, en tenant compte de la franchise **déjà consommée** dans l'année
+   (champ saisi en début de simulation).
+3. **Quote-part** — 10 % de ce qui dépasse la franchise (20 % sur un médicament
+   original substituable, via `quote_part_taux_override`), plafonnée à 700 CHF
+   par an pour un adulte, 350 CHF pour un enfant, en tenant compte de la
+   quote-part déjà consommée.
+4. **Contribution hospitalière** — 15 CHF par jour d'hospitalisation adulte,
+   qui s'ajoute et n'est soumise à aucun plafond.
+
+Reste à charge LAMal = franchise consommée + quote-part + contribution
+hospitalière.
+
+Conséquence à expliquer en clientèle : **la part base est la même partout à
+franchise et modèle égaux.** Le comparatif ne fait donc varier la part base que
+si on simule une autre franchise ; les écarts entre caisses viennent de la LCA.
+
+## Étape 3 — Part LCA (propre à chaque assureur)
+
+Pour chaque produit complémentaire de l'assureur, on cherche une couverture
+correspondant à la prestation. Si plusieurs produits couvrent la même
+prestation, on retient **la plus favorable** (jamais un cumul).
+
+Ordre d'application sur le montant complémentaire de la ligne :
+
+1. `nb_seances_max_annuel` — les séances au-delà du quota ne sont pas remboursées ;
+2. `taux_remboursement` ;
+3. `plafond_par_seance` × nombre de séances (ou `plafond_par_jour` × nombre de jours) ;
+4. `plafond_annuel` de la prestation, décompté du cumul déjà consommé dans l'année ;
+5. `plafond_annuel` de l'**enveloppe** partagée, décompté du cumul de l'enveloppe ;
+6. `franchise_produit` éventuelle du produit.
+
+Le `delai_attente_mois` est affiché comme avertissement (il conditionne l'accès
+au produit à la souscription, il ne modifie pas le calcul sur une facture
+existante).
+
+Une prestation sans couverture chez cet assureur → remboursement 0, affiché
+comme **non couvert** et non comme « 0 CHF », pour que ce soit clair à l'écran.
+
+## Étape 4 — Comparatif
+
+Pour l'assurance actuelle du client puis pour chaque autre caisse, on produit :
+
+```
+reste_a_charge_total = reste_a_charge_LAMal + (montant_LCA - rembourse_LCA)
+```
+
+Le classement se fait sur `reste_a_charge_total` croissant, avec le détail
+prestation par prestation, toujours en distinguant part base et part
+complémentaire.
+
+## Limites assumées
+
+- Le calcul porte sur **la facture saisie**, avec les cumuls annuels renseignés
+  manuellement. Ce n'est pas un décompte officiel de caisse.
+- Les indemnités journalières (`indemnite_journaliere`) sont une prestation
+  versée, pas un remboursement : elles sont présentées à part et n'entrent pas
+  dans le reste à charge.
+- Les primes ne sont pas comparées par défaut : `prime_mensuelle_indicative`
+  n'est qu'un repère facultatif. Une comparaison de primes sérieuse suppose
+  l'âge, la commune et l'année tarifaire — à discuter si tu le veux.

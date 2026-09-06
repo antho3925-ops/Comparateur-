@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "annee_tarifaire": 2026,
+  "devise": "CHF",
+  "commentaire": "Parametres LAMal communs a tous les assureurs. La LAMal etant identique partout, seuls la franchise choisie, le modele et la prime varient d'un assureur a l'autre. Les valeurs ci-dessous servent de defaut : un fichier assureur peut les surcharger si une capture montre autre chose.",
+
+  "lamal": {
+    "franchises_adulte": [300, 500, 1000, 1500, 2000, 2500],
+    "franchises_jeune_adulte": [300, 500, 1000, 1500, 2000, 2500],
+    "franchises_enfant": [0, 100, 200, 300, 400, 500, 600],
+    "quote_part_taux": 0.10,
+    "quote_part_taux_medicament_sans_generique": 0.20,
+    "quote_part_plafond_annuel_adulte": 700,
+    "quote_part_plafond_annuel_enfant": 350,
+    "contribution_hospitaliere_par_jour_adulte": 15,
+    "contribution_hospitaliere_par_jour_enfant": 0,
+    "age_enfant_max": 18,
+    "age_jeune_adulte_min": 19,
+    "age_jeune_adulte_max": 25,
+    "exonerations": [
+      {
+        "id": "maternite",
+        "libelle": "Prestations de maternite",
+        "franchise_applicable": false,
+        "quote_part_applicable": false,
+        "contribution_hospitaliere_applicable": false,
+        "remarque": "Exoneration des la 13e semaine de grossesse et jusqu'a 8 semaines apres l'accouchement."
+      }
+    ]
+  },
+
+  "modeles_assurance": [
+    { "id": "standard",     "libelle": "Standard (libre choix du medecin)" },
+    { "id": "medecin_famille", "libelle": "Medecin de famille / reseau" },
+    { "id": "hmo",          "libelle": "HMO (cabinet de groupe)" },
+    { "id": "telmed",       "libelle": "Telemedecine" },
+    { "id": "pharmacie",    "libelle": "Pharmacie (pharmacien en 1er recours)" }
+  ],
+
+  "sources": [
+    {
+      "type": "reference_legale",
+      "libelle": "LAMal / OAMal - parametres 2026",
+      "a_verifier": true,
+      "remarque": "A confirmer chaque annee. Modifier annee_tarifaire et les montants ci-dessus lors de la mise a jour annuelle."
+    }
+  ]
+}

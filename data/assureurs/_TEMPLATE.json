@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0",
+  "id": "identifiant_court_sans_espace",
+  "nom": "Nom commercial de la caisse",
+  "actif": true,
+
+  "source": {
+    "origine": "capture d'ecran",
+    "reference": "nom du fichier ou description de la capture fournie",
+    "date_extraction": "AAAA-MM-JJ",
+    "annee_tarifaire": 2026,
+    "fiabilite": "a_verifier",
+    "remarque": "Champ libre : ce qui etait lisible ou non sur la capture."
+  },
+
+  "lamal": {
+    "franchises_adulte": null,
+    "franchises_enfant": null,
+    "quote_part_taux": null,
+    "quote_part_plafond_annuel_adulte": null,
+    "quote_part_plafond_annuel_enfant": null,
+    "contribution_hospitaliere_par_jour_adulte": null,
+    "modeles_proposes": ["standard", "medecin_famille", "telmed"],
+    "remarque": "Laisser a null tout ce qui est identique aux valeurs de data/meta.json : l'outil prendra le defaut legal. Ne remplir que les rares specificites de l'assureur."
+  },
+
+  "produits_lca": [
+    {
+      "id": "identifiant_du_produit",
+      "nom": "Nom commercial du produit complementaire",
+      "type": "ambulatoire",
+      "niveau": null,
+      "prime_mensuelle_indicative": null,
+      "franchise_produit": 0,
+      "delai_attente_mois": 0,
+
+      "enveloppes": [
+        {
+          "id": "env_med_alt",
+          "libelle": "Enveloppe commune medecines alternatives",
+          "plafond_annuel": 1000,
+          "remarque": "Utiliser une enveloppe quand plusieurs prestations se partagent UN SEUL plafond annuel."
+        }
+      ],
+
+      "couvertures": [
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": null,
+          "plafond_par_seance": 60,
+          "plafond_par_jour": null,
+          "nb_seances_max_annuel": null,
+          "enveloppe_id": "env_med_alt",
+          "conditions": "Therapeute reconnu ASCA / RME",
+          "source_page": "capture 2, ligne Osteopathie"
+        }
+      ]
+    }
+  ],
+
+  "_aide_remplissage": {
+    "type": "ambulatoire | hospitalisation | dentaire | indemnites | voyage | global",
+    "taux_remboursement": "Fraction entre 0 et 1. 0.9 = 90%. 1 = pris en charge integralement.",
+    "plafond_annuel": "Montant max rembourse par an pour CETTE prestation. null = pas de plafond propre.",
+    "plafond_par_seance": "Montant max rembourse par seance. null = pas de limite par seance.",
+    "plafond_par_jour": "Pour l'hospitalier et les indemnites journalieres.",
+    "nb_seances_max_annuel": "Nombre de seances remboursees par an. null = illimite.",
+    "enveloppe_id": "Renvoie a une enveloppe declaree plus haut si le plafond est partage.",
+    "niveau": "Pour les produits a paliers : 'basic', 'plus', 'top'... Un objet produit par palier.",
+    "regle_de_calcul": "L'outil applique dans cet ordre : taux -> plafond par seance/jour -> plafond annuel de la prestation -> plafond de l'enveloppe.",
+    "prestation_absente": "Une prestation qui ne figure PAS dans 'couvertures' est consideree comme non remboursee par ce produit."
+  }
+}
