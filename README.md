@@ -6,6 +6,11 @@ facture médicale ; l'outil calcule le reste à charge chez l'assureur actuel pu
 le compare à toutes les caisses de la base de données, prestation par prestation,
 en distinguant toujours la part LAMal de la part LCA.
 
+La couverture actuelle est **sélectionnée dans la base** — caisse, puis produits
+possédés — et non saisie librement. L'outil ne retient aucun assureur de
+référence ni aucune couverture par défaut : la situation du client est
+renseignée à chaque rendez-vous.
+
 **Ce n'est pas un décompte officiel de caisse.** Les résultats sont des
 estimations fondées sur les grilles saisies, destinées au conseil.
 
@@ -39,7 +44,7 @@ hors ligne en ouvrant `index.html` directement.
 │   ├── sources/                   Manifestes des documents source par assureur
 │   ├── assureurs/
 │   │   ├── _TEMPLATE.json         Modèle à copier pour chaque nouvelle caisse
-│   │   └── _exemple-demo.json     Caisse FICTIVE de démonstration (à supprimer)
+│   │   └── groupe-mutuel.json     Groupe Mutuel — 28 produits LCA
 │   └── db.js                      Généré — ne pas éditer
 └── docs/
     ├── FORMAT-DONNEES.md          Comment livrer les captures d'écran

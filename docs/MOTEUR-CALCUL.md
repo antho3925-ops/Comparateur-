@@ -3,6 +3,24 @@
 Ce document fige la logique métier pour qu'elle soit vérifiable et discutable
 avant d'être codée.
 
+## Point de départ : la situation réelle du client, jamais un défaut
+
+**Décision figée : l'outil ne retient aucun assureur de référence et aucune
+couverture par défaut.** À chaque nouveau client, le conseiller renseigne où se
+trouve le client, en le sélectionnant dans la base :
+
+1. la **caisse actuelle**, choisie dans la liste des assureurs encodés ;
+2. les **produits complémentaires** qu'il possède, cochés parmi ceux de cette
+   caisse (plusieurs possibles : un ambulatoire, un dentaire, un hospitalier…) ;
+3. sa **franchise LAMal** et son **modèle d'assurance**.
+
+Cette sélection constitue la couverture de référence du calcul. Tant qu'elle
+n'est pas renseignée, aucun comparatif n'est produit : il n'y a rien à comparer.
+Une caisse dont les produits ne sont pas encore encodés n'apparaît simplement pas
+dans la liste — mieux vaut une caisse absente qu'une caisse aux chiffres inventés.
+
+Le bouton **Réinitialiser** remet cette sélection à zéro, comme le reste.
+
 ## Entrée : une ligne de facture
 
 ```json
@@ -100,7 +118,8 @@ sont donc calculés sur plafonds intacts, et l'écran l'indique explicitement po
 
 ## Étape 4 — Comparatif
 
-Pour l'assurance actuelle du client puis pour chaque autre caisse, on produit :
+Pour la couverture actuelle sélectionnée, puis pour chaque autre caisse, on
+produit :
 
 ```
 reste_a_charge_total = reste_a_charge_LAMal + (montant_LCA - rembourse_LCA)
