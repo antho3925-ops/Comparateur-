@@ -22,6 +22,8 @@ hors ligne en ouvrant `index.html` directement.
 .
 ├── index.html                     Page unique de l'application
 ├── build.mjs                      Compile data/*.json -> data/db.js (+ validation)
+├── tools/
+│   └── sources.py                 Téléchargement des PDF assureurs + extraction du texte
 ├── assets/
 │   └── styles.css
 ├── js/
@@ -33,6 +35,7 @@ hors ligne en ouvrant `index.html` directement.
 ├── data/
 │   ├── meta.json                  Paramètres LAMal communs (année tarifaire)
 │   ├── catalogue-prestations.json Nomenclature de référence des prestations
+│   ├── sources/                   Manifestes des documents source par assureur
 │   ├── assureurs/
 │   │   ├── _TEMPLATE.json         Modèle à copier pour chaque nouvelle caisse
 │   │   └── _exemple-demo.json     Caisse FICTIVE de démonstration (à supprimer)
@@ -41,6 +44,27 @@ hors ligne en ouvrant `index.html` directement.
     ├── FORMAT-DONNEES.md          Comment livrer les captures d'écran
     └── MOTEUR-CALCUL.md           Ordre d'application des règles de calcul
 ```
+
+## Alimenter la base depuis les documents d'un assureur
+
+Les grilles de prestations viennent des brochures et conditions générales
+publiées par les caisses. La chaîne :
+
+```
+python3 tools/sources.py telecharger data/sources/<assureur>.sources.json
+python3 tools/sources.py extraire
+```
+
+Les PDF vont dans `sources-pdf/<assureur>/`, le texte extrait dans
+`sources-texte/<assureur>/`. **Ces deux dossiers ne sont pas versionnés** : ce
+sont les documents des assureurs, seules les données structurées qu'on en tire
+sont commitées.
+
+Si le téléchargement échoue avec un `403` de la passerelle, l'environnement
+bloque l'accès sortant : soit autoriser le domaine dans la politique réseau de
+l'environnement, soit déposer les PDF à la main dans `sources-pdf/<assureur>/`
+et lancer directement `extraire`. Un PDF scanné ne rend aucun texte — dans ce
+cas seule une capture d'écran permet de lire la grille.
 
 ## Ajouter ou mettre à jour une caisse
 
@@ -57,4 +81,5 @@ hors ligne en ouvrant `index.html` directement.
 - [x] Spécification du moteur de calcul
 - [ ] Moteurs LAMal / LCA
 - [ ] Interface de saisie et écran de comparaison
-- [ ] Saisie des vraies caisses à partir des captures d'écran
+- [x] Chaîne d'ingestion des PDF assureurs (téléchargement + extraction)
+- [ ] Saisie des vraies caisses (Groupe Mutuel : URL repérées, PDF non accessibles)

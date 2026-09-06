@@ -1,0 +1,71 @@
+{
+  "assureur_id": "groupe_mutuel",
+  "assureur_nom": "Groupe Mutuel",
+  "date_recherche": "2026-09-06",
+  "statut": "urls_reperees_non_telechargees",
+  "avertissement": "Ces URL proviennent d'une recherche web du 2026-09-06. AUCUN de ces PDF n'a ete telecharge ni lu : la politique reseau de l'environnement bloque tout acces sortant. Les libelles ci-dessous sont ceux des resultats de recherche, ils n'ont pas ete verifies dans les documents. Ne rien saisir dans data/assureurs/ sur cette base.",
+  "documents": [
+    {
+      "id": "gm_apercu_complementaires",
+      "titre": "Apercu des assurances complementaires selon la LCA",
+      "priorite": 1,
+      "interet": "Document le plus utile : vue d'ensemble des produits LCA et de leurs prestations.",
+      "url": "https://www.groupemutuel.ch/doc/jcr:2b9ab9aa-fa15-4458-b627-b8c51e1870f8/22_Brochure_Aper%C3%A7u_des_ass._compl._GMASA_F.pdf/lang:fr/22_Brochure_Aper%C3%A7u_des_ass._compl._GMASA_F.pdf"
+    },
+    {
+      "id": "gm_brochure_conditions_sante",
+      "titre": "Brochure conditions d'assurances sante - GMA SA",
+      "priorite": 1,
+      "interet": "Conditions d'assurance sante, taux et plafonds attendus.",
+      "url": "https://www.groupemutuel.ch/doc/jcr:c0001966-59e7-4dcb-92fc-f7f0ad9615e0/brochure-conditions-assurances-sante-GMA-SA-F.pdf/lang:fr/brochure-conditions-assurances-sante-GMA-SA-F.pdf"
+    },
+    {
+      "id": "gm_conditions_global",
+      "titre": "Conditions particulieres GL - assurance complementaire Global",
+      "priorite": 2,
+      "interet": "Produit Global : prestations ambulatoires et medecines alternatives.",
+      "url": "https://www.groupemutuel.ch/doc/jcr:53b38d84-1acf-49a9-9806-71cba26b071c/lang:fr/Conditions_GL_F.pdf"
+    },
+    {
+      "id": "gm_cgc_caga03",
+      "titre": "Conditions generales pour les assurances maladie CGC (CAGA03-F6)",
+      "priorite": 2,
+      "interet": "Conditions generales communes.",
+      "url": "https://www.groupemutuel.ch/doc/jcr:33d269b6-9a41-4c20-b2d2-fe103c5c9ab1/CAGA03-F6.pdf/lang:fr/CAGA03-F6.pdf"
+    },
+    {
+      "id": "gm_cgc_caga04",
+      "titre": "Conditions generales pour les assurances maladie CGC (CAGA04-F2)",
+      "priorite": 3,
+      "url": "https://www.groupemutuel.ch/doc/jcr:33d269b6-9a41-4c20-b2d2-fe103c5c9ab1/CAGA04-F2.pdf/lang:fr/CAGA04-F2.pdf"
+    },
+    {
+      "id": "gm_hospitalisation_hc",
+      "titre": "Assurance complementaire d'hospitalisation HC (portefeuille ferme)",
+      "priorite": 3,
+      "interet": "Hospitalisation mi-privee / privee. Attention : portefeuille ferme, donc plus commercialise.",
+      "url": "https://www.groupemutuel.ch/fr/doc/jcr:accdce1b-c560-4b80-8dc6-c193e81f676f/lang:fr/HCAMCV-NAAM-HCGA-F4_portefeuille-ferme.pdf",
+      "remarque": "URL possiblement tronquee dans le resultat de recherche, a verifier."
+    },
+    {
+      "id": "gm_privee_lca",
+      "titre": "Assurance privee selon la LCA (VHAM01-VFAM01-VAAM01-F1)",
+      "priorite": 3,
+      "url": "https://www.groupemutuel.ch/doc/jcr:309eacb0-d798-4886-ac82-612a3be4606f/lang:fr/VHAM01-VFAM01-VAAM01-F1.pdf"
+    },
+    {
+      "id": "gm_indemnite_journaliere",
+      "titre": "Assurance collective d'indemnite journaliere selon la LCA (PCGA01-F2)",
+      "priorite": 4,
+      "interet": "Indemnites journalieres. Contrat collectif : verifier la pertinence pour du conseil individuel.",
+      "url": "https://www.groupemutuel.ch/doc/jcr:314c775d-85a5-46b9-bb9c-4af282477825/PCGA01_F2-info.pdf/lang:fr/PCGA01_F2-info.pdf"
+    },
+    {
+      "id": "gm_page_premium",
+      "titre": "Page produit - Soins complementaires Premium",
+      "priorite": 2,
+      "type": "page_web",
+      "url": "https://www.groupemutuel.ch/fr/clients-prives/nos-produits/sante/assurances-maladie-complementaires/Soin-Ambulatoires/premium.html"
+    }
+  ]
+}
