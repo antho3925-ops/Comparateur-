@@ -21,6 +21,35 @@ dans la liste — mieux vaut une caisse absente qu'une caisse aux chiffres inven
 
 Le bouton **Réinitialiser** remet cette sélection à zéro, comme le reste.
 
+### Caisse pas encore encodée : saisie libre de secours
+
+Les caisses présentes en base sont proposées en premier. Si le client se trouve
+chez une caisse pas encore encodée, le conseiller peut **décrire sa couverture à
+la main** — taux et plafonds lus sur la police — pour la seule couverture
+actuelle. Dans ce cas l'écran porte en permanence une mention indiquant que la
+couverture de référence a été décrite manuellement et ne provient pas de la base
+vérifiée. Cette saisie n'est pas enregistrée : elle disparaît à la
+réinitialisation, comme le reste du dossier client.
+
+### Côté caisses comparées : le meilleur produit, toujours nommé
+
+Le client ne possède aucun produit chez les concurrents. Pour chaque prestation
+de la facture, l'outil retient donc **le produit le plus favorable de la caisse**
+— jamais un cumul de plusieurs produits.
+
+Deux garde-fous, parce que cette règle compare volontiers un produit d'entrée de
+gamme à un haut de gamme :
+
+- le **nom du produit retenu est affiché** à côté de chaque montant, ligne par
+  ligne : le conseiller voit immédiatement qu'un résultat vient de « Global smart
+  niveau 3 » et non d'un produit comparable à celui du client ;
+- ce produit est **remplaçable d'un clic** par un autre produit de la même caisse,
+  pour refaire la comparaison à gamme équivalente.
+
+Le classement affiche donc un potentiel maximal de remboursement, assumé comme
+tel et vérifiable à l'écran, plutôt qu'un chiffre dont on ne saurait pas d'où il
+sort.
+
 ## Entrée : une ligne de facture
 
 ```json
@@ -96,8 +125,19 @@ Le `delai_attente_mois` est affiché comme avertissement (il conditionne l'accè
 au produit à la souscription, il ne modifie pas le calcul sur une facture
 existante).
 
-Une prestation sans couverture chez cet assureur → remboursement 0, affiché
-comme **non couvert** et non comme « 0 CHF », pour que ce soit clair à l'écran.
+Trois états distincts, à ne jamais confondre à l'écran :
+
+| État | Origine | Affichage |
+|---|---|---|
+| **Remboursé** | couverture chiffrée | le montant calculé, avec le nom du produit |
+| **Non couvert** | aucune couverture pour cette prestation | « non couvert », et non « 0 CHF » |
+| **À préciser** | couverture au statut `a_completer` | « couvert, conditions à préciser » |
+
+Une prestation « à préciser » n'entre ni dans le total remboursé ni dans le reste
+à charge : elle est sortie du chiffre et signalée séparément, avec le nom du
+produit concerné. Le classement des caisses indique combien de lignes sont dans
+ce cas, pour que le conseiller sache si un écart affiché est solide ou
+provisoire.
 
 ## Cumuls déjà consommés dans l'année
 
