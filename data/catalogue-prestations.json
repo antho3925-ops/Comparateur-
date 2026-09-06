@@ -1,21 +1,52 @@
 {
   "schema_version": "1.0",
   "commentaire": "Nomenclature commune. Chaque ligne de facture saisie dans l'outil pointe vers un 'id' de cette liste, et chaque assureur decrit ses remboursements en reference aux memes 'id'. C'est ce qui rend la comparaison possible entre caisses. Ne jamais renommer un 'id' existant : ajouter un nouvel id et marquer l'ancien 'actif': false.",
-
   "groupes": [
-    { "id": "ambulatoire",       "libelle": "Soins ambulatoires" },
-    { "id": "medicaments",       "libelle": "Medicaments" },
-    { "id": "hospitalier",       "libelle": "Hospitalisation" },
-    { "id": "dentaire",          "libelle": "Soins dentaires" },
-    { "id": "med_alternatives",  "libelle": "Medecines alternatives" },
-    { "id": "optique",           "libelle": "Optique" },
-    { "id": "prevention",        "libelle": "Prevention et check-up" },
-    { "id": "maternite",         "libelle": "Maternite" },
-    { "id": "etranger_urgence",  "libelle": "Etranger, transport et sauvetage" },
-    { "id": "aides_soins",       "libelle": "Aides, appareils et soins a domicile" },
-    { "id": "incapacite",        "libelle": "Incapacite de travail" }
+    {
+      "id": "ambulatoire",
+      "libelle": "Soins ambulatoires"
+    },
+    {
+      "id": "medicaments",
+      "libelle": "Medicaments"
+    },
+    {
+      "id": "hospitalier",
+      "libelle": "Hospitalisation"
+    },
+    {
+      "id": "dentaire",
+      "libelle": "Soins dentaires"
+    },
+    {
+      "id": "med_alternatives",
+      "libelle": "Medecines alternatives"
+    },
+    {
+      "id": "optique",
+      "libelle": "Optique"
+    },
+    {
+      "id": "prevention",
+      "libelle": "Prevention et check-up"
+    },
+    {
+      "id": "maternite",
+      "libelle": "Maternite"
+    },
+    {
+      "id": "etranger_urgence",
+      "libelle": "Etranger, transport et sauvetage"
+    },
+    {
+      "id": "aides_soins",
+      "libelle": "Aides, appareils et soins a domicile"
+    },
+    {
+      "id": "incapacite",
+      "libelle": "Incapacite de travail"
+    }
   ],
-
   "prestations": [
     {
       "id": "consultation_medecin",
@@ -90,7 +121,6 @@
       "unite_saisie": "montant",
       "actif": true
     },
-
     {
       "id": "medicaments_liste",
       "libelle": "Medicaments de la liste des specialites (LS)",
@@ -157,7 +187,6 @@
       "unite_saisie": "montant",
       "actif": true
     },
-
     {
       "id": "hospitalisation_commune",
       "libelle": "Hospitalisation division commune (canton de domicile)",
@@ -173,7 +202,6 @@
       "groupe": "hospitalier",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_jours",
-      "part_lamal_defaut": null,
       "remarque": "La LAMal prend en charge le tarif de la division commune ; la LCA couvre le surcout. Saisir si possible les deux montants separement (montant_part_lamal).",
       "actif": true
     },
@@ -183,7 +211,6 @@
       "groupe": "hospitalier",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_jours",
-      "part_lamal_defaut": null,
       "actif": true
     },
     {
@@ -192,7 +219,6 @@
       "groupe": "hospitalier",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_jours",
-      "part_lamal_defaut": null,
       "actif": true
     },
     {
@@ -217,10 +243,8 @@
       "groupe": "hospitalier",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_jours",
-      "part_lamal_defaut": null,
       "actif": true
     },
-
     {
       "id": "dentaire_soins",
       "libelle": "Soins dentaires courants (caries, detartrage, controle)",
@@ -255,7 +279,6 @@
       "remarque": "Pris en charge par la LAMal si l'accident n'est pas couvert par la LAA.",
       "actif": true
     },
-
     {
       "id": "osteopathie",
       "libelle": "Osteopathie",
@@ -270,7 +293,6 @@
       "groupe": "med_alternatives",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_seances",
-      "part_lamal_defaut": null,
       "remarque": "Prise en charge LAMal uniquement si pratiquee par un medecin titulaire du titre reconnu ; sinon LCA.",
       "actif": true
     },
@@ -280,7 +302,6 @@
       "groupe": "med_alternatives",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_seances",
-      "part_lamal_defaut": null,
       "actif": true
     },
     {
@@ -305,7 +326,6 @@
       "groupe": "med_alternatives",
       "categorie": "MIXTE",
       "unite_saisie": "montant_et_seances",
-      "part_lamal_defaut": null,
       "remarque": "Chiropraticien reconnu : prise en charge LAMal. Complements et depassements : LCA.",
       "actif": true
     },
@@ -325,7 +345,6 @@
       "unite_saisie": "montant_et_seances",
       "actif": true
     },
-
     {
       "id": "lunettes_lentilles_adulte",
       "libelle": "Lunettes et lentilles (adulte)",
@@ -340,7 +359,6 @@
       "groupe": "optique",
       "categorie": "MIXTE",
       "unite_saisie": "montant",
-      "part_lamal_defaut": null,
       "remarque": "Forfait LAMal annuel limite jusqu'a 18 ans, complete par la LCA.",
       "actif": true
     },
@@ -352,7 +370,6 @@
       "unite_saisie": "montant",
       "actif": true
     },
-
     {
       "id": "maternite_controles",
       "libelle": "Controles de grossesse et prestations de maternite",
@@ -379,14 +396,12 @@
       "unite_saisie": "montant",
       "actif": true
     },
-
     {
       "id": "transport_urgence",
       "libelle": "Transport medicalise / ambulance",
       "groupe": "etranger_urgence",
       "categorie": "MIXTE",
       "unite_saisie": "montant",
-      "part_lamal_defaut": null,
       "remarque": "La LAMal ne prend en charge qu'une part limitee et plafonnee ; le solde releve de la LCA.",
       "actif": true
     },
@@ -396,7 +411,6 @@
       "groupe": "etranger_urgence",
       "categorie": "MIXTE",
       "unite_saisie": "montant",
-      "part_lamal_defaut": null,
       "actif": true
     },
     {
@@ -413,7 +427,6 @@
       "groupe": "etranger_urgence",
       "categorie": "MIXTE",
       "unite_saisie": "montant",
-      "part_lamal_defaut": null,
       "remarque": "La LAMal rembourse au maximum le double de ce que couterait le traitement en Suisse ; la LCA couvre generalement le surplus.",
       "actif": true
     },
@@ -425,7 +438,6 @@
       "unite_saisie": "montant",
       "actif": true
     },
-
     {
       "id": "soins_domicile_lamal",
       "libelle": "Soins a domicile prescrits (Spitex)",
@@ -458,7 +470,6 @@
       "unite_saisie": "montant",
       "actif": true
     },
-
     {
       "id": "indemnite_journaliere",
       "libelle": "Indemnite journaliere en cas d'incapacite de travail",

@@ -20,8 +20,14 @@ avant d'être codée.
 
 `montant_part_lamal` ne concerne que les prestations `MIXTE` : quand la facture
 distingue le tarif de base du surcoût (typiquement une hospitalisation
-mi-privée), on saisit les deux. Si l'information n'est pas disponible, l'outil
-demande explicitement la répartition plutôt que de l'inventer.
+mi-privée), on saisit les deux.
+
+**Décision figée : sur une ligne `MIXTE`, l'outil affiche systématiquement deux
+champs** — montant total et part au tarif LAMal — et refuse de deviner la
+répartition. Aucune clé de répartition par défaut n'est stockée au catalogue :
+une approximation invisible sur l'hospitalier fausserait tout le comparatif et
+serait indéfendable devant le client. Tant que la part LAMal n'est pas
+renseignée, la ligne est signalée comme incomplète à l'écran.
 
 ## Étape 1 — Ventilation base / complémentaire
 
@@ -38,8 +44,7 @@ Sur le cumul annuel des montants LAMal, dans cet ordre :
 1. **Exonérations** — les prestations portant `exoneration_id: "maternite"` sont
    sorties du calcul de franchise et de quote-part.
 2. **Franchise** — le client paie 100 % jusqu'à épuisement de la franchise
-   choisie, en tenant compte de la franchise **déjà consommée** dans l'année
-   (champ saisi en début de simulation).
+   choisie, en tenant compte de la franchise **déjà consommée** dans l'année.
 3. **Quote-part** — 10 % de ce qui dépasse la franchise (20 % sur un médicament
    original substituable, via `quote_part_taux_override`), plafonnée à 700 CHF
    par an pour un adulte, 350 CHF pour un enfant, en tenant compte de la
@@ -75,6 +80,23 @@ existante).
 
 Une prestation sans couverture chez cet assureur → remboursement 0, affiché
 comme **non couvert** et non comme « 0 CHF », pour que ce soit clair à l'écran.
+
+## Cumuls déjà consommés dans l'année
+
+**Décision figée : la simulation accepte les cumuls en cours d'année**, via un
+bloc repliable et **vide par défaut** en tête de saisie — il ne ralentit donc
+pas le cas courant :
+
+- franchise LAMal déjà payée cette année ;
+- quote-part LAMal déjà atteinte cette année ;
+- montants déjà consommés sur les plafonds LCA (par prestation ou par
+  enveloppe), saisis seulement si le client le sait.
+
+Ces cumuls s'appliquent **à l'identique à toutes les caisses comparées** pour la
+part LAMal. Côté LCA, un cumul renseigné pour la caisse actuelle ne peut pas être
+reporté sur les autres caisses (le client n'y a rien consommé) : les concurrents
+sont donc calculés sur plafonds intacts, et l'écran l'indique explicitement pour
+éviter une comparaison trompeuse.
 
 ## Étape 4 — Comparatif
 

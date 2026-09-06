@@ -287,7 +287,6 @@ window.DB = {
         "groupe": "hospitalier",
         "categorie": "MIXTE",
         "unite_saisie": "montant_et_jours",
-        "part_lamal_defaut": null,
         "remarque": "La LAMal prend en charge le tarif de la division commune ; la LCA couvre le surcout. Saisir si possible les deux montants separement (montant_part_lamal).",
         "actif": true
       },
@@ -297,7 +296,6 @@ window.DB = {
         "groupe": "hospitalier",
         "categorie": "MIXTE",
         "unite_saisie": "montant_et_jours",
-        "part_lamal_defaut": null,
         "actif": true
       },
       {
@@ -306,7 +304,6 @@ window.DB = {
         "groupe": "hospitalier",
         "categorie": "MIXTE",
         "unite_saisie": "montant_et_jours",
-        "part_lamal_defaut": null,
         "actif": true
       },
       {
@@ -331,7 +328,6 @@ window.DB = {
         "groupe": "hospitalier",
         "categorie": "MIXTE",
         "unite_saisie": "montant_et_jours",
-        "part_lamal_defaut": null,
         "actif": true
       },
       {
@@ -382,7 +378,6 @@ window.DB = {
         "groupe": "med_alternatives",
         "categorie": "MIXTE",
         "unite_saisie": "montant_et_seances",
-        "part_lamal_defaut": null,
         "remarque": "Prise en charge LAMal uniquement si pratiquee par un medecin titulaire du titre reconnu ; sinon LCA.",
         "actif": true
       },
@@ -392,7 +387,6 @@ window.DB = {
         "groupe": "med_alternatives",
         "categorie": "MIXTE",
         "unite_saisie": "montant_et_seances",
-        "part_lamal_defaut": null,
         "actif": true
       },
       {
@@ -417,7 +411,6 @@ window.DB = {
         "groupe": "med_alternatives",
         "categorie": "MIXTE",
         "unite_saisie": "montant_et_seances",
-        "part_lamal_defaut": null,
         "remarque": "Chiropraticien reconnu : prise en charge LAMal. Complements et depassements : LCA.",
         "actif": true
       },
@@ -451,7 +444,6 @@ window.DB = {
         "groupe": "optique",
         "categorie": "MIXTE",
         "unite_saisie": "montant",
-        "part_lamal_defaut": null,
         "remarque": "Forfait LAMal annuel limite jusqu'a 18 ans, complete par la LCA.",
         "actif": true
       },
@@ -495,7 +487,6 @@ window.DB = {
         "groupe": "etranger_urgence",
         "categorie": "MIXTE",
         "unite_saisie": "montant",
-        "part_lamal_defaut": null,
         "remarque": "La LAMal ne prend en charge qu'une part limitee et plafonnee ; le solde releve de la LCA.",
         "actif": true
       },
@@ -505,7 +496,6 @@ window.DB = {
         "groupe": "etranger_urgence",
         "categorie": "MIXTE",
         "unite_saisie": "montant",
-        "part_lamal_defaut": null,
         "actif": true
       },
       {
@@ -522,7 +512,6 @@ window.DB = {
         "groupe": "etranger_urgence",
         "categorie": "MIXTE",
         "unite_saisie": "montant",
-        "part_lamal_defaut": null,
         "remarque": "La LAMal rembourse au maximum le double de ce que couterait le traitement en Suisse ; la LCA couvre generalement le surplus.",
         "actif": true
       },
@@ -772,5 +761,5 @@ window.DB = {
       ]
     }
   ],
-  "genere_le": "2026-09-06T19:14:41.990Z"
+  "genere_le": "2026-09-06T19:19:53.758Z"
 };

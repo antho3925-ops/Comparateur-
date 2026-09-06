@@ -26,7 +26,7 @@ Chaque prestation porte une **catégorie** :
 |---|---|
 | `LAMal`  | Couverte par l'assurance de base, identique chez toutes les caisses |
 | `LCA`    | Uniquement complémentaire, propre à chaque assureur |
-| `MIXTE`  | La base couvre une part (ex. tarif division commune), la complémentaire le surcoût |
+| `MIXTE`  | La base couvre une part (ex. tarif division commune), la complémentaire le surcoût. La répartition est toujours saisie à la main sur la facture, jamais estimée. |
 
 Si une prestation manque au catalogue, dis-le-moi : je l'ajoute. **Ne jamais
 renommer un identifiant existant** — ajouter un nouvel identifiant et passer
