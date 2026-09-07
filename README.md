@@ -30,6 +30,7 @@ hors ligne en ouvrant `index.html` directement.
 ├── dist/                          Export en fichier unique (généré, non versionné)
 ├── tools/
 │   ├── exporter.mjs               Replie tout le projet dans un fichier HTML unique
+│   ├── tests.mjs                  Suite de tests du moteur de calcul
 │   ├── sources.py                 Téléchargement des PDF assureurs + extraction du texte
 │   └── trous.mjs                  Liste les couvertures connues mais non chiffrées
 ├── assets/
@@ -114,13 +115,26 @@ Voir `docs/PROTECTION-DONNEES.md`.
 
 ## Vérification
 
-Les moteurs se testent hors navigateur en chargeant `data/db.js` et les fichiers `js/` dans
-Node. Deux résultats servent de référence :
+```
+node tools/tests.mjs
+```
 
-- **Part LAMal** — consultation 640 CHF + part hospitalière 5 200 CHF, franchise 300 :
-  300 (franchise) + 554 (quote-part 10 %) + 90 (6 jours × 15) = **944 CHF**.
-- **Quota de séances** — 20 séances d'ostéopathie à 6 000 CHF chez Assura Natura, quota
-  12 séances, 130 CHF par séance, franchise produit 200 : **1 560 CHF** remboursés.
+54 tests couvrant l'ensemble des règles de calcul, chacun avec sa valeur attendue
+calculée à la main et écrite dans son intitulé. À relancer après toute modification
+des moteurs ou des données.
+
+Ce que la suite couvre : franchise, quote-part et son plafond, contribution
+hospitalière, exonération maternité, cumuls annuels déjà consommés, quote-part
+majorée sur un médicament substituable ; côté complémentaire, taux, plafonds
+annuels, par séance et par jour, enveloppes partagées, quotas de séances,
+franchises de produit et de prestation, exemptions, participations journalières,
+plafonds cumulables sur plusieurs années ; puis les prestations mixtes et les
+lignes incomplètes, le choix du produit le plus favorable, les trois états
+affichés, le périmètre des produits retenus, les portefeuilles fermés, le
+masquage de caisses, les programmes partenaires, et quatre invariants de
+cohérence — aucun remboursement supérieur à sa ligne, aucun reste à charge
+négatif, part base identique chez toutes les caisses, et somme des parts égale
+au total.
 
 ## État d'avancement
 
