@@ -633,6 +633,7 @@
       const estMeilleure = i === 0 && act && ecart > 0.005;
       h += `<tr class="${estMeilleure ? 'meilleure' : ''}" data-id="${esc(c.assureurId)}">`
         + `<td><span class="rang">${i + 1}</span>${esc(c.nom)}`
+        + (c.estCaisseDuClient ? ' <span class="etiq sacaisse">sa caisse, gamme complète</span>' : '')
         + (c.club ? ' <span class="etiq club">partenaires</span>' : '') + '</td>'
         + `<td class="num">${Fmt.chf(res.lamal.resteACharge)}</td>`
         + `<td class="num">${Fmt.chf(c.lca.totalRembourse)}</td>`

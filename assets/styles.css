@@ -721,3 +721,13 @@ ul.liste-excl li::before {
 }
 .cumul .avert { font-size: 12.5px; color: var(--texte-2); margin-bottom: 10px; }
 .cumul input { max-width: 220px; }
+
+/* La caisse du client figure aussi au classement, avec sa gamme complete :
+   ce qu'il a d'un cote, ce que sa propre caisse pourrait faire de l'autre. */
+.etiq.sacaisse {
+  background: color-mix(in srgb, var(--marine-500) 16%, var(--surface));
+  color: var(--marine-500);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--marine-500) 32%, transparent) inset;
+}
+:root[data-theme="dark"] .etiq.sacaisse,
+:root:not([data-theme="light"]) .etiq.sacaisse { color: var(--texte-2); }

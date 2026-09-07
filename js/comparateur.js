@@ -67,17 +67,26 @@ window.Comparateur = (function () {
     return { lignesLamal, lignesLca, incompletes, versees };
   }
 
-  function produitsRetenus(assureur, filtreIds) {
-    const cible = filtreIds && filtreIds.length;
-    return (assureur.produits_lca || []).filter((p) => {
-      if (p.hors_perimetre_facture) return false;
-      // Un produit en portefeuille ferme ne se souscrit plus : il reste
-      // selectionnable comme couverture actuelle d'un client qui le detient,
-      // mais n'a rien a faire dans une caisse qu'on propose en alternative.
-      if (p.portefeuille_ferme && !cible) return false;
-      if (cible) return filtreIds.indexOf(p.id) !== -1;
-      return true;
-    });
+  /**
+   * @param exigerSelection true pour la couverture actuelle : la liste vide
+   *   signifie alors « aucun produit », et non « tous ». Sans quoi un client
+   *   qui n'a que l'assurance de base serait calcule comme s'il avait toute
+   *   la gamme. Pour les caisses comparees, c'est l'inverse : on retient tout.
+   */
+  function produitsRetenus(assureur, filtreIds, exigerSelection) {
+    const liste = filtreIds || [];
+    if (exigerSelection) {
+      return (assureur.produits_lca || [])
+        .filter((p) => !p.hors_perimetre_facture && liste.indexOf(p.id) !== -1);
+    }
+    if (liste.length) {
+      return (assureur.produits_lca || [])
+        .filter((p) => !p.hors_perimetre_facture && liste.indexOf(p.id) !== -1);
+    }
+    // Un produit en portefeuille ferme ne se souscrit plus : il n'a rien a
+    // faire dans une caisse qu'on propose en alternative.
+    return (assureur.produits_lca || [])
+      .filter((p) => !p.hors_perimetre_facture && !p.portefeuille_ferme);
   }
 
   // Meilleur rabais partenaire par prestation, pour un assureur donne.
@@ -202,7 +211,7 @@ window.Comparateur = (function () {
     } else if (etat.actuel.assureurId) {
       const a = db().assureurs.find((x) => x.id === etat.actuel.assureurId);
       if (a) {
-        const produits = produitsRetenus(a, etat.actuel.produitIds);
+        const produits = produitsRetenus(a, etat.actuel.produitIds, true);
         const ev = evaluer(produits, etat, null);
         const club = avecClub(a, produits, ev);
         actuel = { assureurId: a.id, nom: a.nom, saisieLibre: false, assureur: a, produits, club,
@@ -216,10 +225,11 @@ window.Comparateur = (function () {
     }
 
     // --- Caisses comparees ---------------------------------------------------
+    // Toutes les caisses sont evaluees avec leur gamme complete, y compris
+    // celle du client : la ligne « actuelle » dit ce qu'il a, le tableau classe
+    // dit ce que chaque caisse ferait au mieux — sa propre caisse comprise.
     const masquees = etat.caissesMasquees || [];
-    const candidates = db().assureurs
-      .filter((a) => a.actif !== false)
-      .filter((a) => !actuel || a.id !== actuel.assureurId);
+    const candidates = db().assureurs.filter((a) => a.actif !== false);
 
     const concurrents = candidates
       .filter((a) => masquees.indexOf(a.id) === -1)
@@ -229,6 +239,7 @@ window.Comparateur = (function () {
         const club = avecClub(a, produits, ev);
         return {
           assureurId: a.id, nom: a.nom, assureur: a, produits,
+          estCaisseDuClient: !!(actuel && actuel.assureurId === a.id),
           lamal: club ? club.lamal : ev.lamal,
           lca: club ? club.lca : ev.lca,
           contractuel: ev.resteACharge,
