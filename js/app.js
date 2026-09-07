@@ -164,6 +164,18 @@
     etat.facture.forEach((f) => {
       const p = Comparateur.prestation(f.prestationId);
       const l = el('div', 'ligne-facture');
+
+      // La teinte de la ligne dit de quelle famille releve la prestation :
+      // on repere d'un coup d'oeil le dentaire du medical ou de l'hospitalier.
+      if (p) {
+        l.dataset.groupe = p.groupe;
+        const g = DB.catalogue.groupes.find((x) => x.id === p.groupe);
+        const puce = el('div', 'puce-groupe', (g ? g.libelle : p.groupe)
+          + (p.categorie === 'LAMal' ? ' · base'
+             : p.categorie === 'MIXTE' ? ' · base et complémentaire' : ' · complémentaire'));
+        l.appendChild(puce);
+      }
+
       const h = el('div', 'haut');
 
       const d1 = el('div'); d1.appendChild(el('label', null, 'Prestation'));
@@ -396,6 +408,41 @@
       + '</div></details>';
   }
 
+  // Les chiffres cles defilent depuis leur valeur precedente : on voit dans quel
+  // sens le montant a bouge quand on corrige une ligne de facture, au lieu de
+  // devoir comparer de memoire.
+  const derniersChiffres = {};
+  function animerChiffres(zone) {
+    const sobre = window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    zone.querySelectorAll('.chiffre-cle > div').forEach((bloc) => {
+      const cible = bloc.querySelector('.v');
+      const cle = (bloc.querySelector('.l') || {}).textContent || '';
+      if (!cible) return;
+
+      const brut = cible.textContent.replace(/[^\d.]/g, '');
+      const fin = Number(brut);
+      if (!brut || Number.isNaN(fin)) { delete derniersChiffres[cle]; return; }
+
+      const signe = cible.textContent.trim().startsWith('−') ? '− ' : '';
+      const debut = derniersChiffres[cle];
+      derniersChiffres[cle] = fin;
+      if (sobre || debut === undefined || Math.abs(fin - debut) < 0.5) return;
+
+      const duree = 480;
+      const t0 = performance.now();
+      const pas = (t) => {
+        const a = Math.min(1, (t - t0) / duree);
+        const doux = 1 - Math.pow(1 - a, 3);
+        cible.textContent = signe + Fmt.chf(debut + (fin - debut) * doux);
+        if (a < 1) requestAnimationFrame(pas);
+      };
+      cible.textContent = signe + Fmt.chf(debut);
+      requestAnimationFrame(pas);
+    });
+  }
+
   // Second axe de comparaison : la largeur de la gamme complementaire, distincte
   // du reste a charge. Une caisse peut couvrir beaucoup de prestations et rester
   // chere sur une facture donnee — les deux classements se lisent ensemble.
@@ -411,7 +458,7 @@
       + (n ? ` — la colonne de droite indique combien des ${n} prestation(s) complémentaire(s) `
            + 'de la facture en cours chaque caisse couvre.' : '.') + '</p>';
 
-    h += '<table class="compare etendue"><thead><tr><th>Caisse</th>'
+    h += '<table class="compare etendue anime anime-2"><thead><tr><th>Caisse</th>'
       + '<th class="num">Prestations couvertes</th><th>Part de la gamme la plus large</th>'
       + (n ? '<th class="num">Sur cette facture</th>' : '') + '</tr></thead><tbody>';
 
@@ -422,7 +469,7 @@
         + (e.actuelle ? ' <span class="etiq actu">actuelle</span>' : '') + '</td>'
         + `<td class="num">${e.chiffrees}`
         + (e.aPreciser ? ` <span class="etiq prec">+${e.aPreciser} à préciser</span>` : '') + '</td>'
-        + `<td><span class="jauge"><i style="width:${pct}%"></i></span></td>`
+        + `<td><span class="jauge"><i style="--w:${pct}%"></i></span></td>`
         + (n ? `<td class="num">${e.couvertesFacture} / ${n}</td>` : '') + '</tr>';
     });
     return h + '</tbody></table>';
@@ -497,7 +544,7 @@
 
     const act = res.actuel;
     const meilleur = res.concurrents[0];
-    h += '<div class="chiffre-cle">';
+    h += '<div class="chiffre-cle anime">';
     h += `<div><div class="l">Total facturé</div><div class="v">${Fmt.chf(res.totalFacture)}</div></div>`;
     if (act) {
       h += `<div><div class="l">Reste à charge actuel</div><div class="v">${Fmt.chf(act.resteACharge)}</div></div>`;
@@ -529,12 +576,12 @@
         + `${res.nbMasquees} masquée(s) par votre sélection. À signaler au client : `
         + `ce tableau ne couvre pas l'ensemble du marché.</div>`;
     }
-    h += '<table class="compare"><thead><tr><th>Caisse</th><th class="num">Part base</th>'
+    h += '<table class="compare anime anime-1"><thead><tr><th>Caisse</th><th class="num">Part base</th>'
       + '<th class="num">Remboursé compl.</th><th class="num">Reste à charge</th>'
       + '<th class="num">Écart</th><th>À préciser</th></tr></thead><tbody>';
 
     if (act) {
-      h += `<tr class="actuelle" data-id="${esc(act.assureurId)}"><td><span class="rang"></span>`
+      h += `<tr class="actuelle" data-id="${esc(act.assureurId)}"><td><span class="rang vide">•</span>`
         + `${esc(act.nom)} <span class="etiq actu">actuelle</span>`
         + (act.club ? ' <span class="etiq club">partenaires</span>' : '') + '</td>'
         + `<td class="num">${Fmt.chf(res.lamal.resteACharge)}</td>`
@@ -584,6 +631,7 @@
       + '</div>';
 
     zone.innerHTML = h;
+    animerChiffres(zone);
 
     zone.querySelectorAll('table.compare tbody tr[data-id]').forEach((tr) => {
       tr.addEventListener('click', (ev) => {

@@ -11054,5 +11054,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T12:01:01.476Z"
+  "genere_le": "2026-09-07T12:12:16.019Z"
 };
