@@ -198,6 +198,14 @@
 
       h.append(d1, d2, d3, d4); l.appendChild(h);
 
+      // Remarque du catalogue : c'est la qu'on rappelle, par exemple, qu'une
+      // psychotherapie prescrite releve de la base et non de la complementaire.
+      if (p && p.remarque && p.categorie !== 'MIXTE') {
+        const note = el('div', 'note-prestation', p.remarque);
+        note.classList.add(p.categorie === 'LAMal' ? 'base' : 'compl');
+        l.appendChild(note);
+      }
+
       if (p && p.categorie === 'MIXTE') {
         const mix = el('div', 'mixte');
         mix.appendChild(el('div', 'avert',

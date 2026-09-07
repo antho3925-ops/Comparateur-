@@ -113,21 +113,23 @@
     },
     {
       "id": "psychotherapie_medicale",
-      "libelle": "Psychotherapie medicale ou psychologique prescrite",
+      "libelle": "Psychotherapie sur prescription (therapeute admis LAMal)",
       "groupe": "ambulatoire",
       "categorie": "LAMal",
       "unite_saisie": "montant",
       "actif": true,
-      "nature": "remboursement"
+      "nature": "remboursement",
+      "remarque": "Depuis le 1er juillet 2022, la psychotherapie psychologique releve du modele de prescription : sur ordonnance medicale et par un psychotherapeute admis a facturer la LAMal, elle est prise en charge par l'assurance de base. La couverture est donc IDENTIQUE chez toutes les caisses, aux seules franchise et quote-part pres. C'est le cas le plus frequent : le choisir par defaut."
     },
     {
       "id": "psychotherapie_non_medicale",
-      "libelle": "Psychotherapie non prescrite / therapeute non reconnu LAMal",
+      "libelle": "Psychotherapie hors LAMal (sans prescription ou therapeute non admis)",
       "groupe": "ambulatoire",
       "categorie": "LCA",
       "unite_saisie": "montant",
       "actif": true,
-      "nature": "remboursement"
+      "nature": "remboursement",
+      "remarque": "Ne releve de la complementaire que dans les cas residuels : absence de prescription medicale, therapeute non admis a facturer la LAMal, methode non reconnue, ou seances au-dela de ce que la LAMal prend en charge. Ne pas l'utiliser pour une psychotherapie prescrite ordinaire, sous peine de faire porter a la complementaire une charge qui incombe a la base et de fausser la comparaison entre caisses."
     },
     {
       "id": "logopedie_ergotherapie",

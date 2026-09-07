@@ -198,21 +198,23 @@ window.DB = {
       },
       {
         "id": "psychotherapie_medicale",
-        "libelle": "Psychotherapie medicale ou psychologique prescrite",
+        "libelle": "Psychotherapie sur prescription (therapeute admis LAMal)",
         "groupe": "ambulatoire",
         "categorie": "LAMal",
         "unite_saisie": "montant",
         "actif": true,
-        "nature": "remboursement"
+        "nature": "remboursement",
+        "remarque": "Depuis le 1er juillet 2022, la psychotherapie psychologique releve du modele de prescription : sur ordonnance medicale et par un psychotherapeute admis a facturer la LAMal, elle est prise en charge par l'assurance de base. La couverture est donc IDENTIQUE chez toutes les caisses, aux seules franchise et quote-part pres. C'est le cas le plus frequent : le choisir par defaut."
       },
       {
         "id": "psychotherapie_non_medicale",
-        "libelle": "Psychotherapie non prescrite / therapeute non reconnu LAMal",
+        "libelle": "Psychotherapie hors LAMal (sans prescription ou therapeute non admis)",
         "groupe": "ambulatoire",
         "categorie": "LCA",
         "unite_saisie": "montant",
         "actif": true,
-        "nature": "remboursement"
+        "nature": "remboursement",
+        "remarque": "Ne releve de la complementaire que dans les cas residuels : absence de prescription medicale, therapeute non admis a facturer la LAMal, methode non reconnue, ou seances au-dela de ce que la LAMal prend en charge. Ne pas l'utiliser pour une psychotherapie prescrite ordinaire, sous peine de faire porter a la complementaire une charge qui incombe a la base et de fausser la comparaison entre caisses."
       },
       {
         "id": "logopedie_ergotherapie",
@@ -1255,7 +1257,7 @@ window.DB = {
               "prestation_id": "psychotherapie_non_medicale",
               "taux_remboursement": 1,
               "plafond_annuel": 1500,
-              "conditions": "Art. 9. 100% d'une facturation brute de CHF 1'500 par annee civile. Traitements medicalement prescrits, par des psychotherapeutes non-medecins ou psychologues independants figurant sur la liste de l'organisation faitiere des assureurs-maladie suisses. Tarif de la psychotherapie deleguee du canton de domicile. Derogation expresse au ch. 4.1.10 CGA.",
+              "conditions": "Art. 9. 100% d'une facturation brute de CHF 1'500 par annee civile. Traitements medicalement prescrits, par des psychotherapeutes non-medecins ou psychologues independants figurant sur la liste de l'organisation faitiere des assureurs-maladie suisses. Tarif de la psychotherapie deleguee du canton de domicile. Derogation expresse au ch. 4.1.10 CGA. ATTENTION : cette edition des CSC date de 07.2015, anterieure au passage au modele de prescription du 1er juillet 2022. Le tarif de reference cite est celui de la psychotherapie DELEGUEE, regime aboli depuis. Une large part de ce que cet article couvrait releve desormais de la LAMal, donc de toutes les caisses : la valeur reelle de cette garantie aujourd'hui se limite aux cas residuels. A reverifier dans l'edition en vigueur sur la police du client.",
               "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
@@ -10571,5 +10573,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T11:10:05.834Z"
+  "genere_le": "2026-09-07T11:13:44.145Z"
 };

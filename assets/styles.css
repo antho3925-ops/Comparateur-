@@ -469,3 +469,13 @@ details.repliable.selection-caisses { margin-bottom: 14px; }
 .case-caisse:not(:has(input:checked)) { color: var(--texte-3); }
 .avertissement.masquage { border-left-color: var(--rouge); }
 .avertissement.masquage strong { color: var(--rouge); }
+
+/* ---------------------------------------------------- Remarque de prestation */
+.note-prestation {
+  margin-top: 11px; padding: 10px 12px; border-radius: var(--r-s);
+  font-size: 12.5px; line-height: 1.5; color: var(--texte-2);
+  border: 1px solid var(--bord); background: #fff;
+  border-left: 3px solid var(--bord-fort);
+}
+.note-prestation.base { border-left-color: var(--marine-600); }
+.note-prestation.compl { border-left-color: var(--or); }
