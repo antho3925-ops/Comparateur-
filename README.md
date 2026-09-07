@@ -52,10 +52,24 @@ hors ligne en ouvrant `index.html` directement.
 │   │   └── *.json                 9 caisses : Assura, AXA, CONCORDIA, CSS, Groupe Mutuel,
 │   │                              Helsana, Sanitas, SWICA, Visana
 │   └── db.js                      Généré — ne pas éditer
-└── docs/
-    ├── FORMAT-DONNEES.md          Comment livrer les captures d'écran
-    ├── MOTEUR-CALCUL.md           Ordre d'application des règles de calcul
-    └── PROTECTION-DONNEES.md      Garanties techniques et règles d'usage (LPD)
+├── docs/
+│   ├── FORMAT-DONNEES.md          Comment livrer les captures d'écran
+│   ├── MOTEUR-CALCUL.md           Ordre d'application des règles de calcul
+│   └── PROTECTION-DONNEES.md      Garanties techniques et règles d'usage (LPD)
+└── suivi/                         Plateforme de suivi de performance — projet distinct
+```
+
+## Suivi de performance commerciale
+
+Le dossier `suivi/` abrite un **second outil, distinct de celui-ci** : une
+plateforme web de suivi de l'activité quotidienne de l'équipe de conseillers —
+saisie des indicateurs du jour, objectifs hebdomadaires et mensuels fixés par le
+responsable, écarts chiffrés, vue d'équipe et classement. Contrairement au
+comparateur, elle a un serveur et conserve des données ; les deux projets ne
+partagent aucun fichier. Voir `suivi/README.md`.
+
+```
+node suivi/serveur.mjs
 ```
 
 ## Alimenter la base depuis les documents d'un assureur

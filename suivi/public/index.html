@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Suivi de performance — Connexion</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body class="accueil">
+  <main class="panneau">
+    <span class="marque">Swiss Times Fiduciary</span>
+    <h1>Suivi de performance</h1>
+    <p class="intro">Entrez votre identifiant de conseiller pour accéder à votre page personnelle.</p>
+
+    <form id="formulaire" autocomplete="off">
+      <label for="identifiant">Identifiant</label>
+      <input type="text" id="identifiant" name="identifiant" autocapitalize="none"
+             spellcheck="false" autocomplete="username" autofocus required>
+      <div class="message" id="message" role="alert"></div>
+      <button type="submit" class="primaire">Accéder à ma page</button>
+    </form>
+
+    <div class="pied-panneau">
+      <a href="/admin">Espace administrateur</a>
+    </div>
+  </main>
+  <script type="module" src="/js/connexion.js"></script>
+</body>
+</html>

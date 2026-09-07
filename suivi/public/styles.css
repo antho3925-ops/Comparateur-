@@ -1,0 +1,347 @@
+/* ==========================================================================
+   Suivi de performance commerciale — Swiss Times Fiduciary
+   Palette marine et or reprise de l'identité maison. La couleur porte de
+   l'information : vert quand l'objectif est atteint, ambre quand il manque
+   du chemin, or pour la tête du classement. Le reste est neutre.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  --marine-900: #060d18;
+  --marine-800: #0a1628;
+  --marine-700: #12203a;
+  --marine-600: #1d3050;
+  --marine-500: #2c4468;
+  --or:         #c9a961;
+  --or-clair:   #e3ce97;
+  --or-fonce:   #8a7340;
+
+  --fond:       #f4f6f9;
+  --surface:    #ffffff;
+  --surface-2:  #f9fbfd;
+  --surface-3:  #f1f4f9;
+  --bord:       #e2e7ef;
+  --bord-fort:  #ccd4e0;
+
+  --texte:      #0e1726;
+  --texte-2:    #44536b;
+  --texte-3:    #7d8ca3;
+
+  --vert:       #0a6b48;
+  --vert-vif:   #128f60;
+  --vert-fond:  #e6f4ee;
+  --rouge:      #a32720;
+  --rouge-fond: #fceeed;
+  --ambre:      #8a6100;
+  --ambre-fond: #fdf5e6;
+  --ambre-bord: #ecd9ae;
+
+  --ombre-1: 0 1px 2px rgba(10, 22, 40, .05);
+  --ombre-2: 0 4px 16px rgba(10, 22, 40, .08);
+  --ombre-3: 0 14px 40px rgba(6, 13, 24, .14);
+  --anneau:  0 0 0 3px rgba(201, 169, 97, .3);
+
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+           Georgia, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --filet-or: color-mix(in srgb, var(--or) 42%, var(--bord));
+
+  --r-s: 8px;
+  --r:   12px;
+  --r-l: 16px;
+  --t: 200ms cubic-bezier(.4, 0, .2, 1);
+}
+
+* { box-sizing: border-box; }
+
+/* `.accueil` porte un display:grid, qui l'emporterait sur le display:none que
+   l'attribut hidden apporte par défaut : sans cette règle, la porte d'entrée
+   de l'espace administrateur resterait affichée au-dessus du tableau de bord. */
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--texte);
+  background: var(--fond);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--serif); font-weight: 600; letter-spacing: .01em; margin: 0; }
+
+/* --- Ossature ------------------------------------------------------------ */
+
+.bandeau {
+  background: linear-gradient(180deg, var(--marine-800), var(--marine-700));
+  color: #fff;
+  border-bottom: 2px solid var(--or);
+}
+
+.bandeau-corps {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 22px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.marque {
+  font-family: var(--serif);
+  font-size: 12px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--or-clair);
+}
+
+.bandeau h1 { font-size: 19px; color: #fff; }
+.bandeau .qui { margin-left: auto; display: flex; align-items: center; gap: 12px; font-size: 13px; color: #c3cede; }
+.bandeau .qui strong { color: #fff; font-weight: 600; }
+
+main { max-width: 1240px; margin: 0 auto; padding: 24px 22px 64px; }
+
+.carte {
+  background: var(--surface);
+  border: 1px solid var(--bord);
+  border-radius: var(--r-l);
+  box-shadow: var(--ombre-1);
+  padding: 20px 22px;
+  margin-bottom: 20px;
+}
+
+.carte > header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--filet-or);
+}
+
+.carte > header h2 { font-size: 17px; }
+.carte > header .periode { color: var(--texte-2); font-size: 13px; }
+.carte > header .actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+
+.sous-titre { color: var(--texte-2); font-size: 13px; margin: 0 0 14px; }
+
+/* --- Contrôles ----------------------------------------------------------- */
+
+button, .bouton {
+  font: inherit;
+  font-size: 14px;
+  border-radius: var(--r-s);
+  border: 1px solid var(--bord-fort);
+  background: var(--surface);
+  color: var(--texte);
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+  text-decoration: none;
+  display: inline-block;
+}
+
+button:hover, .bouton:hover { background: var(--surface-3); border-color: var(--or); }
+button:focus-visible, .bouton:focus-visible, input:focus-visible, select:focus-visible {
+  outline: none; box-shadow: var(--anneau); border-color: var(--or);
+}
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+button.primaire {
+  background: var(--marine-700); border-color: var(--marine-700); color: #fff; font-weight: 600;
+}
+button.primaire:hover:not(:disabled) { background: var(--marine-600); border-color: var(--or); }
+button.discret { padding: 5px 10px; font-size: 13px; color: var(--texte-2); }
+button.danger { color: var(--rouge); border-color: color-mix(in srgb, var(--rouge) 30%, var(--bord)); }
+
+input[type="text"], input[type="number"], input[type="password"], select {
+  font: inherit;
+  padding: 8px 10px;
+  border: 1px solid var(--bord-fort);
+  border-radius: var(--r-s);
+  background: var(--surface);
+  color: var(--texte);
+  width: 100%;
+}
+input:disabled { background: var(--surface-3); color: var(--texte-3); }
+input[type="number"] { font-variant-numeric: tabular-nums; }
+
+/* Les flèches natives rétrécissent le champ et n'aident personne ici. */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
+
+/* --- Connexion ----------------------------------------------------------- */
+
+.accueil {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(1100px 520px at 50% -10%, rgba(201, 169, 97, .14), transparent 70%),
+    linear-gradient(170deg, var(--marine-900), var(--marine-700) 55%, var(--marine-800));
+}
+
+.panneau {
+  width: min(430px, 100%);
+  background: var(--surface);
+  border-radius: var(--r-l);
+  box-shadow: var(--ombre-3);
+  padding: 34px 32px 28px;
+  border-top: 3px solid var(--or);
+}
+
+.panneau .marque { color: var(--or-fonce); display: block; margin-bottom: 6px; }
+.panneau h1 { font-size: 23px; margin-bottom: 6px; }
+.panneau p.intro { color: var(--texte-2); font-size: 14px; margin: 0 0 22px; }
+.panneau label { display: block; font-size: 13px; font-weight: 600; color: var(--texte-2); margin-bottom: 6px; }
+.panneau button.primaire { width: 100%; margin-top: 14px; padding: 11px; }
+
+.pied-panneau {
+  margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--bord);
+  font-size: 13px; text-align: center;
+}
+.pied-panneau a { color: var(--marine-600); }
+
+/* --- Messages ------------------------------------------------------------ */
+
+.message { border-radius: var(--r-s); padding: 10px 13px; font-size: 13.5px; margin: 12px 0; }
+.message.erreur { background: var(--rouge-fond); color: var(--rouge); border: 1px solid color-mix(in srgb, var(--rouge) 22%, transparent); }
+.message.succes { background: var(--vert-fond); color: var(--vert); border: 1px solid color-mix(in srgb, var(--vert) 22%, transparent); }
+.message.info   { background: var(--ambre-fond); color: var(--ambre); border: 1px solid var(--ambre-bord); }
+.message:empty { display: none; }
+
+/* --- Grille de saisie ---------------------------------------------------- */
+
+.grille-saisie {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+  gap: 14px;
+}
+
+.champ {
+  background: var(--surface-2);
+  border: 1px solid var(--bord);
+  border-radius: var(--r);
+  padding: 13px 14px;
+}
+.champ label { display: block; font-size: 12.5px; font-weight: 600; color: var(--texte-2); margin-bottom: 8px; min-height: 2.6em; }
+.champ .unite { font-weight: 400; color: var(--texte-3); }
+
+.barre-saisie { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 18px; }
+.barre-saisie .horodatage { font-size: 12.5px; color: var(--texte-3); }
+
+/* --- Tuiles d'écart ------------------------------------------------------ */
+
+.tuiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
+  gap: 13px;
+}
+
+.tuile {
+  border: 1px solid var(--bord);
+  border-left: 3px solid var(--bord-fort);
+  border-radius: var(--r);
+  padding: 13px 15px;
+  background: var(--surface-2);
+}
+.tuile .nom { font-size: 12.5px; font-weight: 600; color: var(--texte-2); min-height: 2.6em; }
+.tuile .realise {
+  font-size: 27px; font-weight: 700; letter-spacing: -.01em;
+  font-variant-numeric: tabular-nums; white-space: nowrap; margin-top: 6px;
+}
+.tuile.montant .realise { font-size: 21px; }
+.tuile .cible { font-size: 12.5px; color: var(--texte-3); font-variant-numeric: tabular-nums; }
+.tuile .ecart { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 3px; }
+.tuile .ecart .mot { font-weight: 400; color: var(--texte-2); }
+
+.tuile.atteint { border-left-color: var(--vert-vif); background: var(--vert-fond); }
+.tuile.atteint .ecart { color: var(--vert); }
+.tuile.manque { border-left-color: var(--or); background: var(--ambre-fond); }
+.tuile.manque .ecart { color: var(--ambre); }
+.tuile.sans-objectif { border-left-color: var(--bord-fort); }
+.tuile.sans-objectif .ecart { color: var(--texte-3); font-weight: 400; font-style: italic; }
+
+/* --- Tableaux ------------------------------------------------------------ */
+
+.defilable { overflow-x: auto; margin: 0 -4px; padding: 0 4px; }
+
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { padding: 9px 11px; text-align: right; border-bottom: 1px solid var(--bord); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th {
+  font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--texte-2); font-weight: 700; border-bottom: 1px solid var(--bord-fort);
+  vertical-align: bottom; white-space: normal; min-width: 82px;
+}
+tbody tr:hover { background: var(--surface-2); }
+td.nombre, th.nombre { font-variant-numeric: tabular-nums; }
+tfoot td { font-weight: 700; border-top: 2px solid var(--filet-or); border-bottom: none; background: var(--surface-2); }
+
+.ecart-cellule { font-size: 12px; display: block; font-variant-numeric: tabular-nums; }
+.ecart-cellule.atteint { color: var(--vert); }
+.ecart-cellule.manque { color: var(--ambre); }
+.ecart-cellule.aucun { color: var(--texte-3); }
+
+.rang { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--texte-2); width: 46px; }
+tr.podium-1 .rang { color: var(--or-fonce); }
+tr.podium-1 td { background: linear-gradient(90deg, rgba(201, 169, 97, .13), transparent 60%); }
+tr.podium-2 .rang, tr.podium-3 .rang { color: var(--marine-500); }
+
+.puce { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
+.puce.oui { background: var(--vert-fond); color: var(--vert); }
+.puce.non { background: var(--surface-3); color: var(--texte-3); }
+.puce.inactif { background: var(--rouge-fond); color: var(--rouge); }
+
+/* --- Onglets et navigation de période ------------------------------------ */
+
+.onglets { display: flex; gap: 4px; border-bottom: 1px solid var(--bord); margin-bottom: 20px; flex-wrap: wrap; }
+.onglets button {
+  border: none; border-bottom: 2px solid transparent; border-radius: 0;
+  background: none; padding: 9px 15px; color: var(--texte-2); font-weight: 600;
+}
+.onglets button:hover { background: var(--surface-3); border-color: transparent; }
+.onglets button[aria-selected="true"] { color: var(--marine-700); border-bottom-color: var(--or); }
+
+.navigation-periode { display: flex; align-items: center; gap: 6px; }
+.navigation-periode .etiquette { font-size: 13px; color: var(--texte-2); min-width: 15em; text-align: center; }
+
+/* --- Objectifs ----------------------------------------------------------- */
+
+.objectifs-table input { width: 92px; text-align: right; padding: 6px 8px; }
+.objectifs-table td.sans { color: var(--texte-3); font-style: italic; font-size: 12.5px; }
+
+.pastille-direct {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--texte-3);
+}
+.pastille-direct::before {
+  content: ""; width: 7px; height: 7px; border-radius: 50%;
+  background: var(--vert-vif); box-shadow: 0 0 0 3px var(--vert-fond);
+}
+.pastille-direct.hors::before { background: var(--texte-3); box-shadow: 0 0 0 3px var(--surface-3); }
+
+.pied-page {
+  max-width: 1240px; margin: 0 auto; padding: 0 22px 40px;
+  color: var(--texte-3); font-size: 12.5px;
+}
+
+.vide { color: var(--texte-3); font-style: italic; padding: 18px 0; }
+
+@media (max-width: 700px) {
+  main { padding: 16px 14px 48px; }
+  .carte { padding: 16px; }
+  .bandeau-corps { padding: 12px 14px; }
+  .bandeau .qui { width: 100%; margin-left: 0; }
+}
+
+@media print {
+  .bandeau, .onglets, .navigation-periode, button { display: none !important; }
+  .carte { box-shadow: none; break-inside: avoid; }
+}

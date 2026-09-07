@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Espace administrateur — Suivi</title>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <!-- Porte d'entrée : tant que le code n'est pas donné, rien d'autre n'existe. -->
+  <div id="porte" class="accueil" hidden>
+    <main class="panneau">
+      <span class="marque">Swiss Times Fiduciary</span>
+      <h1>Espace administrateur</h1>
+      <p class="intro">Accès réservé au responsable d’équipe.</p>
+      <form id="formulaire-admin" autocomplete="off">
+        <label for="code">Code d’accès</label>
+        <input type="password" id="code" name="code" autocomplete="current-password" required>
+        <div class="message" id="message-admin" role="alert"></div>
+        <button type="submit" class="primaire">Ouvrir le tableau de bord</button>
+      </form>
+      <div class="pied-panneau"><a href="/">Retour à la connexion conseiller</a></div>
+    </main>
+  </div>
+
+  <div id="tableau-de-bord" hidden>
+    <header class="bandeau">
+      <div class="bandeau-corps">
+        <span class="marque">Swiss Times Fiduciary</span>
+        <h1>Tableau de bord de l’équipe</h1>
+        <div class="qui" data-qui></div>
+      </div>
+    </header>
+
+    <main>
+      <div class="message" id="message-global" role="alert"></div>
+      <!-- Les confirmations vivent hors des panneaux : un rafraîchissement
+           temps réel reconstruit les panneaux et emporterait le message. -->
+      <div class="message" id="message-action" role="status"></div>
+
+      <nav class="onglets" id="onglets" role="tablist">
+        <button role="tab" data-onglet="equipe" aria-selected="true">Équipe</button>
+        <button role="tab" data-onglet="conseillers" aria-selected="false">Par conseiller</button>
+        <button role="tab" data-onglet="classement" aria-selected="false">Classement</button>
+        <button role="tab" data-onglet="objectifs" aria-selected="false">Objectifs</button>
+        <button role="tab" data-onglet="acces" aria-selected="false">Accès</button>
+      </nav>
+
+      <div id="panneaux"></div>
+    </main>
+
+    <footer class="pied-page">
+      Le classement n’est visible que depuis cette page. Les saisies des journées passées
+      sont définitives : elles ne peuvent être modifiées par personne, administrateur compris.
+    </footer>
+  </div>
+
+  <script type="module" src="/js/admin.js"></script>
+</body>
+</html>

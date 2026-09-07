@@ -16,3 +16,6 @@ _x*.png
 _lg-*.png
 _cumul.png
 _tab.png
+
+# Données de la plateforme de suivi (état, secret de session)
+suivi/data/
