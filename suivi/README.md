@@ -237,6 +237,9 @@ journée de travail pour un conseiller et quatre heures pour l'administrateur.
 ```
 suivi/
 ├── serveur.mjs              Serveur HTTP, routage, fichiers statiques, flux temps réel
+├── package.json             Scripts npm : start, demo, test, acces
+├── Dockerfile               Image sans dépendance, état sur un volume monté
+├── HEBERGEMENT.md           Où faire tourner la plateforme, et à quel prix
 ├── demo.mjs                 Équipe fictive et six semaines d'activité, pour démonstration
 ├── gestion.mjs              Gestion des accès en ligne de commande
 ├── equipe-initiale.json     Conseillers créés au tout premier démarrage
@@ -305,6 +308,9 @@ sur ses propres autres lignes, et une case vide qui dispense sans toucher aux
 collègues.
 
 ## Mise en service
+
+Les voies d'hébergement, leurs coûts et leurs pièges — dont le disque éphémère
+qui efface les chiffres à chaque redéploiement — sont dans `HEBERGEMENT.md`.
 
 Le serveur écoute en clair. Sur un poste ou un réseau interne, cela suffit. Dès
 qu'il est joignable au-delà, placez-le derrière un reverse proxy TLS et posez

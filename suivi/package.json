@@ -1,0 +1,16 @@
+{
+  "name": "suivi-performance",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Suivi de performance commerciale — plateforme interne, sans dépendance",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node serveur.mjs",
+    "demo": "node demo.mjs",
+    "test": "node tests.mjs",
+    "acces": "node gestion.mjs"
+  }
+}
