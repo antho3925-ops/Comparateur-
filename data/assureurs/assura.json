@@ -77,10 +77,10 @@
           "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
-          "prestation_id": "medicaments_vitaux",
+          "prestation_id": "medicaments_hors_liste",
           "taux_remboursement": 1.0,
           "plafond_annuel": 50000,
-          "conditions": "CHF 50'000 SUR LA DUREE DU CONTRAT, et non par annee, pour les medicaments vitaux sans equivalent dans la liste des specialites.",
+          "conditions": "Art. 2. Couvre tout medicament hors liste, confirme par le conseiller le 2026-09-07. Plafond de CHF 50'000 SUR LA DUREE DU CONTRAT, et non par annee. La brochure mentionne les medicaments vitaux sans equivalent dans la liste des specialites ; en pratique la couverture est plus large.",
           "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {

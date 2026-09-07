@@ -319,6 +319,16 @@ titre('Programme partenaires');
     chez(avec, 'helsana').club === null || chez(avec, 'helsana').club === undefined);
 }
 
+verifier('Complementa Extra : tout medicament hors liste, 100% jusqu\'a 50 000',
+  ligne(cas({ actuel: { assureurId: 'assura', produitIds: ['assura_complementa_extra'] },
+    facture: [{ prestationId: 'medicaments_hors_liste', montant: 1000 }] }).actuel).montant,
+  1000);
+
+verifier('Medna seul : 80% apres la franchise de 200',
+  ligne(cas({ actuel: { assureurId: 'assura', produitIds: ['assura_medna'] },
+    facture: [{ prestationId: 'medicaments_hors_liste', montant: 1000 }] }).actuel).montant,
+  640);
+
 verifier('medicaments 1 000 chez Medna, rabais pharmacie de 15%',
   cas({ clubActif: true, actuel: { assureurId: 'assura', produitIds: ['assura_medna'] },
     facture: [{ prestationId: 'medicaments_hors_liste', montant: 1000 }] }).actuel.resteACharge,

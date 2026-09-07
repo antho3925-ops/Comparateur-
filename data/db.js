@@ -253,8 +253,8 @@ window.DB = {
         "categorie": "LCA",
         "unite_saisie": "montant",
         "nature": "remboursement",
-        "actif": true,
-        "remarque": "Cas exceptionnel : medicament indispensable a la survie, enregistre Swissmedic, pour lequel il n'existe aucun equivalent dans la liste des specialites. A ne pas employer pour une boite hors liste ordinaire, sous peine de surestimer largement le remboursement."
+        "actif": false,
+        "remarque": "Desactivee : Complementa Extra, seul produit qui la portait, couvre en realite tout medicament hors liste. L'identifiant reste reserve au cas ou un assureur distinguerait un jour cette categorie."
       },
       {
         "id": "medicaments_medecine_alternative",
@@ -1244,10 +1244,10 @@ window.DB = {
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
-              "prestation_id": "medicaments_vitaux",
+              "prestation_id": "medicaments_hors_liste",
               "taux_remboursement": 1,
               "plafond_annuel": 50000,
-              "conditions": "CHF 50'000 SUR LA DUREE DU CONTRAT, et non par annee, pour les medicaments vitaux sans equivalent dans la liste des specialites.",
+              "conditions": "Art. 2. Couvre tout medicament hors liste, confirme par le conseiller le 2026-09-07. Plafond de CHF 50'000 SUR LA DUREE DU CONTRAT, et non par annee. La brochure mentionne les medicaments vitaux sans equivalent dans la liste des specialites ; en pratique la couverture est plus large.",
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
@@ -11117,5 +11117,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T13:04:05.248Z"
+  "genere_le": "2026-09-07T13:11:16.557Z"
 };
