@@ -7032,13 +7032,6 @@ window.DB = {
               "conditions": "Transport et sauvetage en Suisse, plafond annuel commun de CHF 100'000. Le taux n'est pas indique dans la source."
             },
             {
-              "prestation_id": "sauvetage",
-              "taux_remboursement": null,
-              "statut": "a_completer",
-              "enveloppe_id": "env_transport",
-              "conditions": "Meme plafond commun que le transport."
-            },
-            {
               "prestation_id": "autres_med_alternatives",
               "taux_remboursement": 0.75,
               "conditions": "Medecine complementaire ambulatoire 75%. En stationnaire, prise en charge a 100% jusqu'a CHF 5'000 par an."
@@ -7064,12 +7057,6 @@ window.DB = {
               "taux_remboursement": 0.75
             },
             {
-              "prestation_id": "sauvetage",
-              "taux_remboursement": 1,
-              "plafond_annuel": 30000,
-              "conditions": "Recherche en Suisse, 100% jusqu'a CHF 30'000."
-            },
-            {
               "prestation_id": "dentaire_orthodontie",
               "taux_remboursement": 0.75,
               "plafond_annuel": 10000,
@@ -7081,6 +7068,13 @@ window.DB = {
               "statut": "a_completer",
               "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
               "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
+            },
+            {
+              "prestation_id": "sauvetage",
+              "taux_remboursement": 1,
+              "plafond_annuel": 30000,
+              "enveloppe_id": "env_transport",
+              "conditions": "Recherche et sauvetage en Suisse, 100% jusqu'a CHF 30'000, dans le plafond commun transport/sauvetage de CHF 100'000."
             }
           ]
         },
@@ -8335,11 +8329,6 @@ window.DB = {
           "remarque": "Couverture la plus etendue de la gamme Vital. 4,5 etoiles Moneyland 2026.",
           "couvertures": [
             {
-              "prestation_id": "transport_urgence",
-              "taux_remboursement": 1,
-              "conditions": "Transport d'urgence et sauvetage, 100% illimite dans le monde."
-            },
-            {
               "prestation_id": "sauvetage",
               "taux_remboursement": 1,
               "plafond_annuel": 50000,
@@ -8372,12 +8361,6 @@ window.DB = {
               "plafond_annuel": 1000
             },
             {
-              "prestation_id": "lunettes_lentilles_adulte",
-              "taux_remboursement": 1,
-              "plafond_annuel": 300,
-              "conditions": "CHF 300 sur 3 ans."
-            },
-            {
               "prestation_id": "vaccins_prevention_lca",
               "taux_remboursement": 0.8,
               "enveloppe_id": "env_prev"
@@ -8386,12 +8369,6 @@ window.DB = {
               "prestation_id": "gynecologie_preventive",
               "taux_remboursement": 0.8,
               "enveloppe_id": "env_prev"
-            },
-            {
-              "prestation_id": "lunettes_lentilles_adulte",
-              "taux_remboursement": 1,
-              "plafond_annuel": 600,
-              "conditions": "CHF 600 sur 3 ans."
             },
             {
               "prestation_id": "dentaire_orthodontie",
@@ -8486,12 +8463,6 @@ window.DB = {
               "enveloppe_id": "env_tc"
             },
             {
-              "prestation_id": "transport_urgence",
-              "taux_remboursement": 0.8,
-              "plafond_annuel": 500,
-              "conditions": "Transports planifies."
-            },
-            {
               "prestation_id": "psychotherapie_non_medicale",
               "taux_remboursement": 0.8,
               "enveloppe_id": "env_tc"
@@ -8517,6 +8488,17 @@ window.DB = {
               "statut": "a_completer",
               "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
               "source_page": "Sanitas, pages produits officielles (Vital, Dental, Hospital, Easy, Medical Private, Capital, Salary, Planning a Family)"
+            },
+            {
+              "prestation_id": "lunettes_lentilles_adulte",
+              "taux_remboursement": 1,
+              "plafond_annuel": 300,
+              "conditions": "CHF 300 par periode de 3 ans. Une seconde lecture de la brochure indique CHF 600 pour Vital Premium : verifier les CGC avant de chiffrer."
+            },
+            {
+              "prestation_id": "transport_urgence",
+              "taux_remboursement": 1,
+              "conditions": "Transport d'urgence et sauvetage, 100% illimite dans le monde. Les transports planifies (non urgents) sont pris en charge a 80% jusqu'a CHF 500 par an : hors perimetre du comparateur, qui ne modelise que le transport d'urgence."
             }
           ]
         },
@@ -9769,12 +9751,6 @@ window.DB = {
               "conditions": "Contribution de pension a l'etranger."
             },
             {
-              "prestation_id": "soins_etranger_urgence",
-              "taux_remboursement": 1,
-              "plafond_annuel": 30000,
-              "conditions": "Traitement a l'etranger."
-            },
-            {
               "prestation_id": "transport_urgence",
               "taux_remboursement": 0.9,
               "conditions": "Transport et transfert, illimite."
@@ -9811,7 +9787,8 @@ window.DB = {
             {
               "prestation_id": "soins_etranger_urgence",
               "taux_remboursement": 1,
-              "conditions": "Couverture integrale a l'etranger."
+              "plafond_annuel": 30000,
+              "conditions": "Traitement d'urgence a l'etranger, 100% jusqu'a CHF 30'000. La brochure evoque par ailleurs une couverture integrale a l'etranger : verifier les CGC avant de chiffrer au-dela de ce plafond."
             }
           ]
         },
@@ -10392,10 +10369,6 @@ window.DB = {
               "conditions": "Echographies et controles 90%. Cours prenataux 90% jusqu'a CHF 300 par grossesse, carence de 270 jours."
             },
             {
-              "prestation_id": "transport_urgence",
-              "taux_remboursement": 0.9
-            },
-            {
               "prestation_id": "sauvetage",
               "taux_remboursement": 0.9,
               "plafond_annuel": 25000,
@@ -10418,10 +10391,6 @@ window.DB = {
               "plafond_annuel": 25000
             },
             {
-              "prestation_id": "transport_urgence",
-              "taux_remboursement": 1
-            },
-            {
               "prestation_id": "rapatriement",
               "taux_remboursement": 1
             },
@@ -10431,6 +10400,11 @@ window.DB = {
               "statut": "a_completer",
               "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
               "source_page": "Visana, pages produits officielles visana.ch et conditions complementaires publiees"
+            },
+            {
+              "prestation_id": "transport_urgence",
+              "taux_remboursement": 0.9,
+              "conditions": "Transport et sauvetage en Suisse : 90%. A l'etranger, Vacanza prend en charge le transport a 100%."
             }
           ]
         },
@@ -11117,5 +11091,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T13:11:16.557Z"
+  "genere_le": "2026-09-07T16:00:42.894Z"
 };

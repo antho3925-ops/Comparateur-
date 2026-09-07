@@ -53,7 +53,16 @@ for (const a of assureurs) {
 
   for (const prod of a.produits_lca ?? []) {
     const enveloppes = new Set((prod.enveloppes ?? []).map((e) => e.id));
+    // Une prestation declaree deux fois dans le meme produit est toujours une
+    // erreur de saisie : le moteur retiendrait la ligne la plus genereuse, ce
+    // qui avantage silencieusement l'assureur. Les deux lectures doivent etre
+    // fusionnees en une seule couverture.
+    const vuesPrestations = new Set();
     for (const c of prod.couvertures ?? []) {
+      if (vuesPrestations.has(c.prestation_id)) {
+        erreurs.push(`${a.id} / ${prod.id} : prestation "${c.prestation_id}" declaree deux fois`);
+      }
+      vuesPrestations.add(c.prestation_id);
       if (!idsPrestations.has(c.prestation_id)) {
         erreurs.push(`${a.id} / ${prod.id} : prestation_id inconnu "${c.prestation_id}"`);
       }

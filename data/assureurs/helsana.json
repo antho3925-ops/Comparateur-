@@ -412,13 +412,6 @@
           "conditions": "Transport et sauvetage en Suisse, plafond annuel commun de CHF 100'000. Le taux n'est pas indique dans la source."
         },
         {
-          "prestation_id": "sauvetage",
-          "taux_remboursement": null,
-          "statut": "a_completer",
-          "enveloppe_id": "env_transport",
-          "conditions": "Meme plafond commun que le transport."
-        },
-        {
           "prestation_id": "autres_med_alternatives",
           "taux_remboursement": 0.75,
           "conditions": "Medecine complementaire ambulatoire 75%. En stationnaire, prise en charge a 100% jusqu'a CHF 5'000 par an."
@@ -444,12 +437,6 @@
           "taux_remboursement": 0.75
         },
         {
-          "prestation_id": "sauvetage",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 30000,
-          "conditions": "Recherche en Suisse, 100% jusqu'a CHF 30'000."
-        },
-        {
           "prestation_id": "dentaire_orthodontie",
           "taux_remboursement": 0.75,
           "plafond_annuel": 10000,
@@ -461,6 +448,13 @@
           "statut": "a_completer",
           "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
           "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
+        },
+        {
+          "prestation_id": "sauvetage",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 30000,
+          "enveloppe_id": "env_transport",
+          "conditions": "Recherche et sauvetage en Suisse, 100% jusqu'a CHF 30'000, dans le plafond commun transport/sauvetage de CHF 100'000."
         }
       ]
     },

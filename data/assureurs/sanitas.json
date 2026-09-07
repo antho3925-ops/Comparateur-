@@ -336,11 +336,6 @@
       "remarque": "Couverture la plus etendue de la gamme Vital. 4,5 etoiles Moneyland 2026.",
       "couvertures": [
         {
-          "prestation_id": "transport_urgence",
-          "taux_remboursement": 1.0,
-          "conditions": "Transport d'urgence et sauvetage, 100% illimite dans le monde."
-        },
-        {
           "prestation_id": "sauvetage",
           "taux_remboursement": 1.0,
           "plafond_annuel": 50000,
@@ -373,12 +368,6 @@
           "plafond_annuel": 1000
         },
         {
-          "prestation_id": "lunettes_lentilles_adulte",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 300,
-          "conditions": "CHF 300 sur 3 ans."
-        },
-        {
           "prestation_id": "vaccins_prevention_lca",
           "taux_remboursement": 0.8,
           "enveloppe_id": "env_prev"
@@ -387,12 +376,6 @@
           "prestation_id": "gynecologie_preventive",
           "taux_remboursement": 0.8,
           "enveloppe_id": "env_prev"
-        },
-        {
-          "prestation_id": "lunettes_lentilles_adulte",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 600,
-          "conditions": "CHF 600 sur 3 ans."
         },
         {
           "prestation_id": "dentaire_orthodontie",
@@ -487,12 +470,6 @@
           "enveloppe_id": "env_tc"
         },
         {
-          "prestation_id": "transport_urgence",
-          "taux_remboursement": 0.8,
-          "plafond_annuel": 500,
-          "conditions": "Transports planifies."
-        },
-        {
           "prestation_id": "psychotherapie_non_medicale",
           "taux_remboursement": 0.8,
           "enveloppe_id": "env_tc"
@@ -518,6 +495,17 @@
           "statut": "a_completer",
           "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
           "source_page": "Sanitas, pages produits officielles (Vital, Dental, Hospital, Easy, Medical Private, Capital, Salary, Planning a Family)"
+        },
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 300,
+          "conditions": "CHF 300 par periode de 3 ans. Une seconde lecture de la brochure indique CHF 600 pour Vital Premium : verifier les CGC avant de chiffrer."
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Transport d'urgence et sauvetage, 100% illimite dans le monde. Les transports planifies (non urgents) sont pris en charge a 80% jusqu'a CHF 500 par an : hors perimetre du comparateur, qui ne modelise que le transport d'urgence."
         }
       ]
     },

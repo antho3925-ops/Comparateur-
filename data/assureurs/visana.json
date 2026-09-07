@@ -249,10 +249,6 @@
           "conditions": "Echographies et controles 90%. Cours prenataux 90% jusqu'a CHF 300 par grossesse, carence de 270 jours."
         },
         {
-          "prestation_id": "transport_urgence",
-          "taux_remboursement": 0.9
-        },
-        {
           "prestation_id": "sauvetage",
           "taux_remboursement": 0.9,
           "plafond_annuel": 25000,
@@ -275,10 +271,6 @@
           "plafond_annuel": 25000
         },
         {
-          "prestation_id": "transport_urgence",
-          "taux_remboursement": 1.0
-        },
-        {
           "prestation_id": "rapatriement",
           "taux_remboursement": 1.0
         },
@@ -288,6 +280,11 @@
           "statut": "a_completer",
           "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
           "source_page": "Visana, pages produits officielles visana.ch et conditions complementaires publiees"
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 0.9,
+          "conditions": "Transport et sauvetage en Suisse : 90%. A l'etranger, Vacanza prend en charge le transport a 100%."
         }
       ]
     },

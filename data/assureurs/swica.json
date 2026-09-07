@@ -744,12 +744,6 @@
           "conditions": "Contribution de pension a l'etranger."
         },
         {
-          "prestation_id": "soins_etranger_urgence",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 30000,
-          "conditions": "Traitement a l'etranger."
-        },
-        {
           "prestation_id": "transport_urgence",
           "taux_remboursement": 0.9,
           "conditions": "Transport et transfert, illimite."
@@ -786,7 +780,8 @@
         {
           "prestation_id": "soins_etranger_urgence",
           "taux_remboursement": 1.0,
-          "conditions": "Couverture integrale a l'etranger."
+          "plafond_annuel": 30000,
+          "conditions": "Traitement d'urgence a l'etranger, 100% jusqu'a CHF 30'000. La brochure evoque par ailleurs une couverture integrale a l'etranger : verifier les CGC avant de chiffrer au-dela de ce plafond."
         }
       ]
     },
