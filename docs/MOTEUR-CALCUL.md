@@ -115,11 +115,17 @@ prestation, on retient **la plus favorable** (jamais un cumul).
 Ordre d'application sur le montant complémentaire de la ligne :
 
 1. `nb_seances_max_annuel` — les séances au-delà du quota ne sont pas remboursées ;
-2. `taux_remboursement` ;
-3. `plafond_par_seance` × nombre de séances (ou `plafond_par_jour` × nombre de jours) ;
-4. `plafond_annuel` de la prestation, décompté du cumul déjà consommé dans l'année ;
-5. `plafond_annuel` de l'**enveloppe** partagée, décompté du cumul de l'enveloppe ;
-6. `franchise_produit` éventuelle du produit.
+2. franchise du produit, sauf pour une prestation portant `exempt_franchise_produit` — chez
+   Assura Denta Plus, la prophylaxie est due « sans franchise ni quote-part » ;
+3. `franchise_prestation`, franchise propre à une prestation lorsque le reste du produit n'en
+   porte pas — le dentaire de Complementa Extra en est le cas type ;
+4. `taux_remboursement` ;
+5. `plafond_par_seance` × nombre de séances (ou `plafond_par_jour` × nombre de jours) ;
+6. `plafond_annuel` de la prestation, décompté du cumul déjà consommé dans l'année ;
+7. `plafond_annuel` de l'**enveloppe** partagée, décompté du cumul de l'enveloppe ;
+8. `participation_par_jour`, retranchée du remboursement, avec ses propres limites en jours et
+   en montant annuel — chez Assura Optima Flex Varia, CHF 300 par jour en division privée, 15
+   jours au plus, les participations privée et semi-privée étant cumulées jusqu'à CHF 4 500.
 
 Le `delai_attente_mois` est affiché comme avertissement (il conditionne l'accès
 au produit à la souscription, il ne modifie pas le calcul sur une facture

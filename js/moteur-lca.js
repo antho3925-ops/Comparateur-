@@ -42,7 +42,9 @@ window.MoteurLca = (function () {
     const franchiseProduit = Array.isArray(produit.franchises_produit)
       ? Math.min.apply(null, produit.franchises_produit)
       : (produit.franchise_produit || 0);
-    if (franchiseProduit > 0) {
+    // Certaines prestations echappent expressement a la franchise du produit :
+    // chez Assura Denta Plus, la prophylaxie est due « sans franchise ni quote-part ».
+    if (franchiseProduit > 0 && !couverture.exempt_franchise_produit) {
       const k = cle(produit.id, 'franchise');
       const restante = Math.max(0, franchiseProduit - (cumuls.franchise[k] || 0));
       const prise = Math.min(restante, base);
@@ -88,6 +90,23 @@ window.MoteurLca = (function () {
       notes.push('plafond dependant de l\'option souscrite, non applique');
     }
 
+    // Participation journaliere a la charge de l'assure, distincte d'une franchise :
+    // elle se compte par jour d'hospitalisation et porte son propre plafond annuel.
+    if (couverture.participation_par_jour > 0 && ligne.jours > 0) {
+      let part = couverture.participation_par_jour * ligne.jours;
+      if (couverture.participation_jours_max != null) {
+        part = couverture.participation_par_jour
+             * Math.min(ligne.jours, couverture.participation_jours_max);
+      }
+      if (couverture.participation_plafond_annuel != null) {
+        part = Math.min(part, couverture.participation_plafond_annuel);
+      }
+      if (part > 0) {
+        montant -= part;
+        notes.push(`participation de ${part.toFixed(2)} a charge de l'assure`);
+      }
+    }
+
     montant = Math.max(0, Math.min(montant, ligne.montantLca));
     return { etat: ETAT.REMBOURSE, montant, produit, couverture, notes };
   }
@@ -116,7 +135,9 @@ window.MoteurLca = (function () {
     const franchiseProduit = Array.isArray(produit.franchises_produit)
       ? Math.min.apply(null, produit.franchises_produit)
       : (produit.franchise_produit || 0);
-    if (franchiseProduit > 0) {
+    // Certaines prestations echappent expressement a la franchise du produit :
+    // chez Assura Denta Plus, la prophylaxie est due « sans franchise ni quote-part ».
+    if (franchiseProduit > 0 && !couverture.exempt_franchise_produit) {
       const k = cle(produit.id, 'franchise');
       cumuls.franchise[k] = Math.min(franchiseProduit, (cumuls.franchise[k] || 0) + ligne.montantLca);
     }

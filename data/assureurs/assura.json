@@ -5,7 +5,7 @@
   "actif": true,
   "source": {
     "origine": "recapitulatif produits fourni par le conseiller",
-    "reference": "Assura, fiches produits et pages dediees assura.ch/fr/assurances/assurances-complementaires ; CGA LCA Assura SA edition 07.2015, mise a jour 01.2022 ; CSC Complementa Extra et Natura 07.2015",
+    "reference": "Brochure produits Assura SA, apercu des assurances complementaires ; CGA LCA 07.2015 mise a jour 01.2022 ; CSC Complementa Extra et Natura 07.2015",
     "date_extraction": "2026-09-06",
     "annee_tarifaire": 2026,
     "fiabilite": "a_verifier",
@@ -22,12 +22,11 @@
     "remarque": "Non renseigne : la source ne traite que des complementaires. Les parametres legaux de data/meta.json s'appliquent."
   },
   "notes_generales": [
-    "Certaines assurances (maternite, prenatal, perte de gain, capital invalidite/deces) ne peuvent pas etre souscrites en ligne et necessitent un conseiller.",
-    "Rabais famille jusqu'a 20% pour les enfants mineurs sur la plupart des produits, sauf Previsia et Denta Ortho. Rabais distinct de 15% sur Denta Ortho si souscrit avant la naissance.",
-    "Cadre contractuel et exclusions generales saisis depuis les CGA (art. 1 a 20). Les CGA ne contiennent aucun taux ni plafond : ceux-ci figurent dans les conditions speciales (CSC) de chaque produit, qui restent a fournir.",
-    "Complementa Extra et Natura sont saisis depuis leurs conditions speciales (edition 07.2015), article par article. Les autres produits reposent encore sur le recapitulatif de brochure.",
+    "Gamme saisie depuis la brochure produits officielle : Complementa Extra, Natura, Medna, Denta Plus, Mondia, Mondia Plus, les quatre assurances d'hospitalisation, Hospita, Previsia Extra, Previsia Plus et Nativa.",
+    "La brochure ne mentionne ni Denta Sana ni Denta Ortho, saisis auparavant depuis un recapitulatif de site : ils sont remplaces par Denta Plus. Si la police d'un client cite l'un de ces deux noms, il s'agit d'un contrat anterieur dont les conditions restent a obtenir.",
+    "Materna Varia, Pecunia, Previsia Maladie et les trois modules Lexa ne figurent pas dans la brochure fournie et reposent encore sur un recapitulatif de site.",
     "Assura ne propose aucune prestation de check-up, de fitness, de depistage ni de vaccination preventive dans sa gamme LCA : verifie article par article dans les CSC, ce n'est pas une lacune de saisie.",
-    "Le Club Assura est la seule reponse d'Assura sur le fitness, le check-up, le depistage et les vaccins de prevention, qu'aucune de ses complementaires ne rembourse. Il agit par rabais sur le prix facture, pas par prise en charge : il reduit l'ecart avec les caisses qui remboursent ces postes, il ne l'annule pas."
+    "Le Club Assura est la seule reponse d'Assura sur ces postes. Il agit par rabais sur le prix facture, pas par prise en charge."
   ],
   "produits_lca": [
     {
@@ -43,159 +42,441 @@
       ],
       "delai_attente_mois": 0,
       "hors_perimetre_facture": false,
-      "remarque": "Art. 19 : readaptation et rehabilitation couvertes par derogation a l'art. 4 CGA ; maladies psychiques couvertes par l'art. 9. Ne couvre ni le check-up, ni le fitness, ni le depistage, ni les vaccins de prevention : ces prestations n'existent dans aucun article des CSC.",
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Aucune participation a charge de l'assure, hormis la franchise dentaire. Pas de couverture des urgences a l'etranger : la completer par Mondia ou Mondia Plus.",
       "couvertures": [
         {
           "prestation_id": "hospitalisation_hors_canton",
           "taux_remboursement": 1.0,
-          "conditions": "Art. 1. Couverture integrale en division generale dans tous les hopitaux publics de Suisse, en complement LAMal, LAA, LAI et LAM. Soins hospitaliers sans limite de duree.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
-        },
-        {
-          "prestation_id": "libre_choix_medecin_hopital",
-          "taux_remboursement": 1.0,
-          "conditions": "Art. 1. Majoration d'honoraires prise en charge en cas de libre choix du medecin en division generale.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
-        },
-        {
-          "prestation_id": "chirurgie_ambulatoire",
-          "taux_remboursement": 1.0,
-          "conditions": "Art. 1. Traitement semi-hospitalier ou ambulatoire. La difference de tarif est couverte pour un traitement ambulatoire hors canton.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
-        },
-        {
-          "prestation_id": "medicaments_hors_liste",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 50000,
-          "conditions": "Art. 2. Medicaments vitaux prescrits, sans equivalent dans la liste des specialites, enregistres Swissmedic. Plafond de CHF 50'000 brut pour la DUREE DU CONTRAT, et non par annee civile.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "Division generale d'un etablissement hospitalier repertorie dans la planification d'un canton. Aucune participation a charge de l'assure.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "aide_menage",
           "taux_remboursement": 1.0,
           "plafond_par_jour": 50,
           "nb_jours_max_annuel": 30,
-          "conditions": "Art. 3. Pendant l'hospitalisation et jusqu'au 15e jour suivant.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "Par un service d'assistance, durant l'hospitalisation et jusqu'au 15e jour qui suit.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "rooming_in",
           "taux_remboursement": 1.0,
           "plafond_par_jour": 70,
           "nb_jours_max_annuel": 10,
-          "conditions": "Art. 4. Hebergement de l'accompagnant d'un assure mineur hospitalise.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "Accompagnement d'un enfant : frais factures par l'hopital en cas d'hebergement d'un accompagnant.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "garde_enfants_malades",
           "taux_remboursement": 1.0,
           "plafond_par_jour": 70,
           "nb_jours_max_annuel": 21,
-          "conditions": "Art. 5. Par un organisme officiel, pour un enfant de 15 ans au plus faisant menage commun.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "Garde d'enfants jusqu'a 15 ans par un organisme officiel, pour les enfants d'un assure adulte hospitalise.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
-          "prestation_id": "rattrapage_scolaire",
+          "prestation_id": "medicaments_hors_liste",
           "taux_remboursement": 1.0,
-          "plafond_par_jour": 50,
-          "plafond_annuel": 3000,
-          "conditions": "Art. 6. Si l'assure mineur ne peut suivre le programme scolaire pendant un mois.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "plafond_annuel": 50000,
+          "conditions": "CHF 50'000 SUR LA DUREE DU CONTRAT, et non par annee, pour les medicaments vitaux sans equivalent dans la liste des specialites.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
-          "prestation_id": "gardiennage_domicile",
+          "prestation_id": "moyens_auxiliaires_lca",
           "taux_remboursement": 1.0,
-          "plafond_annuel": 1000,
-          "conditions": "Art. 7. Frais de garde speciale en cas d'hospitalisation.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
-        },
-        {
-          "prestation_id": "soins_domicile_lca",
-          "taux_remboursement": 1.0,
-          "plafond_par_jour": 200,
-          "nb_jours_max_annuel": 21,
-          "conditions": "Art. 8. Sur prescription medicale, uniquement en remplacement d'une hospitalisation medicalement indispensable.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
-        },
-        {
-          "prestation_id": "psychotherapie_non_medicale",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 1500,
-          "conditions": "Art. 9. 100% d'une facturation brute de CHF 1'500 par annee civile. Traitements medicalement prescrits, par des psychotherapeutes non-medecins ou psychologues independants figurant sur la liste de l'organisation faitiere des assureurs-maladie suisses. Tarif de la psychotherapie deleguee du canton de domicile. Derogation expresse au ch. 4.1.10 CGA. ATTENTION : cette edition des CSC date de 07.2015, anterieure au passage au modele de prescription du 1er juillet 2022. Le tarif de reference cite est celui de la psychotherapie DELEGUEE, regime aboli depuis. Une large part de ce que cet article couvrait releve desormais de la LAMal, donc de toutes les caisses : la valeur reelle de cette garantie aujourd'hui se limite aux cas residuels. A reverifier dans l'edition en vigueur sur la police du client.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "plafond_annuel": 500,
+          "conditions": "Appareils medicaux ou articles orthopediques.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "dentaire_soins",
           "taux_remboursement": 1.0,
           "plafond_annuel": 1000,
           "franchise_prestation": 500,
-          "conditions": "Art. 10. Franchise annuelle de CHF 500, puis prise en charge jusqu'a CHF 1'500 de facturation annuelle au tarif SSO-AA/AM/AI, soit CHF 1'000 remboursables au maximum. Exclus : etat deficient preexistant et orthodontie. L'atteinte doit etre posterieure a l'entree en vigueur.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
-        },
-        {
-          "prestation_id": "lunettes_lentilles_adulte",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 100,
-          "conditions": "Art. 11. CHF 100 par annee civile, cumulable d'annee en annee en l'absence de prestation, jusqu'a CHF 500 au maximum.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
-        },
-        {
-          "prestation_id": "chirurgie_refractive",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 100,
-          "conditions": "Art. 12. CHF 100 par annee civile, cumulable de la meme maniere jusqu'a CHF 500 au maximum.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
-        },
-        {
-          "prestation_id": "moyens_auxiliaires_lca",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 500,
-          "conditions": "Art. 13. Appareils medicaux et articles orthopediques prescrits, montant brut. Derogation au ch. 4.1.12 CGA.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "Jusqu'a CHF 1'000 par annee, apres deduction de la franchise de CHF 500, selon tarif SSO. Franchise reduite de 50% pour les enfants avec Denta Plus, et prestations dentaires des deux assurances cumulees.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "transport_urgence",
           "taux_remboursement": 1.0,
-          "conditions": "Art. 14. Transport medicalement necessaire en Suisse, si l'etat de sante exclut un transport usuel, en complement LAMal. Aucun plafond indique.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "En Suisse, en complement de l'assurance de base : transports sans limite. La base ne couvre que 50% de la facture, plafonnes a CHF 500 par annee.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "sauvetage",
           "taux_remboursement": 1.0,
           "plafond_annuel": 20000,
-          "conditions": "Art. 15. Recherche et sauvetage en Suisse, montant brut, en cas de disparition en situation de danger imminent.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "En Suisse, en complement de l'assurance de base, qui plafonne a CHF 5'000.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "rattrapage_scolaire",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 50,
+          "plafond_annuel": 3000,
+          "conditions": "Assistance scolaire par une personne qualifiee, lorsque l'enfant assure ne peut pas suivre le programme scolaire pendant un mois.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_domicile_lca",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 200,
+          "nb_jours_max_annuel": 21,
+          "conditions": "Soins a domicile evitant une hospitalisation, sur prescription medicale.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "centre_thermal",
           "taux_remboursement": 1.0,
           "plafond_annuel": 1000,
-          "conditions": "Art. 16. Cures balneaires : CHF 1'000 par an en Suisse (soins et bains), sur prescription et dans le cadre d'une affection en cours ; CHF 500 par an a l'etranger si l'affection ne peut etre traitee en Suisse.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "Cures balneaires sur prescription : en Suisse CHF 1'000 par annee pour les frais de bains et de soins ; a l'etranger CHF 500 par annee si l'affection ne peut etre traitee en Suisse. La base ne couvre que CHF 10 par jour de logement.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "readaptation_cure",
           "taux_remboursement": 1.0,
           "plafond_par_jour": 40,
           "nb_jours_max_annuel": 21,
-          "conditions": "Art. 17. Cures de convalescence, sur demande prealable, apres un sejour en soins aigus, en etablissement agree. Art. 19 : la readaptation et la rehabilitation sont couvertes, par derogation a l'art. 4 CGA.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "Cures de convalescence en Suisse, sur prescription medicale.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 100,
+          "conditions": "CHF 100 par annee, cumulables sur cinq annees, soit CHF 500 au maximum.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "chirurgie_refractive",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 100,
+          "conditions": "CHF 100 par annee, cumulables sur cinq annees, soit CHF 500 au maximum.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "psychotherapie_non_medicale",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 1500,
+          "conditions": "CHF 1'500 par annee pour les frais consecutifs a des traitements medicalement prescrits, prodigues par des psychotherapeutes non medecins et des psychologues independants figurant sur la liste de l'organisation faitiere des assureurs-maladie suisses. Vient EN COMPLEMENT de l'assurance de base, qui prend en charge la psychotherapie prescrite depuis le 1er juillet 2022.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "liberation_primes",
           "taux_remboursement": 1.0,
-          "conditions": "Art. 18. Prise en charge de l'entier des primes LCA apres licenciement. Delai d'attente de 120 jours apres l'entree en vigueur, puis 90 jours d'interruption de travail. Maximum 12 mois par sinistre et 24 mois cumules. Exclus : licenciement pour justes motifs, demission, periode d'essai, retraite anticipee, chomage partiel, CDD, non-domicilies en Suisse.",
-          "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+          "conditions": "Apres un delai de 90 jours de chomage, Assura regle les primes des complementaires conclues simultanement, y compris pour les membres de la famille faisant menage commun.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         }
+      ]
+    },
+    {
+      "id": "assura_natura",
+      "code_produit": null,
+      "nom": "Natura",
+      "type": "medecine_alternative",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 60,
+      "franchises_produit": [
+        200
       ],
-      "edition_csc": "07.2015",
-      "exclusions": [
-        "affections en cours a la signature",
-        "suites d'accidents anterieurs",
-        "soins palliatifs",
-        "obesite",
-        "maternite",
-        "orthodontie"
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Soins prodigues par des therapeutes reconnus, membres d'une association figurant sur la liste d'Assura SA. Bonus : suppression de la franchise annuelle sur le prochain traitement apres cinq ans sans prestation. En cas de conclusion de Natura et de Medna, la franchise n'est percue qu'une fois et Assura offre 50% de rabais sur la prime Medna.",
+      "couvertures": [
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": 0.9,
+          "plafond_par_seance": 110,
+          "nb_seances_max_annuel": 12,
+          "conditions": "Acupressure, acupuncture. Remboursement selon la duree de la seance : premiere consultation ou bilan de sante de CHF 50 a 130, seances ulterieures de CHF 50 a 110. Douze seances par annee ; au-dela, sur accord d'Assura SA. Franchise annuelle de CHF 200 et quote-part de 10%.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": 0.9,
+          "plafond_par_seance": 110,
+          "nb_seances_max_annuel": 12,
+          "conditions": "Osteopathie, etiopathie, therapie craniosacrale, fasciatherapie-pulsologie. Remboursement selon la duree de la seance : premiere consultation ou bilan de sante de CHF 50 a 130, seances ulterieures de CHF 50 a 110. Douze seances par annee ; au-dela, sur accord d'Assura SA. Franchise annuelle de CHF 200 et quote-part de 10%.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": 0.9,
+          "plafond_par_seance": 110,
+          "nb_seances_max_annuel": 12,
+          "conditions": "Homeopathie, serocytotherapie. Remboursement selon la duree de la seance : premiere consultation ou bilan de sante de CHF 50 a 130, seances ulterieures de CHF 50 a 110. Douze seances par annee ; au-dela, sur accord d'Assura SA. Franchise annuelle de CHF 200 et quote-part de 10%.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "medecine_chinoise",
+          "taux_remboursement": 0.9,
+          "plafond_par_seance": 110,
+          "nb_seances_max_annuel": 12,
+          "conditions": "Medecine chinoise, shiatsu. Remboursement selon la duree de la seance : premiere consultation ou bilan de sante de CHF 50 a 130, seances ulterieures de CHF 50 a 110. Douze seances par annee ; au-dela, sur accord d'Assura SA. Franchise annuelle de CHF 200 et quote-part de 10%.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": 0.9,
+          "plafond_par_seance": 110,
+          "nb_seances_max_annuel": 12,
+          "conditions": "Phytotherapie, aromatherapie, iridologie, kinesiologie. Remboursement selon la duree de la seance : premiere consultation ou bilan de sante de CHF 50 a 130, seances ulterieures de CHF 50 a 110. Douze seances par annee ; au-dela, sur accord d'Assura SA. Franchise annuelle de CHF 200 et quote-part de 10%.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": 0.9,
+          "plafond_par_seance": 110,
+          "nb_seances_max_annuel": 12,
+          "conditions": "Bioresonance, drainage lymphatique, mesotherapie, Ortho-Bionomy, reflexologie, sophrologie curative, sympathicotherapie, therapie neurale. Eurythmie curative et eutonie uniquement sur prescription medicale prealable. Remboursement selon la duree de la seance : premiere consultation ou bilan de sante de CHF 50 a 130, seances ulterieures de CHF 50 a 110. Douze seances par annee ; au-dela, sur accord d'Assura SA. Franchise annuelle de CHF 200 et quote-part de 10%.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 800,
+          "conditions": "Examens de laboratoire et remedes prescrits, max CHF 800 par annee.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        }
+      ]
+    },
+    {
+      "id": "assura_medna",
+      "code_produit": null,
+      "nom": "Medna",
+      "type": "medecine_alternative",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 99,
+      "franchises_produit": [
+        200
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Soins prodigues par des medecins au benefice d'une formation specifique. Ne couvre ni l'acupuncture ni l'osteopathie, contrairement a Natura. Franchise annuelle de CHF 200, sans quote-part.",
+      "couvertures": [
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": 1.0,
+          "plafond_par_seance": 80,
+          "conditions": "Acupressure. Traitements medicaux a CHF 80 par seance, nombre de seances illimite. Uniquement dans la mesure ou la therapie n'est pas prise en charge par l'assurance de base.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": 1.0,
+          "plafond_par_seance": 80,
+          "conditions": "Homeopathie. Traitements medicaux a CHF 80 par seance, nombre de seances illimite. Uniquement dans la mesure ou la therapie n'est pas prise en charge par l'assurance de base.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "medecine_chinoise",
+          "taux_remboursement": 1.0,
+          "plafond_par_seance": 80,
+          "conditions": "Medecine chinoise, medecine ayurvedique. Traitements medicaux a CHF 80 par seance, nombre de seances illimite. Uniquement dans la mesure ou la therapie n'est pas prise en charge par l'assurance de base.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": 1.0,
+          "plafond_par_seance": 80,
+          "conditions": "Phytotherapie, medecine anthroposophique. Traitements medicaux a CHF 80 par seance, nombre de seances illimite. Uniquement dans la mesure ou la therapie n'est pas prise en charge par l'assurance de base.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": 1.0,
+          "plafond_par_seance": 80,
+          "conditions": "Bioresonance, hypnose medicale, therapie neurale, sophrologie, training autogene. Traitements medicaux a CHF 80 par seance, nombre de seances illimite. Uniquement dans la mesure ou la therapie n'est pas prise en charge par l'assurance de base.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 2000,
+          "conditions": "Medicaments enregistres par Swissmedic, 80% du prix, sur prescription medicale.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        }
+      ]
+    },
+    {
+      "id": "assura_denta_plus",
+      "code_produit": null,
+      "nom": "Denta Plus",
+      "type": "dentaire",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 99,
+      "franchises_produit": [
+        500
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Prise en charge selon tarif officiel, en Suisse ou en zone frontaliere. Questionnaire dentaire indemnise jusqu'a CHF 100 a l'adhesion. Bonus : suppression de la franchise sur le prochain traitement apres cinq ans sans prestation, les frais de prophylaxie n'influencant pas son octroi. Avec Complementa Extra, les prestations dentaires des deux assurances sont cumulees et la franchise percue une seule fois.",
+      "couvertures": [
+        {
+          "prestation_id": "dentaire_prophylaxie",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 80,
+          "conditions": "Controle dentaire et detartrage, des la 2e annee d'assurance, sans franchise ni quote-part.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires",
+          "exempt_franchise_produit": true
+        },
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 11600,
+          "conditions": "Mesures diagnostiques et therapeutiques : 80% d'une facturation maximale de CHF 15'000 par annee, apres deduction de la franchise de CHF 500 (CHF 250 pour les enfants). Le plafond de remboursement en decoule : 80% de CHF 14'500.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "dentaire_prothese_implant",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 800,
+          "conditions": "Prestations techniques : confection de couronnes, de ponts et protheses, 80% d'une facturation maximale de CHF 1'000 par annee.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "dentaire_orthodontie",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 400,
+          "conditions": "Honoraires et appareillages jusqu'a 20 ans revolus : 80% d'une facturation maximale de CHF 500 par annee pleine et echue, cumulable sur plusieurs annees jusqu'a CHF 10'000.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        }
+      ]
+    },
+    {
+      "id": "assura_mondia",
+      "code_produit": null,
+      "nom": "Mondia",
+      "type": "voyage",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 99,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Monde entier. Organisme d'assistance 24 heures sur 24 et 7 jours sur 7. Couverture lors de sejours de 45 jours consecutifs au maximum ; au-dela, prolongation possible avec l'accord prealable d'Assura SA.",
+      "couvertures": [
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Prise en charge integrale et sans limite des frais de traitement et d'hospitalisation, avec libre choix du prestataire, en plus des prestations reconnues par la LAMal ou la LAA. Remboursement de la participation a charge de l'assure dans les pays de l'UE et de l'AELE. Avance sur les frais d'hospitalisation.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": 1.0,
+          "conditions": "Envoi des medicaments essentiels s'ils ne sont pas disponibles sur place.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Transport sanitaire.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0,
+          "conditions": "Rapatriement vers la Suisse.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "conditions": "Operations de recherche, de secours et de sauvetage.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "visite_proche_hospitalisation",
+          "taux_remboursement": 1.0,
+          "conditions": "Rapatriement des enfants de l'assure, ou possibilite de faire venir un proche parent en cas d'hospitalisation a l'etranger.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        }
+      ]
+    },
+    {
+      "id": "assura_mondia_plus",
+      "code_produit": null,
+      "nom": "Mondia Plus",
+      "type": "voyage",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 99,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Reprend Mondia et y ajoute le volet annulation.",
+      "couvertures": [
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Prise en charge integrale et sans limite des frais de traitement et d'hospitalisation, avec libre choix du prestataire, en plus des prestations reconnues par la LAMal ou la LAA. Remboursement de la participation a charge de l'assure dans les pays de l'UE et de l'AELE. Avance sur les frais d'hospitalisation.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": 1.0,
+          "conditions": "Envoi des medicaments essentiels s'ils ne sont pas disponibles sur place.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Transport sanitaire.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0,
+          "conditions": "Rapatriement vers la Suisse.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "conditions": "Operations de recherche, de secours et de sauvetage.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "visite_proche_hospitalisation",
+          "taux_remboursement": 1.0,
+          "conditions": "Rapatriement des enfants de l'assure, ou possibilite de faire venir un proche parent en cas d'hospitalisation a l'etranger.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "annulation_voyage",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 15000,
+          "conditions": "Maximum CHF 15'000 par assure et par cas, deux annulations par annee au maximum : annulation totale ou partielle d'un voyage reserve.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "voyage_frais_annexes",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 5000,
+          "conditions": "Frais supplementaires en cas de depart retarde ou necessaires a la poursuite du voyage, max CHF 5'000 par personne. Frais dus a un retour premature et remboursement des couts du sejour non utilise.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "assistance_voyage",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 100,
+          "conditions": "Frais d'annulation de prestations de loisirs reservees, max CHF 100.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        }
       ]
     },
     {
@@ -211,17 +492,54 @@
       ],
       "delai_attente_mois": 0,
       "hors_perimetre_facture": false,
-      "remarque": "Bonus jusqu'a CHF 3'750 par an en division generale.",
-      "participation_par_jour": {
-        "min": 100,
-        "max": 300,
-        "remarque": "Selon la division, au maximum CHF 4'500 par an cumule."
-      },
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Etablissements parmi la liste des agrees Assura SA. Aucune couverture des urgences a l'etranger : la completer par Mondia ou Mondia Plus.",
       "couvertures": [
+        {
+          "prestation_id": "hospitalisation_hors_canton",
+          "taux_remboursement": 1.0,
+          "conditions": "Division generale, au choix avant chaque hospitalisation. Aucune participation.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "hospitalisation_demi_privee",
+          "taux_remboursement": 1.0,
+          "participation_par_jour": 100,
+          "participation_jours_max": 15,
+          "participation_plafond_annuel": 4500,
+          "conditions": "Chambre a deux lits. Participation de CHF 100 par jour, 15 jours par annee au maximum. Les participations des divisions privee et semi-privee sont cumulees jusqu'a CHF 4'500 par annee.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
         {
           "prestation_id": "hospitalisation_privee",
           "taux_remboursement": 1.0,
-          "conditions": "Libre choix de la division (generale, semi-privee ou privee) au moment de l'hospitalisation."
+          "participation_par_jour": 300,
+          "participation_jours_max": 15,
+          "participation_plafond_annuel": 4500,
+          "conditions": "Chambre a un lit. Participation de CHF 300 par jour, 15 jours par annee au maximum, cumulee avec la semi-privee jusqu'a CHF 4'500 par annee.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": 1.0,
+          "conditions": "Libre choix lorsque le medecin est agree par Assura SA.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "indemnite_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 250,
+          "nb_jours_max_annuel": 15,
+          "plafond_annuel": 3750,
+          "conditions": "Indemnite versee en cas de sejour en division generale : CHF 250 par jour, 15 jours par annee, jusqu'a CHF 3'750 par annee.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_etranger_planifies",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 500,
+          "conditions": "Avec accord prealable d'Assura SA. CHF 500 par jour, deux jours par sejour au maximum.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         }
       ]
     },
@@ -238,12 +556,40 @@
       ],
       "delai_attente_mois": 0,
       "hors_perimetre_facture": false,
-      "remarque": "Bonus division generale de CHF 100 par jour, au maximum CHF 1'000 par sejour.",
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Etablissements parmi la liste des agrees Assura SA.",
       "couvertures": [
         {
           "prestation_id": "hospitalisation_demi_privee",
           "taux_remboursement": 1.0,
-          "conditions": "Division semi-privee, liste de fournisseurs de soins agrees."
+          "conditions": "Division semi-privee, chambre a deux lits. Aucune participation a charge de l'assure.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": 1.0,
+          "conditions": "Libre choix lorsque le medecin est agree par Assura SA.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "indemnite_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 100,
+          "plafond_annuel": 1000,
+          "conditions": "En cas de sejour volontaire en division generale : CHF 100 par jour, CHF 1'000 par sejour au maximum.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_etranger_planifies",
+          "taux_remboursement": 1.0,
+          "conditions": "Avec accord prealable d'Assura SA. Prise en charge uniquement lorsque le cout est inferieur au tarif usuel applique dans le canton de domicile.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Selon les conditions de l'assistance touristique d'Assura SA. Completable par Mondia ou Mondia Plus.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         }
       ]
     },
@@ -260,12 +606,40 @@
       ],
       "delai_attente_mois": 0,
       "hors_perimetre_facture": false,
-      "remarque": "Bonus division generale de CHF 100 par jour, au maximum CHF 1'000 par sejour.",
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Etablissements parmi la liste des agrees Assura SA.",
       "couvertures": [
         {
           "prestation_id": "hospitalisation_privee",
           "taux_remboursement": 1.0,
-          "conditions": "Division privee, liste de fournisseurs agrees."
+          "conditions": "Division privee, chambre a un lit. Aucune participation a charge de l'assure.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": 1.0,
+          "conditions": "Libre choix lorsque le medecin est agree par Assura SA.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "indemnite_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 100,
+          "plafond_annuel": 1000,
+          "conditions": "En cas de sejour volontaire en division generale : CHF 100 par jour, CHF 1'000 par sejour au maximum.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_etranger_planifies",
+          "taux_remboursement": 1.0,
+          "conditions": "Avec accord prealable d'Assura SA. Prise en charge uniquement lorsque le cout est inferieur au tarif usuel applique dans le canton de domicile.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Selon les conditions de l'assistance touristique d'Assura SA. Completable par Mondia ou Mondia Plus.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         }
       ]
     },
@@ -282,24 +656,394 @@
       ],
       "delai_attente_mois": 0,
       "hors_perimetre_facture": false,
-      "remarque": "Bonus division generale de CHF 150 par jour en hopital public, CHF 50 par jour en etablissement agree Optima. Deroge a l'art. 4 CGA : la readaptation et la rehabilitation sont couvertes. Prime selon l'age reel, avec paliers a 19, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86 et 91 ans, en derogation de l'art. 12.",
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Libre choix quasi total des etablissements en Suisse. Prime selon l'age reel, avec paliers a 19, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86 et 91 ans, en derogation de l'art. 12 CGA.",
       "couvertures": [
         {
           "prestation_id": "hospitalisation_privee",
           "taux_remboursement": 1.0,
-          "conditions": "Division privee, libre choix quasi total des etablissements en Suisse."
+          "conditions": "Division privee, chambre a un lit. Aucune participation a charge de l'assure.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
-          "prestation_id": "rapatriement",
+          "prestation_id": "libre_choix_medecin_hopital",
           "taux_remboursement": 1.0,
-          "conditions": "Rapatriement et assistance selon conditions touristiques, 45 jours consecutifs au maximum."
+          "conditions": "Libre choix, hormis les medecins et etablissements indiques comme exclus ou sous condition dans la liste des fournisseurs de soins.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "indemnite_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 150,
+          "plafond_annuel": 1500,
+          "conditions": "Sejour volontaire en division generale d'un hopital public : CHF 150 par jour, CHF 1'500 par sejour. Dans un etablissement agree Optima ou Optima Plus : CHF 50 par jour, CHF 500 par sejour.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_etranger_planifies",
+          "taux_remboursement": 1.0,
+          "conditions": "Avec accord prealable d'Assura SA. Prise en charge uniquement lorsque le cout est inferieur au tarif usuel prive applique dans le canton de domicile.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Selon les conditions de l'assistance touristique d'Assura SA.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
           "prestation_id": "readaptation_cure",
           "taux_remboursement": null,
           "statut": "a_completer",
-          "conditions": "Couverte par derogation expresse a l'exclusion de l'art. 4 CGA. Taux et plafond a reprendre dans les conditions speciales du produit.",
-          "source_page": "CGA LCA Assura 07.2015 MAJ 01.2022, points d'attention"
+          "conditions": "Couverte par derogation expresse a l'exclusion de l'art. 4 CGA. Taux et plafond a reprendre dans les conditions speciales.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        }
+      ]
+    },
+    {
+      "id": "assura_hospita",
+      "code_produit": null,
+      "nom": "Hospita",
+      "type": "hospitalisation",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 50,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "exclusions": [
+        "affections relevant de la LAA, de la LAI ou de la LAM"
+      ],
+      "couvertures": [
+        {
+          "prestation_id": "capital_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 3000,
+          "conditions": "Capital au choix : CHF 500 ou 1'000 pour tous, CHF 1'500, 2'000, 2'500 ou 3'000 pour les adultes uniquement. Octroye une fois par annee pour une hospitalisation de plus de 24 heures. Non verse pour les sejours consecutifs a une affection relevant de la LAA, de la LAI ou de la LAM.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        }
+      ]
+    },
+    {
+      "id": "assura_previsia_extra",
+      "code_produit": null,
+      "nom": "Previsia Extra",
+      "type": "accident",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 75,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "5 variantes adultes (19-65 ans), 5 variantes seniors (66-75 ans) et 7 variantes enfants (0-18 ans). Les capitaux dependent de la variante souscrite : les plafonds saisis sont les maxima de la gamme.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": 1.0,
+          "conditions": "Division privee dans le monde entier.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": 1.0,
+          "conditions": "Soins prodigues par un therapeute membre d'une association professionnelle reconnue par Assura SA.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_domicile_lca",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 300,
+          "conditions": "Sur ordonnance medicale, par un service officiel d'assistance medicale.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "readaptation_cure",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 200,
+          "plafond_annuel": 6000,
+          "conditions": "Traitements ordonnes medicalement pris en charge sans limite. Frais de sejour et de pension jusqu'a CHF 200 par jour, CHF 6'000 par cas.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "dentaire_accident",
+          "taux_remboursement": 1.0,
+          "conditions": "Traitements appliques ou ordonnes par un dentiste. Pour les enfants, traitements provisoires et definitifs jusqu'a 22 ans revolus.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "chirurgie_esthetique_reconstructive",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 60000,
+          "conditions": "Jusqu'a CHF 60'000 par cas, lorsque l'intervention est necessaire a la suite de l'accident.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "aide_menage",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 80,
+          "plafond_annuel": 6000,
+          "conditions": "Par un service d'assistance, si incapacite de travail d'au moins 50% attestee par un medecin. Maximum CHF 6'000 par cas.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "moyens_auxiliaires_lca",
+          "taux_remboursement": 1.0,
+          "conditions": "Premiere acquisition de protheses, lunettes, appareils acoustiques et moyens auxiliaires orthopediques. Reparation ou remplacement si endommages. Location de mobilier de malade.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 60000,
+          "conditions": "Frais de recherche, de sauvetage et de recuperation, jusqu'a CHF 60'000 par cas.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Couverts si medicalement necessaires.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "dommages_materiels",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 6000,
+          "conditions": "Jusqu'a CHF 6'000 par cas : nettoyage, reparation ou remplacement en valeur a neuf d'habits et effets personnels, y compris ceux des personnes ayant porte secours.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "garde_enfants_malades",
+          "taux_remboursement": 1.0,
+          "conditions": "Frais de garde d'enfants jusqu'a 15 ans.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "rooming_in",
+          "taux_remboursement": 1.0,
+          "conditions": "Frais d'accompagnement lors d'un sejour hospitalier.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "rattrapage_scolaire",
+          "taux_remboursement": 1.0,
+          "conditions": "Frais d'assistance scolaire par une personne qualifiee.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "visite_proche_hospitalisation",
+          "taux_remboursement": 1.0,
+          "conditions": "En cas d'accident a l'etranger sans rapatriement possible : prolongation du sejour d'un accompagnant, et transport puis sejour d'un proche lorsque l'hospitalisation depasse sept jours.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "capital_deces_accident",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 50000,
+          "conditions": "Selon la variante : adultes de CHF 5'000 a 50'000, enfants de CHF 3'000 a 10'000, seniors de CHF 5'000 a 10'000.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "capital_invalidite_accident",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 250000,
+          "conditions": "Capital d'invalidite progressif selon la variante : adultes de CHF 20'000 a 100'000, enfants de CHF 30'000 a 250'000, seniors de CHF 5'000 a 20'000.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "indemnite_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 30,
+          "conditions": "Allocation d'hospitalisation de CHF 10 a 30 par jour selon la variante.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "indemnite_journaliere",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 60,
+          "conditions": "Indemnite pour perte de gain de CHF 10 a 60 par jour selon la variante.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "capital_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 3000,
+          "conditions": "Propre a Previsia Extra : capital au choix de CHF 1'000, 2'000 ou 3'000 pour un adulte, CHF 1'000 pour un enfant. Verse au maximum une fois par annee et une seule fois par evenement assure.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        }
+      ]
+    },
+    {
+      "id": "assura_previsia_plus",
+      "code_produit": null,
+      "nom": "Previsia Plus",
+      "type": "accident",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 75,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Memes prestations de frais de traitement que Previsia Extra, sans le capital en cas d'hospitalisation. La variante 11 n'est pas proposee pour Previsia Extra.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": 1.0,
+          "conditions": "Division privee dans le monde entier.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": 1.0,
+          "conditions": "Soins prodigues par un therapeute membre d'une association professionnelle reconnue par Assura SA.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "soins_domicile_lca",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 300,
+          "conditions": "Sur ordonnance medicale, par un service officiel d'assistance medicale.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "readaptation_cure",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 200,
+          "plafond_annuel": 6000,
+          "conditions": "Traitements ordonnes medicalement pris en charge sans limite. Frais de sejour et de pension jusqu'a CHF 200 par jour, CHF 6'000 par cas.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "dentaire_accident",
+          "taux_remboursement": 1.0,
+          "conditions": "Traitements appliques ou ordonnes par un dentiste. Pour les enfants, traitements provisoires et definitifs jusqu'a 22 ans revolus.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "chirurgie_esthetique_reconstructive",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 60000,
+          "conditions": "Jusqu'a CHF 60'000 par cas, lorsque l'intervention est necessaire a la suite de l'accident.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "aide_menage",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 80,
+          "plafond_annuel": 6000,
+          "conditions": "Par un service d'assistance, si incapacite de travail d'au moins 50% attestee par un medecin. Maximum CHF 6'000 par cas.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "moyens_auxiliaires_lca",
+          "taux_remboursement": 1.0,
+          "conditions": "Premiere acquisition de protheses, lunettes, appareils acoustiques et moyens auxiliaires orthopediques. Reparation ou remplacement si endommages. Location de mobilier de malade.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 60000,
+          "conditions": "Frais de recherche, de sauvetage et de recuperation, jusqu'a CHF 60'000 par cas.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Couverts si medicalement necessaires.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "dommages_materiels",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 6000,
+          "conditions": "Jusqu'a CHF 6'000 par cas : nettoyage, reparation ou remplacement en valeur a neuf d'habits et effets personnels, y compris ceux des personnes ayant porte secours.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "garde_enfants_malades",
+          "taux_remboursement": 1.0,
+          "conditions": "Frais de garde d'enfants jusqu'a 15 ans.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "rooming_in",
+          "taux_remboursement": 1.0,
+          "conditions": "Frais d'accompagnement lors d'un sejour hospitalier.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "rattrapage_scolaire",
+          "taux_remboursement": 1.0,
+          "conditions": "Frais d'assistance scolaire par une personne qualifiee.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "visite_proche_hospitalisation",
+          "taux_remboursement": 1.0,
+          "conditions": "En cas d'accident a l'etranger sans rapatriement possible : prolongation du sejour d'un accompagnant, et transport puis sejour d'un proche lorsque l'hospitalisation depasse sept jours.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "capital_deces_accident",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 50000,
+          "conditions": "Selon la variante : adultes de CHF 5'000 a 50'000, enfants de CHF 3'000 a 10'000, seniors de CHF 5'000 a 10'000.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "capital_invalidite_accident",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 250000,
+          "conditions": "Capital d'invalidite progressif selon la variante : adultes de CHF 20'000 a 100'000, enfants de CHF 30'000 a 250'000, seniors de CHF 5'000 a 20'000.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "indemnite_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 30,
+          "conditions": "Allocation d'hospitalisation de CHF 10 a 30 par jour selon la variante.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        },
+        {
+          "prestation_id": "indemnite_journaliere",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 60,
+          "conditions": "Indemnite pour perte de gain de CHF 10 a 60 par jour selon la variante.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+        }
+      ]
+    },
+    {
+      "id": "assura_nativa",
+      "code_produit": null,
+      "nom": "Nativa",
+      "type": "global",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 18,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
+      "remarque": "Rabais de combinaison. En cas de souscription prenatale : six mois de primes offertes et pas de questionnaire medical. Ce produit est un regroupement : ses prestations sont celles des six assurances qui le composent.",
+      "couvertures": [
+        {
+          "prestation_id": "consultation_medecin",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Package prenatal et pour enfants regroupant six assurances : Complementa Extra, Denta Plus, Mondia Plus, Medna, Natura et Previsia Extra. Se referer a chacune pour le detail des prestations.",
+          "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         }
       ]
     },
@@ -345,470 +1089,6 @@
           "prestation_id": "indemnite_allaitement",
           "taux_remboursement": 1.0,
           "plafond_annuel": 200
-        }
-      ]
-    },
-    {
-      "id": "assura_hospita",
-      "code_produit": null,
-      "nom": "Hospita",
-      "type": "hospitalisation",
-      "niveau": null,
-      "age_adhesion_min": null,
-      "age_adhesion_max": 50,
-      "franchises_produit": [
-        0
-      ],
-      "delai_attente_mois": 0,
-      "hors_perimetre_facture": true,
-      "exclusions": [
-        "maternite",
-        "LAA",
-        "LAI",
-        "LAM"
-      ],
-      "couvertures": [
-        {
-          "prestation_id": "capital_hospitalisation",
-          "taux_remboursement": null,
-          "statut": "a_completer",
-          "plafond_annuel": 3000,
-          "conditions": "Capital au choix de CHF 500 a CHF 3'000 pour les adultes, par hospitalisation de plus de 24 heures, une fois par an. Capital bonus de CHF 500 (enfant) ou CHF 1'000 (adulte) en cas de sejour volontaire en division generale."
-        }
-      ]
-    },
-    {
-      "id": "assura_natura",
-      "code_produit": null,
-      "nom": "Natura",
-      "type": "medecine_alternative",
-      "niveau": null,
-      "age_adhesion_min": null,
-      "age_adhesion_max": 60,
-      "franchises_produit": [
-        200
-      ],
-      "delai_attente_mois": 0,
-      "hors_perimetre_facture": false,
-      "remarque": "24 therapies admises par la liste A de l'annexe. Le massage therapeutique n'y figure pas comme methode autonome : seuls le drainage lymphatique et la reflexologie s'en approchent. Le NB final de l'annexe exclut les soins a but essentiellement preventif, d'entretien ou de confort. Bonus : apres 5 ans sans prestation, la franchise n'est pas percue lors du premier traitement suivant.",
-      "couvertures": [
-        {
-          "prestation_id": "acupuncture",
-          "taux_remboursement": 0.9,
-          "plafond_par_seance": 110,
-          "nb_seances_max_annuel": 12,
-          "conditions": "Acupuncture, acupressure. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
-          "source_page": "CSC Assura Natura 07.2015 et son annexe"
-        },
-        {
-          "prestation_id": "osteopathie",
-          "taux_remboursement": 0.9,
-          "plafond_par_seance": 110,
-          "nb_seances_max_annuel": 12,
-          "conditions": "Osteopathie, etiopathie, therapie cranio-sacrale. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
-          "source_page": "CSC Assura Natura 07.2015 et son annexe"
-        },
-        {
-          "prestation_id": "homeopathie",
-          "taux_remboursement": 0.9,
-          "plafond_par_seance": 110,
-          "nb_seances_max_annuel": 12,
-          "conditions": "Homeopathie, serocytotherapie. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
-          "source_page": "CSC Assura Natura 07.2015 et son annexe"
-        },
-        {
-          "prestation_id": "medecine_chinoise",
-          "taux_remboursement": 0.9,
-          "plafond_par_seance": 110,
-          "nb_seances_max_annuel": 12,
-          "conditions": "Medecine chinoise, shiatsu. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
-          "source_page": "CSC Assura Natura 07.2015 et son annexe"
-        },
-        {
-          "prestation_id": "naturopathie_phytotherapie",
-          "taux_remboursement": 0.9,
-          "plafond_par_seance": 110,
-          "nb_seances_max_annuel": 12,
-          "conditions": "Phytotherapie, aromatherapie, iridologie, kinesiologie. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
-          "source_page": "CSC Assura Natura 07.2015 et son annexe"
-        },
-        {
-          "prestation_id": "autres_med_alternatives",
-          "taux_remboursement": 0.9,
-          "plafond_par_seance": 110,
-          "nb_seances_max_annuel": 12,
-          "conditions": "Biresonance, drainage lymphatique, fasciatherapie-pulsologie, mesotherapie, ortho-bionomy, reflexologie, sophrologie curative, sympathicotherapie, therapie neurale. Eurythmie curative et eutonie uniquement sur prescription medicale. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
-          "source_page": "CSC Assura Natura 07.2015 et son annexe"
-        },
-        {
-          "prestation_id": "medicaments_hors_liste",
-          "taux_remboursement": 0.9,
-          "plafond_annuel": 800,
-          "conditions": "Examens de laboratoire et remedes prescrits dans le cadre des therapies, maximum CHF 800 par an.",
-          "source_page": "CSC Assura Natura 07.2015 et son annexe"
-        }
-      ],
-      "edition_csc": "07.2015",
-      "exclusions": [
-        "maladies psychiques (art. 4)",
-        "soins a but essentiellement preventif, d'entretien ou de confort",
-        "massage de bien-etre"
-      ]
-    },
-    {
-      "id": "assura_medna",
-      "code_produit": null,
-      "nom": "Medna",
-      "type": "medecine_alternative",
-      "niveau": null,
-      "age_adhesion_min": null,
-      "age_adhesion_max": 99,
-      "franchises_produit": [
-        200
-      ],
-      "delai_attente_mois": 0,
-      "hors_perimetre_facture": false,
-      "remarque": "11 medecines alternatives, dont l'hypnose medicale, par des medecins formes. Franchise de CHF 200 par an. Rabais de combinaison avec Natura. Deroge a l'art. 4 CGA : la readaptation, la rehabilitation et les maladies psychiques sont couvertes, contrairement a l'exclusion generale des maladies mentales ou nerveuses.",
-      "couvertures": [
-        {
-          "prestation_id": "autres_med_alternatives",
-          "taux_remboursement": 1.0,
-          "plafond_par_seance": 80,
-          "conditions": "Seances illimitees, par des medecins formes."
-        },
-        {
-          "prestation_id": "osteopathie",
-          "taux_remboursement": 1.0,
-          "plafond_par_seance": 80,
-          "conditions": "Seances illimitees, par des medecins formes."
-        },
-        {
-          "prestation_id": "acupuncture",
-          "taux_remboursement": 1.0,
-          "plafond_par_seance": 80,
-          "conditions": "Seances illimitees, par des medecins formes."
-        },
-        {
-          "prestation_id": "homeopathie",
-          "taux_remboursement": 1.0,
-          "plafond_par_seance": 80,
-          "conditions": "Seances illimitees, par des medecins formes."
-        },
-        {
-          "prestation_id": "medecine_chinoise",
-          "taux_remboursement": 1.0,
-          "plafond_par_seance": 80,
-          "conditions": "Seances illimitees, par des medecins formes."
-        },
-        {
-          "prestation_id": "medicaments_hors_liste",
-          "taux_remboursement": 0.8,
-          "plafond_annuel": 2000,
-          "conditions": "Medicaments Swissmedic."
-        },
-        {
-          "prestation_id": "readaptation_cure",
-          "taux_remboursement": null,
-          "statut": "a_completer",
-          "conditions": "Couverte par derogation expresse a l'exclusion de l'art. 4 CGA. Taux et plafond a reprendre dans les conditions speciales du produit.",
-          "source_page": "CGA LCA Assura 07.2015 MAJ 01.2022, points d'attention"
-        }
-      ]
-    },
-    {
-      "id": "assura_mondia",
-      "code_produit": null,
-      "nom": "Mondia",
-      "type": "voyage",
-      "niveau": null,
-      "age_adhesion_min": null,
-      "age_adhesion_max": 99,
-      "franchises_produit": [
-        0
-      ],
-      "delai_attente_mois": 0,
-      "hors_perimetre_facture": false,
-      "remarque": "Assistance 24/7 dans le monde entier. Sejours de 45 jours consecutifs au maximum.",
-      "couvertures": [
-        {
-          "prestation_id": "soins_etranger_urgence",
-          "taux_remboursement": 1.0,
-          "conditions": "Urgences medicales prises en charge integralement et sans limite."
-        },
-        {
-          "prestation_id": "rapatriement",
-          "taux_remboursement": 1.0,
-          "conditions": "Rapatriement medicalise."
-        },
-        {
-          "prestation_id": "recherche_sauvetage_etranger",
-          "taux_remboursement": 1.0
-        }
-      ]
-    },
-    {
-      "id": "assura_mondia_plus",
-      "code_produit": null,
-      "nom": "Mondia Plus",
-      "type": "voyage",
-      "niveau": null,
-      "age_adhesion_min": null,
-      "age_adhesion_max": 99,
-      "franchises_produit": [
-        0
-      ],
-      "delai_attente_mois": 0,
-      "hors_perimetre_facture": false,
-      "remarque": "Pas de questionnaire medical.",
-      "couvertures": [
-        {
-          "prestation_id": "soins_etranger_urgence",
-          "taux_remboursement": 1.0,
-          "conditions": "Integralement et sans limite."
-        },
-        {
-          "prestation_id": "rapatriement",
-          "taux_remboursement": 1.0
-        },
-        {
-          "prestation_id": "recherche_sauvetage_etranger",
-          "taux_remboursement": 1.0
-        },
-        {
-          "prestation_id": "annulation_voyage",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 15000,
-          "conditions": "Jusqu'a CHF 15'000 par cas, 2 cas par an au maximum."
-        },
-        {
-          "prestation_id": "voyage_frais_annexes",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 5000,
-          "conditions": "Depart retarde jusqu'a CHF 5'000, retour premature."
-        },
-        {
-          "prestation_id": "assistance_voyage",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 100,
-          "conditions": "Prestations de loisirs."
-        }
-      ]
-    },
-    {
-      "id": "assura_denta_sana",
-      "code_produit": null,
-      "nom": "Denta Sana",
-      "type": "dentaire",
-      "niveau": null,
-      "age_adhesion_min": null,
-      "age_adhesion_max": 99,
-      "franchises_produit": [
-        0
-      ],
-      "delai_attente_mois": 6,
-      "hors_perimetre_facture": false,
-      "enveloppes": [
-        {
-          "id": "env_d",
-          "libelle": "Traitements ambulatoires et prothetiques",
-          "plafond_annuel": 6000
-        }
-      ],
-      "remarque": "Aucune carence pour la prophylaxie. Admission sans controle avant 5 ans. Cumulable avec Complementa Extra.",
-      "couvertures": [
-        {
-          "prestation_id": "dentaire_prophylaxie",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 80
-        },
-        {
-          "prestation_id": "dentaire_soins",
-          "taux_remboursement": 0.75,
-          "enveloppe_id": "env_d"
-        },
-        {
-          "prestation_id": "dentaire_prothese_implant",
-          "taux_remboursement": 0.75,
-          "enveloppe_id": "env_d",
-          "conditions": "Traitements prothetiques."
-        }
-      ]
-    },
-    {
-      "id": "assura_denta_ortho_1",
-      "code_produit": null,
-      "nom": "Denta Ortho niveau 1",
-      "type": "dentaire",
-      "niveau": "n1",
-      "age_adhesion_min": null,
-      "age_adhesion_max": 99,
-      "franchises_produit": [
-        0
-      ],
-      "delai_attente_mois": 12,
-      "hors_perimetre_facture": false,
-      "remarque": "Admission sans controle avant 5 ans. Rabais de 15% si souscrit avant la naissance.",
-      "couvertures": [
-        {
-          "prestation_id": "dentaire_orthodontie",
-          "taux_remboursement": 0.75,
-          "plafond_annuel": 2000
-        }
-      ]
-    },
-    {
-      "id": "assura_denta_ortho_2",
-      "code_produit": null,
-      "nom": "Denta Ortho niveau 2",
-      "type": "dentaire",
-      "niveau": "n2",
-      "age_adhesion_min": null,
-      "age_adhesion_max": 99,
-      "franchises_produit": [
-        0
-      ],
-      "delai_attente_mois": 12,
-      "hors_perimetre_facture": false,
-      "remarque": "Admission sans controle avant 5 ans. Rabais de 15% si souscrit avant la naissance.",
-      "couvertures": [
-        {
-          "prestation_id": "dentaire_orthodontie",
-          "taux_remboursement": 0.75,
-          "plafond_annuel": 6000
-        }
-      ]
-    },
-    {
-      "id": "assura_denta_ortho_3",
-      "code_produit": null,
-      "nom": "Denta Ortho niveau 3",
-      "type": "dentaire",
-      "niveau": "n3",
-      "age_adhesion_min": null,
-      "age_adhesion_max": 99,
-      "franchises_produit": [
-        0
-      ],
-      "delai_attente_mois": 12,
-      "hors_perimetre_facture": false,
-      "remarque": "Admission sans controle avant 5 ans. Rabais de 15% si souscrit avant la naissance.",
-      "couvertures": [
-        {
-          "prestation_id": "dentaire_orthodontie",
-          "taux_remboursement": 0.75,
-          "plafond_annuel": 10000
-        }
-      ]
-    },
-    {
-      "id": "assura_previsia_extra",
-      "code_produit": null,
-      "nom": "Previsia Extra",
-      "type": "accident",
-      "niveau": null,
-      "age_adhesion_min": null,
-      "age_adhesion_max": 75,
-      "franchises_produit": [
-        0
-      ],
-      "delai_attente_mois": 0,
-      "hors_perimetre_facture": false,
-      "remarque": "5 variantes adultes, 4 variantes seniors (66-75 ans) et 7 variantes enfants. Les plafonds de capitaux dependent de la variante souscrite.",
-      "couvertures": [
-        {
-          "prestation_id": "hospitalisation_privee",
-          "taux_remboursement": 1.0,
-          "conditions": "Monde entier."
-        },
-        {
-          "prestation_id": "recherche_sauvetage_etranger",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 60000,
-          "conditions": "Par cas."
-        },
-        {
-          "prestation_id": "chirurgie_esthetique_reconstructive",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 60000,
-          "conditions": "Par cas."
-        },
-        {
-          "prestation_id": "dentaire_accident",
-          "taux_remboursement": 1.0,
-          "conditions": "Enfants jusqu'a 22 ans."
-        },
-        {
-          "prestation_id": "autres_med_alternatives",
-          "taux_remboursement": 1.0
-        },
-        {
-          "prestation_id": "soins_domicile_lca",
-          "taux_remboursement": 1.0,
-          "plafond_par_jour": 300
-        },
-        {
-          "prestation_id": "aide_menage",
-          "taux_remboursement": 1.0,
-          "plafond_par_jour": 80,
-          "plafond_annuel": 6000,
-          "conditions": "Par cas."
-        },
-        {
-          "prestation_id": "readaptation_cure",
-          "taux_remboursement": 1.0,
-          "plafond_par_jour": 200,
-          "plafond_annuel": 6000,
-          "conditions": "Par cas."
-        },
-        {
-          "prestation_id": "capital_deces_accident",
-          "taux_remboursement": null,
-          "statut": "a_completer",
-          "plafond_annuel": 50000,
-          "conditions": "Jusqu'a CHF 50'000 selon la variante."
-        },
-        {
-          "prestation_id": "capital_invalidite_accident",
-          "taux_remboursement": null,
-          "statut": "a_completer",
-          "plafond_annuel": 250000,
-          "conditions": "Jusqu'a CHF 100'000 pour les variantes standards, jusqu'a CHF 250'000 pour les variantes enfants."
-        },
-        {
-          "prestation_id": "capital_hospitalisation",
-          "taux_remboursement": null,
-          "statut": "a_completer",
-          "plafond_annuel": 3000,
-          "conditions": "CHF 1'000 a 3'000."
-        },
-        {
-          "prestation_id": "dommages_materiels",
-          "taux_remboursement": 1.0,
-          "plafond_annuel": 6000,
-          "conditions": "Par cas."
-        }
-      ]
-    },
-    {
-      "id": "assura_nativa_varia",
-      "code_produit": null,
-      "nom": "Nativa Varia",
-      "type": "global",
-      "niveau": null,
-      "age_adhesion_min": null,
-      "age_adhesion_max": 18,
-      "franchises_produit": [
-        0
-      ],
-      "delai_attente_mois": 0,
-      "hors_perimetre_facture": false,
-      "remarque": "Sans questionnaire medical si souscrit avant la naissance. 6 mois de primes offerts, rabais combine jusqu'a CHF 8.90 par mois. Ce produit est un regroupement : ses prestations sont celles des 7 assurances qui le composent.",
-      "couvertures": [
-        {
-          "prestation_id": "consultation_medecin",
-          "taux_remboursement": null,
-          "statut": "a_completer",
-          "conditions": "Package combinant 7 assurances : Complementa Extra, Denta Sana, Denta Ortho, Mondia Plus, Previsia Extra, Medna et Natura. Se referer a chacun de ces produits pour le detail des prestations."
         }
       ]
     },

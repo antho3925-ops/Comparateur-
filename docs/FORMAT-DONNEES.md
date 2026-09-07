@@ -109,6 +109,9 @@ Champs d'une couverture :
 | `plafond_annuel` | max par an pour cette prestation | pas de plafond propre |
 | `nb_seances_max_annuel` | nombre de séances remboursées par an | illimité |
 | `enveloppe_id` | plafond partagé avec d'autres prestations | plafond non partagé |
+| `franchise_prestation` | franchise propre à cette prestation, distincte de celle du produit | aucune |
+| `exempt_franchise_produit` | `true` si la prestation échappe à la franchise du produit | elle s'applique |
+| `participation_par_jour` | participation journalière à charge de l'assuré, avec `participation_jours_max` et `participation_plafond_annuel` | aucune |
 | `statut` | `a_completer` si le taux est inconnu (voir plus bas) | couverture chiffrée |
 | `conditions` | texte libre affiché en clientèle | — |
 | `source_page` | où c'était écrit dans le document source | — |

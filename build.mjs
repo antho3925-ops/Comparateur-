@@ -77,6 +77,10 @@ for (const a of assureurs) {
           && (typeof c.franchise_prestation !== 'number' || c.franchise_prestation < 0)) {
         erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : franchise_prestation doit etre un nombre positif`);
       }
+      if (c.participation_par_jour != null
+          && (typeof c.participation_par_jour !== 'number' || c.participation_par_jour < 0)) {
+        erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : participation_par_jour doit etre un nombre positif`);
+      }
       if (c.plafond_a_preciser) {
         if (c.plafond_annuel != null) {
           erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : plafond_a_preciser impose plafond_annuel: null`);
