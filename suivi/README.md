@@ -52,18 +52,26 @@ touche jamais à `suivi/data/`.
 
 ## Les six indicateurs
 
-| Indicateur | Objectif hebdomadaire | Objectif mensuel |
-|---|---|---|
-| Contrats d'assurance maladie signés | oui | oui |
-| Comptes LPP ouverts | oui | oui |
-| Contrats Everlife signés | oui | oui |
-| Rendez-vous pris dans la journée | oui | oui |
-| Rendez-vous valides non signés | oui | oui |
-| Montant transféré des avoirs LPP (CHF) | **non** | oui |
+| Indicateur | Sens | Hebdomadaire | Mensuel |
+|---|---|---|---|
+| Contrats d'assurance maladie signés | cible | oui | oui |
+| Comptes LPP ouverts | cible | oui | oui |
+| Contrats Everlife signés | cible | oui | oui |
+| Rendez-vous pris dans la journée | cible | oui | oui |
+| Rendez-vous valides non signés | **plafond** | oui | oui |
+| Montant transféré des avoirs LPP (CHF) | cible | **non** | oui |
 
 Aucun indicateur n'a d'objectif journalier. Les objectifs sont fixés par
 l'administrateur, conseiller par conseiller, et modifiables à tout moment : une
 modification prend effet immédiatement, y compris sur la période en cours.
+
+**Cible ou plafond.** Cinq indicateurs sont des cibles : l'objectif est un
+minimum, plus on en fait mieux c'est, et la tuile passe au vert quand il est
+atteint. Les rendez-vous valides non signés sont un **plafond** : ce sont des
+affaires manquées, l'objectif est un maximum à ne pas franchir. Rester en
+dessous est le bon résultat — vert, avec la marge restante ; le franchir passe
+la tuile au rouge et affiche de combien. Au classement, ce même indicateur se
+lit à l'envers : le moins nombreux passe premier.
 
 ## Les règles
 
@@ -81,7 +89,9 @@ montant en francs. Jamais en pourcentage, nulle part.
 **Objectif atteint.** Une tuile dont l'objectif est atteint passe au vert et
 porte un sceau. Au moment où elle bascule — et à ce moment seulement — elle
 s'anime : sursaut, halo, éclat doré, étincelles, et un bandeau quand toute la
-période est bouclée. La comparaison se fait sur l'état précédent de la même
+période est bouclée. Un plafond franchi se signale de la même façon mais en
+rouge, et sans fête : une secousse brève et un sceau d'alerte, parce que ce
+n'est pas un exploit. La comparaison se fait sur l'état précédent de la même
 période, si bien qu'un simple chargement de page ne déclenche rien, et changer
 de semaine non plus. L'animation est désactivée pour qui a demandé à son système
 de réduire les animations ; le sceau et le bandeau, eux, restent : ils portent
@@ -91,9 +101,9 @@ l'information, contrairement au mouvement.
 conseiller est classé indicateur par indicateur sur son réalisé, ex æquo au
 même rang ; les points sont la somme de ces rangs et le plus petit total passe
 premier. Un décompte de rangs, et non un pourcentage, ce qui évite de comparer
-des contrats à des francs. Les rendez-vous valides non signés sont affichés et
-classés mais n'entrent pas dans les points : en faire un critère de performance
-récompenserait l'affaire manquée.
+des contrats à des francs. Les rendez-vous valides non signés sont classés à
+l'envers — c'est un plafond, le moins nombreux passe premier — et restent hors
+des points : tenir un plafond n'est pas une performance, c'est la normale.
 
 **Semaines et mois.** Semaines ISO 8601, du lundi au dimanche. Toutes les dates
 sont raisonnées dans le fuseau `Europe/Zurich`, quel que soit le fuseau du

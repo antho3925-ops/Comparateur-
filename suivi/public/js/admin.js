@@ -3,7 +3,7 @@
 
 import {
   appeler, el, vider, formater, formaterSigne, classeEcart, afficherMessage,
-  heure, tuileEcart, celebrerNouveauxSucces, bandeauSucces,
+  heure, tuileEcart, signalerBascules, bandeauSucces,
   poserBandeau, suivreEnDirect, majPastilleDirect,
 } from './commun.js';
 
@@ -163,7 +163,7 @@ function carte(titre, periode, contenu, actions) {
 
 function tuiles(lignes, clePeriode, texteSucces) {
   const conteneur = el('div', { class: 'tuiles' }, lignes.map(tuileEcart));
-  const { toutAtteint, anime } = celebrerNouveauxSucces(conteneur, lignes, clePeriode);
+  const { toutAtteint, anime } = signalerBascules(conteneur, lignes, clePeriode);
   return toutAtteint
     ? el('div', {}, [bandeauSucces(texteSucces, anime), conteneur])
     : conteneur;
@@ -185,11 +185,11 @@ function rendreEquipe(d) {
   return el('div', {}, [
     carte('Équipe — semaine', libellePeriode(d.semaine),
       tuiles(d.semaine.equipe.lignes, `equipe-semaine:${d.semaine.cle}`,
-        'L’équipe a atteint tous ses objectifs de la semaine.'),
+        'L’équipe a atteint tous ses objectifs de la semaine et tenu son plafond.'),
       navigationPeriode('semaine')),
     carte('Équipe — mois', libellePeriode(d.mois),
       tuiles(d.mois.equipe.lignes, `equipe-mois:${d.mois.cle}`,
-        'L’équipe a atteint tous ses objectifs du mois.'),
+        'L’équipe a atteint tous ses objectifs du mois et tenu son plafond.'),
       navigationPeriode('mois')),
     carte(
       'Saisies du jour',
@@ -260,7 +260,9 @@ function tableIndividuelle(d, lignes, portee) {
       el('th', { texte: 'Conseiller' }),
       ...d.indicateurs.map((i) => el('th', {
         class: 'nombre',
-        texte: portee === 'hebdomadaire' && !i.hebdomadaire ? `${i.court} (sans objectif)` : i.court,
+        texte: portee === 'hebdomadaire' && !i.hebdomadaire
+          ? `${i.court} (sans objectif)`
+          : (i.sens === 'plafond' ? `${i.court} (plafond)` : i.court),
       })),
     ])),
     el('tbody', {}, lignes.map((entree) => el('tr', {}, [
@@ -288,7 +290,9 @@ function rendreClassement(d) {
     class: 'sous-titre',
     texte: 'Chaque conseiller est classé indicateur par indicateur sur son réalisé ; '
       + 'les points sont la somme de ces rangs et le plus petit total passe premier. '
-      + 'Les rendez-vous valides non signés sont comptés mais n’entrent pas dans les points. '
+      + 'Les rendez-vous valides non signés se lisent à l’envers — c’est un plafond, '
+      + 'le moins nombreux passe premier — et restent hors des points : les tenir '
+      + 'n’est pas une performance, c’est la normale. '
       + 'Ce classement n’est visible que depuis l’espace administrateur.',
   });
 
@@ -309,7 +313,7 @@ function tableClassement(d, lignes) {
       el('th', { texte: 'Conseiller' }),
       ...d.indicateurs.map((i) => el('th', {
         class: 'nombre',
-        texte: d.clesClassees.includes(i.cle) ? i.court : `${i.court} (hors points)`,
+        texte: d.clesClassees.includes(i.cle) ? i.court : `${i.court} (plafond, hors points)`,
       })),
       el('th', { class: 'nombre', texte: 'Points' }),
       el('th', { class: 'nombre', texte: 'Objectifs atteints' }),
@@ -343,7 +347,8 @@ function rendreObjectifs(d) {
         texte: 'Objectif hebdomadaire et mensuel pour les cinq premiers indicateurs, objectif '
           + 'mensuel seul pour le montant transféré des avoirs LPP. Aucun objectif journalier. '
           + 'Une case laissée vide signifie « pas d’objectif fixé » ; une modification prend effet '
-          + 'immédiatement sur la période en cours.',
+          + 'immédiatement sur la période en cours. Attention au sens : les rendez-vous valides '
+          + 'non signés sont un plafond, un maximum à ne pas dépasser, et non une cible à atteindre.',
       }),
     ]),
     ...d.conseillers.map((conseiller) => carteObjectifs(d, conseiller)),
@@ -376,7 +381,12 @@ function carteObjectifs(d, conseiller) {
       return el('td', {}, champ);
     };
     return el('tr', {}, [
-      el('td', { texte: indicateur.libelle }),
+      el('td', {}, [
+        indicateur.libelle,
+        indicateur.sens === 'plafond'
+          ? el('span', { class: 'note-plafond', texte: 'maximum à ne pas dépasser' })
+          : null,
+      ]),
       cellule('hebdomadaire'),
       cellule('mensuel'),
     ]);

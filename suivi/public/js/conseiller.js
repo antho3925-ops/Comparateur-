@@ -3,7 +3,7 @@
 
 import {
   appeler, el, vider, formater, afficherMessage, heure, tuileEcart,
-  celebrerNouveauxSucces, bandeauSucces, poserBandeau, suivreEnDirect, majPastilleDirect,
+  signalerBascules, bandeauSucces, poserBandeau, suivreEnDirect, majPastilleDirect,
 } from './commun.js';
 
 const etat = {
@@ -69,9 +69,9 @@ function rendre() {
   noeuds.libelleJour.textContent = d.libelleJourConsulte;
   rendreSaisie(d);
   rendrePeriode(noeuds.tuilesSemaine, noeuds.succesSemaine, d.semaine.bilan.lignes,
-    `semaine:${d.semaine.cle}`, 'Tous les objectifs de la semaine sont atteints.');
+    `semaine:${d.semaine.cle}`, 'Tous les objectifs de la semaine sont atteints, plafond tenu.');
   rendrePeriode(noeuds.tuilesMois, noeuds.succesMois, d.mois.bilan.lignes,
-    `mois:${d.mois.cle}`, 'Tous les objectifs du mois sont atteints.');
+    `mois:${d.mois.cle}`, 'Tous les objectifs du mois sont atteints, plafond tenu.');
   noeuds.libelleSemaine.textContent = `${d.semaine.libelle}${d.semaine.encours ? ' — semaine en cours' : ''}`;
   noeuds.libelleMois.textContent = `${d.mois.libelle}${d.mois.encours ? ' — mois en cours' : ''}`;
   rendreHistorique(d);
@@ -158,7 +158,7 @@ function rendrePeriode(conteneur, emplacementSucces, lignes, clePeriode, texteSu
   vider(conteneur);
   for (const ligne of lignes) conteneur.append(tuileEcart(ligne));
 
-  const { toutAtteint, anime } = celebrerNouveauxSucces(conteneur, lignes, clePeriode);
+  const { toutAtteint, anime } = signalerBascules(conteneur, lignes, clePeriode);
   vider(emplacementSucces);
   if (toutAtteint) emplacementSucces.append(bandeauSucces(texteSucces, anime));
 }

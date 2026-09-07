@@ -16,7 +16,7 @@ import {
   libelleSemaine, libelleMois, libelleJour, moisVoisin, semaineVoisine, estJourValide,
 } from './lib/dates.mjs';
 import {
-  INDICATEURS, CLES, CLES_CLASSEES, normaliserSaisie, normaliserObjectifs,
+  INDICATEURS, CLES, CLES_CLASSEES, indicateur, normaliserSaisie, normaliserObjectifs,
   ecart, cumuler, bilanPeriode, bilanEquipe, classement,
 } from './lib/domaine.mjs';
 import { normaliserIdentifiant } from './lib/sessions.mjs';
@@ -140,16 +140,42 @@ egal('une valeur aberrante est refusée', Boolean(normaliserSaisie({ lpp_montant
 section('Écarts — toujours chiffrés, jamais en pourcentage');
 // ===========================================================================
 
+// -- Cibles : l'objectif est un minimum à atteindre --------------------------
+
 egal('12 réalisés sur 20 : il manque 8',
-  ecart(12, 20), { realise: 12, objectif: 20, ecart: -8, reste: 8, atteint: false });
+  [ecart(12, 20).ecart, ecart(12, 20).reste, ecart(12, 20).atteint], [-8, 8, false]);
 egal('23 réalisés sur 20 : 3 de plus, objectif atteint',
-  ecart(23, 20), { realise: 23, objectif: 20, ecart: 3, reste: 0, atteint: true });
+  [ecart(23, 20).ecart, ecart(23, 20).reste, ecart(23, 20).atteint], [3, 0, true]);
 egal('20 sur 20 : écart nul, objectif atteint',
-  ecart(20, 20), { realise: 20, objectif: 20, ecart: 0, reste: 0, atteint: true });
+  [ecart(20, 20).ecart, ecart(20, 20).atteint], [0, true]);
+egal('une cible n’est jamais « dépassée » au sens négatif', ecart(23, 20).depasse, false);
 egal('sans objectif fixé, il n’y a pas d’écart',
-  ecart(12, null), { realise: 12, objectif: null, ecart: null, reste: null, atteint: null });
+  [ecart(12, null).ecart, ecart(12, null).atteint], [null, null]);
 egal('l’écart d’un montant est en francs, pas en points de pourcentage',
   ecart(180000, 250000).reste, 70000);
+
+// -- Plafonds : l'objectif est un maximum à ne pas franchir ------------------
+
+egal('les rendez-vous valides non signés sont un plafond',
+  indicateur('rdv_non_signes').sens, 'plafond');
+egal('les cinq autres indicateurs sont des cibles',
+  INDICATEURS.filter((i) => i.sens !== 'plafond').map((i) => i.cle),
+  ['maladie', 'lpp_comptes', 'everlife', 'rdv_pris', 'lpp_montant']);
+
+egal('5 sous un plafond de 25 : plafond respecté',
+  [ecart(5, 25, 'plafond').atteint, ecart(5, 25, 'plafond').depasse], [true, false]);
+egal('et il reste 20 de marge', ecart(5, 25, 'plafond').marge, 20);
+egal('15 sous un plafond de 25 reste un bon résultat',
+  ecart(15, 25, 'plafond').atteint, true);
+egal('40 pour un plafond de 25 : le plafond est franchi',
+  [ecart(40, 25, 'plafond').atteint, ecart(40, 25, 'plafond').depasse], [false, true]);
+egal('de 15 de trop', ecart(40, 25, 'plafond').exces, 15);
+egal('exactement au plafond, il est encore respecté',
+  [ecart(25, 25, 'plafond').atteint, ecart(25, 25, 'plafond').depasse], [true, false]);
+egal('un plafond respecté n’a aucun excès', ecart(25, 25, 'plafond').exces, 0);
+egal('un plafond franchi n’a plus de marge', ecart(40, 25, 'plafond').marge, 0);
+egal('sans plafond fixé, rien n’est franchi',
+  [ecart(40, null, 'plafond').atteint, ecart(40, null, 'plafond').depasse], [null, false]);
 
 // ===========================================================================
 section('Cumuls par période');
@@ -205,6 +231,12 @@ const objectifsEquipe = {
   egal('Alice a signé 5 contrats maladie sur un objectif de 8', [maladie.realise, maladie.objectif], [5, 8]);
   egal('il lui en manque 3', maladie.reste, 3);
 
+  const nonSignes = bilan.lignes.find((l) => l.cle === 'rdv_non_signes');
+  egal('Alice a 2 rendez-vous non signés sous un plafond de 3',
+    [nonSignes.realise, nonSignes.objectif], [2, 3]);
+  egal('son plafond est donc respecté', nonSignes.atteint, true);
+  egal('avec 1 de marge', nonSignes.marge, 1);
+
   const montant = bilan.lignes.find((l) => l.cle === 'lpp_montant');
   egal('le montant LPP n’a pas d’objectif hebdomadaire à afficher', montant.applicable, false);
   egal('son objectif hebdomadaire est donc absent', montant.objectif, null);
@@ -257,8 +289,18 @@ section('Classement — réservé à l’administrateur');
     CLES_CLASSEES.includes('rdv_non_signes'), false);
   egal('cinq indicateurs entrent dans les points', CLES_CLASSEES.length, 5);
   const alice = rangs.find((r) => r.nom === 'Alice');
+  const bruno = rangs.find((r) => r.nom === 'Bruno');
   egal('Alice est première sur les contrats maladie', alice.rangs.maladie, 1);
   egal('Alice est deuxième sur Everlife', alice.rangs.everlife, 2);
+
+  // Alice a 2 rendez-vous non signés, Bruno 1 : sur un plafond, c'est Bruno
+  // qui passe premier — le moins nombreux, pas le plus nombreux.
+  egal('sur le plafond, le moins nombreux passe premier',
+    [bruno.bilan.total.rdv_non_signes, bruno.rangs.rdv_non_signes], [1, 1]);
+  egal('et le plus nombreux passe second',
+    [alice.bilan.total.rdv_non_signes, alice.rangs.rdv_non_signes], [2, 2]);
+  egal('alors que sur une cible, c’est le plus nombreux qui mène',
+    [alice.bilan.total.maladie > bruno.bilan.total.maladie, alice.rangs.maladie], [true, 1]);
 }
 
 {

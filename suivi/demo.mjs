@@ -36,7 +36,9 @@ const OBJECTIFS = {
   lpp_comptes: { hebdomadaire: 3, mensuel: 12 },
   everlife: { hebdomadaire: 3, mensuel: 12 },
   rdv_pris: { hebdomadaire: 25, mensuel: 100 },
-  rdv_non_signes: { hebdomadaire: 5, mensuel: 20 },
+  // Plafond, non cible : un maximum à ne pas franchir. Calé de sorte que la
+  // démonstration montre les deux cas, tenu chez les uns, franchi chez les autres.
+  rdv_non_signes: { hebdomadaire: 12, mensuel: 48 },
   lpp_montant: { mensuel: 250000 },
 };
 

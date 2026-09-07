@@ -5,9 +5,16 @@ import { cleSemaine, cleMois, joursSemaine, joursMois } from './dates.mjs';
 
 /**
  * Les six indicateurs saisis chaque jour.
+ *
  * `hebdomadaire` dit si l'indicateur porte un objectif de semaine ; le montant
  * transféré des avoirs LPP n'en a pas, seulement un objectif mensuel.
  * Aucun indicateur n'a d'objectif journalier.
+ *
+ * `sens` dit dans quelle direction va la réussite. Cinq indicateurs sont des
+ * cibles : plus on en fait, mieux c'est, et l'objectif est un minimum à
+ * atteindre. Les rendez-vous valides non signés sont un plafond : ce sont des
+ * affaires manquées, l'objectif est un maximum à ne pas franchir, et le
+ * dépasser est un mauvais résultat, pas un exploit.
  */
 export const INDICATEURS = [
   {
@@ -17,6 +24,7 @@ export const INDICATEURS = [
     unite: 'contrat',
     format: 'nombre',
     hebdomadaire: true,
+    sens: 'cible',
   },
   {
     cle: 'lpp_comptes',
@@ -25,6 +33,7 @@ export const INDICATEURS = [
     unite: 'compte',
     format: 'nombre',
     hebdomadaire: true,
+    sens: 'cible',
   },
   {
     cle: 'everlife',
@@ -33,6 +42,7 @@ export const INDICATEURS = [
     unite: 'contrat',
     format: 'nombre',
     hebdomadaire: true,
+    sens: 'cible',
   },
   {
     cle: 'rdv_pris',
@@ -41,6 +51,7 @@ export const INDICATEURS = [
     unite: 'rendez-vous',
     format: 'nombre',
     hebdomadaire: true,
+    sens: 'cible',
   },
   {
     cle: 'rdv_non_signes',
@@ -49,6 +60,7 @@ export const INDICATEURS = [
     unite: 'rendez-vous',
     format: 'nombre',
     hebdomadaire: true,
+    sens: 'plafond',
   },
   {
     cle: 'lpp_montant',
@@ -57,6 +69,7 @@ export const INDICATEURS = [
     unite: 'CHF',
     format: 'montant',
     hebdomadaire: false,
+    sens: 'cible',
   },
 ];
 
@@ -140,20 +153,47 @@ export function cumuler(saisies, identifiant, jours) {
 
 /**
  * Écart au sens de la plateforme : toujours une valeur chiffrée, jamais un
- * pourcentage. Négatif = il manque ; positif = objectif dépassé.
- * `objectif` à null signifie qu'aucun objectif n'est fixé : pas d'écart.
+ * pourcentage. `objectif` à null signifie qu'aucun objectif n'est fixé.
+ *
+ * L'écart brut est le même dans les deux sens — réalisé moins objectif — mais
+ * sa lecture s'inverse :
+ *   cible   : l'objectif est un minimum. Atteint dès que l'écart est positif
+ *             ou nul ; `reste` dit combien il en manque.
+ *   plafond : l'objectif est un maximum. Respecté tant que l'écart est négatif
+ *             ou nul ; `marge` dit ce qu'il reste avant de le franchir,
+ *             `exces` de combien il est franchi.
  */
-export function ecart(realise, objectif) {
+export function ecart(realise, objectif, sens = 'cible') {
   if (objectif === null || objectif === undefined) {
-    return { realise, objectif: null, ecart: null, reste: null, atteint: null };
+    return {
+      realise, objectif: null, ecart: null, reste: null, marge: null, exces: null,
+      atteint: null, depasse: false, sens,
+    };
   }
   const e = realise - objectif;
+  if (sens === 'plafond') {
+    return {
+      realise,
+      objectif,
+      ecart: e,
+      reste: null,
+      marge: e < 0 ? -e : 0,
+      exces: e > 0 ? e : 0,
+      atteint: e <= 0,
+      depasse: e > 0,
+      sens,
+    };
+  }
   return {
     realise,
     objectif,
     ecart: e,
     reste: e < 0 ? -e : 0,
+    marge: null,
+    exces: null,
     atteint: e >= 0,
+    depasse: false,
+    sens,
   };
 }
 
@@ -175,7 +215,7 @@ export function bilanPeriode(saisies, identifiant, jours, objectifs, portee) {
       format: ind.format,
       unite: ind.unite,
       applicable,
-      ...ecart(total[ind.cle], objectif),
+      ...ecart(total[ind.cle], objectif, ind.sens),
     };
   });
   return { total, joursSaisis, lignes };
@@ -189,8 +229,10 @@ export function bilanPeriode(saisies, identifiant, jours, objectifs, portee) {
  * petit total passe premier. Un décompte de rangs, et non un pourcentage, ce
  * qui évite de comparer des contrats à des francs.
  *
- * Les rendez-vous valides non signés restent hors du rang général : en faire
- * un critère de performance récompenserait l'affaire manquée.
+ * Les rendez-vous valides non signés restent hors du rang général. Ils sont
+ * classés — à l'envers, le moins nombreux en tête, puisque c'est un plafond —
+ * mais ne pèsent pas sur les points : un plafond respecté n'est pas une
+ * performance, c'est la normale.
  */
 export const CLES_CLASSEES = CLES.filter((c) => c !== 'rdv_non_signes');
 
@@ -203,7 +245,12 @@ export function classement(saisies, conseillers, jours, objectifsParConseiller, 
 
   const rangsParIndicateur = {};
   for (const cle of CLES) {
-    const tries = [...bilans].sort((a, b) => b.bilan.total[cle] - a.bilan.total[cle]);
+    // Sur un plafond, le meilleur est celui qui en a le moins : le tri
+    // s'inverse, sans quoi « rang 1 » désignerait le plus mauvais.
+    const plafond = indicateur(cle).sens === 'plafond';
+    const tries = [...bilans].sort((a, b) => (plafond
+      ? a.bilan.total[cle] - b.bilan.total[cle]
+      : b.bilan.total[cle] - a.bilan.total[cle]));
     const rangs = {};
     let rangPrecedent = 0;
     let valeurPrecedente = null;
@@ -268,7 +315,7 @@ export function bilanEquipe(saisies, conseillers, jours, objectifsParConseiller,
     format: ind.format,
     unite: ind.unite,
     applicable: portee === 'mensuel' || ind.hebdomadaire,
-    ...ecart(total[ind.cle], objectifsCumules[ind.cle]),
+    ...ecart(total[ind.cle], objectifsCumules[ind.cle], ind.sens),
   }));
 
   return { total, lignes };

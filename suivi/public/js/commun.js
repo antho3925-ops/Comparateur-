@@ -46,10 +46,22 @@ export function formaterSigne(valeur, format) {
 /**
  * Texte de l'écart. La plateforme n'affiche jamais de pourcentage : l'écart est
  * toujours un nombre de contrats, de rendez-vous ou de francs.
+ *
+ * Sur un plafond — les rendez-vous valides non signés — la lecture s'inverse :
+ * rester en dessous est la réussite, le franchir est le mauvais résultat.
  */
 export function texteEcart(ligne) {
-  if (!ligne.applicable) return 'pas d’objectif à cette échéance';
-  if (ligne.objectif === null) return 'objectif non fixé';
+  const plafond = ligne.sens === 'plafond';
+  // « pas de plafond », mais « pas d'objectif » : l'élision devant la voyelle.
+  if (!ligne.applicable) return plafond ? 'pas de plafond à cette échéance' : 'pas d’objectif à cette échéance';
+  if (ligne.objectif === null) return `${plafond ? 'plafond' : 'objectif'} non fixé`;
+
+  if (plafond) {
+    if (ligne.ecart > 0) return `plafond dépassé de ${formater(ligne.exces, ligne.format)}`;
+    if (ligne.ecart === 0) return 'plafond atteint tout juste, à ne pas franchir';
+    return `${formater(ligne.marge, ligne.format)} de marge sous le plafond`;
+  }
+
   if (ligne.ecart === 0) return 'objectif atteint, tout juste';
   if (ligne.ecart > 0) return `objectif dépassé de ${formater(ligne.ecart, ligne.format)}`;
   return `il manque ${formater(ligne.reste, ligne.format)}`;
@@ -57,7 +69,13 @@ export function texteEcart(ligne) {
 
 export function classeEcart(ligne) {
   if (!ligne.applicable || ligne.objectif === null) return 'sans-objectif';
+  if (ligne.depasse) return 'depasse';
   return ligne.atteint ? 'atteint' : 'manque';
+}
+
+/** « objectif » pour une cible, « plafond » pour un maximum à ne pas franchir. */
+export function motCible(ligne) {
+  return ligne.sens === 'plafond' ? 'plafond' : 'objectif';
 }
 
 export function heure(iso) {
@@ -96,19 +114,21 @@ export function afficherMessage(noeud, texte, genre = 'erreur') {
   noeud.textContent = texte || '';
 }
 
-// --- Objectif atteint : la bascule se voit ----------------------------------
+// --- Les bascules se voient -------------------------------------------------
 
 const DUREE_FETE = 1200;
 
 const succesConnus = new Map();       // période -> Map<indicateur, atteint>
 const fetesEnCours = new Map();       // « période|indicateur » -> fin prévue
+const alertesEnCours = new Map();     // idem, pour un plafond franchi
 const bandeauxEnCours = new Map();    // période -> fin prévue
 
 /**
- * Anime les tuiles dont l'objectif vient d'être atteint. La comparaison se fait
- * sur l'état précédent de la même période : au premier affichage on se contente
- * de mémoriser, sinon toute la page se mettrait à fêter au chargement, ce qui
- * ne voudrait plus rien dire.
+ * Anime les tuiles qui viennent de basculer : fête quand un objectif est
+ * atteint, alerte quand un plafond est franchi. La comparaison se fait sur
+ * l'état précédent de la même période : au premier affichage on se contente de
+ * mémoriser, sinon toute la page se mettrait à fêter au chargement, ce qui ne
+ * voudrait plus rien dire.
  *
  * Une fête a une échéance plutôt qu'un simple déclenchement : un rendu peut en
  * chasser un autre — l'enregistrement recharge la page, et l'événement temps
@@ -117,24 +137,28 @@ const bandeauxEnCours = new Map();    // période -> fin prévue
  *
  * Renvoie l'état de la période : bouclée ou non, et si elle vient de l'être.
  */
-export function celebrerNouveauxSucces(conteneur, lignes, portee) {
+export function signalerBascules(conteneur, lignes, portee) {
   const precedent = succesConnus.get(portee);
   succesConnus.set(portee, new Map(lignes.map((l) => [l.cle, l.atteint === true])));
   const maintenant = Date.now();
 
   for (const ligne of lignes) {
     const cle = `${portee}|${ligne.cle}`;
-    if (ligne.atteint !== true) {
-      fetesEnCours.delete(cle);
-      continue;
-    }
-    if (precedent && precedent.get(ligne.cle) === false) {
-      fetesEnCours.set(cle, maintenant + DUREE_FETE);
-    }
-    const fin = fetesEnCours.get(cle);
-    if (!fin || fin <= maintenant) continue;
+    const avant = precedent ? precedent.get(ligne.cle) : undefined;
+
+    if (ligne.atteint === true && avant === false) fetesEnCours.set(cle, maintenant + DUREE_FETE);
+    if (ligne.depasse && avant === true) alertesEnCours.set(cle, maintenant + DUREE_FETE);
+    if (ligne.atteint !== true) fetesEnCours.delete(cle);
+    if (!ligne.depasse) alertesEnCours.delete(cle);
+
     const tuile = conteneur.querySelector(`[data-cle="${ligne.cle}"]`);
-    if (tuile) feter(tuile, fin - maintenant);
+    if (!tuile) continue;
+
+    const finFete = fetesEnCours.get(cle);
+    if (finFete > maintenant) feter(tuile, finFete - maintenant);
+
+    const finAlerte = alertesEnCours.get(cle);
+    if (finAlerte > maintenant) alerter(tuile, finAlerte - maintenant);
   }
 
   const avecObjectif = lignes.filter((l) => l.objectif !== null);
@@ -157,6 +181,15 @@ function feter(tuile, reste) {
     tuile.classList.remove('celebre');
     for (const decor of tuile.querySelectorAll('.etincelles, .balayage')) decor.remove();
   }, reste);
+}
+
+/**
+ * Un plafond franchi n'est pas une fête : la tuile passe au rouge et se
+ * signale sobrement, sans éclat ni étincelles.
+ */
+function alerter(tuile, reste) {
+  tuile.classList.add('alerte');
+  setTimeout(() => tuile.classList.remove('alerte'), reste);
 }
 
 function etincelles() {
@@ -221,13 +254,22 @@ export function tuileEcart(ligne) {
     'data-cle': ligne.cle,
   }, [
     ligne.atteint === true
-      ? el('span', { class: 'sceau', title: 'Objectif atteint', texte: '✓' })
+      ? el('span', {
+        class: 'sceau',
+        title: ligne.sens === 'plafond' ? 'Plafond respecté' : 'Objectif atteint',
+        texte: '✓',
+      })
+      : null,
+    ligne.depasse
+      ? el('span', { class: 'sceau alerte', title: 'Plafond dépassé', texte: '!' })
       : null,
     el('div', { class: 'nom', texte: ligne.libelle }),
     el('div', { class: 'realise', texte: formater(ligne.realise, ligne.format) }),
     el('div', {
       class: 'cible',
-      texte: ligne.objectif === null ? '\u00a0' : `objectif : ${formater(ligne.objectif, ligne.format)}`,
+      texte: ligne.objectif === null
+        ? '\u00a0'
+        : `${motCible(ligne)} : ${formater(ligne.objectif, ligne.format)}`,
     }),
     el('div', { class: 'ecart' }, [
       ligne.objectif !== null && ligne.ecart !== 0
