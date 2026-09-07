@@ -1160,7 +1160,7 @@ window.DB = {
       },
       "notes_generales": [
         "Gamme saisie depuis la brochure produits officielle : Complementa Extra, Natura, Medna, Denta Plus, Mondia, Mondia Plus, les quatre assurances d'hospitalisation, Hospita, Previsia Extra, Previsia Plus et Nativa.",
-        "La brochure ne mentionne ni Denta Sana ni Denta Ortho, saisis auparavant depuis un recapitulatif de site : ils sont remplaces par Denta Plus. Si la police d'un client cite l'un de ces deux noms, il s'agit d'un contrat anterieur dont les conditions restent a obtenir.",
+        "Gamme dentaire : Denta Sana (soins et protheses) et Denta Ortho (orthodontie, trois niveaux) sont les produits commercialises, saisis depuis les fiches produits du site. Denta Plus, qui figurait dans la brochure fournie, n'est plus propose : il est conserve en portefeuille ferme pour les clients qui le detiennent encore, et exclu des caisses proposees en alternative.",
         "Materna Varia, Pecunia, Previsia Maladie et les trois modules Lexa ne figurent pas dans la brochure fournie et reposent encore sur un recapitulatif de site.",
         "Assura ne propose aucune prestation de check-up, de fitness, de depistage ni de vaccination preventive dans sa gamme LCA : verifie article par article dans les CSC, ce n'est pas une lacune de saisie.",
         "Le Club Assura est la seule reponse d'Assura sur ces postes. Il agit par rabais sur le prix facture, pas par prise en charge.",
@@ -1232,7 +1232,7 @@ window.DB = {
               "taux_remboursement": 1,
               "plafond_annuel": 1000,
               "franchise_prestation": 500,
-              "conditions": "Jusqu'a CHF 1'000 par annee, apres deduction de la franchise de CHF 500, selon tarif SSO. Franchise reduite de 50% pour les enfants avec Denta Plus, et prestations dentaires des deux assurances cumulees.",
+              "conditions": "Jusqu'a CHF 1'000 par annee, apres deduction de la franchise de CHF 500, selon tarif SSO. Cumulable avec Denta Sana, dont les prestations dentaires s'ajoutent a celles-ci.",
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
@@ -1444,7 +1444,7 @@ window.DB = {
         {
           "id": "assura_denta_plus",
           "code_produit": null,
-          "nom": "Denta Plus",
+          "nom": "Denta Plus (portefeuille ferme)",
           "type": "dentaire",
           "niveau": null,
           "age_adhesion_min": null,
@@ -1455,7 +1455,7 @@ window.DB = {
           "delai_attente_mois": 0,
           "hors_perimetre_facture": false,
           "edition_source": "Brochure produits Assura SA, apercu des assurances complementaires",
-          "remarque": "Prise en charge selon tarif officiel, en Suisse ou en zone frontaliere. Questionnaire dentaire indemnise jusqu'a CHF 100 a l'adhesion. Bonus : suppression de la franchise sur le prochain traitement apres cinq ans sans prestation, les frais de prophylaxie n'influencant pas son octroi. Avec Complementa Extra, les prestations dentaires des deux assurances sont cumulees et la franchise percue une seule fois.",
+          "remarque": "PRODUIT PLUS COMMERCIALISE, remplace par Denta Sana et Denta Ortho. Conserve pour les clients qui le detiennent encore : selectionnable comme couverture actuelle, exclu des caisses proposees en alternative. Valeurs issues d'une edition anterieure de la brochure produits. Prise en charge selon tarif officiel, en Suisse ou en zone frontaliere. Questionnaire dentaire indemnise jusqu'a CHF 100 a l'adhesion. Bonus : suppression de la franchise sur le prochain traitement apres cinq ans sans prestation, les frais de prophylaxie n'influencant pas son octroi. Avec Complementa Extra, les prestations dentaires des deux assurances sont cumulees et la franchise percue une seule fois.",
           "couvertures": [
             {
               "prestation_id": "dentaire_prophylaxie",
@@ -1486,7 +1486,136 @@ window.DB = {
               "conditions": "Honoraires et appareillages jusqu'a 20 ans revolus : 80% d'une facturation maximale de CHF 500 par annee pleine et echue, cumulable sur plusieurs annees jusqu'a CHF 10'000.",
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             }
-          ]
+          ],
+          "portefeuille_ferme": true
+        },
+        {
+          "id": "assura_denta_sana",
+          "code_produit": null,
+          "nom": "Denta Sana",
+          "type": "dentaire",
+          "niveau": null,
+          "age_adhesion_min": null,
+          "age_adhesion_max": 99,
+          "franchises_produit": [
+            0
+          ],
+          "delai_attente_mois": 6,
+          "delais_attente_specifiques": [
+            {
+              "motif": "prophylaxie",
+              "mois": 0
+            }
+          ],
+          "hors_perimetre_facture": false,
+          "edition_source": "assura.ch, fiches produits Denta Sana et Denta Ortho",
+          "enveloppes": [
+            {
+              "id": "env_ds",
+              "libelle": "Traitements ambulatoires et prothetiques",
+              "plafond_annuel": 6000
+            }
+          ],
+          "couvertures": [
+            {
+              "prestation_id": "dentaire_prophylaxie",
+              "taux_remboursement": 1,
+              "plafond_annuel": 80,
+              "exempt_franchise_produit": true,
+              "conditions": "Prophylaxie prise en charge integralement jusqu'a CHF 80 par annee. Aucune carence : la prophylaxie est due des la premiere annee.",
+              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho"
+            },
+            {
+              "prestation_id": "dentaire_soins",
+              "taux_remboursement": 0.75,
+              "enveloppe_id": "env_ds",
+              "conditions": "Traitements ambulatoires, 75 pour cent dans la limite de l'enveloppe annuelle de CHF 6'000 partagee avec les traitements prothetiques.",
+              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho"
+            },
+            {
+              "prestation_id": "dentaire_prothese_implant",
+              "taux_remboursement": 0.75,
+              "enveloppe_id": "env_ds",
+              "conditions": "Traitements prothetiques, 75 pour cent, meme enveloppe annuelle de CHF 6'000.",
+              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho"
+            }
+          ],
+          "remarque": "Admission sans controle avant 5 ans. Carence de 6 mois sur les traitements, aucune sur la prophylaxie. Cumulable avec Complementa Extra, dont les prestations dentaires s'ajoutent."
+        },
+        {
+          "id": "assura_denta_ortho_1",
+          "code_produit": null,
+          "nom": "Denta Ortho niveau 1",
+          "type": "dentaire",
+          "niveau": "n1",
+          "age_adhesion_min": null,
+          "age_adhesion_max": 99,
+          "franchises_produit": [
+            0
+          ],
+          "delai_attente_mois": 12,
+          "hors_perimetre_facture": false,
+          "edition_source": "assura.ch, fiches produits Denta Sana et Denta Ortho",
+          "couvertures": [
+            {
+              "prestation_id": "dentaire_orthodontie",
+              "taux_remboursement": 0.75,
+              "plafond_annuel": 2000,
+              "conditions": "Orthodontie prise en charge a 75 pour cent des frais, dans la limite de CHF 2'000 par annee selon le niveau souscrit.",
+              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho"
+            }
+          ],
+          "remarque": "Admission sans controle avant 5 ans. Carence de 12 mois. Rabais de 15% si souscrit avant la naissance."
+        },
+        {
+          "id": "assura_denta_ortho_2",
+          "code_produit": null,
+          "nom": "Denta Ortho niveau 2",
+          "type": "dentaire",
+          "niveau": "n2",
+          "age_adhesion_min": null,
+          "age_adhesion_max": 99,
+          "franchises_produit": [
+            0
+          ],
+          "delai_attente_mois": 12,
+          "hors_perimetre_facture": false,
+          "edition_source": "assura.ch, fiches produits Denta Sana et Denta Ortho",
+          "couvertures": [
+            {
+              "prestation_id": "dentaire_orthodontie",
+              "taux_remboursement": 0.75,
+              "plafond_annuel": 6000,
+              "conditions": "Orthodontie prise en charge a 75 pour cent des frais, dans la limite de CHF 6'000 par annee selon le niveau souscrit.",
+              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho"
+            }
+          ],
+          "remarque": "Admission sans controle avant 5 ans. Carence de 12 mois. Rabais de 15% si souscrit avant la naissance."
+        },
+        {
+          "id": "assura_denta_ortho_3",
+          "code_produit": null,
+          "nom": "Denta Ortho niveau 3",
+          "type": "dentaire",
+          "niveau": "n3",
+          "age_adhesion_min": null,
+          "age_adhesion_max": 99,
+          "franchises_produit": [
+            0
+          ],
+          "delai_attente_mois": 12,
+          "hors_perimetre_facture": false,
+          "edition_source": "assura.ch, fiches produits Denta Sana et Denta Ortho",
+          "couvertures": [
+            {
+              "prestation_id": "dentaire_orthodontie",
+              "taux_remboursement": 0.75,
+              "plafond_annuel": 10000,
+              "conditions": "Orthodontie prise en charge a 75 pour cent des frais, dans la limite de CHF 10'000 par annee selon le niveau souscrit.",
+              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho"
+            }
+          ],
+          "remarque": "Admission sans controle avant 5 ans. Carence de 12 mois. Rabais de 15% si souscrit avant la naissance."
         },
         {
           "id": "assura_mondia",
@@ -2180,7 +2309,7 @@ window.DB = {
               "prestation_id": "consultation_medecin",
               "taux_remboursement": null,
               "statut": "a_completer",
-              "conditions": "Package prenatal et pour enfants regroupant six assurances : Complementa Extra, Denta Plus, Mondia Plus, Medna, Natura et Previsia Extra. Se referer a chacune pour le detail des prestations.",
+              "conditions": "Package prenatal et pour enfants regroupant sept assurances : Complementa Extra, Denta Sana, Denta Ortho, Mondia Plus, Medna, Natura et Previsia Extra. Se referer a chacune pour le detail des prestations.",
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             }
           ]
@@ -10925,5 +11054,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T11:32:22.702Z"
+  "genere_le": "2026-09-07T11:53:29.356Z"
 };

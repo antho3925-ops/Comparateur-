@@ -67,9 +67,14 @@ window.Comparateur = (function () {
   }
 
   function produitsRetenus(assureur, filtreIds) {
+    const cible = filtreIds && filtreIds.length;
     return (assureur.produits_lca || []).filter((p) => {
       if (p.hors_perimetre_facture) return false;
-      if (filtreIds && filtreIds.length) return filtreIds.indexOf(p.id) !== -1;
+      // Un produit en portefeuille ferme ne se souscrit plus : il reste
+      // selectionnable comme couverture actuelle d'un client qui le detient,
+      // mais n'a rien a faire dans une caisse qu'on propose en alternative.
+      if (p.portefeuille_ferme && !cible) return false;
+      if (cible) return filtreIds.indexOf(p.id) !== -1;
       return true;
     });
   }

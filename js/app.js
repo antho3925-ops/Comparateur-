@@ -107,6 +107,7 @@
         const d = el('div');
         d.appendChild(el('div', 'nom', p.nom));
         const bits = [];
+        if (p.portefeuille_ferme) bits.push('portefeuille fermé');
         if (p.hors_perimetre_facture) bits.push('hors comparatif de facture');
         const nb = (p.couvertures || []).length;
         const chiffrees = (p.couvertures || []).filter((c) => c.statut !== 'a_completer').length;
