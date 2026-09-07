@@ -72,9 +72,22 @@ window.MoteurLca = (function () {
       montant = Math.min(montant, couverture.plafond_par_jour * ligne.jours);
     }
     if (couverture.plafond_annuel != null) {
+      // Certains plafonds se cumulent d'annee en annee tant que rien n'est
+      // reclame : chez Assura, les lunettes valent CHF 100 par an cumulables
+      // sur cinq ans. Un client qui change de monture tous les trois ans
+      // dispose donc de CHF 300, pas de CHF 100.
+      let plafond = couverture.plafond_annuel;
+      const cum = couverture.plafond_cumulable;
+      const annees = Math.max(1, Math.floor(ligne.anneesCumul || 1));
+      if (cum && annees > 1) {
+        const retenues = cum.annees_max ? Math.min(annees, cum.annees_max) : annees;
+        plafond = couverture.plafond_annuel * retenues;
+        if (cum.plafond_max != null) plafond = Math.min(plafond, cum.plafond_max);
+        notes.push(`plafond cumule sur ${retenues} annee(s) : ${plafond.toFixed(2)}`);
+      }
       const k = cle(produit.id, couverture.prestation_id);
-      const restant = Math.max(0, couverture.plafond_annuel - (cumuls.prestation[k] || 0));
-      if (montant > restant) notes.push('plafond annuel de la prestation atteint');
+      const restant = Math.max(0, plafond - (cumuls.prestation[k] || 0));
+      if (montant > restant) notes.push('plafond de la prestation atteint');
       montant = Math.min(montant, restant);
     }
     if (couverture.enveloppe_id) {

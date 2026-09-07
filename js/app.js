@@ -157,6 +157,23 @@
   }
 
   // ------------------------------------------------------------- Facture
+  // Prestations pour lesquelles au moins une caisse propose un plafond
+  // cumulable : calcule une fois, pas a chaque ligne redessinee.
+  let cumulables = null;
+  function prestationCumulable(id) {
+    if (!cumulables) {
+      cumulables = new Set();
+      for (const a of DB.assureurs) {
+        for (const prod of a.produits_lca || []) {
+          for (const c of prod.couvertures || []) {
+            if (c.plafond_cumulable) cumulables.add(c.prestation_id);
+          }
+        }
+      }
+    }
+    return cumulables.has(id);
+  }
+
   function rendreFacture() {
     const zone = $('#lignes-facture'); zone.innerHTML = '';
     $('#facture-vide').hidden = etat.facture.length > 0;
@@ -210,6 +227,26 @@
       d4.appendChild(sup);
 
       h.append(d1, d2, d3, d4); l.appendChild(h);
+
+      // Certaines prestations portent un plafond qui se cumule d'annee en annee
+      // tant que rien n'est reclame. Le champ n'apparait que si au moins une
+      // caisse de la base propose ce mecanisme sur cette prestation.
+      if (p && prestationCumulable(p.id)) {
+        const c = el('div', 'cumul');
+        c.appendChild(el('div', 'avert',
+          "Plafond cumulable d'année en année chez certaines caisses. Indiquez depuis combien "
+          + "d'années le client n'a rien réclamé sur cette prestation."));
+        const lab = el('label', null, 'Années sans prestation');
+        lab.htmlFor = 'cumul-' + f.id;
+        const inp = el('input'); inp.type = 'number'; inp.id = 'cumul-' + f.id;
+        inp.min = 1; inp.step = 1; inp.placeholder = '1';
+        inp.value = f.anneesCumul || '';
+        inp.addEventListener('input', () => {
+          f.anneesCumul = Math.max(1, Number(inp.value) || 1); rendreResultat();
+        });
+        c.append(lab, inp);
+        l.appendChild(c);
+      }
 
       // Remarque du catalogue : c'est la qu'on rappelle, par exemple, qu'une
       // psychotherapie prescrite releve de la base et non de la complementaire.

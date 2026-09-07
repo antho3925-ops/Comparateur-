@@ -1283,15 +1283,23 @@ window.DB = {
               "prestation_id": "lunettes_lentilles_adulte",
               "taux_remboursement": 1,
               "plafond_annuel": 100,
-              "conditions": "CHF 100 par annee, cumulables sur cinq annees, soit CHF 500 au maximum.",
-              "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+              "conditions": "CHF 100 par annee, cumulables sur cinq annees sans prestation, soit CHF 500 au maximum. Un client qui renouvelle ses lunettes tous les trois ans dispose donc de CHF 300.",
+              "source_page": "Brochure produits Assura SA, apercu des assurances complementaires",
+              "plafond_cumulable": {
+                "annees_max": 5,
+                "plafond_max": 500
+              }
             },
             {
               "prestation_id": "chirurgie_refractive",
               "taux_remboursement": 1,
               "plafond_annuel": 100,
-              "conditions": "CHF 100 par annee, cumulables sur cinq annees, soit CHF 500 au maximum.",
-              "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+              "conditions": "CHF 100 par annee, cumulables sur cinq annees sans prestation, soit CHF 500 au maximum. Meme mecanisme que les verres de lunettes.",
+              "source_page": "Brochure produits Assura SA, apercu des assurances complementaires",
+              "plafond_cumulable": {
+                "annees_max": 5,
+                "plafond_max": 500
+              }
             },
             {
               "prestation_id": "psychotherapie_medicale",
@@ -1484,7 +1492,11 @@ window.DB = {
               "taux_remboursement": 0.8,
               "plafond_annuel": 400,
               "conditions": "Honoraires et appareillages jusqu'a 20 ans revolus : 80% d'une facturation maximale de CHF 500 par annee pleine et echue, cumulable sur plusieurs annees jusqu'a CHF 10'000.",
-              "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
+              "source_page": "Brochure produits Assura SA, apercu des assurances complementaires",
+              "plafond_cumulable": {
+                "annees_max": null,
+                "plafond_max": 10000
+              }
             }
           ],
           "portefeuille_ferme": true
@@ -1562,7 +1574,11 @@ window.DB = {
               "taux_remboursement": 0.75,
               "plafond_annuel": 2000,
               "conditions": "Orthodontie prise en charge a 75 pour cent des frais, dans la limite de CHF 2'000 par annee selon le niveau souscrit.",
-              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho"
+              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho",
+              "plafond_cumulable": {
+                "annees_max": null,
+                "plafond_max": 2000
+              }
             }
           ],
           "remarque": "Admission sans controle avant 5 ans. Carence de 12 mois. Rabais de 15% si souscrit avant la naissance."
@@ -1587,7 +1603,11 @@ window.DB = {
               "taux_remboursement": 0.75,
               "plafond_annuel": 6000,
               "conditions": "Orthodontie prise en charge a 75 pour cent des frais, dans la limite de CHF 6'000 par annee selon le niveau souscrit.",
-              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho"
+              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho",
+              "plafond_cumulable": {
+                "annees_max": null,
+                "plafond_max": 6000
+              }
             }
           ],
           "remarque": "Admission sans controle avant 5 ans. Carence de 12 mois. Rabais de 15% si souscrit avant la naissance."
@@ -1612,7 +1632,11 @@ window.DB = {
               "taux_remboursement": 0.75,
               "plafond_annuel": 10000,
               "conditions": "Orthodontie prise en charge a 75 pour cent des frais, dans la limite de CHF 10'000 par annee selon le niveau souscrit.",
-              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho"
+              "source_page": "assura.ch, fiches produits Denta Sana et Denta Ortho",
+              "plafond_cumulable": {
+                "annees_max": null,
+                "plafond_max": 10000
+              }
             }
           ],
           "remarque": "Admission sans controle avant 5 ans. Carence de 12 mois. Rabais de 15% si souscrit avant la naissance."
@@ -11057,5 +11081,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T12:27:25.629Z"
+  "genere_le": "2026-09-07T12:31:55.184Z"
 };

@@ -38,7 +38,8 @@ window.Comparateur = (function () {
       }
 
       const commun = { factureId: f.id, prestation: p, prestationId: p.id,
-                       seances: f.seances || 0, jours: f.jours || 0 };
+                       seances: f.seances || 0, jours: f.jours || 0,
+                       anneesCumul: f.anneesCumul || 1 };
 
       if (p.categorie === 'LAMal') {
         lignesLamal.push(Object.assign({}, commun, {
@@ -173,10 +174,14 @@ window.Comparateur = (function () {
       if (a) {
         const produits = produitsRetenus(a, etat.actuel.produitIds);
         const ev = evaluer(produits, etat, null);
-        actuel = { assureurId: a.id, nom: a.nom, saisieLibre: false, assureur: a, produits,
-                   lamal: ev.lamal, lca: ev.lca, resteACharge: ev.resteACharge,
-                   contractuel: ev.resteACharge, club: avecClub(a, produits, ev) };
-        if (actuel.club) actuel.resteACharge = actuel.club.resteACharge;
+        const club = avecClub(a, produits, ev);
+        actuel = { assureurId: a.id, nom: a.nom, saisieLibre: false, assureur: a, produits, club,
+                   // Le detail doit decrire le meme scenario que le total : quand
+                   // les partenaires sont actifs, ce sont les montants remises.
+                   lamal: club ? club.lamal : ev.lamal,
+                   lca: club ? club.lca : ev.lca,
+                   contractuel: ev.resteACharge,
+                   resteACharge: club ? club.resteACharge : ev.resteACharge };
       }
     }
 
