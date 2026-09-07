@@ -218,6 +218,35 @@
     });
   }
 
+  // -------------------------------------------------- Logos des caisses
+  // La liste des logos disponibles est etablie au build (build.mjs recense
+  // assets/logos/). La page ne sonde donc aucun fichier absent.
+  function rendreLogos() {
+    const zone = $('#logos-caisses');
+    if (!zone) return;
+    zone.innerHTML = '';
+    const logos = DB.logos || {};
+    const liste = DB.assureurs.filter((a) => a.actif !== false)
+                              .sort((a, b) => a.nom.localeCompare(b.nom));
+    for (const a of liste) {
+      const tuile = el('div', 'logo-caisse');
+      tuile.title = a.nom;
+      if (logos[a.id]) {
+        const img = new Image();
+        img.src = logos[a.id];
+        img.alt = a.nom;
+        tuile.appendChild(img);
+      } else {
+        const texte = el('div');
+        texte.appendChild(el('div', 'nom-caisse', a.nom));
+        const nb = (a.produits_lca || []).length;
+        texte.appendChild(el('div', 'compte', nb + (nb > 1 ? ' produits' : ' produit')));
+        tuile.appendChild(texte);
+      }
+      zone.appendChild(tuile);
+    }
+  }
+
   // ------------------------------------------------------------ Résultat
   function etiquette(etatLigne) {
     if (etatLigne === 'rembourse') return '<span class="etiq ok">remboursé</span>';
@@ -300,12 +329,12 @@
     if (meilleur && act) {
       const ecart = act.resteACharge - meilleur.resteACharge;
       h += `<div><div class="l">Meilleure caisse</div><div class="v">${esc(meilleur.nom)}</div></div>`;
-      h += `<div><div class="l">Écart</div><div class="v ${ecart > 0 ? 'gain' : ''}">`
-        + (ecart > 0 ? '− ' + Fmt.chf(ecart) : Fmt.chf(0)) + '</div></div>';
+      h += `<div class="${ecart > 0.005 ? 'phare' : ''}"><div class="l">Écart annuel</div><div class="v">`
+        + (ecart > 0.005 ? '− ' + Fmt.chf(ecart) : Fmt.chf(0)) + '</div></div>';
     }
     h += '</div>';
 
-    h += '<h3 style="margin:22px 0 10px;font-size:14px">Détail de la part base (identique chez toutes les caisses)</h3>';
+    h += '<div class="titre-bloc">Part base — identique chez toutes les caisses</div>';
     h += `<table class="lignes"><tbody>
       <tr><td>Franchise consommée</td><td class="num">${Fmt.chf(res.lamal.franchise)}</td></tr>
       <tr><td>Quote-part (plafond CHF ${Fmt.nombre(res.lamal.plafondQuotePart)})</td><td class="num">${Fmt.chf(res.lamal.quotePart)}</td></tr>
@@ -316,7 +345,7 @@
       h += `<div class="produit-src" style="margin-top:6px">Quote-part écrêtée de ${Fmt.chf(res.lamal.quotePartEcretee)} par le plafond annuel.</div>`;
     }
 
-    h += '<h3 style="margin:24px 0 10px;font-size:14px">Comparatif des caisses</h3>';
+    h += '<div class="titre-bloc">Comparatif des caisses</div>';
     h += '<table class="compare"><thead><tr><th>Caisse</th><th class="num">Part base</th>'
       + '<th class="num">Remboursé compl.</th><th class="num">Reste à charge</th>'
       + '<th class="num">Écart</th><th>À préciser</th></tr></thead><tbody>';
@@ -333,7 +362,9 @@
       const ecart = act ? act.resteACharge - c.resteACharge : null;
       const cls = ecart == null ? '' : ecart > 0.005 ? 'gain' : ecart < -0.005 ? 'perte' : '';
       const txt = ecart == null ? '—' : (ecart > 0 ? '− ' : ecart < 0 ? '+ ' : '') + Fmt.chf(Math.abs(ecart));
-      h += `<tr data-id="${esc(c.assureurId)}"><td><span class="rang">${i + 1}</span>${esc(c.nom)}</td>`
+      const estMeilleure = i === 0 && act && ecart > 0.005;
+      h += `<tr class="${estMeilleure ? 'meilleure' : ''}" data-id="${esc(c.assureurId)}">`
+        + `<td><span class="rang">${i + 1}</span>${esc(c.nom)}</td>`
         + `<td class="num">${Fmt.chf(res.lamal.resteACharge)}</td>`
         + `<td class="num">${Fmt.chf(c.lca.totalRembourse)}</td>`
         + `<td class="num">${Fmt.chf(c.resteACharge)}</td>`
@@ -354,8 +385,7 @@
     h += '</tbody></table>';
 
     if (act) {
-      h += '<h3 style="margin:24px 0 10px;font-size:14px">Détail de la couverture actuelle</h3>'
-        + tableauDetail(act);
+      h += '<div class="titre-bloc">Détail de la couverture actuelle</div>' + tableauDetail(act);
     }
 
     h += '<div class="produit-src" style="margin-top:18px">'
@@ -465,6 +495,7 @@
     }
     etat = etatVierge();
     remplirEntetes();
+    rendreLogos();
     brancher();
     etat.facture.push({ id: prochainId++, prestationId: '', montant: 0, seances: 0, jours: 0,
                         montantPartLamal: null });

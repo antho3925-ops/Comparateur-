@@ -3,8 +3,8 @@
 // index.html, y compris en ouverture locale (file://) ou fetch() est bloque.
 // Usage : node build.mjs
 
-import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
-import { join, basename } from 'node:path';
+import { readFileSync, writeFileSync, readdirSync, existsSync } from 'node:fs';
+import { join, basename, extname } from 'node:path';
 
 const DATA = 'data';
 const ASSUREURS = join(DATA, 'assureurs');
@@ -99,8 +99,30 @@ if (erreurs.length) {
   process.exit(1);
 }
 
+// --- Inventaire des logos --------------------------------------------------
+// Recense les logos reellement presents dans assets/logos/, pour que la page
+// n'ait jamais a sonder des fichiers absents (chaque essai rate salit la console).
+const DOSSIER_LOGOS = join('assets', 'logos');
+const EXT_LOGOS = ['.svg', '.png', '.jpg', '.jpeg', '.webp'];
+const logos = {};
+if (existsSync(DOSSIER_LOGOS)) {
+  const presents = readdirSync(DOSSIER_LOGOS);
+  for (const a of assureurs) {
+    for (const ext of EXT_LOGOS) {
+      const nom = a.id + ext;
+      if (presents.includes(nom)) { logos[a.id] = `${DOSSIER_LOGOS}/${nom}`; break; }
+    }
+  }
+  const orphelins = presents
+    .filter((f) => EXT_LOGOS.includes(extname(f).toLowerCase()))
+    .filter((f) => !assureurs.some((a) => a.id === basename(f, extname(f))));
+  if (orphelins.length) {
+    alertes.push(`assets/logos : ${orphelins.join(', ')} ne correspond(ent) a aucun identifiant d'assureur`);
+  }
+}
+
 // --- Ecriture --------------------------------------------------------------
-const db = { meta, catalogue, assureurs, genere_le: new Date().toISOString() };
+const db = { meta, catalogue, assureurs, logos, genere_le: new Date().toISOString() };
 const sortie = `// Fichier genere automatiquement par build.mjs - NE PAS EDITER A LA MAIN.
 // Source de verite : data/meta.json, data/catalogue-prestations.json, data/assureurs/*.json
 window.DB = ${JSON.stringify(db, null, 2)};
@@ -108,6 +130,9 @@ window.DB = ${JSON.stringify(db, null, 2)};
 writeFileSync(join(DATA, 'db.js'), sortie);
 
 console.log(`OK - ${assureurs.length} assureur(s), ${catalogue.prestations.length} prestations -> data/db.js`);
+const sansLogo = assureurs.filter((a) => !logos[a.id]).length;
+console.log(`     ${Object.keys(logos).length}/${assureurs.length} logo(s) trouve(s) dans assets/logos/`
+  + (sansLogo ? ` — les ${sansLogo} autres s'affichent en toutes lettres` : ''));
 if (aCompleterTotal) console.log(`     dont ${aCompleterTotal} couverture(s) au statut "a_completer"`);
 if (plafondAPreciserTotal) console.log(`     dont ${plafondAPreciserTotal} couverture(s) au taux connu mais au plafond dependant de l'option souscrite`);
 if (alertes.length) {

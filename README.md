@@ -32,7 +32,8 @@ hors ligne en ouvrant `index.html` directement.
 │   └── trous.mjs                  Liste les couvertures connues mais non chiffrées
 ├── assets/
 │   ├── styles.css
-│   └── banniere-stf-psg.jpg       Bandeau Swiss Times Fiduciary affiché en pied de page
+│   ├── banniere-stf-psg.jpg       Bandeau Swiss Times Fiduciary affiché en pied de page
+│   └── logos/                     Logos des caisses — déposer les fichiers puis relancer le build
 ├── js/
 │   ├── app.js                     Interface, saisie, bouton Réinitialiser
 │   ├── moteur-lamal.js            Franchise, quote-part, plafonds, forfait hospitalier
@@ -50,7 +51,8 @@ hors ligne en ouvrant `index.html` directement.
 │   └── db.js                      Généré — ne pas éditer
 └── docs/
     ├── FORMAT-DONNEES.md          Comment livrer les captures d'écran
-    └── MOTEUR-CALCUL.md           Ordre d'application des règles de calcul
+    ├── MOTEUR-CALCUL.md           Ordre d'application des règles de calcul
+    └── PROTECTION-DONNEES.md      Garanties techniques et règles d'usage (LPD)
 ```
 
 ## Alimenter la base depuis les documents d'un assureur
@@ -81,6 +83,15 @@ cas seule une capture d'écran permet de lire la grille.
 2. `node build.mjs` — régénère `data/db.js` et valide les données (identifiants
    inconnus, enveloppes orphelines, taux hors bornes, doublons).
 3. Commit et push : le lien partagé est à jour pour toute l'équipe.
+
+## Protection des données
+
+L'outil ne conserve et ne transmet rien : aucun stockage navigateur, aucun appel
+réseau, aucune ressource externe. Les données saisies vivent en mémoire vive et
+disparaissent à la fermeture de l'onglet ou via le bouton Réinitialiser. Les
+données de santé étant sensibles au sens de l'art. 5 let. c LPD, aucun champ
+d'identification du client n'est prévu — c'est un choix de conception.
+Voir `docs/PROTECTION-DONNEES.md`.
 
 ## Vérification
 

@@ -4,16 +4,25 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Comparateur de remboursement — assurance maladie suisse</title>
+<meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
 
 <header class="entete">
-  <div>
-    <h1>Comparateur de remboursement</h1>
-    <div class="sous">Assurance maladie suisse — outil interne de conseil</div>
+  <div class="entete-in">
+    <div class="marque">
+      <div class="sceau" aria-hidden="true">STF</div>
+      <div>
+        <h1>Comparateur de remboursement</h1>
+        <div class="sous">
+          <span>Assurance maladie suisse — outil interne de conseil</span>
+          <span class="pastille" title="Aucune donnée client n'est enregistrée ni transmise">Aucune donnée enregistrée</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-reset" id="btn-reset" type="button">Réinitialiser</button>
   </div>
-  <button class="btn-reset" id="btn-reset" type="button">Réinitialiser</button>
 </header>
 
 <main class="page">
@@ -44,10 +53,10 @@
         </div>
       </div>
 
-      <details class="repliable" style="margin-top:16px">
+      <details class="repliable" style="margin-top:18px">
         <summary>Frais déjà engagés cette année (facultatif)</summary>
         <div>
-          <p style="font-size:13px;color:var(--gris);margin:0 0 12px">
+          <p class="produit-src" style="margin:0 0 13px">
             À remplir seulement si le client a déjà eu des frais cette année. Laissé vide, le calcul
             part d'une année complète devant lui.
           </p>
@@ -80,12 +89,12 @@
           </div>
           <div>
             <label>Produits complémentaires possédés</label>
-            <div style="font-size:13px;color:var(--gris);padding-top:8px" id="compte-produits">
+            <div class="produit-src" style="padding-top:9px" id="compte-produits">
               Choisissez d'abord une caisse.
             </div>
           </div>
         </div>
-        <div id="liste-produits" style="margin-top:14px"></div>
+        <div id="liste-produits" style="margin-top:16px"></div>
       </div>
 
       <div id="bloc-libre" hidden>
@@ -103,7 +112,7 @@
             <input type="number" id="libre-franchise" min="0" step="10" placeholder="0">
           </div>
         </div>
-        <div id="libre-couvertures" style="margin-top:14px"></div>
+        <div id="libre-couvertures" style="margin-top:16px"></div>
         <button class="btn secondaire mini" id="btn-libre-ajout" type="button">+ Ajouter une prestation couverte</button>
       </div>
     </div>
@@ -130,11 +139,76 @@
     </div>
   </section>
 
-  <footer class="bandeau">
-    <img src="assets/banniere-stf-psg.jpg"
-         alt="Swiss Times Fiduciary — partenaire du Paris Saint-Germain, saison 2026/2027">
-    <p>Outil interne Swiss Times Fiduciary. Estimations à usage de conseil, sans valeur de
-       décompte officiel de caisse.</p>
+  <footer class="pied">
+
+    <section class="carte">
+      <header><h2>Caisses présentes dans la base</h2></header>
+      <div class="corps">
+        <div class="logos" id="logos-caisses"></div>
+        <p class="produit-src" style="margin:16px 0 0">
+          Grilles saisies depuis les brochures officielles de chaque assureur, à titre de
+          documentation professionnelle. Les marques et logos appartiennent à leurs titulaires
+          respectifs ; leur mention n'implique aucun lien, partenariat ni approbation.
+        </p>
+      </div>
+    </section>
+
+    <section class="carte confid">
+      <header><h2>Protection des données · LPD</h2></header>
+      <div class="corps">
+        <div class="carte-liste">
+          <div class="point">
+            <h4>Rien n'est enregistré</h4>
+            <p>Les données saisies restent en mémoire vive du navigateur. Elles disparaissent à la
+               fermeture de l'onglet et lorsque vous cliquez sur Réinitialiser. Aucun stockage
+               local, aucun cookie, aucun historique.</p>
+          </div>
+          <div class="point">
+            <h4>Rien n'est transmis</h4>
+            <p>L'outil ne fait aucun appel réseau et ne charge aucune ressource externe. Il
+               fonctionne hors ligne. Aucune mesure d'audience, aucun traceur.</p>
+          </div>
+          <div class="point">
+            <h4>Données sensibles</h4>
+            <p>Les données de santé sont des données sensibles au sens de l'art. 5 let. c LPD. Leur
+               traitement exige une vigilance renforcée, y compris pour un usage strictement
+               interne.</p>
+          </div>
+          <div class="point">
+            <h4>Saisie minimale</h4>
+            <p>Ne saisissez aucune donnée permettant d'identifier le client : ni nom, ni date de
+               naissance complète, ni numéro AVS, ni numéro de police. Le calcul n'en a pas besoin.</p>
+          </div>
+          <div class="point">
+            <h4>Un client, une session</h4>
+            <p>Réinitialisez entre deux rendez-vous. Verrouillez la session lorsque vous quittez
+               l'écran et veillez à ce qu'il ne soit pas visible de tiers.</p>
+          </div>
+          <div class="point">
+            <h4>Documents imprimés</h4>
+            <p>Une impression sort du périmètre technique de l'outil. Remettez-la au client ou
+               détruisez-la ; ne la conservez pas hors du dossier client sécurisé.</p>
+          </div>
+        </div>
+        <p class="produit-src" style="margin:16px 0 0">
+          Le conseiller qui utilise cet outil demeure responsable du traitement au sens de la LPD,
+          ainsi que du secret professionnel attaché à son activité d'intermédiaire en assurance.
+          Les résultats sont des estimations à usage de conseil, sans valeur de décompte officiel
+          de caisse.
+        </p>
+      </div>
+    </section>
+
+    <div class="bandeau">
+      <img src="assets/banniere-stf-psg.jpg"
+           alt="Swiss Times Fiduciary — partenaire du Paris Saint-Germain, saison 2026/2027">
+      <p class="mentions">
+        <strong>Outil interne Swiss Times Fiduciary.</strong> Usage professionnel réservé.
+        Estimations fondées sur les grilles de prestations saisies en base, sans valeur
+        contractuelle. Les conditions générales et particulières de chaque assureur font foi.
+      </p>
+    </div>
+
   </footer>
 
 </main>
