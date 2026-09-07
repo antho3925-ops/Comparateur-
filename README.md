@@ -31,7 +31,8 @@ hors ligne en ouvrant `index.html` directement.
 │   ├── sources.py                 Téléchargement des PDF assureurs + extraction du texte
 │   └── trous.mjs                  Liste les couvertures connues mais non chiffrées
 ├── assets/
-│   └── styles.css
+│   ├── styles.css
+│   └── banniere-stf-psg.jpg       Bandeau Swiss Times Fiduciary affiché en pied de page
 ├── js/
 │   ├── app.js                     Interface, saisie, bouton Réinitialiser
 │   ├── moteur-lamal.js            Franchise, quote-part, plafonds, forfait hospitalier
@@ -81,13 +82,23 @@ cas seule une capture d'écran permet de lire la grille.
    inconnus, enveloppes orphelines, taux hors bornes, doublons).
 3. Commit et push : le lien partagé est à jour pour toute l'équipe.
 
+## Vérification
+
+Les moteurs se testent hors navigateur en chargeant `data/db.js` et les fichiers `js/` dans
+Node. Deux résultats servent de référence :
+
+- **Part LAMal** — consultation 640 CHF + part hospitalière 5 200 CHF, franchise 300 :
+  300 (franchise) + 554 (quote-part 10 %) + 90 (6 jours × 15) = **944 CHF**.
+- **Quota de séances** — 20 séances d'ostéopathie à 6 000 CHF chez Assura Natura, quota
+  12 séances, 130 CHF par séance, franchise produit 200 : **1 560 CHF** remboursés.
+
 ## État d'avancement
 
 - [x] Nomenclature commune des prestations (52 prestations, 11 groupes)
 - [x] Format de données assureur + template + validation au build
 - [x] Spécification du moteur de calcul
-- [ ] Moteurs LAMal / LCA
-- [ ] Interface de saisie et écran de comparaison
+- [x] Moteurs LAMal / LCA, vérifiés sur cas calculés à la main
+- [x] Interface de saisie et écran de comparaison, testée dans Chromium
 - [x] Chaîne d'ingestion des PDF assureurs (téléchargement + extraction)
 - [x] 9 caisses saisies : 172 produits, 967 couvertures dont 654 chiffrées
 - [ ] 313 couvertures à chiffrer depuis les conditions particulières (`node tools/trous.mjs`)
