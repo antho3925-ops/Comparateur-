@@ -63,6 +63,29 @@ sans effet.
 | `SUIVI_DONNEES` | Dossier de l'état et de la configuration (`suivi/data` par défaut) |
 | `SUIVI_HTTPS=1` | À poser derrière un reverse proxy TLS : le cookie de session prend l'attribut `Secure` |
 
+## Deux versions, un même outil
+
+Le dossier `page-hebergee/` contient une **seconde implémentation** de la même
+plateforme, en une page unique publiée sur claude.ai, dont l'état partagé vit
+dans le magasin de documents de l'artefact plutôt que sur un serveur Node. Elle
+existe pour donner un lien immédiat à une équipe qui n'héberge rien.
+
+Ce qu'elle ne peut pas faire, et qu'il faut savoir :
+
+- **Le gel des journées passées y est une règle d'interface, non une garantie.**
+  Le serveur Node refuse structurellement d'écrire ailleurs que sur la journée
+  courante ; ici c'est la page qui s'en abstient, et le magasin reste ouvert en
+  écriture à qui sait s'y prendre.
+- **Le code administrateur y est un rideau, non une serrure.** Il est vérifié
+  dans le navigateur ; les données du classement sont lisibles par tout viewer
+  autorisé, quel que soit ce que l'écran affiche.
+- **L'accès est réservé à l'organisation propriétaire.** Une page déclarant un
+  magasin partagé ne peut pas être rendue publique : chaque lecteur doit être
+  connecté à un compte de cette organisation.
+
+Les deux versions partagent les règles métier mais pas le code : une
+modification du moteur doit être portée des deux côtés.
+
 ## Voir la plateforme remplie
 
 ```
@@ -218,6 +241,8 @@ suivi/
 ├── gestion.mjs              Gestion des accès en ligne de commande
 ├── equipe-initiale.json     Conseillers créés au tout premier démarrage
 ├── acces-initial.json       Empreinte de l'accès administrateur de départ
+├── page-hebergee/
+│   └── suivi.html           Version hébergée sur claude.ai, en une page unique
 ├── tests.mjs                Suite de tests (210 cas)
 ├── lib/
 │   ├── dates.mjs            Fuseau suisse, semaines ISO, libellés en français

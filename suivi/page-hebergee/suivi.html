@@ -1,0 +1,1606 @@
+<title>Suivi de performance STF</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+
+<style>
+/* ==========================================================================
+   Suivi de performance commerciale — Swiss Times Fiduciary
+   Version hébergée. Reprend l'identité du projet : marine et or, la couleur
+   sémantique réservée à ce qu'elle signifie — vert un objectif tenu, ambre ce
+   qui manque, rouge un plafond franchi. Le versant sombre fait du marine le
+   fond plutôt que d'inverser les gris.
+   ========================================================================== */
+
+:root {
+  --ground:      #f2f5f9;
+  --surface:     #ffffff;
+  --surface-2:   #f7fafd;
+  --surface-3:   #eef2f8;
+  --line:        #dde4ee;
+  --line-fort:   #c4cfdf;
+
+  --encre:       #0d1626;
+  --encre-2:     #46546c;
+  --encre-3:     #7a8aa2;
+
+  --marine:      #12203a;
+  --marine-2:    #1d3050;
+  --or:          #b58f22;
+  --or-vif:      #d9b53f;
+  --or-clair:    #f0d98a;
+
+  --bon:         #067a4d;
+  --bon-fond:    #dcf6e9;
+  --bon-trait:   #0fb877;
+  --attente:     #96590a;
+  --attente-fond:#fff2d6;
+  --attente-trait:#f5a30a;
+  --alerte:      #bd2a22;
+  --alerte-fond: #ffe9e7;
+  --alerte-trait:#e0483e;
+
+  --ombre-1: 0 1px 2px rgba(13, 22, 38, .06);
+  --ombre-2: 0 6px 22px rgba(13, 22, 38, .09);
+  --ombre-3: 0 18px 48px rgba(7, 13, 24, .22);
+  --anneau:  0 0 0 3px rgba(217, 181, 63, .42);
+
+  --serif: "Spectral", "Iowan Old Style", Palatino, Georgia, serif;
+  --sans:  "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+
+  --r-s: 8px;
+  --r:   12px;
+  --r-l: 18px;
+  --t:   190ms cubic-bezier(.4, 0, .2, 1);
+
+  color-scheme: light dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:      #070d18;
+    --surface:     #0f1a2c;
+    --surface-2:   #132038;
+    --surface-3:   #182842;
+    --line:        #22334f;
+    --line-fort:   #35496a;
+
+    --encre:       #e7edf7;
+    --encre-2:     #a9b8ce;
+    --encre-3:     #72839c;
+
+    --marine:      #0a1424;
+    --marine-2:    #16253e;
+    --or:          #e8c65c;
+    --or-vif:      #f0d275;
+    --or-clair:    #f7e6ae;
+
+    --bon:         #4fdda2;
+    --bon-fond:    #0c3126;
+    --bon-trait:   #17a877;
+    --attente:     #f7bc57;
+    --attente-fond:#33260c;
+    --attente-trait:#d99724;
+    --alerte:      #ff9089;
+    --alerte-fond: #391519;
+    --alerte-trait:#c9453c;
+
+    --ombre-1: 0 1px 2px rgba(0, 0, 0, .5);
+    --ombre-2: 0 6px 22px rgba(0, 0, 0, .45);
+    --ombre-3: 0 18px 48px rgba(0, 0, 0, .6);
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground:      #070d18;
+  --surface:     #0f1a2c;
+  --surface-2:   #132038;
+  --surface-3:   #182842;
+  --line:        #22334f;
+  --line-fort:   #35496a;
+
+  --encre:       #e7edf7;
+  --encre-2:     #a9b8ce;
+  --encre-3:     #72839c;
+
+  --marine:      #0a1424;
+  --marine-2:    #16253e;
+  --or:          #e8c65c;
+  --or-vif:      #f0d275;
+  --or-clair:    #f7e6ae;
+
+  --bon:         #4fdda2;
+  --bon-fond:    #0c3126;
+  --bon-trait:   #17a877;
+  --attente:     #f7bc57;
+  --attente-fond:#33260c;
+  --attente-trait:#d99724;
+  --alerte:      #ff9089;
+  --alerte-fond: #391519;
+  --alerte-trait:#c9453c;
+
+  --ombre-1: 0 1px 2px rgba(0, 0, 0, .5);
+  --ombre-2: 0 6px 22px rgba(0, 0, 0, .45);
+  --ombre-3: 0 18px 48px rgba(0, 0, 0, .6);
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--encre);
+  background: var(--ground);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--serif);
+  font-weight: 600;
+  margin: 0;
+  text-wrap: balance;
+}
+
+/* --- Bandeau -------------------------------------------------------------- */
+
+.bandeau {
+  background: linear-gradient(180deg, var(--marine), var(--marine-2));
+  border-bottom: 2px solid var(--or);
+  color: #fff;
+}
+
+.bandeau-corps {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 13px 22px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.marque {
+  font-family: var(--serif);
+  font-size: 11.5px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: var(--or-clair);
+}
+
+.bandeau h1 { font-size: 18px; color: #fff; }
+
+.qui {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 13px;
+  color: #bccadd;
+  flex-wrap: wrap;
+}
+.qui strong { color: #fff; font-weight: 600; }
+
+.direct { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; }
+.direct::before {
+  content: "";
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--bon-trait);
+  box-shadow: 0 0 0 3px rgba(15, 184, 119, .22);
+}
+.direct.hors::before { background: #6c7d95; box-shadow: 0 0 0 3px rgba(108, 125, 149, .22); }
+
+main { max-width: 1200px; margin: 0 auto; padding: 22px; }
+
+/* --- Sections ------------------------------------------------------------- */
+
+.bloc {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-l);
+  box-shadow: var(--ombre-1);
+  padding: 20px 22px;
+  margin-bottom: 18px;
+}
+
+.bloc > header {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+  padding-bottom: 11px;
+  border-bottom: 1px solid color-mix(in srgb, var(--or) 34%, var(--line));
+}
+.bloc > header h2 { font-size: 17px; }
+.bloc > header .periode { color: var(--encre-2); font-size: 13px; }
+.bloc > header .a-droite { margin-left: auto; display: flex; gap: 7px; align-items: center; flex-wrap: wrap; }
+
+.note { color: var(--encre-2); font-size: 13px; margin: 0 0 14px; max-width: 78ch; }
+
+/* --- Contrôles ------------------------------------------------------------ */
+
+button {
+  font: inherit;
+  font-size: 14px;
+  font-family: var(--sans);
+  border-radius: var(--r-s);
+  border: 1px solid var(--line-fort);
+  background: var(--surface);
+  color: var(--encre);
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background var(--t), border-color var(--t), color var(--t);
+}
+button:hover { background: var(--surface-3); border-color: var(--or); }
+button:disabled { opacity: .5; cursor: not-allowed; }
+
+button.primaire {
+  background: var(--marine-2);
+  border-color: var(--marine-2);
+  color: #fff;
+  font-weight: 600;
+}
+button.primaire:hover:not(:disabled) { background: var(--marine); border-color: var(--or); }
+button.discret { padding: 5px 10px; font-size: 13px; color: var(--encre-2); }
+button.alerte { color: var(--alerte); border-color: color-mix(in srgb, var(--alerte) 40%, var(--line)); }
+
+input[type="text"], input[type="number"], input[type="password"] {
+  font: inherit;
+  font-family: var(--sans);
+  padding: 8px 10px;
+  border: 1px solid var(--line-fort);
+  border-radius: var(--r-s);
+  background: var(--surface);
+  color: var(--encre);
+  width: 100%;
+}
+input[type="number"] { font-variant-numeric: tabular-nums; }
+input::placeholder { color: var(--encre-3); }
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+input[type="number"] { -moz-appearance: textfield; }
+
+:focus-visible { outline: none; box-shadow: var(--anneau); border-color: var(--or); }
+
+/* --- Porte d'entrée ------------------------------------------------------- */
+
+.porte {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background:
+    radial-gradient(1000px 480px at 50% -12%, rgba(217, 181, 63, .18), transparent 68%),
+    linear-gradient(168deg, #060d18, var(--marine-2) 58%, #0a1424);
+}
+
+.panneau {
+  width: min(430px, 100%);
+  background: var(--surface);
+  border-radius: var(--r-l);
+  box-shadow: var(--ombre-3);
+  padding: 32px 30px 26px;
+  border-top: 3px solid var(--or-vif);
+}
+.panneau .marque { color: var(--or); display: block; margin-bottom: 6px; }
+.panneau h1 { font-size: 23px; margin-bottom: 6px; }
+.panneau p { color: var(--encre-2); font-size: 14px; margin: 0 0 20px; }
+.panneau label { display: block; font-size: 13px; font-weight: 600; color: var(--encre-2); margin-bottom: 6px; }
+.panneau button.primaire { width: 100%; margin-top: 14px; padding: 11px; }
+.pied-panneau {
+  margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--line);
+  font-size: 13px; text-align: center;
+}
+.pied-panneau button { border: none; background: none; color: var(--marine-2); text-decoration: underline; padding: 4px; }
+:root[data-theme="dark"] .pied-panneau button,
+:root:not([data-theme="light"]) .pied-panneau button { color: var(--or); }
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme="dark"]) .pied-panneau button { color: var(--marine-2); }
+}
+
+/* --- Messages ------------------------------------------------------------- */
+
+.message { border-radius: var(--r-s); padding: 10px 13px; font-size: 13.5px; margin: 12px 0; }
+.message:empty { display: none; }
+.message.erreur { background: var(--alerte-fond); color: var(--alerte); border: 1px solid color-mix(in srgb, var(--alerte) 30%, transparent); }
+.message.succes { background: var(--bon-fond); color: var(--bon); border: 1px solid color-mix(in srgb, var(--bon) 30%, transparent); }
+.message.info   { background: var(--attente-fond); color: var(--attente); border: 1px solid color-mix(in srgb, var(--attente) 34%, transparent); }
+
+/* --- Saisie --------------------------------------------------------------- */
+
+.grille-saisie {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 13px;
+}
+
+.champ {
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r);
+  padding: 12px 13px;
+}
+.champ label { display: block; font-size: 12.5px; font-weight: 600; color: var(--encre-2); margin-bottom: 8px; min-height: 2.6em; }
+.champ .unite { font-weight: 400; color: var(--encre-3); }
+
+.barre { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 16px; }
+.barre .horodatage { font-size: 12.5px; color: var(--encre-3); }
+
+/* --- Tuiles --------------------------------------------------------------- */
+
+.tuiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
+  gap: 12px;
+}
+
+.tuile {
+  position: relative;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line-fort);
+  border-radius: var(--r);
+  padding: 12px 14px;
+  background: var(--surface-2);
+}
+.tuile .nom { font-size: 12.5px; font-weight: 600; color: var(--encre-2); min-height: 2.6em; }
+.tuile .realise {
+  font-size: 27px; font-weight: 700; letter-spacing: -.015em;
+  font-variant-numeric: tabular-nums; white-space: nowrap; margin-top: 6px;
+}
+.tuile.montant .realise { font-size: 21px; }
+.tuile .cible { font-size: 12.5px; color: var(--encre-3); font-variant-numeric: tabular-nums; }
+.tuile .ecart { font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums; margin-top: 3px; }
+.tuile .ecart .mot { font-weight: 400; color: var(--encre-2); }
+
+.tuile.atteint { border-left-color: var(--bon-trait); background: var(--bon-fond); }
+.tuile.atteint .ecart { color: var(--bon); }
+.tuile.manque { border-left-color: var(--attente-trait); background: var(--attente-fond); }
+.tuile.manque .ecart { color: var(--attente); }
+.tuile.depasse { border-left-color: var(--alerte-trait); background: var(--alerte-fond); }
+.tuile.depasse .ecart { color: var(--alerte); }
+.tuile.sans-objectif .ecart { color: var(--encre-3); font-weight: 400; font-style: italic; }
+
+.sceau {
+  position: absolute; top: 10px; right: 11px;
+  width: 21px; height: 21px; border-radius: 50%;
+  background: var(--bon-trait); color: #04231a;
+  font-size: 13px; font-weight: 700; line-height: 21px; text-align: center;
+}
+.sceau.mauvais { background: var(--alerte-trait); color: #2a0906; }
+.tuile.atteint .nom, .tuile.depasse .nom { padding-right: 26px; }
+
+.bandeau-succes {
+  display: flex; align-items: center; gap: 9px;
+  margin-bottom: 13px; padding: 10px 14px;
+  border-radius: var(--r-s);
+  background: var(--bon-fond);
+  border: 1px solid color-mix(in srgb, var(--bon-trait) 40%, transparent);
+  color: var(--bon);
+  font-weight: 600; font-size: 13.5px;
+}
+
+/* --- Tableaux ------------------------------------------------------------- */
+
+.defilable { overflow-x: auto; }
+
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; }
+th, td { padding: 9px 11px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+th:first-child, td:first-child { text-align: left; }
+thead th {
+  font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em;
+  color: var(--encre-2); font-weight: 700;
+  border-bottom: 1px solid var(--line-fort);
+  vertical-align: bottom; white-space: normal; min-width: 80px;
+}
+tbody tr:hover { background: var(--surface-2); }
+td.nb, th.nb { font-variant-numeric: tabular-nums; }
+tfoot td {
+  font-weight: 700; background: var(--surface-2);
+  border-top: 2px solid color-mix(in srgb, var(--or) 46%, var(--line));
+  border-bottom: none;
+}
+
+.sous { font-size: 12px; display: block; font-variant-numeric: tabular-nums; }
+.sous.atteint { color: var(--bon); }
+.sous.manque { color: var(--attente); }
+.sous.depasse { color: var(--alerte); font-weight: 600; }
+.sous.sans-objectif { color: var(--encre-3); }
+
+.rang { font-family: var(--serif); font-size: 16px; font-weight: 600; color: var(--encre-2); width: 44px; }
+tr.tete .rang { color: var(--or); }
+tr.tete td { background: color-mix(in srgb, var(--or) 13%, transparent); }
+
+.puce { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
+.puce.oui { background: var(--bon-fond); color: var(--bon); }
+.puce.non { background: var(--surface-3); color: var(--encre-3); }
+.puce.inactif { background: var(--alerte-fond); color: var(--alerte); }
+.puce.attention { background: var(--attente-fond); color: var(--attente); }
+
+/* --- Onglets -------------------------------------------------------------- */
+
+.onglets { display: flex; gap: 3px; border-bottom: 1px solid var(--line); margin-bottom: 18px; flex-wrap: wrap; }
+.onglets button {
+  border: none; border-bottom: 2px solid transparent; border-radius: 0;
+  background: none; padding: 9px 15px; color: var(--encre-2); font-weight: 600;
+}
+.onglets button:hover { background: var(--surface-3); border-color: transparent; }
+.onglets button[aria-selected="true"] { color: var(--encre); border-bottom-color: var(--or); }
+
+.periode-nav { display: flex; align-items: center; gap: 6px; }
+
+.objectifs-table input { width: 92px; text-align: right; padding: 6px 8px; }
+.objectifs-table td.sans { color: var(--encre-3); font-style: italic; font-size: 12.5px; }
+.plafond-note { display: block; font-size: 11.5px; font-weight: 600; color: var(--alerte); }
+
+.vide { color: var(--encre-3); font-style: italic; padding: 16px 0; }
+
+.pied {
+  max-width: 1200px; margin: 0 auto; padding: 0 22px 40px;
+  color: var(--encre-3); font-size: 12.5px; max-width: 90ch;
+}
+
+@media (max-width: 700px) {
+  main { padding: 14px; }
+  .bloc { padding: 16px; }
+  .bandeau-corps { padding: 12px 14px; }
+  .qui { width: 100%; margin-left: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+}
+</style>
+
+<div id="attente" class="porte">
+  <div class="panneau">
+    <span class="marque">Swiss Times Fiduciary</span>
+    <h1>Suivi de performance</h1>
+    <p id="attente-texte">Connexion à l’espace de l’équipe…</p>
+  </div>
+</div>
+
+<div id="porte" class="porte" hidden>
+  <div class="panneau">
+    <span class="marque">Swiss Times Fiduciary</span>
+    <h1 id="porte-titre">Suivi de performance</h1>
+    <p id="porte-texte">Entrez votre identifiant de conseiller pour accéder à votre page.</p>
+    <form id="porte-form" autocomplete="off">
+      <label for="porte-champ" id="porte-label">Identifiant</label>
+      <input type="text" id="porte-champ" autocapitalize="none" spellcheck="false" required>
+      <div class="message" id="porte-message" role="alert"></div>
+      <button type="submit" class="primaire" id="porte-bouton">Accéder à ma page</button>
+    </form>
+    <div class="pied-panneau">
+      <button type="button" id="bascule-porte">Espace administrateur</button>
+    </div>
+  </div>
+</div>
+
+<div id="appli" hidden>
+  <header class="bandeau">
+    <div class="bandeau-corps">
+      <span class="marque">Swiss Times Fiduciary</span>
+      <h1 id="titre-appli">Suivi de performance</h1>
+      <div class="qui">
+        <span class="direct hors" id="pastille">hors ligne</span>
+        <span id="identite"></span>
+        <button class="discret" id="quitter">Se déconnecter</button>
+      </div>
+    </div>
+  </header>
+  <main id="vue"></main>
+  <footer class="pied" id="pied"></footer>
+</div>
+
+<script>
+(() => {
+  'use strict';
+
+  // =========================================================================
+  // Indicateurs
+  //
+  // `sens` dit dans quelle direction va la réussite. Cinq indicateurs sont des
+  // cibles : l'objectif est un minimum à atteindre. Les rendez-vous valides non
+  // signés sont un plafond — des affaires manquées — dont l'objectif est un
+  // maximum à ne pas franchir.
+  // =========================================================================
+
+  const INDICATEURS = [
+    { cle: 'maladie', libelle: "Contrats d'assurance maladie signés", court: 'Maladie',
+      format: 'nombre', hebdomadaire: true, sens: 'cible' },
+    { cle: 'lpp_comptes', libelle: 'Comptes LPP ouverts', court: 'Comptes LPP',
+      format: 'nombre', hebdomadaire: true, sens: 'cible' },
+    { cle: 'everlife', libelle: 'Contrats Everlife signés', court: 'Everlife',
+      format: 'nombre', hebdomadaire: true, sens: 'cible' },
+    { cle: 'rdv_pris', libelle: 'Rendez-vous pris dans la journée', court: 'RDV pris',
+      format: 'nombre', hebdomadaire: true, sens: 'cible' },
+    { cle: 'rdv_non_signes', libelle: 'Rendez-vous valides non signés', court: 'RDV non signés',
+      format: 'nombre', hebdomadaire: true, sens: 'plafond' },
+    { cle: 'lpp_montant', libelle: 'Montant transféré des avoirs LPP', court: 'Avoirs LPP',
+      format: 'montant', hebdomadaire: false, sens: 'cible' },
+  ];
+  const CLES = INDICATEURS.map((i) => i.cle);
+  const CLES_CLASSEES = CLES.filter((c) => c !== 'rdv_non_signes');
+  const CODE_ADMIN = 'admin39';
+
+  // =========================================================================
+  // Dates — fuseau suisse, semaines ISO
+  //
+  // Le gel des saisies dépend de ce que « aujourd'hui » veut dire à Genève, pas
+  // de l'heure du navigateur : un conseiller en déplacement ne doit pas rouvrir
+  // la journée de la veille.
+  // =========================================================================
+
+  const FORMAT_JOUR = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Europe/Zurich', year: 'numeric', month: '2-digit', day: '2-digit',
+  });
+  const aujourdhui = () => FORMAT_JOUR.format(new Date());
+
+  const enUTC = (jour) => {
+    const [a, m, j] = jour.split('-').map(Number);
+    return Date.UTC(a, m - 1, j);
+  };
+  const enJour = (t) => new Date(t).toISOString().slice(0, 10);
+  const decale = (jour, n) => enJour(enUTC(jour) + n * 86400000);
+  const jourSemaine = (jour) => (new Date(enUTC(jour)).getUTCDay() || 7);
+  const lundiDe = (jour) => decale(jour, 1 - jourSemaine(jour));
+  const cleMois = (jour) => jour.slice(0, 7);
+
+  function cleSemaine(jour) {
+    const jeudi = decale(jour, 4 - jourSemaine(jour));
+    const annee = Number(jeudi.slice(0, 4));
+    const numero = Math.floor((enUTC(jeudi) - enUTC(`${annee}-01-01`)) / 86400000 / 7) + 1;
+    return `${annee}-S${String(numero).padStart(2, '0')}`;
+  }
+
+  const joursSemaine = (jour) => {
+    const lundi = lundiDe(jour);
+    return Array.from({ length: 7 }, (_, i) => decale(lundi, i));
+  };
+
+  function joursMois(jour) {
+    const [a, m] = jour.split('-').map(Number);
+    const jours = [];
+    for (let d = new Date(Date.UTC(a, m - 1, 1)); d.getUTCMonth() === m - 1; d.setUTCDate(d.getUTCDate() + 1)) {
+      jours.push(d.toISOString().slice(0, 10));
+    }
+    return jours;
+  }
+
+  const semaineVoisine = (jour, pas) => decale(lundiDe(jour), pas * 7);
+  function moisVoisin(jour, pas) {
+    const [a, m] = jour.split('-').map(Number);
+    const total = a * 12 + (m - 1) + pas;
+    return `${String(Math.floor(total / 12)).padStart(4, '0')}-${String((total % 12) + 1).padStart(2, '0')}-01`;
+  }
+
+  const MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin',
+    'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  const JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+
+  function libelleJour(jour, avecNom = true) {
+    const [a, m, j] = jour.split('-').map(Number);
+    const nom = avecNom ? `${JOURS[jourSemaine(jour) - 1]} ` : '';
+    return `${nom}${j === 1 ? '1er' : j} ${MOIS[m - 1]} ${a}`;
+  }
+  const libelleSemaine = (jour) =>
+    `${libelleJour(lundiDe(jour), false)} – ${libelleJour(decale(lundiDe(jour), 6), false)}`;
+  const libelleMois = (jour) => {
+    const [a, m] = jour.split('-').map(Number);
+    return `${MOIS[m - 1]} ${a}`;
+  };
+
+  // =========================================================================
+  // Écarts, cumuls, classement — fonctions pures
+  // =========================================================================
+
+  const saisieVide = () => Object.fromEntries(CLES.map((c) => [c, 0]));
+
+  /**
+   * L'écart brut est le même dans les deux sens — réalisé moins objectif — mais
+   * sa lecture s'inverse : une cible est atteinte au-dessus, un plafond est
+   * respecté en dessous. Toujours une valeur chiffrée, jamais un pourcentage.
+   */
+  function ecart(realise, objectif, sens) {
+    if (objectif === null || objectif === undefined) {
+      return { realise, objectif: null, ecart: null, reste: null, marge: null,
+        exces: null, atteint: null, depasse: false, sens };
+    }
+    const e = realise - objectif;
+    if (sens === 'plafond') {
+      return { realise, objectif, ecart: e, reste: null,
+        marge: e < 0 ? -e : 0, exces: e > 0 ? e : 0,
+        atteint: e <= 0, depasse: e > 0, sens };
+    }
+    return { realise, objectif, ecart: e, reste: e < 0 ? -e : 0,
+      marge: null, exces: null, atteint: e >= 0, depasse: false, sens };
+  }
+
+  function cumuler(identifiant, jours) {
+    const total = saisieVide();
+    let joursSaisis = 0;
+    for (const jour of jours) {
+      const duJour = saisieDe(identifiant, jour);
+      if (!duJour) continue;
+      joursSaisis += 1;
+      for (const cle of CLES) total[cle] += Number(duJour[cle]) || 0;
+    }
+    return { total, joursSaisis };
+  }
+
+  function bilanPeriode(identifiant, jours, objectifs, portee) {
+    const { total, joursSaisis } = cumuler(identifiant, jours);
+    const lignes = INDICATEURS.map((ind) => {
+      const applicable = portee === 'mensuel' || ind.hebdomadaire;
+      const objectif = applicable && objectifs && objectifs[ind.cle]
+        ? (objectifs[ind.cle][portee] ?? null) : null;
+      return { cle: ind.cle, libelle: ind.libelle, court: ind.court,
+        format: ind.format, applicable, ...ecart(total[ind.cle], objectif, ind.sens) };
+    });
+    return { total, joursSaisis, lignes };
+  }
+
+  function bilanEquipe(conseillers, jours, portee) {
+    const total = saisieVide();
+    const cumules = Object.fromEntries(CLES.map((c) => [c, null]));
+    for (const c of conseillers) {
+      const { total: t } = cumuler(c.identifiant, jours);
+      for (const cle of CLES) total[cle] += t[cle];
+      const objectifs = objectifsDe(c.identifiant);
+      for (const ind of INDICATEURS) {
+        if (portee === 'hebdomadaire' && !ind.hebdomadaire) continue;
+        const v = objectifs[ind.cle] ? (objectifs[ind.cle][portee] ?? null) : null;
+        if (v === null) continue;
+        cumules[ind.cle] = (cumules[ind.cle] ?? 0) + v;
+      }
+    }
+    const lignes = INDICATEURS.map((ind) => ({
+      cle: ind.cle, libelle: ind.libelle, court: ind.court, format: ind.format,
+      applicable: portee === 'mensuel' || ind.hebdomadaire,
+      ...ecart(total[ind.cle], cumules[ind.cle], ind.sens),
+    }));
+    return { total, lignes };
+  }
+
+  /**
+   * Classement réservé à l'espace administrateur. Chacun est classé indicateur
+   * par indicateur sur son réalisé ; les points sont la somme de ces rangs, le
+   * plus petit total passe premier. Un décompte de rangs, non un pourcentage,
+   * ce qui évite de comparer des contrats à des francs.
+   */
+  function classement(conseillers, jours, portee) {
+    const bilans = conseillers.map((c) => ({
+      identifiant: c.identifiant, nom: c.nom,
+      bilan: bilanPeriode(c.identifiant, jours, objectifsDe(c.identifiant), portee),
+    }));
+
+    const rangs = {};
+    for (const ind of INDICATEURS) {
+      const plafond = ind.sens === 'plafond';
+      const tries = [...bilans].sort((a, b) => (plafond
+        ? a.bilan.total[ind.cle] - b.bilan.total[ind.cle]
+        : b.bilan.total[ind.cle] - a.bilan.total[ind.cle]));
+      const parConseiller = {};
+      let rangPrec = 0; let valeurPrec = null;
+      tries.forEach((entree, index) => {
+        const valeur = entree.bilan.total[ind.cle];
+        const rang = valeur === valeurPrec ? rangPrec : index + 1;
+        parConseiller[entree.identifiant] = rang;
+        rangPrec = rang; valeurPrec = valeur;
+      });
+      rangs[ind.cle] = parConseiller;
+    }
+
+    const lignes = bilans.map((entree) => {
+      const siens = Object.fromEntries(CLES.map((c) => [c, rangs[c][entree.identifiant]]));
+      return {
+        ...entree,
+        rangs: siens,
+        points: CLES_CLASSEES.reduce((s, c) => s + siens[c], 0),
+        objectifsAtteints: entree.bilan.lignes.filter((l) => l.atteint === true).length,
+        objectifsFixes: entree.bilan.lignes.filter((l) => l.objectif !== null).length,
+      };
+    });
+
+    lignes.sort((a, b) => a.points - b.points
+      || b.objectifsAtteints - a.objectifsAtteints
+      || a.nom.localeCompare(b.nom, 'fr'));
+
+    let rangPrec = 0; let pointsPrec = null;
+    lignes.forEach((ligne, index) => {
+      ligne.rang = ligne.points === pointsPrec ? rangPrec : index + 1;
+      rangPrec = ligne.rang; pointsPrec = ligne.points;
+    });
+    return lignes;
+  }
+
+  // =========================================================================
+  // Formatage
+  // =========================================================================
+
+  const NOMBRE = new Intl.NumberFormat('fr-CH');
+  const formater = (v, format) => {
+    if (v === null || v === undefined) return '—';
+    return format === 'montant' ? `${NOMBRE.format(v)} CHF` : NOMBRE.format(v);
+  };
+  const formaterSigne = (v, format) => {
+    if (v === null || v === undefined) return '—';
+    const signe = v > 0 ? '+' : v < 0 ? '−' : '±';
+    return `${signe}${formater(Math.abs(v), format)}`;
+  };
+  const heure = (iso) => (iso ? new Date(iso).toLocaleTimeString('fr-CH',
+    { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Zurich' }) : '');
+
+  const motCible = (l) => (l.sens === 'plafond' ? 'plafond' : 'objectif');
+
+  function texteEcart(l) {
+    const plafond = l.sens === 'plafond';
+    if (!l.applicable) return plafond ? 'pas de plafond à cette échéance' : 'pas d’objectif à cette échéance';
+    if (l.objectif === null) return `${motCible(l)} non fixé`;
+    if (plafond) {
+      if (l.ecart > 0) return `plafond dépassé de ${formater(l.exces, l.format)}`;
+      if (l.ecart === 0) return 'plafond atteint tout juste, à ne pas franchir';
+      return `${formater(l.marge, l.format)} de marge sous le plafond`;
+    }
+    if (l.ecart === 0) return 'objectif atteint, tout juste';
+    if (l.ecart > 0) return `objectif dépassé de ${formater(l.ecart, l.format)}`;
+    return `il manque ${formater(l.reste, l.format)}`;
+  }
+
+  const classeEcart = (l) => {
+    if (!l.applicable || l.objectif === null) return 'sans-objectif';
+    if (l.depasse) return 'depasse';
+    return l.atteint ? 'atteint' : 'manque';
+  };
+
+  // =========================================================================
+  // Fabrique d'éléments
+  // =========================================================================
+
+  function el(balise, attributs = {}, enfants = []) {
+    const n = document.createElement(balise);
+    for (const [cle, valeur] of Object.entries(attributs)) {
+      if (valeur === null || valeur === undefined || valeur === false) continue;
+      if (cle === 'class') n.className = valeur;
+      else if (cle === 'texte') n.textContent = valeur;
+      else if (cle.startsWith('on')) n.addEventListener(cle.slice(2), valeur);
+      else n.setAttribute(cle, valeur === true ? '' : String(valeur));
+    }
+    for (const enfant of [].concat(enfants)) {
+      if (enfant === null || enfant === undefined || enfant === false) continue;
+      n.append(typeof enfant === 'string' ? document.createTextNode(enfant) : enfant);
+    }
+    return n;
+  }
+  const vider = (n) => { while (n.firstChild) n.removeChild(n.firstChild); return n; };
+
+  // =========================================================================
+  // État et stockage partagé
+  //
+  // Trois documents suffisent : l'équipe, les objectifs, et un document par
+  // mois de saisies. Les clés de document n'admettent pas le point sans
+  // ambiguïté dans une écriture fusionnée : les identifiants y sont donc
+  // transposés (« s.ragaa » devient « s_ragaa »), le point ne vivant que dans
+  // ce que lisent les conseillers.
+  // =========================================================================
+
+  const cleDb = (identifiant) => identifiant.replace(/\./g, '_');
+
+  const etat = {
+    db: null,
+    pret: false,
+    rosterCharge: false,
+    conseillers: [],
+    objectifs: {},
+    mois: {},
+    abonnementsMois: new Map(),
+    session: { role: null, identifiant: null },
+    porteAdmin: false,
+    ancreSemaine: null,
+    ancreMois: null,
+    onglet: 'equipe',
+    brouillons: new Map(),
+    messageAction: null,
+  };
+
+  const conseillersActifs = () => etat.conseillers.filter((c) => c.actif !== false);
+  const trouver = (identifiant) => etat.conseillers.find((c) => c.identifiant === identifiant) || null;
+  const objectifsDe = (identifiant) => etat.objectifs[cleDb(identifiant)] || {};
+
+  function saisieDe(identifiant, jour) {
+    const mois = etat.mois[cleMois(jour)];
+    if (!mois || !mois[jour]) return null;
+    return mois[jour][cleDb(identifiant)] || null;
+  }
+
+  const normaliserIdentifiant = (brut) => {
+    const cle = String(brut || '').trim().toLowerCase();
+    return /^[a-z0-9][a-z0-9._-]{1,31}$/.test(cle) ? cle : null;
+  };
+
+  // --- Abonnements ---------------------------------------------------------
+
+  function moisNecessaires() {
+    const jour = aujourdhui();
+    const cles = new Set([cleMois(jour)]);
+    for (const j of joursSemaine(etat.ancreSemaine || jour)) cles.add(cleMois(j));
+    cles.add(cleMois(etat.ancreMois || jour));
+    if (etat.session.role === 'conseiller') {
+      // Les trois dernières semaines d'historique peuvent déborder sur le mois
+      // précédent.
+      cles.add(cleMois(decale(jour, -21)));
+    }
+    return cles;
+  }
+
+  function ajusterAbonnementsMois() {
+    const voulus = moisNecessaires();
+    for (const [cle, stop] of etat.abonnementsMois) {
+      if (voulus.has(cle)) continue;
+      stop();
+      etat.abonnementsMois.delete(cle);
+    }
+    for (const cle of voulus) {
+      if (etat.abonnementsMois.has(cle)) continue;
+      const stop = etat.db.doc(`saisies/${cle}`).onSnapshot(
+        (snap) => {
+          etat.mois[cle] = snap.exists ? (snap.data().jours || {}) : {};
+          rendre();
+        },
+        () => { signalerLiaison(false); },
+      );
+      etat.abonnementsMois.set(cle, stop);
+    }
+  }
+
+  function signalerLiaison(enLigne) {
+    const pastille = document.getElementById('pastille');
+    if (!pastille) return;
+    pastille.classList.toggle('hors', !enLigne);
+    pastille.textContent = enLigne ? 'en direct' : 'hors ligne';
+  }
+
+  // --- Écritures -----------------------------------------------------------
+
+  async function fusionner(chemin, corps) {
+    const ref = etat.db.doc(chemin);
+    try {
+      await ref.update(corps);
+    } catch (erreur) {
+      if (erreur && erreur.code === 'invalid_argument') {
+        const snap = await ref.get();
+        if (snap.exists) await ref.update(corps);
+        else await ref.set(corps);
+        return;
+      }
+      throw erreur;
+    }
+  }
+
+  async function enregistrerSaisie(valeurs) {
+    const jour = aujourdhui();
+    await fusionner(`saisies/${cleMois(jour)}`, {
+      jours: { [jour]: { [cleDb(etat.session.identifiant)]: { ...valeurs, maj: new Date().toISOString() } } },
+    });
+  }
+
+  async function enregistrerObjectifs(identifiant, objectifs) {
+    // Un remplacement, non une fusion : vider une case doit effacer l'objectif.
+    const parConseiller = { ...etat.objectifs, [cleDb(identifiant)]: objectifs };
+    await etat.db.doc('equipe/objectifs').set({ parConseiller });
+  }
+
+  async function enregistrerConseillers(conseillers) {
+    await etat.db.doc('equipe/roster').set({ conseillers });
+  }
+
+  // =========================================================================
+  // Session — une commodité par navigateur, pas une identité
+  // =========================================================================
+
+  function lireSession() {
+    try {
+      const brut = localStorage.getItem('suivi-stf-session');
+      if (brut) return JSON.parse(brut);
+    } catch { /* navigation privée, stockage bloqué : on repart de zéro */ }
+    return { role: null, identifiant: null };
+  }
+
+  function ecrireSession(session) {
+    etat.session = session;
+    try {
+      localStorage.setItem('suivi-stf-session', JSON.stringify(session));
+    } catch { /* sans mémoire, il faudra se reconnecter au prochain onglet */ }
+  }
+
+  // =========================================================================
+  // Porte d'entrée
+  // =========================================================================
+
+  const noeuds = {
+    attente: document.getElementById('attente'),
+    attenteTexte: document.getElementById('attente-texte'),
+    porte: document.getElementById('porte'),
+    porteForm: document.getElementById('porte-form'),
+    porteChamp: document.getElementById('porte-champ'),
+    porteLabel: document.getElementById('porte-label'),
+    porteTitre: document.getElementById('porte-titre'),
+    porteTexte: document.getElementById('porte-texte'),
+    porteMessage: document.getElementById('porte-message'),
+    porteBouton: document.getElementById('porte-bouton'),
+    bascule: document.getElementById('bascule-porte'),
+    appli: document.getElementById('appli'),
+    vue: document.getElementById('vue'),
+    identite: document.getElementById('identite'),
+    pied: document.getElementById('pied'),
+  };
+
+  function afficherPorte() {
+    noeuds.attente.hidden = true;
+    noeuds.appli.hidden = true;
+    noeuds.porte.hidden = false;
+    const admin = etat.porteAdmin;
+    noeuds.porteTitre.textContent = admin ? 'Espace administrateur' : 'Suivi de performance';
+    noeuds.porteTexte.textContent = admin
+      ? 'Accès réservé au responsable d’équipe.'
+      : 'Entrez votre identifiant de conseiller pour accéder à votre page.';
+    noeuds.porteLabel.textContent = admin ? 'Code d’accès' : 'Identifiant';
+    noeuds.porteChamp.type = admin ? 'password' : 'text';
+    noeuds.porteChamp.value = '';
+    noeuds.porteBouton.textContent = admin ? 'Ouvrir le tableau de bord' : 'Accéder à ma page';
+    noeuds.bascule.textContent = admin ? 'Retour à la connexion conseiller' : 'Espace administrateur';
+    noeuds.porteMessage.textContent = '';
+    noeuds.porteMessage.className = 'message';
+    noeuds.porteChamp.focus();
+  }
+
+  noeuds.bascule.addEventListener('click', () => {
+    etat.porteAdmin = !etat.porteAdmin;
+    afficherPorte();
+  });
+
+  noeuds.porteForm.addEventListener('submit', (evenement) => {
+    evenement.preventDefault();
+    const valeur = noeuds.porteChamp.value;
+    const erreur = (texte) => {
+      noeuds.porteMessage.className = 'message erreur';
+      noeuds.porteMessage.textContent = texte;
+      noeuds.porteChamp.select();
+    };
+
+    if (etat.porteAdmin) {
+      if (String(valeur).trim().toLowerCase() !== CODE_ADMIN) return erreur('Code incorrect.');
+      ecrireSession({ role: 'admin', identifiant: null });
+      return ouvrirAppli();
+    }
+
+    const identifiant = normaliserIdentifiant(valeur);
+    const conseiller = identifiant ? trouver(identifiant) : null;
+    if (!conseiller) {
+      return erreur('Identifiant inconnu. Demandez au responsable d’équipe de vous créer un accès.');
+    }
+    if (conseiller.actif === false) return erreur('Cet accès a été désactivé.');
+    ecrireSession({ role: 'conseiller', identifiant });
+    return ouvrirAppli();
+  });
+
+  document.getElementById('quitter').addEventListener('click', () => {
+    ecrireSession({ role: null, identifiant: null });
+    etat.porteAdmin = false;
+    afficherPorte();
+  });
+
+  function ouvrirAppli() {
+    noeuds.attente.hidden = true;
+    noeuds.porte.hidden = true;
+    noeuds.appli.hidden = false;
+    ajusterAbonnementsMois();
+    rendre();
+  }
+
+  // =========================================================================
+  // Rendu
+  // =========================================================================
+
+  function rendre() {
+    if (!etat.pret) return;
+    const { role, identifiant } = etat.session;
+
+    if (role === 'conseiller') {
+      const conseiller = trouver(identifiant);
+      if (!conseiller || conseiller.actif === false) {
+        ecrireSession({ role: null, identifiant: null });
+        return afficherPorte();
+      }
+      noeuds.identite.replaceChildren(
+        document.createTextNode('Conseiller · '), el('strong', { texte: conseiller.nom }));
+      noeuds.pied.textContent = 'Les chiffres du jour restent modifiables jusqu’à minuit, '
+        + 'heure suisse. Passé ce délai ils sont définitifs.';
+      return vider(noeuds.vue).append(vueConseiller(conseiller));
+    }
+
+    if (role === 'admin') {
+      noeuds.identite.replaceChildren(el('strong', { texte: 'Responsable d’équipe' }));
+      noeuds.pied.textContent = 'Le classement n’est visible que depuis cette page. '
+        + 'Les saisies des journées passées sont définitives.';
+      return vider(noeuds.vue).append(vueAdmin());
+    }
+
+    return afficherPorte();
+  }
+
+  // --- Fragments -----------------------------------------------------------
+
+  function bloc(titre, periode, contenu, actions) {
+    return el('section', { class: 'bloc' }, [
+      el('header', {}, [
+        el('h2', { texte: titre }),
+        periode ? el('span', { class: 'periode', texte: periode }) : null,
+        actions ? el('div', { class: 'a-droite' }, actions) : null,
+      ]),
+      ...[].concat(contenu),
+    ]);
+  }
+
+  function tuile(ligne) {
+    return el('div', { class: `tuile ${classeEcart(ligne)} ${ligne.format === 'montant' ? 'montant' : ''}` }, [
+      ligne.atteint === true
+        ? el('span', { class: 'sceau', title: `${motCible(ligne)} tenu`, texte: '✓' }) : null,
+      ligne.depasse ? el('span', { class: 'sceau mauvais', title: 'Plafond dépassé', texte: '!' }) : null,
+      el('div', { class: 'nom', texte: ligne.libelle }),
+      el('div', { class: 'realise', texte: formater(ligne.realise, ligne.format) }),
+      el('div', { class: 'cible', texte: ligne.objectif === null
+        ? ' ' : `${motCible(ligne)} : ${formater(ligne.objectif, ligne.format)}` }),
+      el('div', { class: 'ecart' }, [
+        ligne.objectif !== null && ligne.ecart !== 0
+          ? el('span', { texte: `${formaterSigne(ligne.ecart, ligne.format)} · ` }) : null,
+        el('span', { class: 'mot', texte: texteEcart(ligne) }),
+      ]),
+    ]);
+  }
+
+  function tuiles(lignes, texteSucces) {
+    const avecObjectif = lignes.filter((l) => l.objectif !== null);
+    const complet = avecObjectif.length > 0 && avecObjectif.every((l) => l.atteint === true);
+    return el('div', {}, [
+      complet ? el('div', { class: 'bandeau-succes' }, [
+        el('span', { texte: '🏅' }), el('span', { texte: texteSucces })]) : null,
+      el('div', { class: 'tuiles' }, lignes.map(tuile)),
+    ]);
+  }
+
+  function navPeriode(portee) {
+    const aller = (ancre) => {
+      if (portee === 'semaine') etat.ancreSemaine = ancre; else etat.ancreMois = ancre;
+      ajusterAbonnementsMois();
+      rendre();
+    };
+    const ancre = (portee === 'semaine' ? etat.ancreSemaine : etat.ancreMois) || aujourdhui();
+    return el('div', { class: 'periode-nav' }, [
+      el('button', { class: 'discret', texte: '←',
+        title: portee === 'semaine' ? 'Semaine précédente' : 'Mois précédent',
+        onclick: () => aller(portee === 'semaine' ? semaineVoisine(ancre, -1) : moisVoisin(ancre, -1)) }),
+      el('button', { class: 'discret',
+        texte: portee === 'semaine' ? 'Semaine en cours' : 'Mois en cours',
+        onclick: () => aller(null) }),
+      el('button', { class: 'discret', texte: '→',
+        title: portee === 'semaine' ? 'Semaine suivante' : 'Mois suivant',
+        onclick: () => aller(portee === 'semaine' ? semaineVoisine(ancre, 1) : moisVoisin(ancre, 1)) }),
+    ]);
+  }
+
+  const libellePeriodeSemaine = () => {
+    const ancre = etat.ancreSemaine || aujourdhui();
+    return `${libelleSemaine(ancre)}${cleSemaine(ancre) === cleSemaine(aujourdhui()) ? ' — en cours' : ''}`;
+  };
+  const libellePeriodeMois = () => {
+    const ancre = etat.ancreMois || aujourdhui();
+    return `${libelleMois(ancre)}${cleMois(ancre) === cleMois(aujourdhui()) ? ' — en cours' : ''}`;
+  };
+
+  function messageAction() {
+    const noeud = el('div', { class: 'message', role: 'status' });
+    if (etat.messageAction) {
+      noeud.className = `message ${etat.messageAction.genre}`;
+      noeud.textContent = etat.messageAction.texte;
+    }
+    return noeud;
+  }
+
+  function poserMessage(texte, genre) {
+    etat.messageAction = texte ? { texte, genre } : null;
+    rendre();
+  }
+
+  // --- Espace conseiller ---------------------------------------------------
+
+  function vueConseiller(conseiller) {
+    const jour = aujourdhui();
+    const objectifs = objectifsDe(conseiller.identifiant);
+    const saisie = saisieDe(conseiller.identifiant, jour);
+    const champs = {};
+
+    const grille = el('div', { class: 'grille-saisie' }, INDICATEURS.map((ind) => {
+      const champ = el('input', {
+        type: 'number', min: '0', step: '1', inputmode: 'numeric',
+        id: `champ-${ind.cle}`,
+        value: saisie ? String(saisie[ind.cle] ?? 0) : '0',
+      });
+      champs[ind.cle] = champ;
+      return el('div', { class: 'champ' }, [
+        el('label', { for: `champ-${ind.cle}` }, [
+          ind.libelle,
+          ind.format === 'montant' ? el('span', { class: 'unite', texte: ' (CHF)' }) : null,
+        ]),
+        champ,
+      ]);
+    }));
+
+    const bouton = el('button', { class: 'primaire', texte: 'Enregistrer' });
+    bouton.addEventListener('click', async () => {
+      bouton.disabled = true;
+      const valeurs = {};
+      for (const ind of INDICATEURS) {
+        const brut = champs[ind.cle].value;
+        const n = brut === '' ? 0 : Number(brut);
+        if (!Number.isFinite(n) || n < 0 || !Number.isInteger(n)) {
+          bouton.disabled = false;
+          return poserMessage(`« ${ind.libelle} » doit être un nombre entier positif.`, 'erreur');
+        }
+        valeurs[ind.cle] = n;
+      }
+      try {
+        await enregistrerSaisie(valeurs);
+        poserMessage('Chiffres enregistrés. Vous pouvez encore les corriger jusqu’à ce soir.', 'succes');
+      } catch (erreur) {
+        poserMessage(messageErreur(erreur, 'Enregistrement impossible.'), 'erreur');
+      } finally {
+        bouton.disabled = false;
+      }
+      return undefined;
+    });
+
+    const historique = [];
+    for (let i = 0; i < 21; i += 1) {
+      const j = decale(jour, -i);
+      const s = saisieDe(conseiller.identifiant, j);
+      historique.push({ jour: j, fige: j !== jour, saisi: Boolean(s), valeurs: s || saisieVide() });
+    }
+
+    return el('div', {}, [
+      messageAction(),
+      bloc('Saisie du jour', libelleJour(jour), [
+        grille,
+        el('div', { class: 'barre' }, [
+          bouton,
+          el('span', { class: 'horodatage', texte: saisie && saisie.maj
+            ? `Dernier enregistrement à ${heure(saisie.maj)}.`
+            : 'Aucun chiffre enregistré pour aujourd’hui.' }),
+        ]),
+      ]),
+      bloc('Ma semaine', libellePeriodeSemaine(),
+        tuiles(bilanPeriode(conseiller.identifiant, joursSemaine(etat.ancreSemaine || jour),
+          objectifs, 'hebdomadaire').lignes,
+        'Tous les objectifs de la semaine sont atteints, plafond tenu.'),
+        navPeriode('semaine')),
+      bloc('Mon mois', libellePeriodeMois(),
+        tuiles(bilanPeriode(conseiller.identifiant, joursMois(etat.ancreMois || jour),
+          objectifs, 'mensuel').lignes,
+        'Tous les objectifs du mois sont atteints, plafond tenu.'),
+        navPeriode('mois')),
+      bloc('Mes trois dernières semaines',
+        'Les journées passées sont figées et ne peuvent plus être modifiées.',
+        el('div', { class: 'defilable' }, el('table', {}, [
+          el('thead', {}, el('tr', {}, [
+            el('th', { texte: 'Journée' }),
+            ...INDICATEURS.map((i) => el('th', { class: 'nb', texte: i.court })),
+            el('th', { texte: '' }),
+          ])),
+          el('tbody', {}, historique.map((h) => el('tr', {}, [
+            el('td', { texte: libelleJour(h.jour) }),
+            ...INDICATEURS.map((i) => el('td', { class: 'nb',
+              texte: h.saisi ? formater(h.valeurs[i.cle] || 0, i.format) : '—' })),
+            el('td', {}, el('span', { class: `puce ${h.fige ? 'non' : 'oui'}`,
+              texte: h.fige ? 'figée' : 'ouverte' })),
+          ]))),
+        ]))),
+    ]);
+  }
+
+  // --- Espace administrateur -----------------------------------------------
+
+  function vueAdmin() {
+    const onglets = [
+      ['equipe', 'Équipe'], ['conseillers', 'Par conseiller'],
+      ['classement', 'Classement'], ['objectifs', 'Objectifs'], ['acces', 'Accès'],
+    ];
+    const barre = el('nav', { class: 'onglets', role: 'tablist' }, onglets.map(([cle, nom]) =>
+      el('button', {
+        role: 'tab', 'aria-selected': String(etat.onglet === cle), texte: nom,
+        onclick: () => { etat.onglet = cle; etat.messageAction = null; rendre(); },
+      })));
+
+    const panneaux = {
+      equipe: ongletEquipe, conseillers: ongletParConseiller,
+      classement: ongletClassement, objectifs: ongletObjectifs, acces: ongletAcces,
+    };
+    return el('div', {}, [messageAction(), barre, panneaux[etat.onglet]()]);
+  }
+
+  function ongletEquipe() {
+    const jour = aujourdhui();
+    const actifs = conseillersActifs();
+    const total = saisieVide();
+    for (const c of actifs) {
+      const s = saisieDe(c.identifiant, jour);
+      if (!s) continue;
+      for (const ind of INDICATEURS) total[ind.cle] += Number(s[ind.cle]) || 0;
+    }
+    const saisis = actifs.filter((c) => saisieDe(c.identifiant, jour)).length;
+
+    return el('div', {}, [
+      bloc('Équipe — semaine', libellePeriodeSemaine(),
+        tuiles(bilanEquipe(actifs, joursSemaine(etat.ancreSemaine || jour), 'hebdomadaire').lignes,
+          'L’équipe a atteint tous ses objectifs de la semaine et tenu son plafond.'),
+        navPeriode('semaine')),
+      bloc('Équipe — mois', libellePeriodeMois(),
+        tuiles(bilanEquipe(actifs, joursMois(etat.ancreMois || jour), 'mensuel').lignes,
+          'L’équipe a atteint tous ses objectifs du mois et tenu son plafond.'),
+        navPeriode('mois')),
+      bloc('Saisies du jour',
+        `${libelleJour(jour)} — ${saisis} sur ${actifs.length} conseillers ont saisi`,
+        actifs.length ? el('div', { class: 'defilable' }, el('table', {}, [
+          el('thead', {}, el('tr', {}, [
+            el('th', { texte: 'Conseiller' }),
+            ...INDICATEURS.map((i) => el('th', { class: 'nb', texte: i.court })),
+            el('th', { texte: 'Saisie' }),
+          ])),
+          el('tbody', {}, actifs.map((c) => {
+            const s = saisieDe(c.identifiant, jour);
+            return el('tr', {}, [
+              el('td', { texte: c.nom }),
+              ...INDICATEURS.map((i) => el('td', { class: 'nb',
+                texte: s ? formater(Number(s[i.cle]) || 0, i.format) : '—' })),
+              el('td', {}, el('span', { class: `puce ${s ? 'oui' : 'non'}`,
+                texte: s ? `à ${heure(s.maj)}` : 'en attente' })),
+            ]);
+          })),
+          el('tfoot', {}, el('tr', {}, [
+            el('td', { texte: 'Total équipe' }),
+            ...INDICATEURS.map((i) => el('td', { class: 'nb', texte: formater(total[i.cle], i.format) })),
+            el('td', { texte: '' }),
+          ])),
+        ])) : el('p', { class: 'vide', texte: 'Aucun conseiller actif.' })),
+    ]);
+  }
+
+  function tableIndividuelle(lignes, portee) {
+    return el('div', { class: 'defilable' }, el('table', {}, [
+      el('thead', {}, el('tr', {}, [
+        el('th', { texte: 'Conseiller' }),
+        ...INDICATEURS.map((i) => el('th', { class: 'nb',
+          texte: portee === 'hebdomadaire' && !i.hebdomadaire ? `${i.court} (sans objectif)`
+            : (i.sens === 'plafond' ? `${i.court} (plafond)` : i.court) })),
+      ])),
+      el('tbody', {}, lignes.map((entree) => el('tr', {}, [
+        el('td', { texte: entree.nom }),
+        ...entree.bilan.lignes.map((l) => el('td', { class: 'nb' }, [
+          el('span', { texte: formater(l.realise, l.format) }),
+          el('span', { class: `sous ${classeEcart(l)}`,
+            texte: l.objectif === null
+              ? (l.applicable ? `sans ${motCible(l)}` : '—')
+              : `${formaterSigne(l.ecart, l.format)} / ${formater(l.objectif, l.format)}` }),
+        ])),
+      ]))),
+    ]));
+  }
+
+  function ongletParConseiller() {
+    const actifs = conseillersActifs();
+    if (!actifs.length) {
+      return bloc('Chiffres individuels', null,
+        el('p', { class: 'vide', texte: 'Aucun conseiller actif. Créez des accès dans l’onglet « Accès ».' }));
+    }
+    const jour = aujourdhui();
+    return el('div', {}, [
+      bloc('Chiffres individuels — semaine', libellePeriodeSemaine(),
+        tableIndividuelle(classement(actifs, joursSemaine(etat.ancreSemaine || jour), 'hebdomadaire'),
+          'hebdomadaire'), navPeriode('semaine')),
+      bloc('Chiffres individuels — mois', libellePeriodeMois(),
+        tableIndividuelle(classement(actifs, joursMois(etat.ancreMois || jour), 'mensuel'),
+          'mensuel'), navPeriode('mois')),
+    ]);
+  }
+
+  function tableClassement(lignes) {
+    return el('div', { class: 'defilable' }, el('table', {}, [
+      el('thead', {}, el('tr', {}, [
+        el('th', { texte: 'Rang' }), el('th', { texte: 'Conseiller' }),
+        ...INDICATEURS.map((i) => el('th', { class: 'nb',
+          texte: CLES_CLASSEES.includes(i.cle) ? i.court : `${i.court} (plafond, hors points)` })),
+        el('th', { class: 'nb', texte: 'Points' }),
+        el('th', { class: 'nb', texte: 'Objectifs atteints' }),
+      ])),
+      el('tbody', {}, lignes.map((entree) => el('tr', { class: entree.rang === 1 ? 'tete' : '' }, [
+        el('td', { class: 'rang', texte: String(entree.rang) }),
+        el('td', { texte: entree.nom }),
+        ...INDICATEURS.map((i) => el('td', { class: 'nb' }, [
+          el('span', { texte: formater(entree.bilan.total[i.cle], i.format) }),
+          el('span', { class: 'sous sans-objectif', texte: `rang ${entree.rangs[i.cle]}` }),
+        ])),
+        el('td', { class: 'nb', texte: String(entree.points) }),
+        el('td', { class: 'nb', texte: `${entree.objectifsAtteints} / ${entree.objectifsFixes}` }),
+      ]))),
+    ]));
+  }
+
+  function ongletClassement() {
+    const actifs = conseillersActifs();
+    if (!actifs.length) return bloc('Classement', null, el('p', { class: 'vide', texte: 'Aucun conseiller actif.' }));
+    const jour = aujourdhui();
+    return el('div', {}, [
+      bloc('Classement de la semaine', libellePeriodeSemaine(), [
+        el('p', { class: 'note', texte:
+          'Chaque conseiller est classé indicateur par indicateur sur son réalisé ; les points '
+          + 'sont la somme de ces rangs et le plus petit total passe premier. Les rendez-vous '
+          + 'valides non signés se lisent à l’envers — c’est un plafond, le moins nombreux passe '
+          + 'premier — et restent hors des points : les tenir n’est pas une performance, c’est la normale.' }),
+        tableClassement(classement(actifs, joursSemaine(etat.ancreSemaine || jour), 'hebdomadaire')),
+      ], navPeriode('semaine')),
+      bloc('Classement du mois', libellePeriodeMois(),
+        tableClassement(classement(actifs, joursMois(etat.ancreMois || jour), 'mensuel')),
+        navPeriode('mois')),
+    ]);
+  }
+
+  function ongletObjectifs() {
+    if (!etat.conseillers.length) {
+      return bloc('Objectifs', null, el('p', { class: 'vide', texte: 'Aucun conseiller enregistré.' }));
+    }
+    return el('div', {}, [
+      el('section', { class: 'bloc' }, [
+        el('header', {}, el('h2', { texte: 'Objectifs par conseiller' })),
+        el('p', { class: 'note', texte:
+          'Chaque conseiller a ses propres objectifs, et chaque indicateur le sien : les chiffres '
+          + 'd’une carte n’ont aucune influence sur les autres, et chaque carte s’enregistre '
+          + 'séparément. Objectif hebdomadaire et mensuel pour les cinq premiers indicateurs, '
+          + 'objectif mensuel seul pour le montant transféré des avoirs LPP. Aucun objectif '
+          + 'journalier. Une case laissée vide signifie « pas d’objectif fixé » — c’est ainsi '
+          + 'qu’on dispense un conseiller d’un indicateur.' }),
+      ]),
+      ...etat.conseillers.map(carteObjectifs),
+    ]);
+  }
+
+  function carteObjectifs(conseiller) {
+    const champs = {};
+    const enregistres = objectifsDe(conseiller.identifiant);
+    const brouillon = etat.brouillons.get(conseiller.identifiant);
+    const marqueur = el('span', { class: 'puce attention',
+      texte: 'modifié — non enregistré', hidden: !brouillon });
+
+    const cellule = (ind, portee) => {
+      if (portee === 'hebdomadaire' && !ind.hebdomadaire) {
+        return el('td', { class: 'sans', texte: 'pas d’objectif hebdomadaire' });
+      }
+      const cleBrouillon = `${ind.cle}.${portee}`;
+      const enregistre = enregistres[ind.cle] ? enregistres[ind.cle][portee] : null;
+      const valeur = brouillon && cleBrouillon in brouillon
+        ? brouillon[cleBrouillon]
+        : (enregistre === null || enregistre === undefined ? '' : String(enregistre));
+      const champ = el('input', {
+        type: 'number', min: '0', step: '1', inputmode: 'numeric',
+        value: valeur, placeholder: '—',
+        'aria-label': `Objectif ${portee} — ${ind.libelle} — ${conseiller.nom}`,
+        oninput: (evenement) => {
+          if (!etat.brouillons.has(conseiller.identifiant)) etat.brouillons.set(conseiller.identifiant, {});
+          etat.brouillons.get(conseiller.identifiant)[cleBrouillon] = evenement.target.value;
+          marqueur.hidden = false;
+        },
+      });
+      champs[cleBrouillon] = champ;
+      return el('td', {}, champ);
+    };
+
+    const bouton = el('button', { class: 'primaire', texte: 'Enregistrer les objectifs' });
+    bouton.addEventListener('click', async () => {
+      bouton.disabled = true;
+      const objectifs = {};
+      for (const ind of INDICATEURS) {
+        objectifs[ind.cle] = {};
+        const portees = ind.hebdomadaire ? ['hebdomadaire', 'mensuel'] : ['mensuel'];
+        for (const portee of portees) {
+          const champ = champs[`${ind.cle}.${portee}`];
+          const brut = champ ? champ.value : '';
+          if (brut === '') { objectifs[ind.cle][portee] = null; continue; }
+          const n = Number(brut);
+          if (!Number.isFinite(n) || n < 0 || !Number.isInteger(n)) {
+            bouton.disabled = false;
+            return poserMessage(`Objectif ${portee} de « ${ind.libelle} » invalide.`, 'erreur');
+          }
+          objectifs[ind.cle][portee] = n;
+        }
+      }
+      try {
+        await enregistrerObjectifs(conseiller.identifiant, objectifs);
+        etat.brouillons.delete(conseiller.identifiant);
+        poserMessage(`Objectifs de ${conseiller.nom} enregistrés.`, 'succes');
+      } catch (erreur) {
+        poserMessage(messageErreur(erreur, 'Enregistrement impossible.'), 'erreur');
+      } finally {
+        bouton.disabled = false;
+      }
+      return undefined;
+    });
+
+    return el('section', { class: 'bloc' }, [
+      el('header', {}, [
+        el('h2', { texte: conseiller.nom }),
+        el('span', { class: 'periode', texte: conseiller.identifiant }),
+        conseiller.actif === false ? el('span', { class: 'puce inactif', texte: 'accès désactivé' }) : null,
+        el('div', { class: 'a-droite' }, marqueur),
+      ]),
+      el('div', { class: 'defilable' }, el('table', { class: 'objectifs-table' }, [
+        el('thead', {}, el('tr', {}, [
+          el('th', { texte: 'Indicateur' }),
+          el('th', { texte: 'Objectif hebdomadaire' }),
+          el('th', { texte: 'Objectif mensuel' }),
+        ])),
+        el('tbody', {}, INDICATEURS.map((ind) => el('tr', {}, [
+          el('td', {}, [ind.libelle, ind.sens === 'plafond'
+            ? el('span', { class: 'plafond-note', texte: 'maximum à ne pas dépasser' }) : null]),
+          cellule(ind, 'hebdomadaire'),
+          cellule(ind, 'mensuel'),
+        ]))),
+      ])),
+      el('div', { class: 'barre' }, bouton),
+    ]);
+  }
+
+  function ongletAcces() {
+    const champId = el('input', { type: 'text', placeholder: 'p.dupont',
+      autocapitalize: 'none', spellcheck: 'false', 'aria-label': 'Identifiant du nouveau conseiller' });
+    const champNom = el('input', { type: 'text', placeholder: 'Pauline Dupont',
+      'aria-label': 'Nom et prénom du nouveau conseiller' });
+
+    const creer = el('button', { class: 'primaire', texte: 'Créer l’accès' });
+    creer.addEventListener('click', async () => {
+      const identifiant = normaliserIdentifiant(champId.value);
+      const nom = String(champNom.value || '').trim();
+      if (!identifiant) {
+        return poserMessage('Identifiant invalide : 2 à 32 caractères, lettres, chiffres, '
+          + 'point, tiret ou soulignement.', 'erreur');
+      }
+      if (nom.length < 2) return poserMessage('Nom manquant.', 'erreur');
+      if (trouver(identifiant)) return poserMessage('Cet identifiant existe déjà.', 'erreur');
+      creer.disabled = true;
+      try {
+        const liste = [...etat.conseillers, { identifiant, nom, actif: true }]
+          .sort((a, b) => a.nom.localeCompare(b.nom, 'fr'));
+        await enregistrerConseillers(liste);
+        poserMessage(`Accès créé : ${nom} peut se connecter avec « ${identifiant} ».`, 'succes');
+      } catch (erreur) {
+        poserMessage(messageErreur(erreur, 'Création impossible.'), 'erreur');
+      } finally {
+        creer.disabled = false;
+      }
+      return undefined;
+    });
+
+    const basculer = async (conseiller) => {
+      try {
+        await enregistrerConseillers(etat.conseillers.map((c) => (c.identifiant === conseiller.identifiant
+          ? { ...c, actif: c.actif === false } : c)));
+      } catch (erreur) {
+        poserMessage(messageErreur(erreur, 'Modification impossible.'), 'erreur');
+      }
+    };
+
+    return el('div', {}, [
+      bloc('Nouvel accès conseiller', null, [
+        el('p', { class: 'note', texte:
+          'L’identifiant est la clé d’accès : il suffit à ouvrir la page personnelle, sans mot '
+          + 'de passe. Choisissez-le en conséquence et désactivez l’accès au départ d’un collaborateur.' }),
+        el('div', { class: 'grille-saisie' }, [
+          el('div', { class: 'champ' }, [el('label', { texte: 'Identifiant' }), champId]),
+          el('div', { class: 'champ' }, [el('label', { texte: 'Nom et prénom' }), champNom]),
+        ]),
+        el('div', { class: 'barre' }, creer),
+      ]),
+      bloc('Conseillers enregistrés', `${etat.conseillers.length} au total`,
+        etat.conseillers.length ? el('div', { class: 'defilable' }, el('table', {}, [
+          el('thead', {}, el('tr', {}, [
+            el('th', { texte: 'Nom' }), el('th', { texte: 'Identifiant' }),
+            el('th', { texte: 'État' }), el('th', { texte: '' }),
+          ])),
+          el('tbody', {}, etat.conseillers.map((c) => el('tr', {}, [
+            el('td', { texte: c.nom }),
+            el('td', { texte: c.identifiant }),
+            el('td', {}, el('span', { class: `puce ${c.actif === false ? 'inactif' : 'oui'}`,
+              texte: c.actif === false ? 'désactivé' : 'actif' })),
+            el('td', {}, el('button', {
+              class: c.actif === false ? 'discret' : 'discret alerte',
+              texte: c.actif === false ? 'Réactiver' : 'Désactiver',
+              onclick: () => basculer(c),
+            })),
+          ]))),
+        ])) : el('p', { class: 'vide', texte: 'Aucun conseiller pour l’instant.' })),
+    ]);
+  }
+
+  function messageErreur(erreur, defaut) {
+    const code = erreur && erreur.code;
+    if (code === 'revoked' || code === 'not_granted') {
+      return 'Votre accès à cet espace a changé. Rechargez la page.';
+    }
+    if (code === 'resource_exhausted') return 'Trop de requêtes d’un coup. Réessayez dans un instant.';
+    if (code === 'quota_exceeded') return 'L’espace de stockage est plein. Prévenez le responsable.';
+    if (code === 'unavailable') return 'Le service est momentanément indisponible. Réessayez.';
+    return defaut;
+  }
+
+  // =========================================================================
+  // Démarrage
+  // =========================================================================
+
+  (async () => {
+    // Hors d'une vue claude.ai — un fichier ouvert en local, un autre hôte —
+    // `window.claude` n'existe pas du tout : sans ce garde, le script échoue
+    // avant d'avoir pu expliquer quoi que ce soit.
+    const passerelle = window.claude;
+    const db = passerelle && typeof passerelle.use === 'function'
+      ? await passerelle.use('db')
+      : null;
+    if (!db) {
+      noeuds.attenteTexte.textContent = 'Cette page a besoin de l’espace partagé de l’équipe pour '
+        + 'fonctionner, et il n’est pas disponible ici. Ouvrez-la depuis claude.ai, connecté au '
+        + 'compte de votre organisation.';
+      return;
+    }
+    etat.db = db;
+
+    db.doc('equipe/roster').onSnapshot((snap) => {
+      const liste = snap.exists ? snap.data().conseillers : null;
+      etat.conseillers = Array.isArray(liste) ? liste : [];
+      etat.rosterCharge = true;
+      demarrer();
+    }, () => signalerLiaison(false));
+
+    db.doc('equipe/objectifs').onSnapshot((snap) => {
+      const par = snap.exists ? snap.data().parConseiller : null;
+      etat.objectifs = (par && typeof par === 'object') ? par : {};
+      demarrer();
+    }, () => signalerLiaison(false));
+  })();
+
+  let demarre = false;
+  function demarrer() {
+    // Rien ne s'affiche avant de connaître l'équipe : les objectifs peuvent
+    // arriver les premiers, et un conseiller connecté serait alors introuvable
+    // dans une liste encore vide — donc renvoyé à la porte sans raison.
+    if (!etat.rosterCharge) return;
+    etat.pret = true;
+    signalerLiaison(true);
+    if (!demarre) {
+      demarre = true;
+      etat.session = lireSession();
+      if (etat.session.role) ouvrirAppli(); else afficherPorte();
+      return;
+    }
+    if (etat.session.role) { ajusterAbonnementsMois(); rendre(); }
+  }
+
+  // Un onglet laissé ouvert la nuit afficherait encore le formulaire de la
+  // veille, prérempli des chiffres de la veille.
+  let jourAffiche = aujourdhui();
+  setInterval(() => {
+    if (aujourdhui() === jourAffiche) return;
+    jourAffiche = aujourdhui();
+    ajusterAbonnementsMois();
+    rendre();
+  }, 30000);
+})();
+</script>
