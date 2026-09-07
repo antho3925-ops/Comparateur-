@@ -44,6 +44,10 @@ Accessible seulement au bureau, et seulement quand ce poste est allumé.
 
 ### 2. Le même poste, rendu accessible de l'extérieur par un tunnel
 
+**C'est la voie retenue — la marche à suivre complète est dans
+`TUNNEL-CLOUDFLARE.md`, et `demarrer.sh` / `demarrer.ps1` lancent la plateforme
+et le tunnel ensemble.**
+
 Un tunnel Cloudflare donne une adresse en `https://` publique à un service qui
 tourne chez vous, sans ouvrir de port sur votre box et sans adresse IP fixe.
 L'offre gratuite couvre largement quatre utilisateurs.
