@@ -452,3 +452,20 @@ ul.liste-excl li::before {
 .club-bilan b { display: block; font-size: 17px; color: var(--marine-800);
                 font-variant-numeric: tabular-nums; margin-top: 2px; }
 .club-bilan .gain b { color: var(--vert); }
+
+/* ---------------------------------------------------- Selection des caisses */
+details.repliable.selection-caisses { margin-bottom: 14px; }
+.cases-caisses {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 4px;
+}
+.case-caisse {
+  display: flex; align-items: center; gap: 8px; margin: 0;
+  padding: 7px 9px; border-radius: var(--r-s); cursor: pointer;
+  font-size: 13.5px; font-weight: 500; color: var(--texte); text-transform: none;
+  letter-spacing: 0; transition: background var(--transition);
+}
+.case-caisse:hover { background: #eef2f7; }
+.case-caisse input { width: auto; margin: 0; accent-color: var(--marine-800); }
+.case-caisse:not(:has(input:checked)) { color: var(--texte-3); }
+.avertissement.masquage { border-left-color: var(--rouge); }
+.avertissement.masquage strong { color: var(--rouge); }

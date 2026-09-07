@@ -16,6 +16,7 @@
                 libre: { nom: '', franchise: 0, couvertures: [] } },
       facture: [],
       clubActif: false,
+      caissesMasquees: [],
       filtresProduits: {},
       detailOuvert: null,
     };
@@ -367,6 +368,25 @@
     return h;
   }
 
+  // Selection manuelle des caisses affichees. Le nombre de caisses masquees
+  // reste visible en permanence : un comparatif ampute qui se presente comme
+  // complet trompe le client sans qu'il puisse s'en apercevoir.
+  function selecteurCaisses(res) {
+    const toutes = DB.assureurs.filter((a) => a.actif !== false)
+      .filter((a) => !res.actuel || a.id !== res.actuel.assureurId)
+      .sort((a, b) => a.nom.localeCompare(b.nom));
+    if (!toutes.length) return '';
+    const masquees = etat.caissesMasquees || [];
+    return '<details class="repliable selection-caisses"><summary>'
+      + `Caisses comparées — ${toutes.length - masquees.length} sur ${toutes.length}`
+      + '</summary><div><div class="cases-caisses">'
+      + toutes.map((a) => `<label class="case-caisse"><input type="checkbox" data-caisse="${esc(a.id)}"`
+          + `${masquees.indexOf(a.id) === -1 ? ' checked' : ''}> ${esc(a.nom)}</label>`).join('')
+      + '</div><p class="produit-src">Décocher une caisse la retire du tableau. '
+      + 'Le nombre de caisses masquées reste affiché au-dessus du comparatif.</p>'
+      + '</div></details>';
+  }
+
   function tableauDetail(res) {
     let h = '<table class="lignes"><thead><tr><th>Prestation</th><th class="num">Base LAMal</th>'
           + '<th class="num">Part compl.</th><th class="num">Remboursé compl.</th>'
@@ -461,6 +481,13 @@
     }
 
     h += '<div class="titre-bloc">Comparatif des caisses</div>';
+    h += selecteurCaisses(res);
+    if (res.nbMasquees > 0) {
+      h += `<div class="avertissement masquage"><strong>Comparatif partiel.</strong> `
+        + `${res.nbCaisses - res.nbMasquees} caisse(s) affichée(s) sur ${res.nbCaisses}, `
+        + `${res.nbMasquees} masquée(s) par votre sélection. À signaler au client : `
+        + `ce tableau ne couvre pas l'ensemble du marché.</div>`;
+    }
     h += '<table class="compare"><thead><tr><th>Caisse</th><th class="num">Part base</th>'
       + '<th class="num">Remboursé compl.</th><th class="num">Reste à charge</th>'
       + '<th class="num">Écart</th><th>À préciser</th></tr></thead><tbody>';
@@ -521,6 +548,17 @@
         const id = tr.getAttribute('data-id');
         etat.detailOuvert = etat.detailOuvert === id ? null : id;
         rendreResultat();
+      });
+    });
+    zone.querySelectorAll('input[data-caisse]').forEach((cb) => {
+      cb.addEventListener('change', () => {
+        const id = cb.getAttribute('data-caisse');
+        etat.caissesMasquees = cb.checked
+          ? etat.caissesMasquees.filter((x) => x !== id)
+          : etat.caissesMasquees.concat([id]);
+        rendreResultat();
+        const d = document.querySelector('details.selection-caisses');
+        if (d) d.open = true;
       });
     });
     zone.querySelectorAll('select[data-filtre]').forEach((s) => {

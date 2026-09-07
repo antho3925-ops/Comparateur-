@@ -195,6 +195,20 @@ lignes concernées portent une étiquette, et le détail affiche toujours le res
 charge contractuel à côté du reste à charge avec partenaires. Rien de tout cela
 n'entre dans un chiffrage opposable.
 
+## Sélection des caisses comparées
+
+Le conseiller peut retirer des caisses du tableau — un courtier n'est pas
+toujours mandaté pour l'ensemble du marché. Deux garde-fous accompagnent cette
+sélection :
+
+- elle est **manuelle et explicite**. L'outil ne retire jamais une caisse de
+  lui-même, et surtout pas selon son classement : une suppression automatique
+  des caisses les mieux placées produirait un tableau qui se présente comme
+  complet tout en étant orienté, ce que le client n'a aucun moyen de détecter ;
+- dès qu'une caisse est masquée, un bandeau annonce **combien de caisses sont
+  affichées sur combien**, avec la mention explicite que le tableau ne couvre
+  pas l'ensemble du marché. Il ne peut pas être désactivé.
+
 ## Limites assumées
 
 - Le calcul porte sur **la facture saisie**, avec les cumuls annuels renseignés

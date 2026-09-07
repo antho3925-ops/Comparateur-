@@ -157,9 +157,13 @@ window.Comparateur = (function () {
     }
 
     // --- Caisses comparees ---------------------------------------------------
-    const concurrents = db().assureurs
+    const masquees = etat.caissesMasquees || [];
+    const candidates = db().assureurs
       .filter((a) => a.actif !== false)
-      .filter((a) => !actuel || a.id !== actuel.assureurId)
+      .filter((a) => !actuel || a.id !== actuel.assureurId);
+
+    const concurrents = candidates
+      .filter((a) => masquees.indexOf(a.id) === -1)
       .map((a) => {
         const produits = produitsRetenus(a, (etat.filtresProduits || {})[a.id]);
         const ev = evaluer(produits, etat, null);
@@ -177,6 +181,8 @@ window.Comparateur = (function () {
       .sort((x, y) => x.resteACharge - y.resteACharge || x.nom.localeCompare(y.nom));
 
     return { lamal, actuel, concurrents,
+             nbCaisses: candidates.length,
+             nbMasquees: candidates.length - concurrents.length,
              incompletes: refs.incompletes, versees: refs.versees,
              clubActif: !!etat.clubActif,
              totalFacture: etat.facture.reduce((s, f) => s + (Number(f.montant) || 0), 0),
