@@ -10300,8 +10300,9 @@ window.DB = {
     "concordia": "assets/logos/concordia.png",
     "css": "assets/logos/css.png",
     "groupe_mutuel": "assets/logos/groupe_mutuel.png",
+    "helsana": "assets/logos/helsana.png",
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T07:36:31.330Z"
+  "genere_le": "2026-09-07T07:37:19.745Z"
 };
