@@ -2672,7 +2672,13 @@ window.DB = {
             "partenaire": "Choice Health Wellness Spa",
             "remarque": "Spa, soins relaxants et therapies complementaires. Non rembourse par la LCA Assura : le rabais porte sur une prestation entierement a charge du client."
           }
-        ]
+        ],
+        "application_rabais": "facture",
+        "application_rabais_options": {
+          "facture": "Le partenaire facture moins ; la caisse rembourse sur ce montant reduit. C'est ce que decrit la documentation du Club : les offres agissent sur le prix facture, pas sur la prise en charge.",
+          "reste_a_charge": "La caisse rembourse sur le prix plein, puis le rabais porte sur ce qui reste a payer. Plus avantageux a annoncer, mais plus cher pour le client.",
+          "remarque": "Sur des lunettes a CHF 1'000, avec CHF 500 de plafond cumule et 30% de rabais : CHF 200 a charge en mode facture, CHF 350 en mode reste a charge. Verifier aupres du partenaire comment le rabais s'applique en pratique."
+        }
       }
     },
     {
@@ -11081,5 +11087,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T12:31:55.184Z"
+  "genere_le": "2026-09-07T12:40:31.917Z"
 };

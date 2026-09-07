@@ -144,16 +144,44 @@ window.Comparateur = (function () {
     function avecClub(assureur, produits, evalContractuelle) {
       const rabais = rabaisDe(assureur, etat.clubActif);
       if (!rabais) return null;
-      const ev = evaluer(produits, etat, rabais);
+      const prog = assureur.programme_partenaires;
       const touchees = etat.facture
         .filter((f) => rabais[f.prestationId] && f.montant > 0)
         .map((f) => ({ libelle: (prestation(f.prestationId) || {}).libelle,
                        montant: f.montant, rabais: rabais[f.prestationId] }));
       if (!touchees.length) return null;
+
+      // Deux ordres possibles, et ils ne donnent pas le meme resultat.
+      //
+      // « facture » : le partenaire facture moins, la caisse rembourse sur ce
+      //   montant reduit. C'est ce que decrit le document du Club Assura, qui
+      //   precise que les offres agissent sur le prix facture.
+      //
+      // « reste_a_charge » : la caisse rembourse sur le prix plein, puis le
+      //   rabais porte sur ce qui reste a payer. Plus avantageux a annoncer,
+      //   mais plus cher pour le client.
+      //
+      // Sur des lunettes a CHF 1'000 avec CHF 500 cumules et 30% de rabais :
+      // CHF 200 a charge dans le premier cas, CHF 350 dans le second.
+      if (prog.application_rabais === 'reste_a_charge') {
+        let reduction = 0;
+        for (const d of evalContractuelle.lca.parLigne) {
+          const r = rabais[d.ligne.prestationId];
+          if (!r || d.etat !== window.MoteurLca.ETAT.REMBOURSE) continue;
+          reduction += Math.max(0, d.ligne.montantLca - d.montant) * r.taux;
+        }
+        return {
+          lamal: evalContractuelle.lamal, lca: evalContractuelle.lca,
+          resteACharge: evalContractuelle.resteACharge - reduction,
+          economie: reduction, touchees, programme: prog,
+        };
+      }
+
+      const ev = evaluer(produits, etat, rabais);
       return Object.assign(ev, {
         economie: evalContractuelle.resteACharge - ev.resteACharge,
         touchees,
-        programme: assureur.programme_partenaires,
+        programme: prog,
       });
     }
 
