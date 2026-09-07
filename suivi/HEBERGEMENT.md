@@ -92,6 +92,16 @@ User=suivi
 WantedBy=multi-user.target
 ```
 
+### 4bis. Render, en quelques clics et sans terminal — payant
+
+Si personne chez vous ne veut installer quoi que ce soit, c'est la voie la plus
+courte : tout se fait dans le navigateur. Le fichier `render.yaml` à la racine
+du dépôt décrit déjà le service, le disque et les réglages ; Render le lit et
+propose la configuration toute faite.
+
+Cela suppose l'offre payante, quelques francs par mois : c'est le disque
+persistant qu'on paie, et c'est précisément ce que l'offre gratuite n'a pas.
+
 ### 4. Un hébergeur de conteneurs, offre gratuite
 
 Render, Koyeb et leurs semblables déploient le `Dockerfile` de ce dossier sans

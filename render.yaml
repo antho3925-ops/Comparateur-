@@ -1,0 +1,32 @@
+# Mise en ligne de la plateforme de suivi, en quelques clics et sans terminal.
+#
+# Sur render.com : New → Blueprint → choisir ce dépôt. Render lit ce fichier et
+# propose le service déjà configuré ; il ne reste qu'à confirmer.
+#
+# Le disque est le point à ne pas manquer : sans lui, l'état repart vide à
+# chaque redéploiement, et les chiffres de l'équipe avec. C'est ce qui rend
+# l'offre gratuite inutilisable ici.
+
+services:
+  - type: web
+    name: suivi-performance
+    runtime: node
+    plan: starter
+    region: frankfurt
+    rootDir: suivi
+    # Aucune dépendance à installer : le projet n'en a pas.
+    buildCommand: node --version
+    startCommand: node serveur.mjs
+    healthCheckPath: /
+    autoDeploy: false
+    envVars:
+      # L'état vit sur le disque monté, jamais dans le conteneur.
+      - key: SUIVI_DONNEES
+        value: /var/lib/suivi
+      # Render sert le site en HTTPS : le cookie de session prend Secure.
+      - key: SUIVI_HTTPS
+        value: "1"
+    disk:
+      name: donnees
+      mountPath: /var/lib/suivi
+      sizeGB: 1
