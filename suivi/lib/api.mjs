@@ -331,6 +331,23 @@ export async function journalAdmin({ session: s, etat }) {
   return { journal: etat.journal.slice(-200).reverse() };
 }
 
+/**
+ * Copie de tout l'état, à emporter. Le disque de l'hébergeur protège d'un
+ * redémarrage ; cette copie-là protège de l'hébergeur lui-même.
+ */
+export async function telechargerSauvegarde({ session: s, etat, reponse }) {
+  exigerAdmin(s);
+  const contenu = Buffer.from(`${JSON.stringify(etat, null, 2)}\n`, 'utf8');
+  reponse.writeHead(200, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Content-Disposition': `attachment; filename="suivi-${aujourdhui()}.json"`,
+    'Content-Length': contenu.length,
+    'Cache-Control': 'no-store',
+  });
+  reponse.end(contenu);
+  return undefined;
+}
+
 // --- Utilitaires ------------------------------------------------------------
 
 function extraireValeurs(saisie) {

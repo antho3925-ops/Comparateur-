@@ -543,6 +543,19 @@ function rendreAcces(d) {
       ]),
       el('div', { class: 'barre-saisie' }, boutonCreer),
     ]),
+    carte('Sauvegarde', null, [
+      el('p', {
+        class: 'sous-titre',
+        texte: 'Une copie de tout — conseillers, objectifs, chiffres de chaque journée — dans '
+          + 'un fichier. Le serveur en garde déjà une par jour sur son propre disque ; '
+          + 'celle-ci part sur votre ordinateur, ce qui la met à l’abri d’une panne de '
+          + 'l’hébergeur. Une fois par semaine suffit.',
+      }),
+      el('div', { class: 'barre-saisie' }, el('button', {
+        texte: 'Télécharger la sauvegarde',
+        onclick: () => { window.location.href = '/api/admin/sauvegarde'; },
+      })),
+    ]),
     carte('Conseillers enregistrés', `${d.conseillers.length} au total`,
       d.conseillers.length
         ? defilable(el('table', {}, [

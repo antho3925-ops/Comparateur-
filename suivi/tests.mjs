@@ -22,6 +22,7 @@ import {
 import { Securite, normaliserIdentifiant } from './lib/sessions.mjs';
 import { Stockage } from './lib/stockage.mjs';
 import { installerEquipeInitiale } from './lib/installation.mjs';
+import { sauvegarderSiNecessaire } from './lib/sauvegarde.mjs';
 import { demarrer } from './serveur.mjs';
 
 let reussis = 0;
@@ -466,6 +467,55 @@ section('Accès administrateur livré avec l’installation');
 }
 
 // ===========================================================================
+section('Sauvegardes quotidiennes');
+// ===========================================================================
+
+{
+  const { writeFile, readdir, mkdtemp, rm } = await import('node:fs/promises');
+  const { tmpdir: dossierTemporaire } = await import('node:os');
+  const bac = await mkdtemp(join(dossierTemporaire(), 'suivi-sauve-'));
+  const source = join(bac, 'suivi.json');
+  const copies = join(bac, 'sauvegardes');
+  const jour = aujourdhui();
+
+  egal('sans fichier à copier, rien ne se passe',
+    await sauvegarderSiNecessaire(join(bac, 'absent.json'), copies), null);
+
+  await writeFile(source, JSON.stringify({ conseillers: [], marque: 'premier' }));
+  egal('la copie du jour est faite', await sauvegarderSiNecessaire(source, copies), `suivi-${jour}.json`);
+  egal('elle porte la date du jour', (await readdir(copies)), [`suivi-${jour}.json`]);
+
+  // Une seconde passe dans la même journée ne doit pas écraser la première :
+  // c'est ce qui permet de revenir à l'état du matin après une fausse manœuvre.
+  await writeFile(source, JSON.stringify({ conseillers: [], marque: 'second' }));
+  egal('une seconde passe le même jour ne refait pas la copie',
+    await sauvegarderSiNecessaire(source, copies), null);
+  const { readFile: lire } = await import('node:fs/promises');
+  egal('et la copie du matin est préservée',
+    JSON.parse(await lire(join(copies, `suivi-${jour}.json`), 'utf8')).marque, 'premier');
+
+  // Des copies anciennes et récentes, pour vérifier la coupe.
+  for (const age of [45, 40, 31, 30, 29, 5]) {
+    await writeFile(join(copies, `suivi-${decale(jour, -age)}.json`), '{}');
+  }
+  await writeFile(join(copies, 'autre-fichier.json'), '{}');
+  await sauvegarderSiNecessaire(source, copies, 30);
+  const restants = (await readdir(copies)).sort();
+
+  egal('les copies de plus de trente jours sont effacées',
+    restants.some((n) => n === `suivi-${decale(jour, -45)}.json`
+      || n === `suivi-${decale(jour, -40)}.json`
+      || n === `suivi-${decale(jour, -31)}.json`), false);
+  egal('celles de moins de trente jours sont gardées',
+    [`suivi-${decale(jour, -29)}.json`, `suivi-${decale(jour, -5)}.json`, `suivi-${jour}.json`]
+      .every((n) => restants.includes(n)), true);
+  egal('un fichier étranger au format n’est jamais effacé',
+    restants.includes('autre-fichier.json'), true);
+
+  await rm(bac, { recursive: true, force: true });
+}
+
+// ===========================================================================
 section('Serveur — accès, gel des journées et cloisonnement');
 // ===========================================================================
 
@@ -484,7 +534,7 @@ const base = `http://127.0.0.1:${port}`;
 /** Client HTTP minimal qui conserve son cookie, comme un navigateur. */
 function client() {
   let cookie = null;
-  return async function requete(chemin, options = {}) {
+  async function requete(chemin, options = {}) {
     const reponse = await fetch(base + chemin, {
       method: options.methode || 'GET',
       headers: {
@@ -498,7 +548,14 @@ function client() {
     let donnees = null;
     try { donnees = await reponse.json(); } catch { donnees = null; }
     return { statut: reponse.status, donnees };
+  }
+
+  // Pour les réponses dont l'intérêt est dans l'en-tête, non dans le corps.
+  requete.entetes = async (chemin) => {
+    const reponse = await fetch(base + chemin, { headers: cookie ? { Cookie: cookie } : {} });
+    return reponse.headers;
   };
+  return requete;
 }
 
 try {
@@ -755,6 +812,27 @@ try {
   await admin('/api/admin/conseillers/b.dias', { methode: 'PATCH', corps: { actif: true } });
   egal('un accès réactivé fonctionne de nouveau',
     (await client()('/api/connexion', { methode: 'POST', corps: { identifiant: 'b.dias' } })).statut, 200);
+
+  // -- Sauvegarde téléchargeable --------------------------------------------
+  {
+    egal('un conseiller ne peut pas télécharger la sauvegarde',
+      (await alice('/api/admin/sauvegarde')).statut, 401);
+    egal('un visiteur non connecté non plus',
+      (await client()('/api/admin/sauvegarde')).statut, 401);
+
+    const sauvegarde = await admin('/api/admin/sauvegarde');
+    egal('l’administrateur obtient l’état complet', sauvegarde.statut, 200);
+    egal('avec les conseillers', Array.isArray(sauvegarde.donnees.conseillers), true);
+    egal('et les saisies, journées figées comprises',
+      sauvegarde.donnees.saisies[veille]['a.roux'].maladie, 9);
+    egal('et les objectifs', typeof sauvegarde.donnees.objectifs, 'object');
+
+    // Le fichier arrive nommé et en pièce jointe, sans quoi le navigateur
+    // l'afficherait au lieu de l'enregistrer.
+    const entetes = await admin.entetes('/api/admin/sauvegarde');
+    egal('le fichier est proposé en téléchargement, daté du jour',
+      entetes.get('content-disposition'), `attachment; filename="suivi-${aujourdhui()}.json"`);
+  }
 
   // -- Déconnexion et pages --------------------------------------------------
   await alice('/api/deconnexion', { methode: 'POST' });

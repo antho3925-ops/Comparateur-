@@ -13,6 +13,7 @@ import { fileURLToPath } from 'node:url';
 
 import { Stockage } from './lib/stockage.mjs';
 import { installerEquipeInitiale } from './lib/installation.mjs';
+import { programmerSauvegardes } from './lib/sauvegarde.mjs';
 import { Securite, lireCookie } from './lib/sessions.mjs';
 import * as api from './lib/api.mjs';
 import { ErreurHttp } from './lib/api.mjs';
@@ -57,6 +58,7 @@ const ROUTES = [
   ['PUT', /^\/api\/saisie$/, api.enregistrerSaisie],
   ['GET', /^\/api\/admin\/tableau$/, api.tableauAdmin],
   ['GET', /^\/api\/admin\/journal$/, api.journalAdmin],
+  ['GET', /^\/api\/admin\/sauvegarde$/, api.telechargerSauvegarde],
   ['POST', /^\/api\/admin\/conseillers$/, api.creerConseiller],
   ['PATCH', /^\/api\/admin\/conseillers\/(?<identifiant>[^/]+)$/, api.modifierConseiller],
   ['PUT', /^\/api\/admin\/objectifs\/(?<identifiant>[^/]+)$/, api.enregistrerObjectifs],
@@ -75,6 +77,8 @@ export async function demarrer({
   const securite = await Securite.charger(join(dossierDonnees, 'config.json'), {
     empreinteInitiale: await lireEmpreinteInitiale(accesInitial),
   });
+  const arreterSauvegardes = programmerSauvegardes(
+    join(dossierDonnees, 'suivi.json'), join(dossierDonnees, 'sauvegardes'));
 
   const serveur = createServer((requete, reponse) => {
     traiter(requete, reponse, { stockage, securite }).catch((erreur) => {
@@ -84,6 +88,7 @@ export async function demarrer({
     });
   });
 
+  serveur.on('close', arreterSauvegardes);
   await new Promise((resoudre) => serveur.listen(port, hote, resoudre));
   return { serveur, stockage, securite, installes, port: serveur.address().port };
 }
@@ -146,12 +151,17 @@ async function appeler(requete, reponse, contexte, gestionnaire, params, url) {
       securise: SECURISE,
       cleClient: adresse(requete),
     });
+    // Un gestionnaire qui a déjà répondu lui-même — un téléchargement, par
+    // exemple — n'attend pas qu'on écrive une seconde réponse par-dessus.
+    if (reponse.headersSent) return undefined;
     envoyerJson(reponse, 200, resultat ?? { ok: true });
   } catch (erreur) {
+    if (reponse.headersSent) { reponse.end(); return undefined; }
     if (erreur instanceof ErreurHttp) return envoyerJson(reponse, erreur.code, { erreur: erreur.message });
     if (erreur instanceof SyntaxError) return envoyerJson(reponse, 400, { erreur: 'Corps de requête illisible.' });
     throw erreur;
   }
+  return undefined;
 }
 
 /** Flux temps réel : chaque changement d'état réveille les navigateurs ouverts. */

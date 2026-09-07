@@ -250,13 +250,14 @@ suivi/
 ├── acces-initial.json       Empreinte de l'accès administrateur de départ
 ├── page-hebergee/
 │   └── suivi.html           Version hébergée sur claude.ai, en une page unique
-├── tests.mjs                Suite de tests (210 cas)
+├── tests.mjs                Suite de tests (225 cas)
 ├── lib/
 │   ├── dates.mjs            Fuseau suisse, semaines ISO, libellés en français
 │   ├── domaine.mjs          Indicateurs, cumuls, écarts, classement — fonctions pures
 │   ├── stockage.mjs         Persistance JSON atomique et diffusion des changements
 │   ├── sessions.mjs         Cookies signés, code administrateur, identifiants
 │   ├── installation.mjs     Amorçage de l'équipe de départ, une seule fois
+│   ├── sauvegarde.mjs       Copie quotidienne, rotation sur trente jours
 │   └── api.mjs              Gestionnaires de routes
 ├── public/
 │   ├── index.html           Connexion conseiller
@@ -268,6 +269,24 @@ suivi/
     ├── suivi.json           Conseillers, saisies, objectifs, journal
     └── config.json          Secret de session et empreinte du code administrateur
 ```
+
+## Sauvegardes
+
+Deux filets, qui ne protègent pas de la même chose.
+
+**Une copie par journée, sur le disque du serveur**, dans
+`$SUIVI_DONNEES/sauvegardes/suivi-AAAA-MM-JJ.json`. Elle est faite au démarrage
+puis vérifiée chaque heure, donc la première ouverture après minuit la déclenche.
+Les trente dernières sont gardées, les plus anciennes effacées. La copie du jour
+n'est jamais refaite une seconde fois : c'est ce qui permet de revenir à l'état
+du matin après une fausse manœuvre de l'après-midi. Elle ne protège pas d'une
+perte du disque, puisqu'elle vit dessus.
+
+**Un fichier à emporter**, par le bouton « Télécharger la sauvegarde » de
+l'onglet **Accès**. Il contient tout — conseillers, objectifs, chiffres de chaque
+journée, journal — et c'est le seul filet contre une panne de l'hébergeur.
+Une fois par semaine suffit. Restaurer, c'est remettre ce fichier en place sous
+le nom `suivi.json`, serveur arrêté.
 
 ## Données
 
@@ -288,7 +307,7 @@ tronqué.
 node suivi/tests.mjs
 ```
 
-210 tests. Les tests de dates et de règles métier sont unitaires ; les tests
+225 tests. Les tests de dates et de règles métier sont unitaires ; les tests
 d'accès démarrent un vrai serveur sur un port libre, avec un dossier de données
 jetable, et parlent HTTP comme le ferait un navigateur.
 
@@ -309,7 +328,9 @@ installation neuve et ne revient jamais écraser un code changé depuis ; enfin
 l'indépendance des objectifs — deux conseillers aux grilles entièrement
 distinctes, un indicateur modifié chez l'un qui ne déplace rien chez l'autre ni
 sur ses propres autres lignes, et une case vide qui dispense sans toucher aux
-collègues.
+collègues ; enfin les sauvegardes — la copie du jour faite une seule fois, la
+coupe au-delà de trente jours, et le téléchargement refusé à qui n'est pas
+l'administrateur.
 
 ## Mise en service
 
