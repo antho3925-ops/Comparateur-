@@ -1139,7 +1139,7 @@ window.DB = {
       "actif": true,
       "source": {
         "origine": "recapitulatif produits fourni par le conseiller",
-        "reference": "Assura, fiches produits et pages dediees assura.ch/fr/assurances/assurances-complementaires ; CGA LCA Assura SA edition 07.2015, mise a jour 01.2022",
+        "reference": "Assura, fiches produits et pages dediees assura.ch/fr/assurances/assurances-complementaires ; CGA LCA Assura SA edition 07.2015, mise a jour 01.2022 ; CSC Complementa Extra et Natura 07.2015",
         "date_extraction": "2026-09-06",
         "annee_tarifaire": 2026,
         "fiabilite": "a_verifier",
@@ -1158,7 +1158,9 @@ window.DB = {
       "notes_generales": [
         "Certaines assurances (maternite, prenatal, perte de gain, capital invalidite/deces) ne peuvent pas etre souscrites en ligne et necessitent un conseiller.",
         "Rabais famille jusqu'a 20% pour les enfants mineurs sur la plupart des produits, sauf Previsia et Denta Ortho. Rabais distinct de 15% sur Denta Ortho si souscrit avant la naissance.",
-        "Cadre contractuel et exclusions generales saisis depuis les CGA (art. 1 a 20). Les CGA ne contiennent aucun taux ni plafond : ceux-ci figurent dans les conditions speciales (CSC) de chaque produit, qui restent a fournir."
+        "Cadre contractuel et exclusions generales saisis depuis les CGA (art. 1 a 20). Les CGA ne contiennent aucun taux ni plafond : ceux-ci figurent dans les conditions speciales (CSC) de chaque produit, qui restent a fournir.",
+        "Complementa Extra et Natura sont saisis depuis leurs conditions speciales (edition 07.2015), article par article. Les autres produits reposent encore sur le recapitulatif de brochure.",
+        "Assura ne propose aucune prestation de check-up, de fitness, de depistage ni de vaccination preventive dans sa gamme LCA : verifie article par article dans les CSC, ce n'est pas une lacune de saisie."
       ],
       "produits_lca": [
         {
@@ -1174,86 +1176,159 @@ window.DB = {
           ],
           "delai_attente_mois": 0,
           "hors_perimetre_facture": false,
-          "remarque": "Ne couvre pas les urgences a l'etranger : voir Mondia.",
+          "remarque": "Art. 19 : readaptation et rehabilitation couvertes par derogation a l'art. 4 CGA ; maladies psychiques couvertes par l'art. 9. Ne couvre ni le check-up, ni le fitness, ni le depistage, ni les vaccins de prevention : ces prestations n'existent dans aucun article des CSC.",
           "couvertures": [
             {
               "prestation_id": "hospitalisation_hors_canton",
               "taux_remboursement": 1,
-              "conditions": "Division generale, libre choix de l'hopital."
+              "conditions": "Art. 1. Couverture integrale en division generale dans tous les hopitaux publics de Suisse, en complement LAMal, LAA, LAI et LAM. Soins hospitaliers sans limite de duree.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
-              "prestation_id": "aide_menage",
+              "prestation_id": "libre_choix_medecin_hopital",
               "taux_remboursement": 1,
-              "plafond_par_jour": 50,
-              "nb_jours_max_annuel": 30
+              "conditions": "Art. 1. Majoration d'honoraires prise en charge en cas de libre choix du medecin en division generale.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
-              "prestation_id": "garde_enfants_malades",
+              "prestation_id": "chirurgie_ambulatoire",
               "taux_remboursement": 1,
-              "conditions": "Garde d'enfant hospitalise."
+              "conditions": "Art. 1. Traitement semi-hospitalier ou ambulatoire. La difference de tarif est couverte pour un traitement ambulatoire hors canton.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
               "prestation_id": "medicaments_hors_liste",
               "taux_remboursement": 1,
               "plafond_annuel": 50000,
-              "conditions": "Medicaments vitaux hors liste, CHF 50'000 par contrat."
+              "conditions": "Art. 2. Medicaments vitaux prescrits, sans equivalent dans la liste des specialites, enregistres Swissmedic. Plafond de CHF 50'000 brut pour la DUREE DU CONTRAT, et non par annee civile.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
-              "prestation_id": "moyens_auxiliaires_lca",
+              "prestation_id": "aide_menage",
               "taux_remboursement": 1,
-              "plafond_annuel": 500
+              "plafond_par_jour": 50,
+              "nb_jours_max_annuel": 30,
+              "conditions": "Art. 3. Pendant l'hospitalisation et jusqu'au 15e jour suivant.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
-              "prestation_id": "dentaire_accident",
+              "prestation_id": "rooming_in",
               "taux_remboursement": 1,
-              "plafond_annuel": 1000,
-              "conditions": "Soins dentaires suite a accident ou maladie grave."
+              "plafond_par_jour": 70,
+              "nb_jours_max_annuel": 10,
+              "conditions": "Art. 4. Hebergement de l'accompagnant d'un assure mineur hospitalise.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
-              "prestation_id": "transport_urgence",
+              "prestation_id": "garde_enfants_malades",
               "taux_remboursement": 1,
-              "conditions": "Illimite."
-            },
-            {
-              "prestation_id": "sauvetage",
-              "taux_remboursement": 1,
-              "plafond_annuel": 20000,
-              "conditions": "Par cas."
+              "plafond_par_jour": 70,
+              "nb_jours_max_annuel": 21,
+              "conditions": "Art. 5. Par un organisme officiel, pour un enfant de 15 ans au plus faisant menage commun.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
               "prestation_id": "rattrapage_scolaire",
               "taux_remboursement": 1,
+              "plafond_par_jour": 50,
               "plafond_annuel": 3000,
-              "conditions": "Assistance scolaire."
+              "conditions": "Art. 6. Si l'assure mineur ne peut suivre le programme scolaire pendant un mois.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+            },
+            {
+              "prestation_id": "gardiennage_domicile",
+              "taux_remboursement": 1,
+              "plafond_annuel": 1000,
+              "conditions": "Art. 7. Frais de garde speciale en cas d'hospitalisation.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
               "prestation_id": "soins_domicile_lca",
               "taux_remboursement": 1,
               "plafond_par_jour": 200,
-              "nb_jours_max_annuel": 21
+              "nb_jours_max_annuel": 21,
+              "conditions": "Art. 8. Sur prescription medicale, uniquement en remplacement d'une hospitalisation medicalement indispensable.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
-              "prestation_id": "readaptation_cure",
+              "prestation_id": "psychotherapie_non_medicale",
               "taux_remboursement": 1,
-              "conditions": "Cures balneaires et de convalescence."
+              "plafond_annuel": 1500,
+              "conditions": "Art. 9. 100% d'une facturation brute de CHF 1'500 par annee civile. Traitements medicalement prescrits, par des psychotherapeutes non-medecins ou psychologues independants figurant sur la liste de l'organisation faitiere des assureurs-maladie suisses. Tarif de la psychotherapie deleguee du canton de domicile. Derogation expresse au ch. 4.1.10 CGA.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+            },
+            {
+              "prestation_id": "dentaire_soins",
+              "taux_remboursement": 1,
+              "plafond_annuel": 1000,
+              "franchise_prestation": 500,
+              "conditions": "Art. 10. Franchise annuelle de CHF 500, puis prise en charge jusqu'a CHF 1'500 de facturation annuelle au tarif SSO-AA/AM/AI, soit CHF 1'000 remboursables au maximum. Exclus : etat deficient preexistant et orthodontie. L'atteinte doit etre posterieure a l'entree en vigueur.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
               "prestation_id": "lunettes_lentilles_adulte",
               "taux_remboursement": 1,
               "plafond_annuel": 100,
-              "conditions": "Cumul sur 5 ans."
+              "conditions": "Art. 11. CHF 100 par annee civile, cumulable d'annee en annee en l'absence de prestation, jusqu'a CHF 500 au maximum.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
               "prestation_id": "chirurgie_refractive",
               "taux_remboursement": 1,
               "plafond_annuel": 100,
-              "conditions": "Chirurgie de la vue, meme enveloppe que les lunettes, cumul sur 5 ans."
+              "conditions": "Art. 12. CHF 100 par annee civile, cumulable de la meme maniere jusqu'a CHF 500 au maximum.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+            },
+            {
+              "prestation_id": "moyens_auxiliaires_lca",
+              "taux_remboursement": 1,
+              "plafond_annuel": 500,
+              "conditions": "Art. 13. Appareils medicaux et articles orthopediques prescrits, montant brut. Derogation au ch. 4.1.12 CGA.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+            },
+            {
+              "prestation_id": "transport_urgence",
+              "taux_remboursement": 1,
+              "conditions": "Art. 14. Transport medicalement necessaire en Suisse, si l'etat de sante exclut un transport usuel, en complement LAMal. Aucun plafond indique.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+            },
+            {
+              "prestation_id": "sauvetage",
+              "taux_remboursement": 1,
+              "plafond_annuel": 20000,
+              "conditions": "Art. 15. Recherche et sauvetage en Suisse, montant brut, en cas de disparition en situation de danger imminent.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+            },
+            {
+              "prestation_id": "centre_thermal",
+              "taux_remboursement": 1,
+              "plafond_annuel": 1000,
+              "conditions": "Art. 16. Cures balneaires : CHF 1'000 par an en Suisse (soins et bains), sur prescription et dans le cadre d'une affection en cours ; CHF 500 par an a l'etranger si l'affection ne peut etre traitee en Suisse.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
+            },
+            {
+              "prestation_id": "readaptation_cure",
+              "taux_remboursement": 1,
+              "plafond_par_jour": 40,
+              "nb_jours_max_annuel": 21,
+              "conditions": "Art. 17. Cures de convalescence, sur demande prealable, apres un sejour en soins aigus, en etablissement agree. Art. 19 : la readaptation et la rehabilitation sont couvertes, par derogation a l'art. 4 CGA.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             },
             {
               "prestation_id": "liberation_primes",
               "taux_remboursement": 1,
-              "conditions": "Liberation des primes en cas de chomage."
+              "conditions": "Art. 18. Prise en charge de l'entier des primes LCA apres licenciement. Delai d'attente de 120 jours apres l'entree en vigueur, puis 90 jours d'interruption de travail. Maximum 12 mois par sinistre et 24 mois cumules. Exclus : licenciement pour justes motifs, demission, periode d'essai, retraite anticipee, chomage partiel, CDD, non-domicilies en Suisse.",
+              "source_page": "CSC Assura Complementa Extra 07.2015, art. 1 a 19"
             }
+          ],
+          "edition_csc": "07.2015",
+          "exclusions": [
+            "affections en cours a la signature",
+            "suites d'accidents anterieurs",
+            "soins palliatifs",
+            "obesite",
+            "maternite",
+            "orthodontie"
           ]
         },
         {
@@ -1448,56 +1523,69 @@ window.DB = {
           ],
           "delai_attente_mois": 0,
           "hors_perimetre_facture": false,
-          "remarque": "24 therapies couvertes. Franchise de CHF 200 par an et quote-part de 10%. Bonus : suppression de la franchise apres 5 ans sans sinistre.",
+          "remarque": "24 therapies admises par la liste A de l'annexe. Le massage therapeutique n'y figure pas comme methode autonome : seuls le drainage lymphatique et la reflexologie s'en approchent. Le NB final de l'annexe exclut les soins a but essentiellement preventif, d'entretien ou de confort. Bonus : apres 5 ans sans prestation, la franchise n'est pas percue lors du premier traitement suivant.",
           "couvertures": [
             {
-              "prestation_id": "autres_med_alternatives",
-              "taux_remboursement": 1,
-              "plafond_par_seance": 130,
+              "prestation_id": "acupuncture",
+              "taux_remboursement": 0.9,
+              "plafond_par_seance": 110,
               "nb_seances_max_annuel": 12,
-              "conditions": "CHF 50 a 130 par seance selon la duree, therapeutes agrees."
+              "conditions": "Acupuncture, acupressure. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
+              "source_page": "CSC Assura Natura 07.2015 et son annexe"
             },
             {
               "prestation_id": "osteopathie",
-              "taux_remboursement": 1,
-              "plafond_par_seance": 130,
+              "taux_remboursement": 0.9,
+              "plafond_par_seance": 110,
               "nb_seances_max_annuel": 12,
-              "conditions": "CHF 50 a 130 par seance selon la duree, therapeutes agrees."
-            },
-            {
-              "prestation_id": "acupuncture",
-              "taux_remboursement": 1,
-              "plafond_par_seance": 130,
-              "nb_seances_max_annuel": 12,
-              "conditions": "CHF 50 a 130 par seance selon la duree, therapeutes agrees."
+              "conditions": "Osteopathie, etiopathie, therapie cranio-sacrale. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
+              "source_page": "CSC Assura Natura 07.2015 et son annexe"
             },
             {
               "prestation_id": "homeopathie",
-              "taux_remboursement": 1,
-              "plafond_par_seance": 130,
+              "taux_remboursement": 0.9,
+              "plafond_par_seance": 110,
               "nb_seances_max_annuel": 12,
-              "conditions": "CHF 50 a 130 par seance selon la duree, therapeutes agrees."
+              "conditions": "Homeopathie, serocytotherapie. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
+              "source_page": "CSC Assura Natura 07.2015 et son annexe"
             },
             {
               "prestation_id": "medecine_chinoise",
-              "taux_remboursement": 1,
-              "plafond_par_seance": 130,
+              "taux_remboursement": 0.9,
+              "plafond_par_seance": 110,
               "nb_seances_max_annuel": 12,
-              "conditions": "CHF 50 a 130 par seance selon la duree, therapeutes agrees."
+              "conditions": "Medecine chinoise, shiatsu. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
+              "source_page": "CSC Assura Natura 07.2015 et son annexe"
             },
             {
               "prestation_id": "naturopathie_phytotherapie",
-              "taux_remboursement": 1,
-              "plafond_par_seance": 130,
+              "taux_remboursement": 0.9,
+              "plafond_par_seance": 110,
               "nb_seances_max_annuel": 12,
-              "conditions": "CHF 50 a 130 par seance selon la duree, therapeutes agrees."
+              "conditions": "Phytotherapie, aromatherapie, iridologie, kinesiologie. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
+              "source_page": "CSC Assura Natura 07.2015 et son annexe"
+            },
+            {
+              "prestation_id": "autres_med_alternatives",
+              "taux_remboursement": 0.9,
+              "plafond_par_seance": 110,
+              "nb_seances_max_annuel": 12,
+              "conditions": "Biresonance, drainage lymphatique, fasciatherapie-pulsologie, mesotherapie, ortho-bionomy, reflexologie, sophrologie curative, sympathicotherapie, therapie neurale. Eurythmie curative et eutonie uniquement sur prescription medicale. Apres franchise annuelle de CHF 200, Assura assume au maximum 90%. Consultation ulterieure : CHF 50 jusqu'a 30 minutes, puis CHF 20 par quart d'heure, plafond de CHF 110 par seance ; la premiere consultation ou le bilan de sante est plafonne a CHF 130. 12 consultations par an sans requete prealable ; au-dela, prolongation ou changement de therapeute soumis a autorisation. Therapeute membre d'une association reconnue (ASCA, APTN, NVS, FSO, RSO, KineSuisse, OPS-MTC).",
+              "source_page": "CSC Assura Natura 07.2015 et son annexe"
             },
             {
               "prestation_id": "medicaments_hors_liste",
-              "taux_remboursement": 1,
+              "taux_remboursement": 0.9,
               "plafond_annuel": 800,
-              "conditions": "Medicaments et analyses de laboratoire lies aux therapies."
+              "conditions": "Examens de laboratoire et remedes prescrits dans le cadre des therapies, maximum CHF 800 par an.",
+              "source_page": "CSC Assura Natura 07.2015 et son annexe"
             }
+          ],
+          "edition_csc": "07.2015",
+          "exclusions": [
+            "maladies psychiques (art. 4)",
+            "soins a but essentiellement preventif, d'entretien ou de confort",
+            "massage de bien-etre"
           ]
         },
         {
@@ -10403,5 +10491,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T07:50:03.217Z"
+  "genere_le": "2026-09-07T07:56:24.791Z"
 };

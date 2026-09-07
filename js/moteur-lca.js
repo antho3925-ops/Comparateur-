@@ -7,7 +7,7 @@ window.MoteurLca = (function () {
   const ETAT = { REMBOURSE: 'rembourse', NON_COUVERT: 'non_couvert', A_PRECISER: 'a_preciser' };
 
   function nouveauxCumuls() {
-    return { prestation: {}, enveloppe: {}, seances: {}, franchise: {} };
+    return { prestation: {}, enveloppe: {}, seances: {}, franchise: {}, franchisePrestation: {} };
   }
 
   function cle() {
@@ -48,6 +48,17 @@ window.MoteurLca = (function () {
       const prise = Math.min(restante, base);
       base -= prise;
       if (prise > 0) notes.push(`franchise produit de ${prise.toFixed(2)} deduite`);
+    }
+
+    // Franchise propre a une prestation, distincte de celle du produit.
+    // Chez Assura, le dentaire de Complementa Extra en porte une de CHF 500
+    // alors que le reste du produit n'en a aucune.
+    if (couverture.franchise_prestation > 0) {
+      const k = cle(produit.id, couverture.prestation_id, 'fr');
+      const restante = Math.max(0, couverture.franchise_prestation - (cumuls.franchisePrestation[k] || 0));
+      const prise = Math.min(restante, base);
+      base -= prise;
+      if (prise > 0) notes.push(`franchise de ${prise.toFixed(2)} sur cette prestation`);
     }
 
     let montant = base * couverture.taux_remboursement;
@@ -95,6 +106,12 @@ window.MoteurLca = (function () {
     if (couverture.nb_seances_max_annuel != null && ligne.seances > 0) {
       const k = cle(produit.id, couverture.prestation_id, 'seances');
       cumuls.seances[k] = (cumuls.seances[k] || 0) + ligne.seances;
+    }
+    if (couverture.franchise_prestation > 0) {
+      const k = cle(produit.id, couverture.prestation_id, 'fr');
+      cumuls.franchisePrestation[k] = Math.min(
+        couverture.franchise_prestation,
+        (cumuls.franchisePrestation[k] || 0) + ligne.montantLca);
     }
     const franchiseProduit = Array.isArray(produit.franchises_produit)
       ? Math.min.apply(null, produit.franchises_produit)

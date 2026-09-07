@@ -73,6 +73,10 @@ for (const a of assureurs) {
 
       // Cas intermediaire : le taux est connu mais le plafond depend de l'option
       // souscrite par l'assure. On ne choisit pas un montant a sa place.
+      if (c.franchise_prestation != null
+          && (typeof c.franchise_prestation !== 'number' || c.franchise_prestation < 0)) {
+        erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : franchise_prestation doit etre un nombre positif`);
+      }
       if (c.plafond_a_preciser) {
         if (c.plafond_annuel != null) {
           erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : plafond_a_preciser impose plafond_annuel: null`);
