@@ -628,18 +628,28 @@ ul.liste-excl li::before {
 }
 
 /* ------------------------------------------------------------------- Logos */
-.logos { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+/* Grille plutot que flex : la derniere rangee garde la largeur des autres au
+   lieu de s'etirer sur deux tuiles geantes. */
+.logos {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px;
+}
+/* Tuile blanche dans les deux themes : les logos arrivent avec leur propre
+   fond, souvent opaque. Sur ground sombre ils formeraient des rectangles
+   blancs disparates ; une tuile franchement blanche rend l'ensemble voulu. */
 .logo-caisse {
-  flex: 1 1 152px; min-height: 60px; display: grid; place-items: center; padding: 12px 14px;
-  background: var(--surface); border: 1px solid var(--bord); border-radius: var(--r-s);
+  min-height: 66px; display: grid; place-items: center; padding: 12px 14px;
+  background: #fff; border: 1px solid var(--bord); border-radius: var(--r-s);
   transition: border-color var(--t), box-shadow var(--t), transform var(--t);
 }
 .logo-caisse:hover { border-color: var(--or); box-shadow: var(--ombre-2); transform: translateY(-2px); }
-.logo-caisse img { max-height: 30px; max-width: 100%; object-fit: contain; display: block; }
+/* Hauteur genereuse pour que les logos hauts et etroits — AXA et sa barre —
+   restent lisibles ; la largeur maximale ramene les logotypes larges. */
+.logo-caisse img { max-height: 40px; max-width: 128px; object-fit: contain; display: block; }
+/* Couleurs fixes : la tuile est blanche quel que soit le theme. */
 .logo-caisse .nom-caisse {
-  font-size: 13.5px; font-weight: 650; color: var(--texte); letter-spacing: .015em; text-align: center;
+  font-size: 13.5px; font-weight: 650; color: #0e1726; letter-spacing: .015em; text-align: center;
 }
-.logo-caisse .compte { font-size: 10.5px; color: var(--texte-3); font-weight: 500; margin-top: 3px; text-align: center; }
+.logo-caisse .compte { font-size: 10.5px; color: #7d8ca3; font-weight: 500; margin-top: 3px; text-align: center; }
 
 /* ---------------------------------------------------------- Confidentialité */
 .confid { border-left: 3px solid var(--vert-vif); }

@@ -11047,12 +11047,15 @@ window.DB = {
     }
   ],
   "logos": {
+    "assura": "assets/logos/assura.png",
+    "axa": "assets/logos/axa.png",
     "concordia": "assets/logos/concordia.png",
     "css": "assets/logos/css.png",
     "groupe_mutuel": "assets/logos/groupe_mutuel.png",
     "helsana": "assets/logos/helsana.png",
+    "sanitas": "assets/logos/sanitas.png",
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T12:21:48.131Z"
+  "genere_le": "2026-09-07T12:27:25.629Z"
 };
