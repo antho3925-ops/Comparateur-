@@ -5,7 +5,7 @@
   "actif": true,
   "source": {
     "origine": "recapitulatif produits fourni par le conseiller",
-    "reference": "Assura, fiches produits et pages dediees assura.ch/fr/assurances/assurances-complementaires",
+    "reference": "Assura, fiches produits et pages dediees assura.ch/fr/assurances/assurances-complementaires ; CGA LCA Assura SA edition 07.2015, mise a jour 01.2022",
     "date_extraction": "2026-09-06",
     "annee_tarifaire": 2026,
     "fiabilite": "a_verifier",
@@ -23,7 +23,8 @@
   },
   "notes_generales": [
     "Certaines assurances (maternite, prenatal, perte de gain, capital invalidite/deces) ne peuvent pas etre souscrites en ligne et necessitent un conseiller.",
-    "Rabais famille jusqu'a 20% pour les enfants mineurs sur la plupart des produits, sauf Previsia et Denta Ortho. Rabais distinct de 15% sur Denta Ortho si souscrit avant la naissance."
+    "Rabais famille jusqu'a 20% pour les enfants mineurs sur la plupart des produits, sauf Previsia et Denta Ortho. Rabais distinct de 15% sur Denta Ortho si souscrit avant la naissance.",
+    "Cadre contractuel et exclusions generales saisis depuis les CGA (art. 1 a 20). Les CGA ne contiennent aucun taux ni plafond : ceux-ci figurent dans les conditions speciales (CSC) de chaque produit, qui restent a fournir."
   ],
   "produits_lca": [
     {
@@ -205,7 +206,7 @@
       ],
       "delai_attente_mois": 0,
       "hors_perimetre_facture": false,
-      "remarque": "Bonus division generale de CHF 150 par jour en hopital public, CHF 50 par jour en etablissement agree Optima.",
+      "remarque": "Bonus division generale de CHF 150 par jour en hopital public, CHF 50 par jour en etablissement agree Optima. Deroge a l'art. 4 CGA : la readaptation et la rehabilitation sont couvertes. Prime selon l'age reel, avec paliers a 19, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86 et 91 ans, en derogation de l'art. 12.",
       "couvertures": [
         {
           "prestation_id": "hospitalisation_privee",
@@ -216,6 +217,13 @@
           "prestation_id": "rapatriement",
           "taux_remboursement": 1.0,
           "conditions": "Rapatriement et assistance selon conditions touristiques, 45 jours consecutifs au maximum."
+        },
+        {
+          "prestation_id": "readaptation_cure",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Couverte par derogation expresse a l'exclusion de l'art. 4 CGA. Taux et plafond a reprendre dans les conditions speciales du produit.",
+          "source_page": "CGA LCA Assura 07.2015 MAJ 01.2022, points d'attention"
         }
       ]
     },
@@ -232,7 +240,7 @@
       ],
       "delai_attente_mois": 12,
       "hors_perimetre_facture": false,
-      "remarque": "Reserve aux femmes, fin automatique a 50 ans. Souscription uniquement via un conseiller.",
+      "remarque": "Reserve aux femmes, fin automatique a 50 ans. Souscription uniquement via un conseiller. Les CGA citent Complementa, Complementa Plus, Materna Eco, Materna Media, Materna Plus et Natura R3 comme categories assumant des prestations de maternite : la gamme Materna comporte donc plusieurs variantes non encore saisies.",
       "couvertures": [
         {
           "prestation_id": "accouchement",
@@ -371,7 +379,7 @@
       ],
       "delai_attente_mois": 0,
       "hors_perimetre_facture": false,
-      "remarque": "11 medecines alternatives, dont l'hypnose medicale, par des medecins formes. Franchise de CHF 200 par an. Rabais de combinaison avec Natura.",
+      "remarque": "11 medecines alternatives, dont l'hypnose medicale, par des medecins formes. Franchise de CHF 200 par an. Rabais de combinaison avec Natura. Deroge a l'art. 4 CGA : la readaptation, la rehabilitation et les maladies psychiques sont couvertes, contrairement a l'exclusion generale des maladies mentales ou nerveuses.",
       "couvertures": [
         {
           "prestation_id": "autres_med_alternatives",
@@ -408,6 +416,13 @@
           "taux_remboursement": 0.8,
           "plafond_annuel": 2000,
           "conditions": "Medicaments Swissmedic."
+        },
+        {
+          "prestation_id": "readaptation_cure",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Couverte par derogation expresse a l'exclusion de l'art. 4 CGA. Taux et plafond a reprendre dans les conditions speciales du produit.",
+          "source_page": "CGA LCA Assura 07.2015 MAJ 01.2022, points d'attention"
         }
       ]
     },
@@ -835,5 +850,89 @@
         }
       ]
     }
-  ]
+  ],
+  "cadre_contractuel": {
+    "source": "CGA LCA Assura SA, edition 07.2015, mise a jour 01.2022 (CGA_ASSURA_LCA_07.2015-MAJ-01.2022_F)",
+    "remarque": "Cadre commun a tous les produits. Chaque produit dispose de conditions speciales (CSC) qui peuvent y deroger : toujours croiser CGA et CSC.",
+    "etendue_territoriale": {
+      "portee": "monde entier",
+      "hors_suisse_liechtenstein_zone_frontaliere_jours_max": 90,
+      "remarque": "Art. 5. Le transfert de domicile hors de Suisse, du Liechtenstein ou de la zone frontaliere met fin a l'assurance a la fin de la periode en cours. Un assure malade ou accidente en Suisse qui part a l'etranger n'est indemnise qu'avec l'accord ecrit prealable d'Assura."
+    },
+    "concours_assureurs": {
+      "regle": "prorata",
+      "subsidiaire_a": [
+        "LAMal",
+        "LAA",
+        "assurance militaire",
+        "AI"
+      ],
+      "remarque": "Art. 6. Assura n'intervient qu'a titre complementaire. Aucune prestation si les frais ont ete payes par un tiers responsable ou son assureur. En l'absence de couverture LAMal, les prestations sont calculees comme si elle existait."
+    },
+    "duree_et_resiliation": {
+      "duree_min_ans_si_debut_1er_janvier": 3,
+      "duree_min_ans_si_debut_en_cours_annee": 2,
+      "preavis_resiliation_mois": 3,
+      "contrat_a_vie_entiere": true,
+      "exceptions_vie_entiere": [
+        "Previsia",
+        "Pecunia",
+        "Assuralex",
+        "Assura-Serenity"
+      ],
+      "remarque": "Art. 8 et 9. Resiliation au 31 decembre, preavis de 3 mois. En cas de hausse tarifaire (art. 10), les nouvelles primes sont communiquees au moins 25 jours avant la fin de l'annee et le produit peut etre resilie jusqu'au dernier jour de l'annee civile."
+    },
+    "primes": {
+      "base": "age de l'assure a la conclusion",
+      "paliers_age_standard": [
+        19,
+        26
+      ],
+      "remarque": "Art. 12. Passage automatique au tarif superieur a 19 ans puis a 26 ans, le tarif devenant alors definitif. Ultra Varia deroge a cette regle : prime selon l'age reel, avec paliers a 19, 26, 31, 36, 41, 46, 51, 56, 61, 66, 71, 76, 81, 86 et 91 ans."
+    },
+    "declaration_sinistre": {
+      "delai_jours": 3,
+      "concerne": [
+        "incapacite de travail",
+        "hospitalisation",
+        "intervention chirurgicale",
+        "cure balneaire"
+      ],
+      "remarque": "Art. 14. Annonce immediate exigee, urgences reservees. Aucune prestation due au-dela de 3 jours, sauf retard non fautif. Un accord telephonique ne fonde aucun droit. Art. 16 : decompte sur factures originales detaillees ; franchise et quote-part sont deduites directement."
+    },
+    "maternite_couverte_par": [
+      "Complementa",
+      "Complementa Plus",
+      "Materna Eco",
+      "Materna Media",
+      "Materna Plus",
+      "Natura R3"
+    ]
+  },
+  "exclusions_generales": {
+    "reference": "Art. 4.1 CGA",
+    "reserve": "Sous reserve des prestations specifiques prevues par les conditions speciales de chaque produit : plusieurs categories derogent expressement a ces exclusions.",
+    "liste": [
+      "affections sous reserve, affections en cours a la signature et suites d'accidents anterieurs",
+      "traitements non reconnus par l'assurance obligatoire",
+      "chirurgie plastique et reconstructive",
+      "consequences du tabagisme, de l'alcoolisme et des stupefiants",
+      "suicide et mutilation volontaire, tentatives comprises",
+      "interruption ou conservation de grossesse, procreation assistee, traitements de la sterilite",
+      "atteintes volontaires, actes temeraires ou delictueux, faute grave, bagarre",
+      "accidents en competition et a l'entrainement associe",
+      "cures d'air, de repos, d'eau et thalassotherapie",
+      "traitements de l'obesite",
+      "corrections des defauts de la vue",
+      "hospitalisations medicosociales et soins palliatifs de fin de vie",
+      "mesures dietetiques, de readaptation, de rehabilitation ou de traitement de la douleur",
+      "maladies mentales ou nerveuses",
+      "frais personnels d'hospitalisation sans lien avec la guerison",
+      "acquisition ou location d'appareils medicaux, articles orthopediques et protheses",
+      "faits de guerre, emeutes, terrorisme, sabotage",
+      "certains accidents d'aeronef, parachute ou parapente",
+      "effets des radiations ionisantes, hors radiations prescrites medicalement",
+      "transplantations d'organes"
+    ]
+  }
 }

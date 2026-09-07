@@ -91,7 +91,7 @@ window.Comparateur = (function () {
       const a = db().assureurs.find((x) => x.id === etat.actuel.assureurId);
       if (a) {
         const produits = produitsRetenus(a, etat.actuel.produitIds);
-        actuel = { assureurId: a.id, nom: a.nom, saisieLibre: false,
+        actuel = { assureurId: a.id, nom: a.nom, saisieLibre: false, assureur: a,
                    lca: window.MoteurLca.calculer(lignesLca, produits), produits };
       }
     }

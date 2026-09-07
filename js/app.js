@@ -288,6 +288,48 @@
     return h + '</div>';
   }
 
+  // Cadre contractuel et exclusions generales : ce qu'il faut pouvoir dire au
+  // client pendant l'entretien, pas apres.
+  function blocCadre(assureur) {
+    if (!assureur) return '';
+    const cadre = assureur.cadre_contractuel;
+    const excl = assureur.exclusions_generales;
+    if (!cadre && !excl) return '';
+
+    let h = '<details class="repliable vigilance"><summary>Points de vigilance — cadre contractuel'
+          + (excl ? ` et ${excl.liste.length} exclusions générales` : '') + '</summary><div>';
+
+    if (cadre) {
+      const f = [];
+      const d = cadre.declaration_sinistre;
+      if (d) f.push([`Déclaration de sinistre`,
+        `${d.delai_jours} jours — ${esc(d.concerne.join(', '))}`]);
+      const r = cadre.duree_et_resiliation;
+      if (r) f.push(['Durée et résiliation',
+        `${r.duree_min_ans_si_debut_1er_janvier} ans minimum (${r.duree_min_ans_si_debut_en_cours_annee} si le contrat débute en cours d'année), `
+        + `préavis de ${r.preavis_resiliation_mois} mois`]);
+      const e = cadre.etendue_territoriale;
+      if (e) f.push(['Étendue territoriale',
+        `${esc(e.portee)}, ${e.hors_suisse_liechtenstein_zone_frontaliere_jours_max} jours au maximum hors Suisse, Liechtenstein et zone frontalière`]);
+      const co = cadre.concours_assureurs;
+      if (co) f.push(['Concours d\'assureurs',
+        `prestations au prorata, à titre subsidiaire à ${esc(co.subsidiaire_a.join(', '))}`]);
+      if (f.length) {
+        h += '<table class="lignes"><tbody>'
+          + f.map(([k, v]) => `<tr><td style="width:34%"><strong>${k}</strong></td><td>${v}</td></tr>`).join('')
+          + '</tbody></table>';
+      }
+    }
+
+    if (excl) {
+      h += `<div class="titre-vigilance">Exclusions générales · ${esc(excl.reference)}</div>`
+        + '<ul class="liste-excl">' + excl.liste.map((x) => `<li>${esc(x)}</li>`).join('') + '</ul>'
+        + `<p class="produit-src">${esc(excl.reserve)}</p>`;
+    }
+    if (cadre && cadre.remarque) h += `<p class="produit-src">${esc(cadre.remarque)}</p>`;
+    return h + '</div></details>';
+  }
+
   function tableauDetail(res) {
     let h = '<table class="lignes"><thead><tr><th>Prestation</th><th class="num">Base LAMal</th>'
           + '<th class="num">Part compl.</th><th class="num">Remboursé compl.</th>'
@@ -413,13 +455,15 @@
               const sel = ((etat.filtresProduits[c.assureurId] || [])[0] === p.id) ? ' selected' : '';
               return `<option value="${esc(p.id)}"${sel}>${esc(p.nom)}</option>`;
             }).join('')
-          + '</select></div>' + blocArgumentaire(act, c) + tableauDetail(c) + '</div></td></tr>';
+          + '</select></div>' + blocArgumentaire(act, c) + tableauDetail(c)
+          + blocCadre(c.assureur) + '</div></td></tr>';
       }
     });
     h += '</tbody></table>';
 
     if (act) {
-      h += '<div class="titre-bloc">Détail de la couverture actuelle</div>' + tableauDetail(act);
+      h += '<div class="titre-bloc">Détail de la couverture actuelle</div>' + tableauDetail(act)
+        + blocCadre(act.assureur);
     }
 
     h += '<div class="produit-src" style="margin-top:18px">'

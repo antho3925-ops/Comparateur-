@@ -183,6 +183,22 @@ combler.
 
 ---
 
+### Cadre contractuel et exclusions générales
+
+Les conditions générales (CGA) d'un assureur ne contiennent aucun taux : elles
+posent le cadre commun à tous ses produits. Elles se saisissent dans deux blocs
+au niveau de l'assureur, affichés à l'écran sous « Points de vigilance » :
+
+- `cadre_contractuel` — étendue territoriale, concours d'assureurs, durée et
+  résiliation, base de calcul des primes, délai de déclaration de sinistre ;
+- `exclusions_generales` — la liste des exclusions, avec sa `reference`
+  d'article et la `reserve` rappelant que les conditions spéciales de chaque
+  produit peuvent y déroger.
+
+Ces dérogations comptent : chez Assura, Ultra Varia et Medna couvrent la
+réadaptation malgré l'exclusion générale, et Medna couvre en plus les maladies
+psychiques. Elles se notent dans la `remarque` du produit concerné.
+
 ## 4. Ce que l'aperçu produits ne suffit pas à faire
 
 Une brochure d'aperçu permet de savoir **quels produits d'une caisse couvrent
