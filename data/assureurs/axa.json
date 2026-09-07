@@ -1,0 +1,731 @@
+{
+  "schema_version": "1.0",
+  "id": "axa",
+  "nom": "AXA",
+  "actif": true,
+  "source": {
+    "origine": "recapitulatif produits fourni par le conseiller",
+    "reference": "AXA (Suisse), pages produits officielles axa.ch et apercu des prestations",
+    "date_extraction": "2026-09-06",
+    "annee_tarifaire": 2026,
+    "fiabilite": "a_verifier",
+    "remarque": "Saisi depuis un recapitulatif de brochure. Les couvertures au statut 'a_completer' sont connues comme couvertes mais sans taux exploitable dans la source. Verifier les CGA/CC avant tout engagement contractuel."
+  },
+  "lamal": {
+    "franchises_adulte": null,
+    "franchises_enfant": null,
+    "quote_part_taux": null,
+    "quote_part_plafond_annuel_adulte": null,
+    "quote_part_plafond_annuel_enfant": null,
+    "contribution_hospitaliere_par_jour_adulte": null,
+    "modeles_proposes": null,
+    "remarque": "AXA ne propose pas d'assurance de base LAMal. Un client AXA a donc necessairement sa base chez un autre assureur : la franchise et le modele saisis se rapportent a cet autre assureur."
+  },
+  "notes_generales": [
+    "AXA ne propose pas d'assurance de base LAMal, uniquement des complementaires LCA.",
+    "Rabais famille : 5% pour deux personnes, 10% des trois personnes du meme menage.",
+    "Duree minimale de contrat de 1 an, au choix 1, 2 ou 3 ans. Preavis de resiliation de 3 mois pour la fin de l'annee civile, 1 mois en cas de modification de prime.",
+    "Exclusions principales : traitements et operations esthetiques, procreation medicalement assistee et traitements contre la sterilite."
+  ],
+  "produits_lca": [
+    {
+      "id": "axa_actif",
+      "code_produit": null,
+      "nom": "ACTIF",
+      "type": "ambulatoire",
+      "niveau": "actif",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [
+        {
+          "id": "env_ps",
+          "libelle": "Promotion de la sante et sport",
+          "plafond_annuel": 400
+        },
+        {
+          "id": "env_prev",
+          "libelle": "Mesures de medecine preventive",
+          "plafond_annuel": 500
+        }
+      ],
+      "couvertures": [
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 200,
+          "enveloppe_id": "env_ps"
+        },
+        {
+          "prestation_id": "clubs_sportifs",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 100,
+          "enveloppe_id": "env_ps"
+        },
+        {
+          "prestation_id": "activite_physique_cours",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 200,
+          "enveloppe_id": "env_ps",
+          "conditions": "Cours labellises Qualicert ou Qualitop, ecoles de natation labellisees."
+        },
+        {
+          "prestation_id": "massage_therapeutique",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 200,
+          "conditions": "Massages medicaux."
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 500,
+          "conditions": "Bilans de sante, sur 3 ans."
+        },
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 1000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 1000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 1000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 1000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 1000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "medecine_chinoise",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 1000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "gynecologie_preventive",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "enveloppe_id": "env_prev",
+          "conditions": "Compris dans le plafond global de prevention de CHF 500 par an. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "maternite_complements",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "enveloppe_id": "env_prev",
+          "conditions": "Compris dans le plafond global de prevention de CHF 500 par an. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "depistage_lca",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "enveloppe_id": "env_prev",
+          "conditions": "Compris dans le plafond global de prevention de CHF 500 par an. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "conseil_sante_pharmacie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "enveloppe_id": "env_prev",
+          "conditions": "Compris dans le plafond global de prevention de CHF 500 par an. Le taux n'est pas indique dans la source."
+        }
+      ]
+    },
+    {
+      "id": "axa_plus",
+      "code_produit": null,
+      "nom": "PLUS",
+      "type": "ambulatoire",
+      "niveau": "plus",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Ne comprend ni la promotion de la sante, ni la medecine complementaire, ni les mesures de prevention : ces postes sont propres a ACTIF et COMPLET.",
+      "couvertures": [
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 150,
+          "conditions": "Jusqu'a CHF 150 par an. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "psychotherapie_non_medicale",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 1000,
+          "conditions": "Therapeutes non admis a la LAMal."
+        },
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": 0.9,
+          "conditions": "Vaccinations preventives et de voyage."
+        },
+        {
+          "prestation_id": "vaccins_voyage",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": 0.75,
+          "conditions": "Medicaments agrees Swissmedic non a charge de la LAMal."
+        },
+        {
+          "prestation_id": "moyens_auxiliaires_lca",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 1000,
+          "conditions": "Appareils auditifs, fauteuils roulants, semelles, lits medicalises, perruques."
+        },
+        {
+          "prestation_id": "soins_etranger_planifies",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 1000,
+          "conditions": "Ambulatoire."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Urgence medicale ambulatoire et stationnaire, 100% des frais."
+        },
+        {
+          "prestation_id": "visite_proche_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 1000,
+          "conditions": "Hospitalisation d'au moins 7 jours a l'etranger, CHF 1'000 par cas."
+        }
+      ]
+    },
+    {
+      "id": "axa_complet",
+      "code_produit": null,
+      "nom": "COMPLET",
+      "type": "ambulatoire",
+      "niveau": "complet",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [
+        {
+          "id": "env_ps",
+          "libelle": "Promotion de la sante et sport",
+          "plafond_annuel": 500
+        },
+        {
+          "id": "env_prev",
+          "libelle": "Mesures de medecine preventive",
+          "plafond_annuel": 600
+        }
+      ],
+      "couvertures": [
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 300,
+          "conditions": "Jusqu'a CHF 300 par an. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 300,
+          "enveloppe_id": "env_ps"
+        },
+        {
+          "prestation_id": "clubs_sportifs",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 150,
+          "enveloppe_id": "env_ps"
+        },
+        {
+          "prestation_id": "activite_physique_cours",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 300,
+          "enveloppe_id": "env_ps"
+        },
+        {
+          "prestation_id": "psychotherapie_non_medicale",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 3000
+        },
+        {
+          "prestation_id": "prevention_psychologique",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 500,
+          "conditions": "Fitness mental, par des psychologues FSP ou SBAP. CHF 500 sur 3 ans."
+        },
+        {
+          "prestation_id": "massage_therapeutique",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 200
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 1000,
+          "conditions": "Sur 3 ans."
+        },
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "vaccins_voyage",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "moyens_auxiliaires_lca",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 2000
+        },
+        {
+          "prestation_id": "soins_etranger_planifies",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 2000
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "visite_proche_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 1000
+        },
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 3000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 3000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 3000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 3000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 3000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "medecine_chinoise",
+          "taux_remboursement": 0.75,
+          "plafond_annuel": 3000,
+          "conditions": "Methodes reconnues AXA, therapeutes RME ou ASCA."
+        },
+        {
+          "prestation_id": "gynecologie_preventive",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "enveloppe_id": "env_prev",
+          "conditions": "Compris dans le plafond global de prevention de CHF 600 par an. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "maternite_complements",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "enveloppe_id": "env_prev",
+          "conditions": "Compris dans le plafond global de prevention de CHF 600 par an. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "depistage_lca",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "enveloppe_id": "env_prev",
+          "conditions": "Compris dans le plafond global de prevention de CHF 600 par an. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "conseil_sante_pharmacie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "enveloppe_id": "env_prev",
+          "conditions": "Compris dans le plafond global de prevention de CHF 600 par an. Le taux n'est pas indique dans la source."
+        }
+      ]
+    },
+    {
+      "id": "axa_hopital_commune",
+      "code_produit": null,
+      "nom": "Hopital Division commune",
+      "type": "hospitalisation",
+      "niveau": "commune",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Liste d'hopitaux AXA applicable, certains etablissements et maisons de naissance exclus.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_hors_canton",
+          "taux_remboursement": 1.0,
+          "conditions": "Libre choix de l'hopital dans toute la Suisse en division commune, couverture des frais depassant le tarif du canton de domicile."
+        }
+      ]
+    },
+    {
+      "id": "axa_hopital_semi_privee",
+      "code_produit": null,
+      "nom": "Hopital Division semi-privee",
+      "type": "hospitalisation",
+      "niveau": "semi_privee",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Gratuit de la naissance au 1er anniversaire.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_demi_privee",
+          "taux_remboursement": 1.0,
+          "conditions": "Chambre a deux lits, libre choix du medecin et de l'hopital dans toute la Suisse."
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": 1.0
+        }
+      ]
+    },
+    {
+      "id": "axa_hopital_privee",
+      "code_produit": null,
+      "nom": "Hopital Division privee",
+      "type": "hospitalisation",
+      "niveau": "privee",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": 1.0,
+          "conditions": "Chambre individuelle, libre choix du medecin specialiste et de l'hopital en Suisse."
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Couverture etendue a l'etranger."
+        },
+        {
+          "prestation_id": "readaptation_cure",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Cures balneaires, thermales et de convalescence a l'etranger possibles sur demande."
+        }
+      ]
+    },
+    {
+      "id": "axa_hopital_flex1",
+      "code_produit": null,
+      "nom": "Hopital Flex 1",
+      "type": "hospitalisation",
+      "niveau": "flex1",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Gratuit de la naissance au 1er anniversaire.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_demi_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Division choisie au moment de l'hospitalisation, moyennant une participation. Taux et participation non chiffres dans la source."
+        },
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Meme mecanisme."
+        }
+      ]
+    },
+    {
+      "id": "axa_hopital_flex2",
+      "code_produit": null,
+      "nom": "Hopital Flex 2",
+      "type": "hospitalisation",
+      "niveau": "flex2",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Gratuit de la naissance au 1er anniversaire.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_demi_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Division choisie au moment de l'hospitalisation, moyennant une participation. Taux et participation non chiffres dans la source."
+        },
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Meme mecanisme."
+        }
+      ]
+    },
+    {
+      "id": "axa_indemnite_hospitalisation",
+      "code_produit": null,
+      "nom": "Indemnite journaliere d'hospitalisation",
+      "type": "indemnites",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "remarque": "Complement a l'assurance complementaire d'hospitalisation.",
+      "couvertures": [
+        {
+          "prestation_id": "indemnite_hospitalisation",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Couverture des frais subsequents d'un sejour hospitalier pour soins aigus, a partir de trois nuits. Montant non precise dans la source."
+        }
+      ]
+    },
+    {
+      "id": "axa_accident_prive",
+      "code_produit": null,
+      "nom": "Accident Prive",
+      "type": "accident",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Complete la LAA. Gratuit de la naissance au 1er anniversaire.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Hospitalisation en division privee en cas d'accident."
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        }
+      ]
+    },
+    {
+      "id": "axa_dentaire_adultes",
+      "code_produit": null,
+      "nom": "Assurance dentaire complementaire (adultes)",
+      "type": "dentaire",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Taux et plafonds non chiffres dans la source. Le produit Dentaire 1000 est gratuit de la naissance au 1er anniversaire.",
+      "couvertures": [
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "dentaire_orthodontie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Correction de malpositions dentaires."
+        },
+        {
+          "prestation_id": "dentaire_prophylaxie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Hygiene dentaire, detartrage professionnel."
+        },
+        {
+          "prestation_id": "dentaire_esthetique",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Blanchiment."
+        }
+      ]
+    },
+    {
+      "id": "axa_dentaire_enfants",
+      "code_produit": null,
+      "nom": "Assurance dentaire complementaire (enfants)",
+      "type": "dentaire",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Taux et plafonds non chiffres dans la source.",
+      "couvertures": [
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Traitement des caries, obturations, remplacements dentaires."
+        },
+        {
+          "prestation_id": "dentaire_orthodontie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Pose d'un appareil dentaire."
+        },
+        {
+          "prestation_id": "dentaire_prophylaxie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Examens de controle, hygiene dentaire."
+        },
+        {
+          "prestation_id": "chirurgie_maxillaire",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Extraction des dents de sagesse."
+        }
+      ]
+    },
+    {
+      "id": "axa_capital",
+      "code_produit": null,
+      "nom": "Assurance de capital",
+      "type": "capital",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "remarque": "La couverture s'eteint a 60 ans revolus.",
+      "couvertures": [
+        {
+          "prestation_id": "capital_invalidite_accident",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 300000,
+          "conditions": "Somme assuree de CHF 0 a 300'000."
+        },
+        {
+          "prestation_id": "capital_deces_accident",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 300000
+        },
+        {
+          "prestation_id": "capital_invalidite_maladie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 300000,
+          "conditions": "Des 56 ans, la couverture invalidite maladie est limitee a CHF 100'000."
+        },
+        {
+          "prestation_id": "capital_deces_maladie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 300000
+        }
+      ]
+    },
+    {
+      "id": "axa_pharmacie",
+      "code_produit": null,
+      "nom": "Conseil sante en pharmacie",
+      "type": "pharmacie",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "couvertures": [
+        {
+          "prestation_id": "conseil_sante_pharmacie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Participation aux frais de conseil sante et d'examens realises dans plus de 300 pharmacies partenaires. Compris dans le plafond global de prevention : CHF 600 par an avec COMPLET, CHF 500 avec ACTIF."
+        }
+      ]
+    }
+  ]
+}

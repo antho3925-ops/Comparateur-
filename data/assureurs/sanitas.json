@@ -1,0 +1,1012 @@
+{
+  "schema_version": "1.0",
+  "id": "sanitas",
+  "nom": "Sanitas",
+  "actif": true,
+  "source": {
+    "origine": "recapitulatif produits fourni par le conseiller",
+    "reference": "Sanitas, pages produits officielles (Vital, Dental, Hospital, Easy, Medical Private, Capital, Salary, Planning a Family)",
+    "date_extraction": "2026-09-06",
+    "annee_tarifaire": 2026,
+    "fiabilite": "a_verifier",
+    "remarque": "Saisi depuis un recapitulatif de brochure. Les couvertures au statut 'a_completer' sont connues comme couvertes mais sans taux exploitable dans la source. Verifier les CGA/CC avant tout engagement contractuel."
+  },
+  "lamal": {
+    "franchises_adulte": null,
+    "franchises_enfant": null,
+    "quote_part_taux": null,
+    "quote_part_plafond_annuel_adulte": null,
+    "quote_part_plafond_annuel_enfant": null,
+    "contribution_hospitaliere_par_jour_adulte": null,
+    "modeles_proposes": null,
+    "remarque": "Non renseigne : la source ne traite que des complementaires. Les parametres legaux de data/meta.json s'appliquent."
+  },
+  "notes_generales": [
+    "Les montants indiques sont des prestations maximales et, sauf mention contraire, valables par annee civile.",
+    "Un supplement de prime individuel permet une couverture complete meme en cas d'antecedent de sante.",
+    "Le passage a une categorie superieure necessite un examen de sante ; le passage a une categorie inferieure non."
+  ],
+  "produits_lca": [
+    {
+      "id": "sanitas_vital_basic",
+      "code_produit": null,
+      "nom": "Vital Basic",
+      "type": "ambulatoire",
+      "niveau": "basic",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [
+        {
+          "id": "env_prev",
+          "libelle": "Prevention",
+          "plafond_annuel": 500
+        }
+      ],
+      "remarque": "Entree de gamme. Ni medecine alternative ni promotion de la sante.",
+      "couvertures": [
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Transport d'urgence et sauvetage, 100% illimite dans le monde."
+        },
+        {
+          "prestation_id": "sauvetage",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 50000,
+          "conditions": "Recherche et degagement en Suisse, par evenement."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Urgences a l'etranger, 100% illimite, 180 jours au maximum."
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0,
+          "conditions": "Assistance Sanitas."
+        },
+        {
+          "prestation_id": "voyage_frais_annexes",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 2000,
+          "conditions": "Hebergement jusqu'a 10 nuits a CHF 200, medicaments."
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": 0.9,
+          "conditions": "Sans plafond."
+        },
+        {
+          "prestation_id": "moyens_auxiliaires_lca",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 1000
+        },
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 300,
+          "conditions": "CHF 300 sur 3 ans."
+        },
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev"
+        },
+        {
+          "prestation_id": "gynecologie_preventive",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev"
+        },
+        {
+          "prestation_id": "dentaire_orthodontie",
+          "taux_remboursement": 0.5,
+          "plafond_annuel": 10000,
+          "conditions": "Jusqu'a 20 ans."
+        }
+      ]
+    },
+    {
+      "id": "sanitas_vital_smart",
+      "code_produit": null,
+      "nom": "Vital Smart",
+      "type": "ambulatoire",
+      "niveau": "smart",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [
+        {
+          "id": "env_prev",
+          "libelle": "Prevention",
+          "plafond_annuel": 1000
+        },
+        {
+          "id": "env_ma",
+          "libelle": "Medecine alternative (option CHF 2'500 ou 5'000)",
+          "plafond_annuel": null
+        },
+        {
+          "id": "env_ps",
+          "libelle": "Promotion de la sante (option CHF 400 ou 600)",
+          "plafond_annuel": null
+        },
+        {
+          "id": "env_tc",
+          "libelle": "Therapies et diagnostics complementaires",
+          "plafond_annuel": 1000
+        }
+      ],
+      "remarque": "Reprend Vital Basic. Les plafonds de medecine alternative (CHF 2'500 ou 5'000) et de promotion de la sante (CHF 400 ou 600) dependent de l'option souscrite : ils sont laisses a null plutot que de retenir un montant arbitraire. 4,5 etoiles Moneyland 2026.",
+      "couvertures": [
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Transport d'urgence et sauvetage, 100% illimite dans le monde."
+        },
+        {
+          "prestation_id": "sauvetage",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 50000,
+          "conditions": "Recherche et degagement en Suisse, par evenement."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Urgences a l'etranger, 100% illimite, 180 jours au maximum."
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0,
+          "conditions": "Assistance Sanitas."
+        },
+        {
+          "prestation_id": "voyage_frais_annexes",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 2000,
+          "conditions": "Hebergement jusqu'a 10 nuits a CHF 200, medicaments."
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": 0.9,
+          "conditions": "Sans plafond."
+        },
+        {
+          "prestation_id": "moyens_auxiliaires_lca",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 1000
+        },
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 300,
+          "conditions": "CHF 300 sur 3 ans."
+        },
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev"
+        },
+        {
+          "prestation_id": "gynecologie_preventive",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev"
+        },
+        {
+          "prestation_id": "dentaire_orthodontie",
+          "taux_remboursement": 0.5,
+          "conditions": "Sans plafond, jusqu'a 20 ans."
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev"
+        },
+        {
+          "prestation_id": "depistage_lca",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev",
+          "conditions": "Depistage du cancer."
+        },
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "medecine_chinoise",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "massage_therapeutique",
+          "taux_remboursement": 0.8,
+          "plafond_a_preciser": true,
+          "plafond_annuel": null,
+          "conditions": "Sous-plafond de CHF 250 ou CHF 500 selon l'option de medecine alternative choisie."
+        },
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": 0.5,
+          "enveloppe_id": "env_ps"
+        },
+        {
+          "prestation_id": "activite_physique_cours",
+          "taux_remboursement": 0.5,
+          "enveloppe_id": "env_ps"
+        },
+        {
+          "prestation_id": "maternite_complements",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 1000,
+          "conditions": "Prestations parentales."
+        },
+        {
+          "prestation_id": "psychotherapie_non_medicale",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "sterilisation",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "chirurgie_esthetique_reconstructive",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "podologie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        }
+      ]
+    },
+    {
+      "id": "sanitas_vital_premium",
+      "code_produit": null,
+      "nom": "Vital Premium",
+      "type": "ambulatoire",
+      "niveau": "premium",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [
+        {
+          "id": "env_prev",
+          "libelle": "Prevention",
+          "plafond_annuel": 1500
+        },
+        {
+          "id": "env_ma",
+          "libelle": "Medecine alternative",
+          "plafond_annuel": 10000
+        },
+        {
+          "id": "env_ps",
+          "libelle": "Promotion de la sante",
+          "plafond_annuel": 800
+        },
+        {
+          "id": "env_tc",
+          "libelle": "Therapies et diagnostics complementaires",
+          "plafond_annuel": 5000
+        }
+      ],
+      "remarque": "Couverture la plus etendue de la gamme Vital. 4,5 etoiles Moneyland 2026.",
+      "couvertures": [
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Transport d'urgence et sauvetage, 100% illimite dans le monde."
+        },
+        {
+          "prestation_id": "sauvetage",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 50000,
+          "conditions": "Recherche et degagement en Suisse, par evenement."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Urgences a l'etranger, 100% illimite, 180 jours au maximum."
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0,
+          "conditions": "Assistance Sanitas."
+        },
+        {
+          "prestation_id": "voyage_frais_annexes",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 2000,
+          "conditions": "Hebergement jusqu'a 10 nuits a CHF 200, medicaments."
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": 0.9,
+          "conditions": "Sans plafond."
+        },
+        {
+          "prestation_id": "moyens_auxiliaires_lca",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 1000
+        },
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 300,
+          "conditions": "CHF 300 sur 3 ans."
+        },
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev"
+        },
+        {
+          "prestation_id": "gynecologie_preventive",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev"
+        },
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 600,
+          "conditions": "CHF 600 sur 3 ans."
+        },
+        {
+          "prestation_id": "dentaire_orthodontie",
+          "taux_remboursement": 0.8,
+          "conditions": "Sans plafond, jusqu'a 20 ans."
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev"
+        },
+        {
+          "prestation_id": "depistage_lca",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev",
+          "conditions": "Depistage du cancer, controle des grains de beaute en ligne, prevention de la cataracte."
+        },
+        {
+          "prestation_id": "tests_genetiques",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_prev",
+          "conditions": "Autotests."
+        },
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "medecine_chinoise",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "massage_therapeutique",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 750,
+          "enveloppe_id": "env_ma"
+        },
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 400,
+          "enveloppe_id": "env_ps"
+        },
+        {
+          "prestation_id": "activite_physique_cours",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 400,
+          "enveloppe_id": "env_ps"
+        },
+        {
+          "prestation_id": "maternite_complements",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 1000,
+          "conditions": "Prestations parentales."
+        },
+        {
+          "prestation_id": "forfait_accouchement",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 1000,
+          "conditions": "Indemnite journaliere jusqu'a CHF 1'000 par naissance ou adoption."
+        },
+        {
+          "prestation_id": "therapies_digitales",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "tests_prenataux_genetiques",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 500,
+          "conditions": "Transports planifies."
+        },
+        {
+          "prestation_id": "psychotherapie_non_medicale",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "sterilisation",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "chirurgie_esthetique_reconstructive",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "podologie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_tc"
+        }
+      ]
+    },
+    {
+      "id": "sanitas_dental_basic",
+      "code_produit": null,
+      "nom": "Dental Basic",
+      "type": "dentaire",
+      "niveau": "basic",
+      "age_adhesion_min": null,
+      "age_adhesion_max": 65,
+      "franchises_produit": [
+        250
+      ],
+      "delai_attente_mois": 6,
+      "hors_perimetre_facture": false,
+      "delais_attente_specifiques": [
+        {
+          "motif": "protheses et facettes",
+          "mois": 12
+        }
+      ],
+      "enveloppes": [
+        {
+          "id": "env_d",
+          "libelle": "Plafond annuel dentaire",
+          "plafond_annuel": 2000
+        }
+      ],
+      "remarque": "Franchise de CHF 250 par an, hors prevention. Suisse et pays limitrophes.",
+      "couvertures": [
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_d"
+        },
+        {
+          "prestation_id": "dentaire_prothese_implant",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_d",
+          "conditions": "Bridges, couronnes, pivots. Facettes et parodontologie incluses."
+        },
+        {
+          "prestation_id": "dentaire_esthetique",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_d",
+          "conditions": "Facettes."
+        },
+        {
+          "prestation_id": "dentaire_prophylaxie",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 100,
+          "conditions": "Controles et hygiene dentaire, CHF 100 par an, hors franchise."
+        }
+      ]
+    },
+    {
+      "id": "sanitas_dental",
+      "code_produit": null,
+      "nom": "Dental",
+      "type": "dentaire",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": 59,
+      "franchises_produit": [
+        350
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "delais_attente_specifiques": [
+        {
+          "motif": "general",
+          "jours": 180
+        }
+      ],
+      "enveloppes": [
+        {
+          "id": "env_d",
+          "libelle": "Plafond annuel dentaire",
+          "plafond_annuel": 5000
+        }
+      ],
+      "remarque": "Franchise de CHF 350 par an et par cause (maladie ou accident). Aucune carence en cas d'accident. Rapport dentaire requis des le 5e anniversaire. Suisse et monde entier.",
+      "couvertures": [
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_d"
+        },
+        {
+          "prestation_id": "dentaire_prothese_implant",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_d"
+        },
+        {
+          "prestation_id": "dentaire_orthodontie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_d"
+        },
+        {
+          "prestation_id": "chirurgie_maxillaire",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_d"
+        },
+        {
+          "prestation_id": "dentaire_prophylaxie",
+          "taux_remboursement": 0.8,
+          "enveloppe_id": "env_d",
+          "conditions": "Un controle ou une visite d'hygiene dentaire par an."
+        }
+      ]
+    },
+    {
+      "id": "sanitas_hospital_standard",
+      "code_produit": null,
+      "nom": "Hospital Standard Liberty",
+      "type": "hospitalisation",
+      "niveau": "standard",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Surclassement possible via Hospital Upgrade.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_hors_canton",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Libre choix de l'hopital en division commune parmi les hopitaux partenaires Sanitas."
+        }
+      ]
+    },
+    {
+      "id": "sanitas_hospital_extra",
+      "code_produit": null,
+      "nom": "Hospital Extra Liberty",
+      "type": "hospitalisation",
+      "niveau": "extra",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Conseiller personnel.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_demi_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Chambre a 2 lits, parmi les hopitaux partenaires accredites."
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "acces_prioritaire_soins",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Priority Access."
+        },
+        {
+          "prestation_id": "deuxieme_avis_medical",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "aide_menage",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        }
+      ]
+    },
+    {
+      "id": "sanitas_hospital_top",
+      "code_produit": null,
+      "nom": "Hospital Top Liberty",
+      "type": "hospitalisation",
+      "niveau": "top",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Couverture la plus elevee de la gamme hospitalisation.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Chambre individuelle, libre choix du medecin et de l'hopital."
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "acces_prioritaire_soins",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Priority Access."
+        },
+        {
+          "prestation_id": "deuxieme_avis_medical",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "innovations_medicales",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Procedures innovantes."
+        },
+        {
+          "prestation_id": "implants_medicaux",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "moyens_auxiliaires_lca",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "aide_menage",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "soins_domicile_lca",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        }
+      ]
+    },
+    {
+      "id": "sanitas_hospital_day_comfort",
+      "code_produit": null,
+      "nom": "Hospital Day Comfort",
+      "type": "hospitalisation",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Concue pour les interventions ambulatoires sans nuitee.",
+      "couvertures": [
+        {
+          "prestation_id": "libre_choix_medecin_ambulatoire",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Parmi les partenaires Sanitas, pour les interventions realisees dans la journee."
+        },
+        {
+          "prestation_id": "acces_prioritaire_soins",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "deuxieme_avis_medical",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "confort_chirurgie_ambulatoire",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Confort avant, pendant et apres l'intervention."
+        }
+      ]
+    },
+    {
+      "id": "sanitas_accident_extra",
+      "code_produit": null,
+      "nom": "Accident Extra Liberty",
+      "type": "accident",
+      "niveau": "extra",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_demi_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "En cas d'accident."
+        },
+        {
+          "prestation_id": "aide_menage",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Traitements d'urgence a l'etranger."
+        }
+      ]
+    },
+    {
+      "id": "sanitas_accident_top",
+      "code_produit": null,
+      "nom": "Accident Top Liberty",
+      "type": "accident",
+      "niveau": "top",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "En cas d'accident."
+        },
+        {
+          "prestation_id": "aide_menage",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Traitements d'urgence a l'etranger."
+        }
+      ]
+    },
+    {
+      "id": "sanitas_easy",
+      "code_produit": null,
+      "nom": "Easy",
+      "type": "voyage",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Necessite l'assurance de base Sanitas ou l'un des produits Dental, Dental Basic, Planning a Family, Salary ou Capital. Non combinable avec Vital, Classic ou les assurances d'hospitalisation (double assurance).",
+      "couvertures": [
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 20000,
+          "conditions": "Participation aux frais de traitement d'urgence a l'etranger, jusqu'a CHF 20'000 par annee civile. Taux non precise."
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "sauvetage",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        }
+      ]
+    },
+    {
+      "id": "sanitas_medical_private",
+      "code_produit": null,
+      "nom": "Medical Private",
+      "type": "choix_medecin",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "couvertures": [
+        {
+          "prestation_id": "libre_choix_medecin_ambulatoire",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Libre choix du medecin en ambulatoire dans le monde entier, y compris chez des medecins facturant a leurs propres tarifs en Suisse."
+        },
+        {
+          "prestation_id": "soins_etranger_planifies",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Traitements ambulatoires planifies et therapies prescrites a l'etranger."
+        }
+      ]
+    },
+    {
+      "id": "sanitas_planning_family",
+      "code_produit": null,
+      "nom": "Planning a Family",
+      "type": "desir_enfant",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Acces aux cliniques de fertilite dans toute la Suisse.",
+      "couvertures": [
+        {
+          "prestation_id": "procreation_assistee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Cycles supplementaires de procreation medicalement assistee."
+        },
+        {
+          "prestation_id": "tests_prenataux_genetiques",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        }
+      ]
+    },
+    {
+      "id": "sanitas_capital",
+      "code_produit": null,
+      "nom": "Capital",
+      "type": "capital",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "remarque": "Montants selon contrat, non precises dans la source. Usage libre des prestations.",
+      "couvertures": [
+        {
+          "prestation_id": "capital_invalidite_accident",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "capital_deces_accident",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "capital_invalidite_maladie",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "capital_deces_maladie",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        }
+      ]
+    },
+    {
+      "id": "sanitas_salary",
+      "code_produit": null,
+      "nom": "Salary",
+      "type": "indemnites",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "couvertures": [
+        {
+          "prestation_id": "indemnite_journaliere",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_par_jour": 500,
+          "conditions": "Jusqu'a CHF 500 par jour pendant 720 jours sur une periode de 900 jours. Maladie, accident et complications liees a la grossesse. Montant et delai d'attente selon contrat."
+        }
+      ]
+    }
+  ]
+}

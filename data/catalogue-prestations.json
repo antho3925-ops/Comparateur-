@@ -728,6 +728,321 @@
       "unite_saisie": "montant",
       "nature": "remboursement",
       "actif": true
+    },
+    {
+      "id": "protection_juridique_patient",
+      "libelle": "Protection juridique du patient (litiges medicaux)",
+      "groupe": "juridique",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "soins_longue_duree",
+      "libelle": "Forfait soins de longue duree / hotellerie EMS",
+      "groupe": "aides_soins",
+      "categorie": "LCA",
+      "unite_saisie": "montant_et_jours",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "indemnite_soins",
+      "libelle": "Indemnite journaliere de soins (EMS)",
+      "groupe": "aides_soins",
+      "categorie": "LCA",
+      "unite_saisie": "montant_et_jours",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "soins_domicile_lca",
+      "libelle": "Soins a domicile (complement au-dela de la LAMal)",
+      "groupe": "aides_soins",
+      "categorie": "LCA",
+      "unite_saisie": "montant_et_jours",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "procreation_assistee",
+      "libelle": "Procreation medicalement assistee",
+      "groupe": "maternite",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "tests_prenataux_genetiques",
+      "libelle": "Tests prenataux et genetiques",
+      "groupe": "maternite",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "indemnite_allaitement",
+      "libelle": "Indemnite / allocation d'allaitement",
+      "groupe": "maternite",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "forfait_accouchement",
+      "libelle": "Forfait accouchement (ambulatoire, domicile, maison de naissance)",
+      "groupe": "maternite",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "chambre_familiale_accouchement",
+      "libelle": "Chambre familiale lors de l'accouchement",
+      "groupe": "maternite",
+      "categorie": "LCA",
+      "unite_saisie": "montant_et_jours",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "rooming_in",
+      "libelle": "Rooming-in (sejour d'un parent aupres de son enfant hospitalise)",
+      "groupe": "hospitalier",
+      "categorie": "LCA",
+      "unite_saisie": "montant_et_jours",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "nuitee_hospitaliere_ambulatoire",
+      "libelle": "Nuitee hospitaliere lors d'une intervention ambulatoire",
+      "groupe": "hospitalier",
+      "categorie": "LCA",
+      "unite_saisie": "montant_et_jours",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "innovations_medicales",
+      "libelle": "Innovations et procedures medicales non prises en charge",
+      "groupe": "ambulatoire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "implants_medicaux",
+      "libelle": "Implants medicaux",
+      "groupe": "ambulatoire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "centre_thermal",
+      "libelle": "Centre thermal / bains",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "liberation_primes",
+      "libelle": "Liberation du paiement des primes",
+      "groupe": "capitaux",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "capital_invalidite_maladie",
+      "libelle": "Capital invalidite suite a maladie",
+      "groupe": "capitaux",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "capital_deces_maladie",
+      "libelle": "Capital deces suite a maladie",
+      "groupe": "capitaux",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "dommages_materiels",
+      "libelle": "Dommages materiels consecutifs a un accident",
+      "groupe": "capitaux",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "prestation_versee",
+      "actif": true
+    },
+    {
+      "id": "annulation_voyage",
+      "libelle": "Frais d'annulation de voyage",
+      "groupe": "etranger_urgence",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "voyage_frais_annexes",
+      "libelle": "Frais de voyage annexes (retour anticipe, depart retarde, hebergement)",
+      "groupe": "etranger_urgence",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "visite_proche_hospitalisation",
+      "libelle": "Voyage de visite d'un proche en cas d'hospitalisation",
+      "groupe": "etranger_urgence",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "soins_etranger_planifies",
+      "libelle": "Traitements planifies a l'etranger",
+      "groupe": "etranger_urgence",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "podologie",
+      "libelle": "Podologie",
+      "groupe": "ambulatoire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "therapies_digitales",
+      "libelle": "Therapies digitales",
+      "groupe": "ambulatoire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "libre_choix_medecin_ambulatoire",
+      "libelle": "Libre choix du medecin en ambulatoire (medecins non conventionnes)",
+      "groupe": "ambulatoire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "deuxieme_avis_medical",
+      "libelle": "Deuxieme avis medical",
+      "groupe": "ambulatoire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "acces_prioritaire_soins",
+      "libelle": "Acces prioritaire aux specialistes / prise en charge acceleree",
+      "groupe": "ambulatoire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "tests_genetiques",
+      "libelle": "Tests genetiques et autotests de depistage",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "vaccins_prevention_lca",
+      "libelle": "Vaccinations preventives non couvertes par la LAMal",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "activite_physique_cours",
+      "libelle": "Cours d'activite physique, piscine, escalade, clubs sportifs",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "prevention_psychologique",
+      "libelle": "Prevention psychologique / fitness mental",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "conseil_sante_pharmacie",
+      "libelle": "Conseil sante et examens en pharmacie",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "chirurgie_maxillaire",
+      "libelle": "Chirurgie maxillaire",
+      "groupe": "dentaire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "dentaire_esthetique",
+      "libelle": "Dentaire esthetique (blanchiment, facettes)",
+      "groupe": "dentaire",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
+    },
+    {
+      "id": "clubs_sportifs",
+      "libelle": "Clubs sportifs, abonnements piscine et escalade",
+      "groupe": "prevention",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true
     }
   ]
 }

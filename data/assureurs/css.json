@@ -1,0 +1,617 @@
+{
+  "schema_version": "1.0",
+  "id": "css",
+  "nom": "CSS",
+  "actif": true,
+  "source": {
+    "origine": "recapitulatif produits fourni par le conseiller",
+    "reference": "CSS, pages produits myFlex, fiches produit et conditions generales officielles css.ch",
+    "date_extraction": "2026-09-06",
+    "annee_tarifaire": 2026,
+    "fiabilite": "a_verifier",
+    "remarque": "Saisi depuis un recapitulatif de brochure. Les couvertures au statut 'a_completer' sont connues comme couvertes mais sans taux exploitable dans la source. Verifier les CGA/CC avant tout engagement contractuel. Les montants et pourcentages exacts varient selon l'edition de la police et sont fixes unilateralement par la CSS : cette saisie est donc particulierement a verifier avant tout engagement."
+  },
+  "lamal": {
+    "franchises_adulte": null,
+    "franchises_enfant": null,
+    "quote_part_taux": null,
+    "quote_part_plafond_annuel_adulte": null,
+    "quote_part_plafond_annuel_enfant": null,
+    "contribution_hospitaliere_par_jour_adulte": null,
+    "modeles_proposes": null,
+    "remarque": "Non renseigne : la source ne traite que des complementaires. Les parametres legaux de data/meta.json s'appliquent."
+  },
+  "notes_generales": [
+    "La ligne myFlex fonctionne par combinaison modulaire : assurance ambulatoire (Economy, Balance ou Premium) + assurance hospitalisation (Economy, Balance ou Premium) + un module medecine alternative ou dentaire.",
+    "Le compte sante n'est debloque qu'en combinant une assurance ambulatoire myFlex ET une assurance hospitalisation myFlex. Son niveau depend de la categorie choisie."
+  ],
+  "produits_lca": [
+    {
+      "id": "css_ambulatoire_economy",
+      "code_produit": null,
+      "nom": "myFlex Ambulatoire Economy",
+      "type": "ambulatoire",
+      "niveau": "economy",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Entree de gamme. Le compte sante n'est debloque qu'en combinant une assurance ambulatoire myFlex ET une assurance hospitalisation myFlex. Son niveau depend de la categorie choisie.",
+      "couvertures": [
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 100
+        },
+        {
+          "prestation_id": "gynecologie_preventive",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": 0.5,
+          "plafond_annuel": 300,
+          "conditions": "Compte sante, CHF 300 sur 2 annees civiles. Necessite myFlex Hospitalisation."
+        },
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": 0.5,
+          "plafond_annuel": 150,
+          "conditions": "Bonus compte sante, CHF 150 par an, CHF 300 pour une famille."
+        }
+      ]
+    },
+    {
+      "id": "css_ambulatoire_balance",
+      "code_produit": null,
+      "nom": "myFlex Ambulatoire Balance",
+      "type": "ambulatoire",
+      "niveau": "balance",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Niveau standard. Surclassement possible sans nouvel examen de sante, de 20 a 70 ans, tous les 5 ans. Le compte sante n'est debloque qu'en combinant une assurance ambulatoire myFlex ET une assurance hospitalisation myFlex. Son niveau depend de la categorie choisie.",
+      "couvertures": [
+        {
+          "prestation_id": "lunettes_lentilles_enfant",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 150,
+          "conditions": "CHF 150 par cas jusqu'a 18 ans."
+        },
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 150,
+          "conditions": "CHF 150 par an des 19 ans."
+        },
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "gynecologie_preventive",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": 0.5,
+          "plafond_annuel": 500,
+          "conditions": "Compte sante, sur 2 annees civiles."
+        },
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": 0.5,
+          "plafond_annuel": 250,
+          "conditions": "Bonus compte sante, CHF 250 par an, CHF 500 pour une famille."
+        },
+        {
+          "prestation_id": "forfait_accouchement",
+          "taux_remboursement": 0.9,
+          "conditions": "Accouchement ambulatoire et echographie."
+        },
+        {
+          "prestation_id": "indemnite_allaitement",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 200,
+          "conditions": "CHF 200 par enfant."
+        }
+      ]
+    },
+    {
+      "id": "css_ambulatoire_premium",
+      "code_produit": null,
+      "nom": "myFlex Ambulatoire Premium",
+      "type": "ambulatoire",
+      "niveau": "premium",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Sports a risque integralement assures, sous reserve de negligence grave. Le compte sante n'est debloque qu'en combinant une assurance ambulatoire myFlex ET une assurance hospitalisation myFlex. Son niveau depend de la categorie choisie.",
+      "couvertures": [
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 250000,
+          "conditions": "Jusqu'a CHF 250'000 par cas en Europe et CHF 50'000 par cas hors d'Europe."
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0,
+          "conditions": "Sauvetage et rapatriement illimites dans le monde entier."
+        },
+        {
+          "prestation_id": "sauvetage",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "voyage_frais_annexes",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 1000,
+          "conditions": "Voyage d'un proche et frais de retour anticipe jusqu'a CHF 1'000."
+        },
+        {
+          "prestation_id": "visite_proche_hospitalisation",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": 0.5,
+          "plafond_annuel": 1000,
+          "conditions": "Compte sante, sur 2 annees civiles."
+        },
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": 0.5,
+          "plafond_annuel": 500,
+          "conditions": "Bonus compte sante, CHF 500 par an, CHF 700 pour une famille."
+        },
+        {
+          "prestation_id": "psychotherapie_non_medicale",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Prise en charge partielle, taux non precise."
+        },
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "gynecologie_preventive",
+          "taux_remboursement": 0.9
+        }
+      ]
+    },
+    {
+      "id": "css_hospitalisation_economy",
+      "code_produit": null,
+      "nom": "myFlex Hospitalisation Economy",
+      "type": "hospitalisation",
+      "niveau": "economy",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Surclassement Economy vers Balance ou Balance vers Premium sans nouvel examen de sante. Le compte sante n'est debloque qu'en combinant une assurance ambulatoire myFlex ET une assurance hospitalisation myFlex. Son niveau depend de la categorie choisie.",
+      "couvertures": [
+        {
+          "prestation_id": "chirurgie_ambulatoire",
+          "taux_remboursement": 0.9,
+          "conditions": "Prestations ambulatoires et semi-hospitalieres permettant d'eviter ou de raccourcir une hospitalisation stationnaire, jusqu'a 90% du montant maximum stationnaire."
+        },
+        {
+          "prestation_id": "capital_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 2000,
+          "conditions": "CHF 2'000 pour un sejour d'au moins 4 jours (3 nuits), selon la division choisie."
+        }
+      ]
+    },
+    {
+      "id": "css_hospitalisation_balance",
+      "code_produit": null,
+      "nom": "myFlex Hospitalisation Balance",
+      "type": "hospitalisation",
+      "niveau": "balance",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Surclassement Economy vers Balance ou Balance vers Premium sans nouvel examen de sante. Le compte sante n'est debloque qu'en combinant une assurance ambulatoire myFlex ET une assurance hospitalisation myFlex. Son niveau depend de la categorie choisie.",
+      "couvertures": [
+        {
+          "prestation_id": "chirurgie_ambulatoire",
+          "taux_remboursement": 0.9,
+          "conditions": "Prestations ambulatoires et semi-hospitalieres permettant d'eviter ou de raccourcir une hospitalisation stationnaire, jusqu'a 90% du montant maximum stationnaire."
+        },
+        {
+          "prestation_id": "capital_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 2000,
+          "conditions": "CHF 2'000 pour un sejour d'au moins 4 jours (3 nuits), selon la division choisie."
+        }
+      ]
+    },
+    {
+      "id": "css_hospitalisation_premium",
+      "code_produit": null,
+      "nom": "myFlex Hospitalisation Premium",
+      "type": "hospitalisation",
+      "niveau": "premium",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Surclassement Economy vers Balance ou Balance vers Premium sans nouvel examen de sante. Le compte sante n'est debloque qu'en combinant une assurance ambulatoire myFlex ET une assurance hospitalisation myFlex. Son niveau depend de la categorie choisie.",
+      "couvertures": [
+        {
+          "prestation_id": "chirurgie_ambulatoire",
+          "taux_remboursement": 0.9,
+          "conditions": "Prestations ambulatoires et semi-hospitalieres permettant d'eviter ou de raccourcir une hospitalisation stationnaire, jusqu'a 90% du montant maximum stationnaire."
+        },
+        {
+          "prestation_id": "capital_hospitalisation",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 2000,
+          "conditions": "CHF 2'000 pour un sejour d'au moins 4 jours (3 nuits), selon la division choisie."
+        }
+      ]
+    },
+    {
+      "id": "css_medecine_alternative",
+      "code_produit": null,
+      "nom": "myFlex Medecine alternative",
+      "type": "medecine_alternative",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Peut etre remplacee par le module dentaire selon l'offre.",
+      "couvertures": [
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Methodes et fournisseurs reconnus par la CSS. Taux et plafonds non chiffres dans la source."
+        },
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Methodes et fournisseurs reconnus par la CSS. Taux et plafonds non chiffres dans la source."
+        },
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Methodes et fournisseurs reconnus par la CSS. Taux et plafonds non chiffres dans la source."
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Methodes et fournisseurs reconnus par la CSS. Taux et plafonds non chiffres dans la source."
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Methodes et fournisseurs reconnus par la CSS. Taux et plafonds non chiffres dans la source."
+        }
+      ]
+    },
+    {
+      "id": "css_compte_sante",
+      "code_produit": null,
+      "nom": "Compte sante et bonus",
+      "type": "prevention",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Mecanisme transversal plutot que produit autonome : les contributions dependent de la categorie Economy, Balance ou Premium souscrite. Le compte sante n'est debloque qu'en combinant une assurance ambulatoire myFlex ET une assurance hospitalisation myFlex. Son niveau depend de la categorie choisie.",
+      "couvertures": [
+        {
+          "prestation_id": "maternite_complements",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Preparation a l'accouchement, natation pour enfants."
+        },
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "myStep, abonnements, cours de danse."
+        },
+        {
+          "prestation_id": "activite_physique_cours",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Gym du dos, aquafitness, yoga, gestion du stress."
+        },
+        {
+          "prestation_id": "clubs_sportifs",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Piscines, salles d'escalade, abonnements de ski de fond."
+        },
+        {
+          "prestation_id": "sevrage_tabagique",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        }
+      ]
+    },
+    {
+      "id": "css_dentaire",
+      "code_produit": null,
+      "nom": "Assurance pour soins dentaires",
+      "type": "dentaire",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Taux et plafonds non chiffres dans la source. Peut etre souscrite en lieu et place du module myFlex Medecine alternative.",
+      "couvertures": [
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Contribution aux traitements dentaires."
+        },
+        {
+          "prestation_id": "dentaire_prophylaxie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Controles, detartrage."
+        },
+        {
+          "prestation_id": "dentaire_orthodontie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Selon la variante souscrite."
+        }
+      ]
+    },
+    {
+      "id": "css_ij_hospitalisation",
+      "code_produit": null,
+      "nom": "Indemnite journaliere en cas d'hospitalisation",
+      "type": "indemnites",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "couvertures": [
+        {
+          "prestation_id": "indemnite_hospitalisation",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Indemnite journaliere forfaitaire pendant le sejour hospitalier, versee independamment des autres assurances. Montant au choix selon contrat."
+        }
+      ]
+    },
+    {
+      "id": "css_ij_individuelle",
+      "code_produit": null,
+      "nom": "Assurance individuelle d'indemnite journaliere",
+      "type": "indemnites",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "couvertures": [
+        {
+          "prestation_id": "indemnite_journaliere",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Incapacite de travail due a une maladie ou un accident, maintien du revenu. Regie par ses propres conditions generales."
+        }
+      ]
+    },
+    {
+      "id": "css_voyage",
+      "code_produit": null,
+      "nom": "Assurance pour voyages et vacances",
+      "type": "voyage",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Duree d'assurance de 10 a 62 jours, ou contrats d'un an ou trois ans. L'assistance de personnes est deja incluse dans l'assurance ambulatoire.",
+      "couvertures": [
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Frais de guerison, selon la formule choisie."
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0,
+          "conditions": "Sauvetage et rapatriement illimites dans le monde entier."
+        },
+        {
+          "prestation_id": "sauvetage",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "annulation_voyage",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Selon la formule choisie."
+        },
+        {
+          "prestation_id": "voyage_frais_annexes",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 1000,
+          "conditions": "Voyage d'un proche, frais de retour anticipe jusqu'a CHF 1'000."
+        },
+        {
+          "prestation_id": "capital_deces_accident",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Deces ou invalidite par accident, selon la formule."
+        }
+      ]
+    },
+    {
+      "id": "css_ihp",
+      "code_produit": null,
+      "nom": "International Health Plan (IHP)",
+      "type": "voyage",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Produit dedie aux Suisses de l'etranger et aux expatries.",
+      "couvertures": [
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Couverture globale dans le monde entier."
+        },
+        {
+          "prestation_id": "soins_etranger_planifies",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        }
+      ]
+    },
+    {
+      "id": "css_capital_accident",
+      "code_produit": null,
+      "nom": "Assurance deces ou invalidite par accident",
+      "type": "capital",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "remarque": "Libre choix du beneficiaire, modifiable a tout moment. Versement independant des autres assurances, imposition separee a taux reduit.",
+      "couvertures": [
+        {
+          "prestation_id": "capital_invalidite_accident",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 2100000,
+          "conditions": "Jusqu'a CHF 2'100'000 en cas d'invalidite par accident, montant progressif."
+        },
+        {
+          "prestation_id": "capital_deces_accident",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 200000
+        }
+      ]
+    },
+    {
+      "id": "css_capital_maladie",
+      "code_produit": null,
+      "nom": "Assurance deces ou invalidite par maladie",
+      "type": "capital",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "remarque": "Egalement disponible pour les enfants et les jeunes, via un produit dedie.",
+      "couvertures": [
+        {
+          "prestation_id": "capital_invalidite_maladie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 600000
+        },
+        {
+          "prestation_id": "capital_deces_maladie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 200000
+        }
+      ]
+    },
+    {
+      "id": "css_protection_juridique",
+      "code_produit": null,
+      "nom": "Protection juridique privee et circulation",
+      "type": "protection_juridique",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "couvertures": [
+        {
+          "prestation_id": "protection_juridique",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Litiges en droit prive et circulation routiere. Plafonds non precises dans la source."
+        },
+        {
+          "prestation_id": "protection_juridique_patient",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Produit distinct de protection juridique des patients."
+        }
+      ]
+    }
+  ]
+}

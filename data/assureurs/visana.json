@@ -1,0 +1,957 @@
+{
+  "schema_version": "1.0",
+  "id": "visana",
+  "nom": "Visana",
+  "actif": true,
+  "source": {
+    "origine": "recapitulatif produits fourni par le conseiller",
+    "reference": "Visana, pages produits officielles visana.ch et conditions complementaires publiees",
+    "date_extraction": "2026-09-06",
+    "annee_tarifaire": 2026,
+    "fiabilite": "a_verifier",
+    "remarque": "Saisi depuis un recapitulatif de brochure. Les couvertures au statut 'a_completer' sont connues comme couvertes mais sans taux exploitable dans la source. Verifier les CGA/CC avant tout engagement contractuel."
+  },
+  "lamal": {
+    "franchises_adulte": null,
+    "franchises_enfant": null,
+    "quote_part_taux": null,
+    "quote_part_plafond_annuel_adulte": null,
+    "quote_part_plafond_annuel_enfant": null,
+    "contribution_hospitaliere_par_jour_adulte": null,
+    "modeles_proposes": null,
+    "remarque": "Non renseigne : la source ne traite que des complementaires. Les parametres legaux de data/meta.json s'appliquent."
+  },
+  "notes_generales": [
+    "Rabais famille : 50% sur les primes complementaires des le 2e enfant assure chez Visana (jusqu'a 18 ans), sur Traitements ambulatoires, Medecine complementaire, Hopital, Basic et Soins dentaires.",
+    "Contrats pluriannuels : 3 ans (-2%) ou 5 ans (-3%).",
+    "Souscription possible jusqu'a 70 ans.",
+    "Une gamme VIVA existe (complementaires en soins integres), combinable uniquement avec l'assurance de base VIVA, avec un rabais de 5% sur les primes. Non saisie ici."
+  ],
+  "produits_lca": [
+    {
+      "id": "visana_ambulatoire_1",
+      "code_produit": null,
+      "nom": "Traitements ambulatoires I",
+      "type": "ambulatoire",
+      "niveau": "i",
+      "age_adhesion_min": null,
+      "age_adhesion_max": 70,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Niveau d'entree. Taux et plafonds non chiffres dans la source. Rabais familial de 50% des le 2e enfant.",
+      "couvertures": [
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Participation aux frais."
+        },
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Corrections dentaires."
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Medicaments non couverts par la LAMal."
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Examens preventifs."
+        },
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "vaccins_voyage",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Vacanza incluse : couverture integrale des urgences ambulatoires et stationnaires a l'etranger, 8 semaines par voyage."
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 25000
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0
+        }
+      ]
+    },
+    {
+      "id": "visana_ambulatoire_2",
+      "code_produit": null,
+      "nom": "Traitements ambulatoires II",
+      "type": "ambulatoire",
+      "niveau": "ii",
+      "age_adhesion_min": null,
+      "age_adhesion_max": 70,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Niveau intermediaire, inclus dans le paquet Basic. Contrats pluriannuels : 3 ans (-2%) ou 5 ans (-3%).",
+      "couvertures": [
+        {
+          "prestation_id": "dentaire_orthodontie",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 10000,
+          "conditions": "Correction de la position des dents, 80% du montant de la facture."
+        },
+        {
+          "prestation_id": "moyens_auxiliaires_lca",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Prescrits par un medecin."
+        },
+        {
+          "prestation_id": "soins_domicile_lca",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Aide et soins a domicile."
+        },
+        {
+          "prestation_id": "maternite_complements",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Controles et gymnastique."
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Abonnements fitness et cheques wellness."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Vacanza incluse : couverture integrale des urgences ambulatoires et stationnaires a l'etranger, 8 semaines par voyage."
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 25000
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0
+        }
+      ]
+    },
+    {
+      "id": "visana_ambulatoire_3",
+      "code_produit": null,
+      "nom": "Traitements ambulatoires III",
+      "type": "ambulatoire",
+      "niveau": "iii",
+      "age_adhesion_min": null,
+      "age_adhesion_max": 70,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "delais_attente_specifiques": [
+        {
+          "motif": "cours prenataux",
+          "jours": 270
+        }
+      ],
+      "remarque": "Niveau le plus complet de la gamme ambulatoire.",
+      "couvertures": [
+        {
+          "prestation_id": "lunettes_lentilles_adulte",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 250,
+          "conditions": "Correction superieure a 10 dioptries : 90% jusqu'a CHF 750 par an."
+        },
+        {
+          "prestation_id": "vaccins_prevention_lca",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "vaccins_voyage",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "checkup_preventif",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 600,
+          "conditions": "Sur 3 ans."
+        },
+        {
+          "prestation_id": "gynecologie_preventive",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "fitness_prevention",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 200,
+          "conditions": "Bon de CHF 200 par an."
+        },
+        {
+          "prestation_id": "activite_physique_cours",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 150,
+          "conditions": "Cheques de CHF 150 pour des cours."
+        },
+        {
+          "prestation_id": "psychotherapie_non_medicale",
+          "taux_remboursement": 0.8,
+          "plafond_annuel": 5000
+        },
+        {
+          "prestation_id": "soins_domicile_lca",
+          "taux_remboursement": 1.0,
+          "plafond_par_jour": 100,
+          "nb_jours_max_annuel": 30,
+          "conditions": "CHF 100 par jour pendant 30 jours, puis CHF 50 par jour pendant 30 jours supplementaires."
+        },
+        {
+          "prestation_id": "chirurgie_ambulatoire",
+          "taux_remboursement": 0.5,
+          "plafond_annuel": 1000,
+          "conditions": "Interventions chirurgicales."
+        },
+        {
+          "prestation_id": "maternite_complements",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 300,
+          "conditions": "Echographies et controles 90%. Cours prenataux 90% jusqu'a CHF 300 par grossesse, carence de 270 jours."
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "sauvetage",
+          "taux_remboursement": 0.9,
+          "plafond_annuel": 25000,
+          "conditions": "Recherche et sauvetage."
+        },
+        {
+          "prestation_id": "voyage_frais_annexes",
+          "taux_remboursement": 0.5,
+          "plafond_annuel": 2000,
+          "conditions": "Frais de voyage."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Vacanza incluse : couverture integrale des urgences ambulatoires et stationnaires a l'etranger, 8 semaines par voyage."
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 25000
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0
+        }
+      ]
+    },
+    {
+      "id": "visana_med_compl_1",
+      "code_produit": null,
+      "nom": "Medecine complementaire I",
+      "type": "medecine_alternative",
+      "niveau": "n1",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [],
+      "remarque": "Prise en charge jusqu'a CHF 10'000 par an selon le niveau ; la source ne donne le plafond que pour le niveau le plus eleve. Visana applique ses propres criteres de reconnaissance des therapeutes, distincts du RME et de l'ASCA.",
+      "couvertures": [
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "medecine_chinoise",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Medicaments de medecine complementaire."
+        }
+      ]
+    },
+    {
+      "id": "visana_med_compl_2",
+      "code_produit": null,
+      "nom": "Medecine complementaire II",
+      "type": "medecine_alternative",
+      "niveau": "n2",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [],
+      "remarque": "Prise en charge jusqu'a CHF 10'000 par an selon le niveau ; la source ne donne le plafond que pour le niveau le plus eleve. Visana applique ses propres criteres de reconnaissance des therapeutes, distincts du RME et de l'ASCA.",
+      "couvertures": [
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "medecine_chinoise",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": null,
+          "enveloppe_id": null,
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Medicaments de medecine complementaire."
+        }
+      ]
+    },
+    {
+      "id": "visana_med_compl_3",
+      "code_produit": null,
+      "nom": "Medecine complementaire III",
+      "type": "medecine_alternative",
+      "niveau": "n3",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [
+        {
+          "id": "env_ma",
+          "libelle": "Medecine complementaire",
+          "plafond_annuel": 10000
+        }
+      ],
+      "remarque": "Prise en charge jusqu'a CHF 10'000 par an selon le niveau ; la source ne donne le plafond que pour le niveau le plus eleve. Visana applique ses propres criteres de reconnaissance des therapeutes, distincts du RME et de l'ASCA.",
+      "couvertures": [
+        {
+          "prestation_id": "autres_med_alternatives",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 10000,
+          "enveloppe_id": "env_ma",
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "osteopathie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 10000,
+          "enveloppe_id": "env_ma",
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "acupuncture",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 10000,
+          "enveloppe_id": "env_ma",
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "homeopathie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 10000,
+          "enveloppe_id": "env_ma",
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "naturopathie_phytotherapie",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 10000,
+          "enveloppe_id": "env_ma",
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "medecine_chinoise",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 10000,
+          "enveloppe_id": "env_ma",
+          "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
+        },
+        {
+          "prestation_id": "medicaments_hors_liste",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Medicaments de medecine complementaire."
+        }
+      ]
+    },
+    {
+      "id": "visana_hopital_commune",
+      "code_produit": null,
+      "nom": "Hopital division commune",
+      "type": "hospitalisation",
+      "niveau": "commune",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_hors_canton",
+          "taux_remboursement": 1.0,
+          "conditions": "Libre acces aux hopitaux de soins aigus en Suisse, y compris hors du canton de residence. Couverture des couts non pris en charge par la LAMal."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Vacanza incluse : couverture integrale des urgences ambulatoires et stationnaires a l'etranger, 8 semaines par voyage."
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 25000
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0
+        }
+      ]
+    },
+    {
+      "id": "visana_hopital_mi_privee",
+      "code_produit": null,
+      "nom": "Hopital division mi-privee",
+      "type": "hospitalisation",
+      "niveau": "mi_privee",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_demi_privee",
+          "taux_remboursement": 1.0,
+          "conditions": "Chambre a deux lits, libre choix du medecin, traitement par le medecin-chef, acces libre a tous les hopitaux suisses de soins aigus."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Vacanza incluse : couverture integrale des urgences ambulatoires et stationnaires a l'etranger, 8 semaines par voyage."
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 25000
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": 1.0
+        }
+      ]
+    },
+    {
+      "id": "visana_hopital_privee",
+      "code_produit": null,
+      "nom": "Hopital division privee",
+      "type": "hospitalisation",
+      "niveau": "privee",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": 1.0,
+          "conditions": "Chambre individuelle, libre choix du medecin, traitement par le medecin-chef."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Vacanza incluse : couverture integrale des urgences ambulatoires et stationnaires a l'etranger, 8 semaines par voyage."
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 25000
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "libre_choix_medecin_hopital",
+          "taux_remboursement": 1.0
+        }
+      ]
+    },
+    {
+      "id": "visana_hopital_flexible",
+      "code_produit": null,
+      "nom": "Hopital choix flexible",
+      "type": "hospitalisation",
+      "niveau": "flexible",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Flexibilite par sejour.",
+      "couvertures": [
+        {
+          "prestation_id": "hospitalisation_hors_canton",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Division choisie avant chaque hospitalisation."
+        },
+        {
+          "prestation_id": "hospitalisation_demi_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Division choisie avant chaque hospitalisation."
+        },
+        {
+          "prestation_id": "hospitalisation_privee",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Division choisie avant chaque hospitalisation."
+        },
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Vacanza incluse : couverture integrale des urgences ambulatoires et stationnaires a l'etranger, 8 semaines par voyage."
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 25000
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0
+        }
+      ]
+    },
+    {
+      "id": "visana_basic",
+      "code_produit": null,
+      "nom": "Paquet combine Basic",
+      "type": "global",
+      "niveau": null,
+      "age_adhesion_min": 19,
+      "age_adhesion_max": 65,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Ce produit est un regroupement : ses prestations sont celles des 4 assurances qui le composent. Rabais familial applicable.",
+      "couvertures": [
+        {
+          "prestation_id": "consultation_medecin",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Paquet regroupant 4 produits : Traitements ambulatoires II, Medecine complementaire II, une assurance complementaire d'hospitalisation au choix et Vacanza. Se referer a chacun de ces produits pour le detail des prestations."
+        }
+      ]
+    },
+    {
+      "id": "visana_dentaire_3",
+      "code_produit": null,
+      "nom": "Soins dentaires niveau 3",
+      "type": "dentaire",
+      "niveau": "n3",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [
+        {
+          "id": "env_d",
+          "libelle": "Plafond annuel dentaire",
+          "plafond_annuel": 600
+        }
+      ],
+      "remarque": "La source ne cite que quelques niveaux a titre d'exemple (niveau 3, niveau 7, classe 4 a 75% max CHF 600). La grille complete des niveaux reste a saisir. Cumulable avec Traitements ambulatoires pour couvrir le solde. Pas d'examen de sante si l'enfant est assure avant son 4e anniversaire.",
+      "couvertures": [
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": 0.5,
+          "enveloppe_id": "env_d"
+        },
+        {
+          "prestation_id": "dentaire_prophylaxie",
+          "taux_remboursement": 0.5,
+          "enveloppe_id": "env_d",
+          "conditions": "Examens de controle et hygiene dentaire."
+        },
+        {
+          "prestation_id": "dentaire_prothese_implant",
+          "taux_remboursement": 0.5,
+          "enveloppe_id": "env_d",
+          "conditions": "Appareils dentaires et remplacement de dents."
+        }
+      ]
+    },
+    {
+      "id": "visana_dentaire_7",
+      "code_produit": null,
+      "nom": "Soins dentaires niveau 7",
+      "type": "dentaire",
+      "niveau": "n7",
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "enveloppes": [
+        {
+          "id": "env_d",
+          "libelle": "Plafond annuel dentaire",
+          "plafond_annuel": 1500
+        }
+      ],
+      "remarque": "La source ne cite que quelques niveaux a titre d'exemple (niveau 3, niveau 7, classe 4 a 75% max CHF 600). La grille complete des niveaux reste a saisir. Cumulable avec Traitements ambulatoires pour couvrir le solde. Pas d'examen de sante si l'enfant est assure avant son 4e anniversaire.",
+      "couvertures": [
+        {
+          "prestation_id": "dentaire_soins",
+          "taux_remboursement": 0.75,
+          "enveloppe_id": "env_d"
+        },
+        {
+          "prestation_id": "dentaire_prophylaxie",
+          "taux_remboursement": 0.75,
+          "enveloppe_id": "env_d",
+          "conditions": "Examens de controle et hygiene dentaire."
+        },
+        {
+          "prestation_id": "dentaire_prothese_implant",
+          "taux_remboursement": 0.75,
+          "enveloppe_id": "env_d",
+          "conditions": "Appareils dentaires et remplacement de dents."
+        }
+      ]
+    },
+    {
+      "id": "visana_vacanza",
+      "code_produit": null,
+      "nom": "Vacanza",
+      "type": "voyage",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": false,
+      "remarque": "Incluse dans les assurances Traitements ambulatoires, Hopital et le paquet Basic. Version longue duree disponible pour les sejours prolonges.",
+      "couvertures": [
+        {
+          "prestation_id": "soins_etranger_urgence",
+          "taux_remboursement": 1.0,
+          "conditions": "Vacanza incluse : couverture integrale des urgences ambulatoires et stationnaires a l'etranger, 8 semaines par voyage."
+        },
+        {
+          "prestation_id": "recherche_sauvetage_etranger",
+          "taux_remboursement": 1.0,
+          "plafond_annuel": 25000
+        },
+        {
+          "prestation_id": "transport_urgence",
+          "taux_remboursement": 1.0
+        },
+        {
+          "prestation_id": "rapatriement",
+          "taux_remboursement": 1.0
+        }
+      ]
+    },
+    {
+      "id": "visana_ij_hospitalisation",
+      "code_produit": null,
+      "nom": "Indemnites journalieres d'hospitalisation",
+      "type": "indemnites",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "remarque": "Risque accident excluable.",
+      "couvertures": [
+        {
+          "prestation_id": "indemnite_hospitalisation",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_par_jour": 500,
+          "conditions": "Montant fixe par jour d'hospitalisation (sejour d'au moins 24 heures), echelonne par tranches de CHF 50, de CHF 50 a CHF 500 par jour. Debut des prestations au choix des le 2e ou le 4e jour, duree au choix de 30, 60 ou 90 jours par an."
+        }
+      ]
+    },
+    {
+      "id": "visana_ij_lca",
+      "code_produit": null,
+      "nom": "Indemnites journalieres LCA (perte de gain)",
+      "type": "indemnites",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "couvertures": [
+        {
+          "prestation_id": "indemnite_journaliere",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Garantie du revenu en cas d'incapacite de travail pour maladie ou accident, pendant 730 jours au maximum, apres le delai d'attente fixe au contrat."
+        }
+      ]
+    },
+    {
+      "id": "visana_ij_soins",
+      "code_produit": null,
+      "nom": "Indemnites journalieres de soins",
+      "type": "longue_duree",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "couvertures": [
+        {
+          "prestation_id": "indemnite_soins",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "Prise en charge des couts non couverts en cas de sejour en etablissement medico-social."
+        }
+      ]
+    },
+    {
+      "id": "visana_capital_hopital",
+      "code_produit": null,
+      "nom": "Capital Hopital",
+      "type": "hospitalisation",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "remarque": "Alternative aux indemnites journalieres. Duree contractuelle de 30 a 90 jours.",
+      "couvertures": [
+        {
+          "prestation_id": "capital_hospitalisation",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "plafond_annuel": 15000,
+          "conditions": "Somme forfaitaire fixee a l'avance en cas d'hospitalisation, utilisable librement, jusqu'a CHF 15'000."
+        }
+      ]
+    },
+    {
+      "id": "visana_capital_accident",
+      "code_produit": null,
+      "nom": "Assurance-accidents sous forme de capital",
+      "type": "capital",
+      "niveau": null,
+      "age_adhesion_min": null,
+      "age_adhesion_max": null,
+      "franchises_produit": [
+        0
+      ],
+      "delai_attente_mois": 0,
+      "hors_perimetre_facture": true,
+      "remarque": "Montants selon contrat, non precises dans la source.",
+      "couvertures": [
+        {
+          "prestation_id": "capital_invalidite_accident",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "capital_deces_accident",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "capital_invalidite_maladie",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        },
+        {
+          "prestation_id": "capital_deces_maladie",
+          "taux_remboursement": null,
+          "statut": "a_completer"
+        }
+      ]
+    }
+  ]
+}

@@ -44,7 +44,8 @@ hors ligne en ouvrant `index.html` directement.
 │   ├── sources/                   Manifestes des documents source par assureur
 │   ├── assureurs/
 │   │   ├── _TEMPLATE.json         Modèle à copier pour chaque nouvelle caisse
-│   │   └── groupe-mutuel.json     Groupe Mutuel — 28 produits LCA
+│   │   └── *.json                 9 caisses : Assura, AXA, CONCORDIA, CSS, Groupe Mutuel,
+│   │                              Helsana, Sanitas, SWICA, Visana
 │   └── db.js                      Généré — ne pas éditer
 └── docs/
     ├── FORMAT-DONNEES.md          Comment livrer les captures d'écran
@@ -88,6 +89,6 @@ cas seule une capture d'écran permet de lire la grille.
 - [ ] Moteurs LAMal / LCA
 - [ ] Interface de saisie et écran de comparaison
 - [x] Chaîne d'ingestion des PDF assureurs (téléchargement + extraction)
-- [x] Groupe Mutuel : 28 produits saisis depuis l'aperçu LCA 2.26
-- [ ] Groupe Mutuel : 112 couvertures à chiffrer (`node tools/trous.mjs groupe_mutuel`)
-- [ ] Autres caisses
+- [x] 9 caisses saisies : 172 produits, 967 couvertures dont 654 chiffrées
+- [ ] 313 couvertures à chiffrer depuis les conditions particulières (`node tools/trous.mjs`)
+- [ ] Vérification des sources (toutes marquées `a_verifier`)

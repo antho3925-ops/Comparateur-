@@ -46,6 +46,7 @@ for (const p of catalogue.prestations) {
 
 const vusAssureurs = new Set();
 let aCompleterTotal = 0;
+let plafondAPreciserTotal = 0;
 for (const a of assureurs) {
   if (vusAssureurs.has(a.id)) erreurs.push(`Assureur en double : "${a.id}"`);
   vusAssureurs.add(a.id);
@@ -61,14 +62,22 @@ for (const a of assureurs) {
       }
       // Une couverture "a_completer" vient d'une brochure qui dit QUE la prestation
       // est couverte sans dire COMBIEN : taux inconnu, donc null exige et jamais 0.
-      const aCompleter = c.statut === 'a_completer';
-      if (aCompleter) {
+      if (c.statut === 'a_completer') {
         if (c.taux_remboursement !== null) {
           erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : statut "a_completer" impose taux_remboursement: null`);
         }
         aCompleterTotal++;
       } else if (typeof c.taux_remboursement !== 'number' || c.taux_remboursement < 0 || c.taux_remboursement > 1) {
         erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : taux_remboursement doit etre entre 0 et 1, ou statut "a_completer"`);
+      }
+
+      // Cas intermediaire : le taux est connu mais le plafond depend de l'option
+      // souscrite par l'assure. On ne choisit pas un montant a sa place.
+      if (c.plafond_a_preciser) {
+        if (c.plafond_annuel != null) {
+          erreurs.push(`${a.id} / ${prod.id} / ${c.prestation_id} : plafond_a_preciser impose plafond_annuel: null`);
+        }
+        plafondAPreciserTotal++;
       }
     }
   }
@@ -100,6 +109,7 @@ writeFileSync(join(DATA, 'db.js'), sortie);
 
 console.log(`OK - ${assureurs.length} assureur(s), ${catalogue.prestations.length} prestations -> data/db.js`);
 if (aCompleterTotal) console.log(`     dont ${aCompleterTotal} couverture(s) au statut "a_completer"`);
+if (plafondAPreciserTotal) console.log(`     dont ${plafondAPreciserTotal} couverture(s) au taux connu mais au plafond dependant de l'option souscrite`);
 if (alertes.length) {
   console.log('\nA verifier :');
   alertes.forEach((a) => console.log('  ! ' + a));
