@@ -13,9 +13,11 @@ const etat = {
   ancreSemaine: null,
   ancreMois: null,
   ancreJour: null,
-  // Un objectif en cours de frappe ne doit pas être écrasé par un
-  // rafraîchissement temps réel provoqué par la saisie d'un conseiller.
-  objectifsEnEdition: new Set(),
+  // Objectifs saisis mais pas encore enregistrés, par conseiller. Ils vivent
+  // ici plutôt que seulement dans les champs : un rafraîchissement temps réel
+  // provoqué par la saisie d'un conseiller, ou un aller-retour vers un autre
+  // onglet, reconstruit les cartes et emporterait le travail en cours.
+  brouillonObjectifs: new Map(),
 };
 
 const porte = document.getElementById('porte');
@@ -109,7 +111,7 @@ document.getElementById('onglets').addEventListener('click', (evenement) => {
 });
 
 function rendre(menagerLaSaisie = false) {
-  if (menagerLaSaisie && (saisieEnCours() || etat.objectifsEnEdition.size > 0)) return;
+  if (menagerLaSaisie && saisieEnCours()) return;
   const rendus = {
     equipe: rendreEquipe,
     conseillers: rendreParConseiller,
@@ -344,9 +346,12 @@ function rendreObjectifs(d) {
       el('header', {}, el('h2', { texte: 'Objectifs par conseiller' })),
       el('p', {
         class: 'sous-titre',
-        texte: 'Objectif hebdomadaire et mensuel pour les cinq premiers indicateurs, objectif '
-          + 'mensuel seul pour le montant transféré des avoirs LPP. Aucun objectif journalier. '
-          + 'Une case laissée vide signifie « pas d’objectif fixé » ; une modification prend effet '
+        texte: 'Chaque conseiller a ses propres objectifs, et chaque indicateur le sien : '
+          + 'les chiffres d’une carte n’ont aucune influence sur les autres, et chaque carte '
+          + 's’enregistre séparément. Objectif hebdomadaire et mensuel pour les cinq premiers '
+          + 'indicateurs, objectif mensuel seul pour le montant transféré des avoirs LPP. Aucun '
+          + 'objectif journalier. Une case laissée vide signifie « pas d’objectif fixé » — c’est '
+          + 'ainsi qu’on dispense un conseiller d’un indicateur. Une modification prend effet '
           + 'immédiatement sur la période en cours. Attention au sens : les rendez-vous valides '
           + 'non signés sont un plafond, un maximum à ne pas dépasser, et non une cible à atteindre.',
       }),
@@ -358,24 +363,50 @@ function rendreObjectifs(d) {
 function carteObjectifs(d, conseiller) {
   const champs = {};
 
+  // Chaque carte enregistre pour elle seule. Passer d'un conseiller à l'autre
+  // sans enregistrer perdrait la saisie en cours sans rien dire : ce marqueur
+  // le signale, et l'onglet prévient avant de se fermer.
+  const marqueur = el('span', {
+    class: 'puce attention',
+    texte: 'modifié — non enregistré',
+    hidden: !etat.brouillonObjectifs.has(conseiller.identifiant),
+  });
+
+  const brouillon = () => {
+    if (!etat.brouillonObjectifs.has(conseiller.identifiant)) {
+      etat.brouillonObjectifs.set(conseiller.identifiant, {});
+    }
+    return etat.brouillonObjectifs.get(conseiller.identifiant);
+  };
+
   const rangee = (indicateur) => {
     champs[indicateur.cle] = {};
     const cellule = (portee) => {
       if (portee === 'hebdomadaire' && !indicateur.hebdomadaire) {
         return el('td', { class: 'sans', texte: 'pas d’objectif hebdomadaire' });
       }
-      const valeur = conseiller.objectifs[indicateur.cle]
+      const enregistre = conseiller.objectifs[indicateur.cle]
         ? conseiller.objectifs[indicateur.cle][portee]
         : null;
+      // Le brouillon prime sur ce qui est en base : une case vidée mais pas
+      // encore enregistrée doit rester vide sous les yeux de qui l'a vidée.
+      const enCours = etat.brouillonObjectifs.get(conseiller.identifiant);
+      const cleBrouillon = `${indicateur.cle}.${portee}`;
+      const valeur = enCours && cleBrouillon in enCours
+        ? enCours[cleBrouillon]
+        : (enregistre === null || enregistre === undefined ? '' : String(enregistre));
       const champ = el('input', {
         type: 'number',
         min: '0',
         step: '1',
         inputmode: 'numeric',
-        value: valeur === null || valeur === undefined ? '' : String(valeur),
+        value: valeur,
         placeholder: '—',
         'aria-label': `Objectif ${portee} — ${indicateur.libelle} — ${conseiller.nom}`,
-        oninput: () => etat.objectifsEnEdition.add(conseiller.identifiant),
+        oninput: (evenement) => {
+          brouillon()[cleBrouillon] = evenement.target.value;
+          marqueur.hidden = false;
+        },
       });
       champs[indicateur.cle][portee] = champ;
       return el('td', {}, champ);
@@ -407,7 +438,8 @@ function carteObjectifs(d, conseiller) {
         methode: 'PUT',
         corps: { objectifs },
       });
-      etat.objectifsEnEdition.delete(conseiller.identifiant);
+      etat.brouillonObjectifs.delete(conseiller.identifiant);
+      marqueur.hidden = true;
       afficherMessage(messageAction, `Objectifs de ${conseiller.nom} enregistrés.`, 'succes');
     } catch (erreur) {
       afficherMessage(messageAction, erreur.message, 'erreur');
@@ -424,6 +456,7 @@ function carteObjectifs(d, conseiller) {
       el('h2', { texte: conseiller.nom }),
       el('span', { class: 'periode', texte: conseiller.identifiant }),
       !conseiller.actif ? el('span', { class: 'puce inactif', texte: 'accès désactivé' }) : null,
+      el('span', { class: 'actions' }, marqueur),
     ]),
     defilable(el('table', { class: 'objectifs-table' }, [
       el('thead', {}, el('tr', {}, [
@@ -540,5 +573,12 @@ function rendreAcces(d) {
         : el('p', { class: 'vide', texte: 'Aucun conseiller pour l’instant.' })),
   ]);
 }
+
+// Un onglet fermé sur des objectifs non enregistrés les perdrait sans recours.
+window.addEventListener('beforeunload', (evenement) => {
+  if (etat.brouillonObjectifs.size === 0) return;
+  evenement.preventDefault();
+  evenement.returnValue = '';
+});
 
 demarrer();

@@ -24,14 +24,16 @@ const JOURS_HISTORIQUE = 45;
 const CONSEILLERS = [
   // « allant » module le volume d'affaires, « regularite » la fréquence des
   // journées saisies. De quoi obtenir un classement qui a du relief.
-  { identifiant: 'a.roux', nom: 'Alice Roux', allant: 1.25, regularite: 0.97 },
-  { identifiant: 'b.dias', nom: 'Bruno Dias', allant: 1.05, regularite: 0.92 },
-  { identifiant: 'c.meyer', nom: 'Chloé Meyer', allant: 0.85, regularite: 0.88 },
-  { identifiant: 'd.perret', nom: 'David Perret', allant: 1.00, regularite: 0.75 },
-  { identifiant: 'e.fontana', nom: 'Elena Fontana', allant: 0.70, regularite: 0.95 },
+  { identifiant: 'a.roux', nom: 'Alice Roux', allant: 1.25, regularite: 0.97, exigence: 1.3 },
+  { identifiant: 'b.dias', nom: 'Bruno Dias', allant: 1.05, regularite: 0.92, exigence: 1.0 },
+  { identifiant: 'c.meyer', nom: 'Chloé Meyer', allant: 0.85, regularite: 0.88, exigence: 0.9 },
+  // Spécialiste de la prévoyance : on ne lui demande pas d'Everlife.
+  { identifiant: 'd.perret', nom: 'David Perret', allant: 1.00, regularite: 0.75, exigence: 1.1, dispense: ['everlife'] },
+  // Arrivée récente : objectifs allégés le temps de la montée en charge.
+  { identifiant: 'e.fontana', nom: 'Elena Fontana', allant: 0.70, regularite: 0.95, exigence: 0.6 },
 ];
 
-const OBJECTIFS = {
+const OBJECTIFS_TYPES = {
   maladie: { hebdomadaire: 8, mensuel: 32 },
   lpp_comptes: { hebdomadaire: 3, mensuel: 12 },
   everlife: { hebdomadaire: 3, mensuel: 12 },
@@ -41,6 +43,29 @@ const OBJECTIFS = {
   rdv_non_signes: { hebdomadaire: 12, mensuel: 48 },
   lpp_montant: { mensuel: 250000 },
 };
+
+/**
+ * Les objectifs se règlent conseiller par conseiller et indicateur par
+ * indicateur. La démonstration en donne donc de différents à chacun — un
+ * confirmé plus exigeant, une débutante ménagée, un spécialiste LPP dispensé
+ * d'Everlife — plutôt que la même grille recopiée cinq fois, qui laisserait
+ * croire à un réglage unique pour toute l'équipe.
+ */
+function objectifsDe(conseiller) {
+  const objectifs = structuredClone(OBJECTIFS_TYPES);
+  const echelle = conseiller.exigence;
+  for (const [cle, portees] of Object.entries(objectifs)) {
+    for (const portee of Object.keys(portees)) {
+      // Le plafond suit l'inverse : plus on attend d'un conseiller, moins on
+      // lui tolère d'affaires manquées.
+      const facteur = cle === 'rdv_non_signes' ? 1 / echelle : echelle;
+      const arrondi = cle === 'lpp_montant' ? 10000 : 1;
+      portees[portee] = Math.max(1, Math.round((portees[portee] * facteur) / arrondi) * arrondi);
+    }
+  }
+  for (const cle of conseiller.dispense || []) delete objectifs[cle];
+  return objectifs;
+}
 
 /**
  * Générateur pseudo-aléatoire à graine : la démonstration doit montrer les
@@ -89,7 +114,7 @@ function construireEtat() {
   const objectifs = {};
 
   for (const conseiller of CONSEILLERS) {
-    objectifs[conseiller.identifiant] = structuredClone(OBJECTIFS);
+    objectifs[conseiller.identifiant] = objectifsDe(conseiller);
   }
 
   for (let i = JOURS_HISTORIQUE; i >= 0; i -= 1) {

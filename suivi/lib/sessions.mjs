@@ -153,8 +153,18 @@ export class Securite {
   }
 }
 
+/**
+ * Le code administrateur ne tient pas compte de la casse ni des espaces de
+ * bord, comme les identifiants des conseillers. Un responsable qui tape
+ * « admin39 » au lieu de « Admin39 » resterait sinon devant une porte close
+ * sans comprendre pourquoi, et l'outil est interne.
+ */
+function normaliserCode(code) {
+  return String(code).trim().toLowerCase();
+}
+
 function empreinte(code, sel) {
-  return scryptSync(code, sel, 32).toString('hex');
+  return scryptSync(normaliserCode(code), sel, 32).toString('hex');
 }
 
 // --- Cookies ---------------------------------------------------------------

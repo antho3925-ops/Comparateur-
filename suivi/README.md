@@ -45,8 +45,9 @@ node suivi/gestion.mjs code-admin
 `suivi/data/config.json`. Ce qui circule est son empreinte `scrypt` salée :
 elle vérifie un code proposé, elle ne permet pas de le retrouver.
 
-Le code administrateur est **sensible à la casse**, contrairement aux
-identifiants des conseillers.
+Le code administrateur ne tient compte ni de la casse ni des espaces de bord,
+comme les identifiants des conseillers : `Admin39`, `admin39` et `ADMIN39`
+ouvrent la même porte.
 
 Cela dit, une empreinte livrée dans le dépôt reste attaquable hors ligne par
 qui y a accès, d'autant plus vite que le code est court. C'est un compromis
@@ -89,6 +90,14 @@ touche jamais à `suivi/data/`.
 Aucun indicateur n'a d'objectif journalier. Les objectifs sont fixés par
 l'administrateur, conseiller par conseiller, et modifiables à tout moment : une
 modification prend effet immédiatement, y compris sur la période en cours.
+
+**Chacun les siens.** Les objectifs se règlent conseiller par conseiller et
+indicateur par indicateur : rien n'est partagé, aucune valeur n'en entraîne une
+autre. Chaque carte de l'onglet **Objectifs** s'enregistre séparément, et une
+case laissée vide dispense purement et simplement ce conseiller de cet
+indicateur — il n'aura ni objectif ni écart affiché sur cette ligne, tandis que
+ses collègues gardent le leur. Un objectif saisi mais pas encore enregistré est
+signalé sur sa carte et conservé si l'on change d'onglet entre-temps.
 
 **Cible ou plafond.** Cinq indicateurs sont des cibles : l'objectif est un
 minimum, plus on en fait mieux c'est, et la tuile passe au vert quand il est
@@ -162,7 +171,7 @@ le fichier par-dessus à sa prochaine modification.
 
 L'identifiant est enregistré en minuscules ; la connexion, elle, ne tient pas
 compte de la casse — `S.ragaa`, `s.ragaa` et `S.RAGAA` ouvrent la même page. Le
-code administrateur, lui, est sensible à la casse.
+code administrateur suit la même règle.
 
 Désactiver plutôt que supprimer : les chiffres déjà saisis restent au dossier et
 continuent de compter dans les totaux passés, mais la personne ne peut plus se
@@ -209,7 +218,7 @@ suivi/
 ├── gestion.mjs              Gestion des accès en ligne de commande
 ├── equipe-initiale.json     Conseillers créés au tout premier démarrage
 ├── acces-initial.json       Empreinte de l'accès administrateur de départ
-├── tests.mjs                Suite de tests (196 cas)
+├── tests.mjs                Suite de tests (210 cas)
 ├── lib/
 │   ├── dates.mjs            Fuseau suisse, semaines ISO, libellés en français
 │   ├── domaine.mjs          Indicateurs, cumuls, écarts, classement — fonctions pures
@@ -247,7 +256,7 @@ tronqué.
 node suivi/tests.mjs
 ```
 
-196 tests. Les tests de dates et de règles métier sont unitaires ; les tests
+210 tests. Les tests de dates et de règles métier sont unitaires ; les tests
 d'accès démarrent un vrai serveur sur un port libre, avec un dossier de données
 jetable, et parlent HTTP comme le ferait un navigateur.
 
@@ -264,7 +273,11 @@ d'objectif, la désactivation et la réactivation d'un accès, le cloisonnement
 des fichiers servis, l'amorçage de l'équipe de départ — qui ne joue qu'une
 fois, jamais sur une base déjà peuplée, et refuse un identifiant invalide — et
 l'accès administrateur livré, dont l'empreinte ne s'applique qu'à une
-installation neuve et ne revient jamais écraser un code changé depuis.
+installation neuve et ne revient jamais écraser un code changé depuis ; enfin
+l'indépendance des objectifs — deux conseillers aux grilles entièrement
+distinctes, un indicateur modifié chez l'un qui ne déplace rien chez l'autre ni
+sur ses propres autres lignes, et une case vide qui dispense sans toucher aux
+collègues.
 
 ## Mise en service
 

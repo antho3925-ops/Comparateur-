@@ -512,6 +512,12 @@ try {
     (await admin('/api/connexion-admin', { methode: 'POST', corps: { code: 'faux' } })).statut, 401);
   egal('le bon code administrateur ouvre la session',
     (await admin('/api/connexion-admin', { methode: 'POST', corps: { code: 'code-de-test-1234' } })).statut, 200);
+  egal('le code s’accommode des majuscules',
+    (await client()('/api/connexion-admin', { methode: 'POST', corps: { code: 'CODE-DE-TEST-1234' } })).statut, 200);
+  egal('et des espaces de bord',
+    (await client()('/api/connexion-admin', { methode: 'POST', corps: { code: '  Code-De-Test-1234  ' } })).statut, 200);
+  egal('mais pas d’un caractère de trop',
+    (await client()('/api/connexion-admin', { methode: 'POST', corps: { code: 'code-de-test-12345' } })).statut, 401);
 
   // -- Création des conseillers ---------------------------------------------
   egal('l’administrateur crée un conseiller',
@@ -640,6 +646,79 @@ try {
   }
   egal('un objectif sur un conseiller inconnu est refusé',
     (await admin('/api/admin/objectifs/personne', { methode: 'PUT', corps: { objectifs: {} } })).statut, 404);
+
+  // -- Chaque conseiller ses objectifs, chaque indicateur le sien -----------
+  {
+    await admin('/api/admin/objectifs/a.roux', {
+      methode: 'PUT',
+      corps: {
+        objectifs: {
+          maladie: { hebdomadaire: 11, mensuel: 44 },
+          lpp_comptes: { hebdomadaire: 2, mensuel: 9 },
+          everlife: { hebdomadaire: 7, mensuel: 28 },
+          rdv_pris: { hebdomadaire: 31, mensuel: 120 },
+          rdv_non_signes: { hebdomadaire: 4, mensuel: 15 },
+          lpp_montant: { mensuel: 480000 },
+        },
+      },
+    });
+    await admin('/api/admin/objectifs/b.dias', {
+      methode: 'PUT',
+      corps: {
+        objectifs: {
+          maladie: { hebdomadaire: 3, mensuel: 12 },
+          // Dispensé de comptes LPP et d'Everlife : cases laissées vides.
+          rdv_pris: { hebdomadaire: 9, mensuel: 36 },
+          rdv_non_signes: { hebdomadaire: 25, mensuel: 90 },
+          lpp_montant: { mensuel: 50000 },
+        },
+      },
+    });
+
+    const tableau = (await admin('/api/admin/tableau')).donnees;
+    const objectifsDe = (id) => tableau.conseillers.find((c) => c.identifiant === id).objectifs;
+    const roux = objectifsDe('a.roux');
+    const dias = objectifsDe('b.dias');
+
+    egal('deux conseillers portent des objectifs entièrement distincts',
+      [roux.maladie.hebdomadaire, dias.maladie.hebdomadaire], [11, 3]);
+    egal('chaque indicateur a sa propre valeur chez un même conseiller',
+      [roux.maladie.hebdomadaire, roux.lpp_comptes.hebdomadaire, roux.everlife.hebdomadaire,
+        roux.rdv_pris.hebdomadaire, roux.rdv_non_signes.hebdomadaire],
+      [11, 2, 7, 31, 4]);
+    egal('l’hebdomadaire et le mensuel d’un même indicateur sont indépendants',
+      [roux.everlife.hebdomadaire, roux.everlife.mensuel], [7, 28]);
+    egal('une case laissée vide dispense le conseiller de cet indicateur',
+      [dias.lpp_comptes.hebdomadaire, dias.lpp_comptes.mensuel, dias.everlife.mensuel],
+      [null, null, null]);
+    egal('tandis que son collègue garde le sien',
+      [roux.lpp_comptes.hebdomadaire, roux.everlife.mensuel], [2, 28]);
+    egal('les montants LPP diffèrent aussi',
+      [roux.lpp_montant.mensuel, dias.lpp_montant.mensuel], [480000, 50000]);
+
+    // Modifier un seul indicateur chez un seul conseiller ne doit rien
+    // déplacer ailleurs — ni chez le voisin, ni sur les autres indicateurs.
+    await admin('/api/admin/objectifs/a.roux', {
+      methode: 'PUT',
+      corps: { objectifs: { ...roux, maladie: { hebdomadaire: 99, mensuel: 44 } } },
+    });
+    const apres = (await admin('/api/admin/tableau')).donnees;
+    const rouxApres = apres.conseillers.find((c) => c.identifiant === 'a.roux').objectifs;
+    const diasApres = apres.conseillers.find((c) => c.identifiant === 'b.dias').objectifs;
+    egal('l’indicateur visé change', rouxApres.maladie.hebdomadaire, 99);
+    egal('les autres indicateurs du même conseiller ne bougent pas',
+      [rouxApres.everlife.hebdomadaire, rouxApres.rdv_pris.hebdomadaire, rouxApres.lpp_montant.mensuel],
+      [7, 31, 480000]);
+    egal('et le mensuel du même indicateur non plus', rouxApres.maladie.mensuel, 44);
+    egal('le conseiller voisin est intact',
+      [diasApres.maladie.hebdomadaire, diasApres.rdv_pris.hebdomadaire, diasApres.lpp_montant.mensuel],
+      [3, 9, 50000]);
+
+    // Et chacun ne voit que les siens depuis sa propre page.
+    const vueAlice = (await alice('/api/conseiller')).donnees;
+    egal('un conseiller ne voit que ses propres objectifs',
+      vueAlice.semaine.bilan.lignes.find((l) => l.cle === 'maladie').objectif, 99);
+  }
 
   // -- Tableau de bord administrateur ---------------------------------------
   {

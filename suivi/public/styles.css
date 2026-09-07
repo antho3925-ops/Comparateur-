@@ -486,6 +486,7 @@ tr.podium-2 .rang, tr.podium-3 .rang { color: var(--marine-500); }
 .puce.oui { background: var(--vert-fond); color: var(--vert); }
 .puce.non { background: var(--surface-3); color: var(--texte-3); }
 .puce.inactif { background: var(--rouge-fond); color: var(--rouge); }
+.puce.attention { background: var(--ambre-fond); color: var(--ambre); border: 1px solid var(--ambre-bord); }
 
 /* --- Onglets et navigation de période ------------------------------------ */
 
