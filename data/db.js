@@ -10296,6 +10296,10 @@ window.DB = {
       ]
     }
   ],
-  "logos": {},
-  "genere_le": "2026-09-07T07:28:58.454Z"
+  "logos": {
+    "concordia": "assets/logos/concordia.png",
+    "groupe_mutuel": "assets/logos/groupe_mutuel.png",
+    "swica": "assets/logos/swica.png"
+  },
+  "genere_le": "2026-09-07T07:34:54.827Z"
 };
