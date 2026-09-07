@@ -371,3 +371,38 @@ table.lignes tbody tr:last-child td { border-bottom: 0; }
   table.compare tbody tr[data-id] { cursor: auto; }
   .logos { display: none; }
 }
+
+/* ---------------------------------------------------- Argumentaire */
+.argu {
+  border: 1px solid var(--bord); border-radius: var(--r-s);
+  background: #fff; padding: 16px; margin-bottom: 18px;
+}
+.argu-titre {
+  font-size: 11px; text-transform: uppercase; letter-spacing: .09em;
+  color: var(--marine-700); font-weight: 700; margin-bottom: 13px;
+  padding-bottom: 9px; border-bottom: 1px solid var(--bord);
+}
+.argu-bloc { margin-bottom: 15px; }
+.argu-bloc:last-child { margin-bottom: 0; }
+.argu-bloc h5 {
+  margin: 0 0 7px; font-size: 12.5px; font-weight: 650; color: var(--texte);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding-left: 10px; border-left: 3px solid var(--bord-fort);
+}
+.argu-bloc.fort h5      { border-left-color: var(--vert); }
+.argu-bloc.faible h5    { border-left-color: var(--rouge); }
+.argu-bloc.apreciser h5 { border-left-color: var(--or); }
+.argu-total { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.argu-total.gain  { color: var(--vert); }
+.argu-total.perte { color: var(--rouge); }
+.argu-bloc ul { list-style: none; margin: 0; padding: 0 0 0 13px; }
+.argu-bloc li {
+  display: flex; align-items: baseline; justify-content: space-between; gap: 14px;
+  padding: 5px 0; font-size: 13px; border-bottom: 1px solid #f2f4f7;
+}
+.argu-bloc li:last-child { border-bottom: 0; }
+.argu-bloc li b { font-variant-numeric: tabular-nums; white-space: nowrap; font-weight: 650; }
+.argu-bloc.fort li b   { color: var(--vert); }
+.argu-bloc.faible li b { color: var(--rouge); }
+.argu-bloc.apreciser li b { color: var(--ambre); font-weight: 600; font-size: 12px; }
+.argu-bloc p { margin: 8px 0 0 13px; }

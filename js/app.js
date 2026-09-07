@@ -254,6 +254,40 @@
     return '<span class="etiq non">non couvert</span>';
   }
 
+  function blocArgumentaire(act, concurrent) {
+    const a = Comparateur.argumentaire(act, concurrent);
+    if (!a || (!a.mieux.length && !a.moins.length && !a.aPreciser.length)) return '';
+
+    const rangee = (i, signe) => {
+      const via = i.produit ? `<span class="produit-src"> · ${esc(i.produit.nom)}</span>` : '';
+      const val = signe === '+' ? '+ ' + Fmt.chf(i.ecart)
+                : signe === '-' ? '− ' + Fmt.chf(Math.abs(i.ecart))
+                : Fmt.chf(i.montantLca) + ' non chiffré';
+      return `<li><span>${esc(i.libelle)}${via}</span><b>${val}</b></li>`;
+    };
+
+    let h = '<div class="argu">';
+    h += `<div class="argu-titre">Argumentaire face à la couverture actuelle</div>`;
+    if (a.mieux.length) {
+      h += `<div class="argu-bloc fort"><h5>${a.mieux.length} prestation(s) mieux remboursée(s)`
+        + `<span class="argu-total gain">+ ${Fmt.chf(a.gain)}</span></h5><ul>`
+        + a.mieux.map((i) => rangee(i, '+')).join('') + '</ul></div>';
+    }
+    if (a.moins.length) {
+      h += `<div class="argu-bloc faible"><h5>${a.moins.length} prestation(s) moins bien remboursée(s)`
+        + `<span class="argu-total perte">− ${Fmt.chf(Math.abs(a.perte))}</span></h5><ul>`
+        + a.moins.map((i) => rangee(i, '-')).join('') + '</ul></div>';
+    }
+    if (a.aPreciser.length) {
+      h += `<div class="argu-bloc apreciser"><h5>${a.aPreciser.length} prestation(s) à préciser`
+        + `<span class="argu-total">hors total</span></h5><ul>`
+        + a.aPreciser.map((i) => rangee(i, '?')).join('') + '</ul>'
+        + '<p class="produit-src">Couvertes d\'après la brochure, sans taux exploitable. '
+        + 'Ne pas les annoncer chiffrées au client.</p></div>';
+    }
+    return h + '</div>';
+  }
+
   function tableauDetail(res) {
     let h = '<table class="lignes"><thead><tr><th>Prestation</th><th class="num">Base LAMal</th>'
           + '<th class="num">Part compl.</th><th class="num">Remboursé compl.</th>'
@@ -379,7 +413,7 @@
               const sel = ((etat.filtresProduits[c.assureurId] || [])[0] === p.id) ? ' selected' : '';
               return `<option value="${esc(p.id)}"${sel}>${esc(p.nom)}</option>`;
             }).join('')
-          + '</select></div>' + tableauDetail(c) + '</div></td></tr>';
+          + '</select></div>' + blocArgumentaire(act, c) + tableauDetail(c) + '</div></td></tr>';
       }
     });
     h += '</tbody></table>';

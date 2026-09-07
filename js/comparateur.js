@@ -121,5 +121,43 @@ window.Comparateur = (function () {
              lignesLca, lignesLamal };
   }
 
-  return { comparer, preparerLignes, prestation };
+  // Compare une caisse a la couverture actuelle, prestation par prestation.
+  // Sert a preparer l'entretien : les points forts comme les points faibles,
+  // parce qu'un argumentaire qui tait les seconds ne survit pas a la premiere
+  // objection du client.
+  function argumentaire(actuel, concurrent) {
+    if (!actuel || !concurrent) return null;
+
+    const refs = {};
+    for (const d of actuel.lca.parLigne) refs[d.ligne.factureId] = d;
+
+    const mieux = [], moins = [], aPreciser = [];
+    for (const d of concurrent.lca.parLigne) {
+      const ref = refs[d.ligne.factureId];
+      const montantRef = ref ? ref.montant : 0;
+      const item = {
+        libelle: d.ligne.prestation.libelle,
+        montantLca: d.ligne.montantLca,
+        rembourse: d.montant,
+        rembourseActuel: montantRef,
+        ecart: d.montant - montantRef,
+        produit: d.produit,
+        etat: d.etat,
+        etatActuel: ref ? ref.etat : null,
+      };
+      if (d.etat === 'a_preciser') aPreciser.push(item);
+      else if (item.ecart > 0.005) mieux.push(item);
+      else if (item.ecart < -0.005) moins.push(item);
+    }
+    mieux.sort((a, b) => b.ecart - a.ecart);
+    moins.sort((a, b) => a.ecart - b.ecart);
+
+    return {
+      mieux, moins, aPreciser,
+      gain: mieux.reduce((s, i) => s + i.ecart, 0),
+      perte: moins.reduce((s, i) => s + i.ecart, 0),
+    };
+  }
+
+  return { comparer, preparerLignes, prestation, argumentaire };
 })();
