@@ -247,6 +247,26 @@ window.DB = {
         "nature": "remboursement"
       },
       {
+        "id": "medicaments_medecine_alternative",
+        "libelle": "Remedes et medicaments de medecine alternative",
+        "groupe": "medicaments",
+        "categorie": "LCA",
+        "unite_saisie": "montant",
+        "nature": "remboursement",
+        "actif": true,
+        "remarque": "Remedes prescrits dans le cadre d'une therapie alternative, et analyses de laboratoire qui l'accompagnent. Ne pas confondre avec les medicaments hors liste ordinaires : les produits de medecine alternative ne les couvrent pas."
+      },
+      {
+        "id": "medicaments_envoi_etranger",
+        "libelle": "Envoi de medicaments essentiels a l'etranger",
+        "groupe": "etranger_urgence",
+        "categorie": "LCA",
+        "unite_saisie": "montant",
+        "nature": "remboursement",
+        "actif": true,
+        "remarque": "Service d'acheminement lorsque le medicament n'est pas disponible sur place. Ce n'est pas une prise en charge du prix du medicament."
+      },
+      {
         "id": "vaccins_lamal",
         "libelle": "Vaccinations recommandees (plan suisse)",
         "groupe": "prevention",
@@ -1381,7 +1401,7 @@ window.DB = {
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
-              "prestation_id": "medicaments_hors_liste",
+              "prestation_id": "medicaments_medecine_alternative",
               "taux_remboursement": 0.9,
               "plafond_annuel": 800,
               "conditions": "Examens de laboratoire et remedes prescrits, max CHF 800 par annee.",
@@ -1441,7 +1461,7 @@ window.DB = {
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
-              "prestation_id": "medicaments_hors_liste",
+              "prestation_id": "medicaments_medecine_alternative",
               "taux_remboursement": 0.8,
               "plafond_annuel": 2000,
               "conditions": "Medicaments enregistres par Swissmedic, 80% du prix, sur prescription medicale.",
@@ -1664,7 +1684,7 @@ window.DB = {
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
-              "prestation_id": "medicaments_hors_liste",
+              "prestation_id": "medicaments_envoi_etranger",
               "taux_remboursement": 1,
               "conditions": "Envoi des medicaments essentiels s'ils ne sont pas disponibles sur place.",
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
@@ -1718,7 +1738,7 @@ window.DB = {
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
-              "prestation_id": "medicaments_hors_liste",
+              "prestation_id": "medicaments_envoi_etranger",
               "taux_remboursement": 1,
               "conditions": "Envoi des medicaments essentiels s'ils ne sont pas disponibles sur place.",
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
@@ -6891,7 +6911,7 @@ window.DB = {
               "conditions": "Jusqu'a 20 ans."
             },
             {
-              "prestation_id": "medicaments_hors_liste",
+              "prestation_id": "medicaments_medecine_alternative",
               "taux_remboursement": 0.75,
               "conditions": "Medicaments de medecine complementaire, 75%."
             },
@@ -10469,7 +10489,7 @@ window.DB = {
               "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
             },
             {
-              "prestation_id": "medicaments_hors_liste",
+              "prestation_id": "medicaments_medecine_alternative",
               "taux_remboursement": null,
               "statut": "a_completer",
               "conditions": "Medicaments de medecine complementaire."
@@ -10541,7 +10561,7 @@ window.DB = {
               "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
             },
             {
-              "prestation_id": "medicaments_hors_liste",
+              "prestation_id": "medicaments_medecine_alternative",
               "taux_remboursement": null,
               "statut": "a_completer",
               "conditions": "Medicaments de medecine complementaire."
@@ -10619,7 +10639,7 @@ window.DB = {
               "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
             },
             {
-              "prestation_id": "medicaments_hors_liste",
+              "prestation_id": "medicaments_medecine_alternative",
               "taux_remboursement": null,
               "statut": "a_completer",
               "conditions": "Medicaments de medecine complementaire."
@@ -11087,5 +11107,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T12:41:56.519Z"
+  "genere_le": "2026-09-07T12:52:49.310Z"
 };

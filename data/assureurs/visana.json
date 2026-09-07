@@ -356,7 +356,7 @@
           "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
         },
         {
-          "prestation_id": "medicaments_hors_liste",
+          "prestation_id": "medicaments_medecine_alternative",
           "taux_remboursement": null,
           "statut": "a_completer",
           "conditions": "Medicaments de medecine complementaire."
@@ -428,7 +428,7 @@
           "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
         },
         {
-          "prestation_id": "medicaments_hors_liste",
+          "prestation_id": "medicaments_medecine_alternative",
           "taux_remboursement": null,
           "statut": "a_completer",
           "conditions": "Medicaments de medecine complementaire."
@@ -506,7 +506,7 @@
           "conditions": "Traitements possibles sans prescription medicale. Environ 50 methodes reconnues. Le taux n'est pas indique dans la source."
         },
         {
-          "prestation_id": "medicaments_hors_liste",
+          "prestation_id": "medicaments_medecine_alternative",
           "taux_remboursement": null,
           "statut": "a_completer",
           "conditions": "Medicaments de medecine complementaire."

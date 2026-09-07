@@ -301,7 +301,7 @@
           "conditions": "Jusqu'a 20 ans."
         },
         {
-          "prestation_id": "medicaments_hors_liste",
+          "prestation_id": "medicaments_medecine_alternative",
           "taux_remboursement": 0.75,
           "conditions": "Medicaments de medecine complementaire, 75%."
         },

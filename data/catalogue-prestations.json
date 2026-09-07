@@ -161,6 +161,26 @@
       "nature": "remboursement"
     },
     {
+      "id": "medicaments_medecine_alternative",
+      "libelle": "Remedes et medicaments de medecine alternative",
+      "groupe": "medicaments",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true,
+      "remarque": "Remedes prescrits dans le cadre d'une therapie alternative, et analyses de laboratoire qui l'accompagnent. Ne pas confondre avec les medicaments hors liste ordinaires : les produits de medecine alternative ne les couvrent pas."
+    },
+    {
+      "id": "medicaments_envoi_etranger",
+      "libelle": "Envoi de medicaments essentiels a l'etranger",
+      "groupe": "etranger_urgence",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true,
+      "remarque": "Service d'acheminement lorsque le medicament n'est pas disponible sur place. Ce n'est pas une prise en charge du prix du medicament."
+    },
+    {
       "id": "vaccins_lamal",
       "libelle": "Vaccinations recommandees (plan suisse)",
       "groupe": "prevention",
