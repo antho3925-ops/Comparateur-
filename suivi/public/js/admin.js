@@ -3,7 +3,8 @@
 
 import {
   appeler, el, vider, formater, formaterSigne, classeEcart, afficherMessage,
-  heure, tuileEcart, poserBandeau, suivreEnDirect, majPastilleDirect,
+  heure, tuileEcart, celebrerNouveauxSucces, bandeauSucces,
+  poserBandeau, suivreEnDirect, majPastilleDirect,
 } from './commun.js';
 
 const etat = {
@@ -160,8 +161,12 @@ function carte(titre, periode, contenu, actions) {
   ]);
 }
 
-function tuiles(lignes) {
-  return el('div', { class: 'tuiles' }, lignes.map(tuileEcart));
+function tuiles(lignes, clePeriode, texteSucces) {
+  const conteneur = el('div', { class: 'tuiles' }, lignes.map(tuileEcart));
+  const { toutAtteint, anime } = celebrerNouveauxSucces(conteneur, lignes, clePeriode);
+  return toutAtteint
+    ? el('div', {}, [bandeauSucces(texteSucces, anime), conteneur])
+    : conteneur;
 }
 
 function libellePeriode(p) {
@@ -179,9 +184,13 @@ function rendreEquipe(d) {
 
   return el('div', {}, [
     carte('Équipe — semaine', libellePeriode(d.semaine),
-      tuiles(d.semaine.equipe.lignes), navigationPeriode('semaine')),
+      tuiles(d.semaine.equipe.lignes, `equipe-semaine:${d.semaine.cle}`,
+        'L’équipe a atteint tous ses objectifs de la semaine.'),
+      navigationPeriode('semaine')),
     carte('Équipe — mois', libellePeriode(d.mois),
-      tuiles(d.mois.equipe.lignes), navigationPeriode('mois')),
+      tuiles(d.mois.equipe.lignes, `equipe-mois:${d.mois.cle}`,
+        'L’équipe a atteint tous ses objectifs du mois.'),
+      navigationPeriode('mois')),
     carte(
       'Saisies du jour',
       `${d.libelleJourConsulte} — ${saisisAujourdhui} sur ${d.jourEquipe.length} conseillers ont saisi`,

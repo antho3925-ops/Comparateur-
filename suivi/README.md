@@ -78,6 +78,15 @@ navigateur, le serveur écrit toujours sur la journée courante.
 affiché en valeur chiffrée — un nombre de contrats, de rendez-vous, ou un
 montant en francs. Jamais en pourcentage, nulle part.
 
+**Objectif atteint.** Une tuile dont l'objectif est atteint passe au vert et
+porte un sceau. Au moment où elle bascule — et à ce moment seulement — elle
+s'anime : sursaut, halo, éclat doré, étincelles, et un bandeau quand toute la
+période est bouclée. La comparaison se fait sur l'état précédent de la même
+période, si bien qu'un simple chargement de page ne déclenche rien, et changer
+de semaine non plus. L'animation est désactivée pour qui a demandé à son système
+de réduire les animations ; le sceau et le bandeau, eux, restent : ils portent
+l'information, contrairement au mouvement.
+
 **Classement.** Visible uniquement depuis l'espace administrateur. Chaque
 conseiller est classé indicateur par indicateur sur son réalisé, ex æquo au
 même rang ; les points sont la somme de ces rangs et le plus petit total passe

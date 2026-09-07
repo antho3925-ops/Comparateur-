@@ -2,8 +2,8 @@
 // mois, historique figé.
 
 import {
-  appeler, el, vider, formater, afficherMessage, heure,
-  tuileEcart, poserBandeau, suivreEnDirect, majPastilleDirect,
+  appeler, el, vider, formater, afficherMessage, heure, tuileEcart,
+  celebrerNouveauxSucces, bandeauSucces, poserBandeau, suivreEnDirect, majPastilleDirect,
 } from './commun.js';
 
 const etat = {
@@ -12,6 +12,7 @@ const etat = {
   ancreMois: null,
   saisieEnCours: false,
   modifieDepuisChargement: false,
+  dernierEnregistrement: 0,
 };
 
 /** Jour courant à Genève, tel que le navigateur peut le calculer. */
@@ -33,6 +34,8 @@ const noeuds = {
   libelleMois: document.getElementById('libelle-mois'),
   tuilesSemaine: document.getElementById('tuiles-semaine'),
   tuilesMois: document.getElementById('tuiles-mois'),
+  succesSemaine: document.getElementById('succes-semaine'),
+  succesMois: document.getElementById('succes-mois'),
   historique: document.getElementById('historique'),
 };
 
@@ -65,8 +68,10 @@ function rendre() {
 
   noeuds.libelleJour.textContent = d.libelleJourConsulte;
   rendreSaisie(d);
-  rendrePeriode(noeuds.tuilesSemaine, d.semaine.bilan.lignes);
-  rendrePeriode(noeuds.tuilesMois, d.mois.bilan.lignes);
+  rendrePeriode(noeuds.tuilesSemaine, noeuds.succesSemaine, d.semaine.bilan.lignes,
+    `semaine:${d.semaine.cle}`, 'Tous les objectifs de la semaine sont atteints.');
+  rendrePeriode(noeuds.tuilesMois, noeuds.succesMois, d.mois.bilan.lignes,
+    `mois:${d.mois.cle}`, 'Tous les objectifs du mois sont atteints.');
   noeuds.libelleSemaine.textContent = `${d.semaine.libelle}${d.semaine.encours ? ' — semaine en cours' : ''}`;
   noeuds.libelleMois.textContent = `${d.mois.libelle}${d.mois.encours ? ' — mois en cours' : ''}`;
   rendreHistorique(d);
@@ -129,6 +134,7 @@ noeuds.formulaire.addEventListener('submit', async (evenement) => {
   try {
     const resultat = await appeler('/api/saisie', { methode: 'PUT', corps: { valeurs } });
     etat.modifieDepuisChargement = false;
+    etat.dernierEnregistrement = Date.now();
     afficherMessage(noeuds.messageSaisie,
       `Chiffres enregistrés à ${heure(resultat.maj)}. Vous pouvez encore les corriger jusqu’à ce soir.`,
       'succes');
@@ -143,9 +149,18 @@ noeuds.formulaire.addEventListener('submit', async (evenement) => {
 
 // --- Tuiles d'écart ---------------------------------------------------------
 
-function rendrePeriode(conteneur, lignes) {
+/**
+ * La clé de période porte la semaine ou le mois consulté : en changeant de
+ * période on repart d'une ardoise vierge, sinon naviguer vers une semaine
+ * réussie déclencherait une fête qui n'a rien fêté.
+ */
+function rendrePeriode(conteneur, emplacementSucces, lignes, clePeriode, texteSucces) {
   vider(conteneur);
   for (const ligne of lignes) conteneur.append(tuileEcart(ligne));
+
+  const { toutAtteint, anime } = celebrerNouveauxSucces(conteneur, lignes, clePeriode);
+  vider(emplacementSucces);
+  if (toutAtteint) emplacementSucces.append(bandeauSucces(texteSucces, anime));
 }
 
 // --- Historique -------------------------------------------------------------
@@ -215,5 +230,11 @@ function surveillerChangementDeJour() {
 }
 
 charger();
-suivreEnDirect(() => charger(), majPastilleDirect);
+// Notre propre enregistrement provoque un rechargement explicite, puis
+// l'événement temps réel qu'il déclenche en provoquerait un second : celui-ci
+// remplacerait les tuiles en pleine animation. On laisse passer le nôtre.
+suivreEnDirect(() => {
+  if (Date.now() - etat.dernierEnregistrement < 1500) return;
+  charger();
+}, majPastilleDirect);
 surveillerChangementDeJour();

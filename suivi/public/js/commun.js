@@ -96,6 +96,90 @@ export function afficherMessage(noeud, texte, genre = 'erreur') {
   noeud.textContent = texte || '';
 }
 
+// --- Objectif atteint : la bascule se voit ----------------------------------
+
+const DUREE_FETE = 1200;
+
+const succesConnus = new Map();       // période -> Map<indicateur, atteint>
+const fetesEnCours = new Map();       // « période|indicateur » -> fin prévue
+const bandeauxEnCours = new Map();    // période -> fin prévue
+
+/**
+ * Anime les tuiles dont l'objectif vient d'être atteint. La comparaison se fait
+ * sur l'état précédent de la même période : au premier affichage on se contente
+ * de mémoriser, sinon toute la page se mettrait à fêter au chargement, ce qui
+ * ne voudrait plus rien dire.
+ *
+ * Une fête a une échéance plutôt qu'un simple déclenchement : un rendu peut en
+ * chasser un autre — l'enregistrement recharge la page, et l'événement temps
+ * réel qu'il provoque la recharge encore — et la tuile reconstruite doit
+ * reprendre l'animation là où elle en était plutôt que de l'escamoter.
+ *
+ * Renvoie l'état de la période : bouclée ou non, et si elle vient de l'être.
+ */
+export function celebrerNouveauxSucces(conteneur, lignes, portee) {
+  const precedent = succesConnus.get(portee);
+  succesConnus.set(portee, new Map(lignes.map((l) => [l.cle, l.atteint === true])));
+  const maintenant = Date.now();
+
+  for (const ligne of lignes) {
+    const cle = `${portee}|${ligne.cle}`;
+    if (ligne.atteint !== true) {
+      fetesEnCours.delete(cle);
+      continue;
+    }
+    if (precedent && precedent.get(ligne.cle) === false) {
+      fetesEnCours.set(cle, maintenant + DUREE_FETE);
+    }
+    const fin = fetesEnCours.get(cle);
+    if (!fin || fin <= maintenant) continue;
+    const tuile = conteneur.querySelector(`[data-cle="${ligne.cle}"]`);
+    if (tuile) feter(tuile, fin - maintenant);
+  }
+
+  const avecObjectif = lignes.filter((l) => l.objectif !== null);
+  const toutAtteint = avecObjectif.length > 0 && avecObjectif.every((l) => l.atteint === true);
+  const boucleAvant = Boolean(precedent) && avecObjectif.length > 0
+    && avecObjectif.every((l) => precedent.get(l.cle) === true);
+
+  if (!toutAtteint) bandeauxEnCours.delete(portee);
+  else if (precedent && !boucleAvant) bandeauxEnCours.set(portee, maintenant + DUREE_FETE);
+
+  return { toutAtteint, anime: (bandeauxEnCours.get(portee) ?? 0) > maintenant };
+}
+
+function feter(tuile, reste) {
+  tuile.classList.add('celebre');
+  tuile.append(el('span', { class: 'balayage' }, el('i')), etincelles());
+  // La classe est retirée pour qu'une bascule suivante rejoue l'animation :
+  // une classe qui reste ne se rejoue jamais.
+  setTimeout(() => {
+    tuile.classList.remove('celebre');
+    for (const decor of tuile.querySelectorAll('.etincelles, .balayage')) decor.remove();
+  }, reste);
+}
+
+function etincelles() {
+  const groupe = el('div', { class: 'etincelles' });
+  for (let i = 0; i < 8; i += 1) {
+    const angle = (i / 8) * Math.PI * 2 - Math.PI / 2;
+    const distance = 26 + (i % 3) * 9;
+    groupe.append(el('span', {
+      style: `--dx:${(Math.cos(angle) * distance).toFixed(1)}px;`
+        + `--dy:${(Math.sin(angle) * distance).toFixed(1)}px;`
+        + `animation-delay:${150 + i * 22}ms`,
+    }));
+  }
+  return groupe;
+}
+
+export function bandeauSucces(texte, anime) {
+  return el('div', { class: `bandeau-succes ${anime ? 'celebre' : ''}` }, [
+    el('span', { class: 'medaille', texte: '🏅' }),
+    el('span', { texte }),
+  ]);
+}
+
 // --- Temps réel -------------------------------------------------------------
 
 /**
@@ -132,7 +216,13 @@ export function suivreEnDirect(surChangement, surEtatLiaison) {
  * plutôt qu'une seule, pour qu'un montant en francs ne se coupe pas en deux.
  */
 export function tuileEcart(ligne) {
-  return el('div', { class: `tuile ${classeEcart(ligne)} ${ligne.format === 'montant' ? 'montant' : ''}` }, [
+  return el('div', {
+    class: `tuile ${classeEcart(ligne)} ${ligne.format === 'montant' ? 'montant' : ''}`,
+    'data-cle': ligne.cle,
+  }, [
+    ligne.atteint === true
+      ? el('span', { class: 'sceau', title: 'Objectif atteint', texte: '✓' })
+      : null,
     el('div', { class: 'nom', texte: ligne.libelle }),
     el('div', { class: 'realise', texte: formater(ligne.realise, ligne.format) }),
     el('div', {

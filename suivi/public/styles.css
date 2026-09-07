@@ -13,9 +13,9 @@
   --marine-700: #12203a;
   --marine-600: #1d3050;
   --marine-500: #2c4468;
-  --or:         #c9a961;
-  --or-clair:   #e3ce97;
-  --or-fonce:   #8a7340;
+  --or:         #d9b53f;
+  --or-clair:   #f0d98a;
+  --or-fonce:   #856614;
 
   --fond:       #f4f6f9;
   --surface:    #ffffff;
@@ -28,19 +28,22 @@
   --texte-2:    #44536b;
   --texte-3:    #7d8ca3;
 
-  --vert:       #0a6b48;
-  --vert-vif:   #128f60;
-  --vert-fond:  #e6f4ee;
-  --rouge:      #a32720;
-  --rouge-fond: #fceeed;
-  --ambre:      #8a6100;
-  --ambre-fond: #fdf5e6;
-  --ambre-bord: #ecd9ae;
+  /* Sémantique — assez vive pour se lire d'un coup d'œil à travers la pièce,
+     assez sombre sur le texte pour rester lisible (contraste AA vérifié). */
+  --vert:       #05794c;
+  --vert-vif:   #0fb877;
+  --vert-fond:  #d8f7e8;
+  --rouge:      #c22a22;
+  --rouge-fond: #ffe9e7;
+  --ambre:      #9a5b00;
+  --ambre-vif:  #f5a30a;
+  --ambre-fond: #fff2d8;
+  --ambre-bord: #f3cf87;
 
   --ombre-1: 0 1px 2px rgba(10, 22, 40, .05);
   --ombre-2: 0 4px 16px rgba(10, 22, 40, .08);
   --ombre-3: 0 14px 40px rgba(6, 13, 24, .14);
-  --anneau:  0 0 0 3px rgba(201, 169, 97, .3);
+  --anneau:  0 0 0 3px rgba(217, 181, 63, .38);
 
   --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
            Georgia, "Times New Roman", serif;
@@ -183,7 +186,7 @@ input[type="number"] { -moz-appearance: textfield; }
   place-items: center;
   padding: 24px;
   background:
-    radial-gradient(1100px 520px at 50% -10%, rgba(201, 169, 97, .14), transparent 70%),
+    radial-gradient(1100px 520px at 50% -10%, rgba(217, 181, 63, .2), transparent 70%),
     linear-gradient(170deg, var(--marine-900), var(--marine-700) 55%, var(--marine-800));
 }
 
@@ -245,11 +248,15 @@ input[type="number"] { -moz-appearance: textfield; }
 }
 
 .tuile {
+  position: relative;
   border: 1px solid var(--bord);
   border-left: 3px solid var(--bord-fort);
   border-radius: var(--r);
   padding: 13px 15px;
   background: var(--surface-2);
+  /* La bascule d'un objectif change la couleur du fond et du liseré : la
+     transition fait qu'on la voit se produire, au lieu de la découvrir faite. */
+  transition: background var(--t), border-color var(--t);
 }
 .tuile .nom { font-size: 12.5px; font-weight: 600; color: var(--texte-2); min-height: 2.6em; }
 .tuile .realise {
@@ -263,10 +270,153 @@ input[type="number"] { -moz-appearance: textfield; }
 
 .tuile.atteint { border-left-color: var(--vert-vif); background: var(--vert-fond); }
 .tuile.atteint .ecart { color: var(--vert); }
-.tuile.manque { border-left-color: var(--or); background: var(--ambre-fond); }
+.tuile.manque { border-left-color: var(--ambre-vif); background: var(--ambre-fond); }
 .tuile.manque .ecart { color: var(--ambre); }
 .tuile.sans-objectif { border-left-color: var(--bord-fort); }
 .tuile.sans-objectif .ecart { color: var(--texte-3); font-weight: 400; font-style: italic; }
+
+/* --- Objectif atteint : sceau et animation de bascule --------------------- */
+
+/* Le sceau est là dès que l'objectif est atteint ; il ne s'anime qu'au moment
+   où il vient de l'être. Un indicateur permanent, pas seulement une fête. */
+.tuile .sceau {
+  position: absolute;
+  top: 11px;
+  right: 12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--vert-vif);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 22px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(15, 184, 119, .4);
+}
+
+.tuile.atteint .nom { padding-right: 26px; }
+
+@keyframes tuile-bascule {
+  0%   { transform: scale(1); }
+  28%  { transform: scale(1.045); }
+  62%  { transform: scale(.995); }
+  100% { transform: scale(1); }
+}
+
+@keyframes tuile-halo {
+  0%   { box-shadow: 0 0 0 0 rgba(15, 184, 119, .55); }
+  100% { box-shadow: 0 0 0 20px rgba(15, 184, 119, 0); }
+}
+
+/* Un éclat doré traverse la tuile une fois, de gauche à droite. */
+@keyframes tuile-balayage {
+  0%   { transform: translateX(-130%) skewX(-18deg); opacity: 0; }
+  18%  { opacity: 1; }
+  100% { transform: translateX(240%) skewX(-18deg); opacity: 0; }
+}
+
+@keyframes sceau-arrivee {
+  0%   { transform: scale(0) rotate(-45deg); opacity: 0; }
+  55%  { transform: scale(1.3) rotate(8deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes etincelle {
+  0%   { transform: translate(0, 0) scale(1); opacity: 1; }
+  100% { transform: translate(var(--dx), var(--dy)) scale(.2); opacity: 0; }
+}
+
+.tuile.celebre {
+  /* La tuile qui fête passe au-dessus de ses voisines, sinon les étincelles
+     qui la débordent disparaissent sous la tuile suivante. */
+  z-index: 3;
+  animation: tuile-bascule 620ms cubic-bezier(.34, 1.56, .64, 1),
+             tuile-halo 900ms ease-out;
+}
+
+/* L'éclat doré est enfermé dans son propre cadre : c'est lui qu'on rogne aux
+   bords de la tuile, pas les étincelles, qui doivent pouvoir en sortir. */
+.balayage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.balayage i {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 34%;
+  background: linear-gradient(100deg,
+    transparent,
+    color-mix(in srgb, var(--or-clair) 46%, transparent),
+    transparent);
+  animation: tuile-balayage 850ms 120ms ease-out;
+}
+
+.tuile.celebre .sceau { animation: sceau-arrivee 620ms 90ms cubic-bezier(.34, 1.56, .64, 1) backwards; }
+
+.etincelles {
+  position: absolute;
+  top: 22px;
+  right: 23px;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+.etincelles span {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  margin: -3.5px;
+  border-radius: 50%;
+  background: var(--or);
+  box-shadow: 0 0 6px rgba(217, 181, 63, .8);
+  animation: etincelle 900ms 150ms ease-out backwards;
+}
+.etincelles span:nth-child(even) {
+  background: var(--vert-vif);
+  box-shadow: 0 0 5px rgba(15, 184, 119, .6);
+}
+
+/* Quand toute une période est bouclée, un bandeau le dit — et se signale
+   une fois, au moment où c'est devenu vrai. */
+.bandeau-succes {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 14px;
+  padding: 10px 14px;
+  border-radius: var(--r-s);
+  background: linear-gradient(95deg, var(--vert-fond), color-mix(in srgb, var(--or-clair) 45%, var(--vert-fond)));
+  border: 1px solid color-mix(in srgb, var(--vert-vif) 35%, transparent);
+  color: var(--vert);
+  font-weight: 600;
+  font-size: 13.5px;
+}
+.bandeau-succes .medaille { font-size: 17px; }
+
+@keyframes bandeau-arrivee {
+  0%   { transform: translateY(-8px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+.bandeau-succes.celebre { animation: bandeau-arrivee 420ms cubic-bezier(.34, 1.56, .64, 1); }
+
+/* Une animation ne doit jamais être imposée : le système d'exploitation sait
+   qui la refuse. Le sceau et le bandeau, eux, restent — ils portent
+   l'information, contrairement au mouvement. */
+@media (prefers-reduced-motion: reduce) {
+  .tuile.celebre,
+  .tuile.celebre .sceau,
+  .bandeau-succes.celebre,
+  .etincelles span { animation: none; }
+  .balayage { display: none; }
+  .tuile { transition: none; }
+}
 
 /* --- Tableaux ------------------------------------------------------------ */
 
@@ -293,7 +443,7 @@ tfoot td { font-weight: 700; border-top: 2px solid var(--filet-or); border-botto
 tr.podium-1 .rang { color: var(--or-fonce); }
 /* Un aplat, pas un dégradé : un dégradé posé sur les cellules se redessine
    dans chacune et zèbre la ligne au lieu de la traverser. */
-tr.podium-1 td { background: rgba(201, 169, 97, .1); }
+tr.podium-1 td { background: rgba(217, 181, 63, .16); }
 tr.podium-2 .rang, tr.podium-3 .rang { color: var(--marine-500); }
 
 .puce { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
