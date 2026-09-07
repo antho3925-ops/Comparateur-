@@ -19,7 +19,7 @@ import {
   INDICATEURS, CLES, CLES_CLASSEES, indicateur, normaliserSaisie, normaliserObjectifs,
   ecart, cumuler, bilanPeriode, bilanEquipe, classement,
 } from './lib/domaine.mjs';
-import { normaliserIdentifiant } from './lib/sessions.mjs';
+import { Securite, normaliserIdentifiant } from './lib/sessions.mjs';
 import { Stockage } from './lib/stockage.mjs';
 import { installerEquipeInitiale } from './lib/installation.mjs';
 import { demarrer } from './serveur.mjs';
@@ -399,6 +399,68 @@ section('Équipe de départ');
     refus = true;
   }
   egal('un identifiant invalide dans l’équipe de départ arrête le démarrage', refus, true);
+
+  await rm(bac, { recursive: true, force: true });
+}
+
+// ===========================================================================
+section('Accès administrateur livré avec l’installation');
+// ===========================================================================
+
+{
+  const { scryptSync, randomBytes } = await import('node:crypto');
+  const { readFile, mkdtemp, rm } = await import('node:fs/promises');
+  const { tmpdir: dossierTemporaire } = await import('node:os');
+  const bac = await mkdtemp(join(dossierTemporaire(), 'suivi-acces-'));
+
+  // Le fichier livré est vérifié sur sa forme, jamais sur son contenu : y
+  // écrire le code attendu le remettrait en clair dans le dépôt, ce que tout
+  // ce mécanisme existe précisément pour éviter.
+  const livre = JSON.parse(await readFile(new URL('./acces-initial.json', import.meta.url), 'utf8'));
+  egal('l’installation livre une empreinte d’accès administrateur',
+    Boolean(livre.administrateur), true);
+  egal('elle se limite à un sel et à une empreinte',
+    Object.keys(livre.administrateur).sort(), ['empreinte', 'sel']);
+  egal('le sel est bien un sel',
+    /^[0-9a-f]{32,}$/.test(livre.administrateur.sel), true);
+  egal('l’empreinte fait 32 octets, comme scrypt les rend',
+    livre.administrateur.empreinte.length, 64);
+  egal('aucun code en clair n’accompagne l’empreinte',
+    /code|motdepasse|mot_de_passe/i.test(JSON.stringify(livre.administrateur)), false);
+
+  // Le mécanisme, lui, se teste avec une empreinte fabriquée pour l'occasion.
+  const sel = randomBytes(16).toString('hex');
+  const secretDeTest = 'code-livre-avec-installation';
+  const empreinteInitiale = { sel, empreinte: scryptSync(secretDeTest, sel, 32).toString('hex') };
+
+  const neuf = join(bac, 'neuf.json');
+  const s1 = await Securite.charger(neuf, { codeAdmin: undefined, empreinteInitiale });
+  egal('sur une installation neuve, l’empreinte livrée fait foi',
+    s1.codeAdminValide(secretDeTest), true);
+  egal('un autre code reste refusé', s1.codeAdminValide('autre chose'), false);
+  egal('aucun code n’est affiché sur la console, il n’y en a pas à révéler',
+    s1.codeGenere, null);
+
+  const relu = JSON.parse(await readFile(neuf, 'utf8'));
+  egal('la configuration écrite ne contient que l’empreinte',
+    relu.adminEmpreinte, empreinteInitiale.empreinte);
+  egal('et jamais le code lui-même',
+    JSON.stringify(relu).includes(secretDeTest), false);
+
+  const s2 = await Securite.charger(neuf, { codeAdmin: 'un-code-choisi-a-la-main' });
+  egal('la variable d’environnement prend le pas sur l’empreinte livrée',
+    [s2.codeAdminValide('un-code-choisi-a-la-main'), s2.codeAdminValide(secretDeTest)],
+    [true, false]);
+  const s3 = await Securite.charger(neuf, { codeAdmin: undefined, empreinteInitiale });
+  egal('et l’empreinte livrée ne revient jamais écraser un code déjà changé',
+    [s3.codeAdminValide('un-code-choisi-a-la-main'), s3.codeAdminValide(secretDeTest)],
+    [true, false]);
+
+  const autre = join(bac, 'autre.json');
+  const s4 = await Securite.charger(autre, { codeAdmin: undefined, empreinteInitiale: null });
+  egal('sans empreinte livrée ni variable, un code est tiré au hasard',
+    typeof s4.codeGenere === 'string' && s4.codeGenere.length >= 12, true);
+  egal('et ce code tiré fonctionne', s4.codeAdminValide(s4.codeGenere), true);
 
   await rm(bac, { recursive: true, force: true });
 }

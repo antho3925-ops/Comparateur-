@@ -20,10 +20,14 @@ La plateforme écoute sur `http://localhost:8080` et s'ouvre dans n'importe quel
 navigateur. Aucune dépendance à installer : Node seul suffit (version 18 ou
 plus récente, pour `fetch` et `Intl`).
 
-Au tout premier démarrage, l'équipe de départ décrite dans
-`suivi/equipe-initiale.json` est installée — les conseillers peuvent se
-connecter aussitôt — et un code administrateur est tiré au hasard, affiché
-**une seule fois** sur la console. Pour en fixer un vous-même :
+Au tout premier démarrage, tout se met en place seul : l'équipe de départ
+décrite dans `suivi/equipe-initiale.json` est installée, et l'accès
+administrateur prend l'empreinte livrée dans `suivi/acces-initial.json`. Les
+conseillers et le responsable peuvent se connecter aussitôt, sans rien
+configurer.
+
+Sans empreinte livrée, un code est tiré au hasard et affiché **une seule fois**
+sur la console. Pour en fixer un vous-même, à tout moment :
 
 ```
 SUIVI_CODE_ADMIN='votre-code' node suivi/serveur.mjs
@@ -37,10 +41,18 @@ rester dans l'historique du shell à chaque démarrage :
 node suivi/gestion.mjs code-admin
 ```
 
-**Aucun code d'accès ne figure dans le dépôt** — seule son empreinte `scrypt`
-salée est écrite dans `suivi/data/config.json`, hors versionnement. Un code
-inscrit dans le dépôt serait lisible par tous ceux qui y ont accès, ce qui
-retirerait à l'espace administrateur la seule chose qui le protège.
+**Le code n'est écrit en clair nulle part** — ni dans le dépôt, ni dans
+`suivi/data/config.json`. Ce qui circule est son empreinte `scrypt` salée :
+elle vérifie un code proposé, elle ne permet pas de le retrouver.
+
+Le code administrateur est **sensible à la casse**, contrairement aux
+identifiants des conseillers.
+
+Cela dit, une empreinte livrée dans le dépôt reste attaquable hors ligne par
+qui y a accès, d'autant plus vite que le code est court. C'est un compromis
+assumé au profit d'une installation sans configuration : `gestion.mjs
+code-admin` permet d'en sortir quand on le souhaite, et rend le fichier livré
+sans effet.
 
 | Variable | Effet |
 |---|---|
@@ -156,14 +168,19 @@ Désactiver plutôt que supprimer : les chiffres déjà saisis restent au dossie
 continuent de compter dans les totaux passés, mais la personne ne peut plus se
 connecter ni saisir.
 
-### L'équipe de départ
+### Ce que l'installation apporte
 
 `suivi/equipe-initiale.json` liste les conseillers créés **au tout premier
 démarrage**, quand la base est encore vierge. Passé ce moment le fichier n'est
 plus jamais relu : le modifier ne change rien à une installation en service, et
 une équipe vidée de tous ses conseillers ne verra pas ressusciter les anciens.
 La base reste la seule source de vérité ; ce fichier n'est qu'un point de
-départ, et ne contient que des identifiants et des noms — jamais un secret.
+départ, et ne contient que des identifiants et des noms.
+
+`suivi/acces-initial.json` joue le même rôle pour l'accès administrateur, avec
+la même règle : il ne sert qu'à la toute première configuration, et une fois
+`suivi/data/config.json` écrit il n'est plus jamais consulté. Changer le code
+avec `gestion.mjs code-admin` le rend définitivement sans effet.
 
 ## Accès
 
@@ -191,7 +208,8 @@ suivi/
 ├── demo.mjs                 Équipe fictive et six semaines d'activité, pour démonstration
 ├── gestion.mjs              Gestion des accès en ligne de commande
 ├── equipe-initiale.json     Conseillers créés au tout premier démarrage
-├── tests.mjs                Suite de tests (182 cas)
+├── acces-initial.json       Empreinte de l'accès administrateur de départ
+├── tests.mjs                Suite de tests (196 cas)
 ├── lib/
 │   ├── dates.mjs            Fuseau suisse, semaines ISO, libellés en français
 │   ├── domaine.mjs          Indicateurs, cumuls, écarts, classement — fonctions pures
@@ -229,7 +247,7 @@ tronqué.
 node suivi/tests.mjs
 ```
 
-182 tests. Les tests de dates et de règles métier sont unitaires ; les tests
+196 tests. Les tests de dates et de règles métier sont unitaires ; les tests
 d'accès démarrent un vrai serveur sur un port libre, avec un dossier de données
 jetable, et parlent HTTP comme le ferait un navigateur.
 
@@ -243,8 +261,10 @@ l'impossibilité pour un conseiller de voir la page d'un collègue, d'atteindre 
 tableau de bord ou de fixer ses propres objectifs, le gel des journées passées
 y compris pour l'administrateur, la prise d'effet immédiate d'un changement
 d'objectif, la désactivation et la réactivation d'un accès, le cloisonnement
-des fichiers servis, et l'amorçage de l'équipe de départ — qui ne joue qu'une
-fois, jamais sur une base déjà peuplée, et refuse un identifiant invalide.
+des fichiers servis, l'amorçage de l'équipe de départ — qui ne joue qu'une
+fois, jamais sur une base déjà peuplée, et refuse un identifiant invalide — et
+l'accès administrateur livré, dont l'empreinte ne s'applique qu'à une
+installation neuve et ne revient jamais écraser un code changé depuis.
 
 ## Mise en service
 

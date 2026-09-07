@@ -1,0 +1,19 @@
+{
+  "_lisez-moi": [
+    "Accès administrateur posé au tout premier démarrage, quand aucune",
+    "configuration n'existe encore. Ensuite ce fichier n'est plus jamais relu.",
+    "",
+    "Ce qui figure ici est l'empreinte scrypt salée du code, non le code :",
+    "elle permet de vérifier un code proposé, pas de le retrouver. Le code en",
+    "clair n'est écrit nulle part, ni ici ni sur le serveur.",
+    "",
+    "Une empreinte reste néanmoins attaquable hors ligne par qui accède au",
+    "dépôt, d'autant plus vite que le code est court. Pour en changer :",
+    "  node suivi/gestion.mjs code-admin <nouveau code>",
+    "ce qui réécrit suivi/data/config.json et rend ce fichier sans effet."
+  ],
+  "administrateur": {
+    "sel": "22a20ae593776ac432093508f277a813",
+    "empreinte": "4d21fde88fbf3404fb8e48a5a06d32ed977cf9c0948d70287ce8b22f2bf53229"
+  }
+}

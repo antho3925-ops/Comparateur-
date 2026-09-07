@@ -67,11 +67,14 @@ export async function demarrer({
   hote = HOTE,
   dossierDonnees = DONNEES,
   equipeInitiale = join(RACINE, 'equipe-initiale.json'),
+  accesInitial = join(RACINE, 'acces-initial.json'),
 } = {}) {
   const stockage = new Stockage(join(dossierDonnees, 'suivi.json'));
   await stockage.charger();
   const installes = await installerEquipeInitiale(stockage, equipeInitiale);
-  const securite = await Securite.charger(join(dossierDonnees, 'config.json'));
+  const securite = await Securite.charger(join(dossierDonnees, 'config.json'), {
+    empreinteInitiale: await lireEmpreinteInitiale(accesInitial),
+  });
 
   const serveur = createServer((requete, reponse) => {
     traiter(requete, reponse, { stockage, securite }).catch((erreur) => {
@@ -83,6 +86,24 @@ export async function demarrer({
 
   await new Promise((resoudre) => serveur.listen(port, hote, resoudre));
   return { serveur, stockage, securite, installes, port: serveur.address().port };
+}
+
+/**
+ * Empreinte du code administrateur livrée avec l'installation, s'il y en a une.
+ * Elle ne sert qu'à la toute première configuration : une fois config.json
+ * écrit, ce fichier n'est plus jamais consulté. Absent ou illisible, on
+ * l'ignore et le premier démarrage tire un code au hasard, comme avant.
+ */
+async function lireEmpreinteInitiale(chemin) {
+  try {
+    const { administrateur } = JSON.parse(await readFile(chemin, 'utf8'));
+    if (!administrateur) return null;
+    const { sel, empreinte } = administrateur;
+    const valide = (v) => typeof v === 'string' && /^[0-9a-f]+$/.test(v) && v.length >= 32;
+    return valide(sel) && valide(empreinte) ? { sel, empreinte } : null;
+  } catch {
+    return null;
+  }
 }
 
 async function traiter(requete, reponse, contexte) {

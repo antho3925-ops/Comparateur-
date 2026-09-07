@@ -33,12 +33,20 @@ export class Securite {
   }
 
   /**
-   * Charge — ou crée — la configuration de sécurité. Le code administrateur
-   * vient de la variable d'environnement SUIVI_CODE_ADMIN quand elle est
-   * définie ; sinon un code est tiré au hasard au premier démarrage et
-   * affiché une seule fois sur la console.
+   * Charge — ou crée — la configuration de sécurité.
+   *
+   * Au premier démarrage, le code administrateur vient, dans l'ordre : de la
+   * variable d'environnement SUIVI_CODE_ADMIN ; à défaut de l'empreinte livrée
+   * avec l'installation ; à défaut d'un tirage au hasard, affiché une seule
+   * fois sur la console.
+   *
+   * Une empreinte livrée n'est pas un code : elle vérifie un code proposé,
+   * elle ne le révèle pas. Le code en clair n'est écrit nulle part.
    */
-  static async charger(chemin, { codeAdmin = process.env.SUIVI_CODE_ADMIN } = {}) {
+  static async charger(chemin, {
+    codeAdmin = process.env.SUIVI_CODE_ADMIN,
+    empreinteInitiale = null,
+  } = {}) {
     let config = null;
     if (existsSync(chemin)) {
       config = JSON.parse(await readFile(chemin, 'utf8'));
@@ -46,14 +54,19 @@ export class Securite {
 
     let codeAffiche = null;
     if (!config) {
-      const code = codeAdmin || randomBytes(9).toString('base64url');
-      if (!codeAdmin) codeAffiche = code;
-      const sel = randomBytes(16).toString('hex');
-      config = {
-        secret: randomBytes(32).toString('hex'),
-        adminSel: sel,
-        adminEmpreinte: empreinte(code, sel),
-      };
+      config = { secret: randomBytes(32).toString('hex') };
+
+      if (!codeAdmin && empreinteInitiale) {
+        config.adminSel = empreinteInitiale.sel;
+        config.adminEmpreinte = empreinteInitiale.empreinte;
+      } else {
+        const code = codeAdmin || randomBytes(9).toString('base64url');
+        if (!codeAdmin) codeAffiche = code;
+        const sel = randomBytes(16).toString('hex');
+        config.adminSel = sel;
+        config.adminEmpreinte = empreinte(code, sel);
+      }
+
       await mkdir(dirname(chemin), { recursive: true });
       await writeFile(chemin, `${JSON.stringify(config, null, 2)}\n`, { mode: 0o600 });
     } else if (codeAdmin) {
