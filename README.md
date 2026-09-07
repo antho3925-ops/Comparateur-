@@ -27,7 +27,9 @@ hors ligne en ouvrant `index.html` directement.
 .
 ├── index.html                     Page unique de l'application
 ├── build.mjs                      Compile data/*.json -> data/db.js (+ validation)
+├── dist/                          Export en fichier unique (généré, non versionné)
 ├── tools/
+│   ├── exporter.mjs               Replie tout le projet dans un fichier HTML unique
 │   ├── sources.py                 Téléchargement des PDF assureurs + extraction du texte
 │   └── trous.mjs                  Liste les couvertures connues mais non chiffrées
 ├── assets/
@@ -83,6 +85,23 @@ cas seule une capture d'écran permet de lire la grille.
 2. `node build.mjs` — régénère `data/db.js` et valide les données (identifiants
    inconnus, enveloppes orphelines, taux hors bornes, doublons).
 3. Commit et push : le lien partagé est à jour pour toute l'équipe.
+
+## Distribuer l'outil
+
+```
+node build.mjs
+node tools/exporter.mjs
+```
+
+`dist/comparateur.html` est un **fichier unique et autonome** : styles, scripts,
+base de données, bandeau et logos y sont intégrés. Il s'ouvre par un double-clic,
+se copie sur une clé USB, s'envoie par courriel, et fonctionne sans connexion.
+C'est la forme à donner aux collègues.
+
+`dist/artifact.html` est la même page sans son enveloppe `html`/`head`/`body`,
+pour publication en lien partagé.
+
+Ces deux fichiers sont régénérés à chaque export et ne sont pas versionnés.
 
 ## Protection des données
 
