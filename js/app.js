@@ -15,6 +15,7 @@
       actuel: { mode: 'base', assureurId: '', produitIds: [],
                 libre: { nom: '', franchise: 0, couvertures: [] } },
       facture: [],
+      clubActif: false,
       filtresProduits: {},
       detailOuvert: null,
     };
@@ -330,6 +331,42 @@
     return h + '</div></details>';
   }
 
+  function bandeauClub(res) {
+    const avec = (res.actuel && res.actuel.club ? [res.actuel] : [])
+      .concat(res.concurrents.filter((c) => c.club));
+    if (!res.clubActif || !avec.length) return '';
+    const prog = avec[0].club.programme;
+    return '<div class="avertissement club">'
+      + `<strong>Simulation « ${esc(prog.nom)} » active.</strong> `
+      + 'Les montants de ces caisses supposent que le client se rende chez un partenaire. '
+      + 'Ce sont des avantages commerciaux, pas des prestations contractuelles opposables.'
+      + '<ul>' + prog.avertissements.map((a) => `<li>${esc(a)}</li>`).join('') + '</ul>'
+      + `<div class="produit-src">Catalogue vérifié le ${esc(prog.date_verification)} — `
+      + `${esc(prog.source)}.</div></div>`;
+  }
+
+  function blocClub(c) {
+    if (!c.club) return '';
+    const k = c.club;
+    let h = '<div class="argu club-detail"><div class="argu-titre">'
+      + `Effet des partenaires ${esc(k.programme.nom)}</div>`;
+    h += '<table class="lignes"><thead><tr><th>Prestation</th><th class="num">Facturé</th>'
+      + '<th class="num">Rabais</th><th>Partenaire</th></tr></thead><tbody>'
+      + k.touchees.map((x) => `<tr><td>${esc(x.libelle)}</td>`
+          + `<td class="num">${Fmt.chf(x.montant)}</td>`
+          + `<td class="num">− ${Fmt.pct(x.rabais.taux)}</td>`
+          + `<td>${esc(x.rabais.partenaire)}<div class="produit-src">${esc(x.rabais.remarque || '')}</div></td></tr>`).join('')
+      + '</tbody></table>';
+    h += '<div class="club-bilan">'
+      + `<span>Reste à charge contractuel <b>${Fmt.chf(c.contractuel)}</b></span>`
+      + `<span>Avec les partenaires <b>${Fmt.chf(k.resteACharge)}</b></span>`
+      + `<span class="gain">Économie réelle <b>${Fmt.chf(k.economie)}</b></span></div>`
+      + '<p class="produit-src">L\'économie n\'est pas le montant du rabais : une facture plus '
+      + 'basse entraîne aussi un remboursement plus bas. Seul l\'écart entre les deux restes à '
+      + 'charge revient au client.</p></div>';
+    return h;
+  }
+
   function tableauDetail(res) {
     let h = '<table class="lignes"><thead><tr><th>Prestation</th><th class="num">Base LAMal</th>'
           + '<th class="num">Part compl.</th><th class="num">Remboursé compl.</th>'
@@ -395,6 +432,8 @@
         + 'Elle ne provient pas de la base vérifiée.</div>';
     }
 
+    h += bandeauClub(res);
+
     const act = res.actuel;
     const meilleur = res.concurrents[0];
     h += '<div class="chiffre-cle">';
@@ -428,7 +467,8 @@
 
     if (act) {
       h += `<tr class="actuelle" data-id="${esc(act.assureurId)}"><td><span class="rang"></span>`
-        + `${esc(act.nom)} <span class="etiq actu">actuelle</span></td>`
+        + `${esc(act.nom)} <span class="etiq actu">actuelle</span>`
+        + (act.club ? ' <span class="etiq club">partenaires</span>' : '') + '</td>'
         + `<td class="num">${Fmt.chf(res.lamal.resteACharge)}</td>`
         + `<td class="num">${Fmt.chf(act.lca.totalRembourse)}</td>`
         + `<td class="num">${Fmt.chf(act.resteACharge)}</td><td class="num">—</td>`
@@ -440,7 +480,8 @@
       const txt = ecart == null ? '—' : (ecart > 0 ? '− ' : ecart < 0 ? '+ ' : '') + Fmt.chf(Math.abs(ecart));
       const estMeilleure = i === 0 && act && ecart > 0.005;
       h += `<tr class="${estMeilleure ? 'meilleure' : ''}" data-id="${esc(c.assureurId)}">`
-        + `<td><span class="rang">${i + 1}</span>${esc(c.nom)}</td>`
+        + `<td><span class="rang">${i + 1}</span>${esc(c.nom)}`
+        + (c.club ? ' <span class="etiq club">partenaires</span>' : '') + '</td>'
         + `<td class="num">${Fmt.chf(res.lamal.resteACharge)}</td>`
         + `<td class="num">${Fmt.chf(c.lca.totalRembourse)}</td>`
         + `<td class="num">${Fmt.chf(c.resteACharge)}</td>`
@@ -455,15 +496,15 @@
               const sel = ((etat.filtresProduits[c.assureurId] || [])[0] === p.id) ? ' selected' : '';
               return `<option value="${esc(p.id)}"${sel}>${esc(p.nom)}</option>`;
             }).join('')
-          + '</select></div>' + blocArgumentaire(act, c) + tableauDetail(c)
+          + '</select></div>' + blocClub(c) + blocArgumentaire(act, c) + tableauDetail(c)
           + blocCadre(c.assureur) + '</div></td></tr>';
       }
     });
     h += '</tbody></table>';
 
     if (act) {
-      h += '<div class="titre-bloc">Détail de la couverture actuelle</div>' + tableauDetail(act)
-        + blocCadre(act.assureur);
+      h += '<div class="titre-bloc">Détail de la couverture actuelle</div>'
+        + blocClub(act) + tableauDetail(act) + blocCadre(act.assureur);
     }
 
     h += '<div class="produit-src" style="margin-top:18px">'
@@ -535,6 +576,9 @@
     $('#libre-nom').addEventListener('input', (e) => { etat.actuel.libre.nom = e.target.value; rendreResultat(); });
     $('#libre-franchise').addEventListener('input', (e) => {
       etat.actuel.libre.franchise = Number(e.target.value) || 0; rendreResultat();
+    });
+    $('#club-actif').addEventListener('change', (e) => {
+      etat.clubActif = e.target.checked; rendreResultat();
     });
     $('#btn-imprimer').addEventListener('click', () => window.print());
     $('#btn-reset').addEventListener('click', () => {

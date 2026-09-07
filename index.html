@@ -132,7 +132,13 @@
   <section class="carte">
     <header>
       <h2><span class="etape">4</span>Résultat et comparatif</h2>
-      <button class="btn secondaire mini no-print" id="btn-imprimer" type="button">Imprimer</button>
+      <div style="display:flex;align-items:center;gap:14px">
+        <label class="bascule" for="club-actif" title="Avantages commerciaux non contractuels">
+          <input type="checkbox" id="club-actif">
+          <span>Simuler le recours aux partenaires</span>
+        </label>
+        <button class="btn secondaire mini no-print" id="btn-imprimer" type="button">Imprimer</button>
+      </div>
     </header>
     <div class="corps" id="resultat">
       <div class="vide">Renseignez la couverture actuelle et au moins une prestation.</div>

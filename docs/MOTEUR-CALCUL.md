@@ -169,6 +169,32 @@ Le classement se fait sur `reste_a_charge_total` croissant, avec le détail
 prestation par prestation, toujours en distinguant part base et part
 complémentaire.
 
+## Programmes partenaires — une couche à part
+
+Certaines caisses proposent des rabais chez des prestataires partenaires plutôt
+qu'un remboursement. Ils sont décrits dans un bloc `programme_partenaires` au
+niveau de l'assureur et pilotés par un interrupteur, **désactivé par défaut**.
+
+Le rabais s'applique **au montant facturé, avant toute ventilation** : c'est la
+facture qui baisse, pas la prise en charge. Toute la chaîne est alors recalculée
+pour cette caisse, part LAMal comprise — un rabais sur des médicaments de la
+liste réduit la franchise consommée.
+
+**L'économie du client n'est jamais le montant du rabais.** Une facture plus
+basse entraîne un remboursement plus bas : sur 2 000 CHF de soins dentaires
+remisés de 50 %, avec une complémentaire à 75 %, le client économise le quart de
+la remise, pas la remise entière. Seul l'écart entre les deux restes à charge lui
+revient, et c'est ce que l'écran affiche. Sur un panier dentaire, optique et
+médicaments, la somme des rabais atteint 1 330 CHF pour une économie réelle de
+445 CHF.
+
+Ces avantages ne sont **pas contractuels** : réservés aux assurés de la caisse,
+non cumulables, modifiables ou supprimables à tout moment, et souvent limités à
+une région. Quand l'interrupteur est actif, un bandeau reprend ces réserves, les
+lignes concernées portent une étiquette, et le détail affiche toujours le reste à
+charge contractuel à côté du reste à charge avec partenaires. Rien de tout cela
+n'entre dans un chiffrage opposable.
+
 ## Limites assumées
 
 - Le calcul porte sur **la facture saisie**, avec les cumuls annuels renseignés

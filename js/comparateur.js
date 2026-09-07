@@ -9,15 +9,28 @@ window.Comparateur = (function () {
   }
 
   // Ventile chaque ligne de facture entre part LAMal et part complementaire.
-  function preparerLignes(facture) {
+  // `rabais` applique un rabais partenaire au montant facture AVANT toute
+  // ventilation : c'est bien la facture qui baisse, pas le remboursement.
+  function preparerLignes(facture, rabais) {
     const lignesLamal = [];
     const lignesLca = [];
     const incompletes = [];
     const versees = [];
 
-    for (const f of facture) {
-      const p = prestation(f.prestationId);
-      if (!p || !(f.montant > 0)) continue;
+    for (const brut of facture) {
+      const p = prestation(brut.prestationId);
+      if (!p || !(brut.montant > 0)) continue;
+
+      let f = brut;
+      const r = rabais && rabais[brut.prestationId];
+      if (r) {
+        f = Object.assign({}, brut, {
+          montant: brut.montant * (1 - r.taux),
+          montantPartLamal: brut.montantPartLamal == null ? brut.montantPartLamal
+                            : Number(brut.montantPartLamal) * (1 - r.taux),
+          rabais: r,
+        });
+      }
 
       if (p.nature === 'prestation_versee') {
         versees.push({ facture: f, prestation: p });
@@ -61,16 +74,63 @@ window.Comparateur = (function () {
     });
   }
 
-  function comparer(etat) {
-    const { lignesLamal, lignesLca, incompletes, versees } = preparerLignes(etat.facture);
+  // Meilleur rabais partenaire par prestation, pour un assureur donne.
+  function rabaisDe(assureur, actif) {
+    const pp = assureur && assureur.programme_partenaires;
+    if (!actif || !pp) return null;
+    const m = {};
+    for (const r of pp.rabais || []) {
+      for (const id of r.prestation_ids) {
+        if (!m[id] || r.taux > m[id].taux) {
+          m[id] = { taux: r.taux, partenaire: r.partenaire, remarque: r.remarque };
+        }
+      }
+    }
+    return Object.keys(m).length ? m : null;
+  }
 
-    const lamal = window.MoteurLamal.calculer(lignesLamal, {
+  function evaluer(produits, etat, rabais) {
+    const prep = preparerLignes(etat.facture, rabais);
+    const lamal = window.MoteurLamal.calculer(prep.lignesLamal, {
       franchise: etat.client.franchise,
       franchisePayee: etat.cumuls.franchisePayee || 0,
       quotePartAtteinte: etat.cumuls.quotePartAtteinte || 0,
       categorie: etat.client.categorie,
       meta: db().meta,
     });
+    const lca = window.MoteurLca.calculer(prep.lignesLca, produits);
+    return { lamal, lca, prep, resteACharge: lamal.resteACharge + lca.resteACharge };
+  }
+
+  function comparer(etat) {
+    const refs = preparerLignes(etat.facture, null);
+    const lamal = window.MoteurLamal.calculer(refs.lignesLamal, {
+      franchise: etat.client.franchise,
+      franchisePayee: etat.cumuls.franchisePayee || 0,
+      quotePartAtteinte: etat.cumuls.quotePartAtteinte || 0,
+      categorie: etat.client.categorie,
+      meta: db().meta,
+    });
+
+    // Enrichit une evaluation du volet partenaires, lorsqu'il est actif.
+    // Le rabais fait baisser la facture, donc aussi le remboursement qui en
+    // decoule : l'economie reelle du client est l'ecart entre les deux restes
+    // a charge, jamais le montant du rabais.
+    function avecClub(assureur, produits, evalContractuelle) {
+      const rabais = rabaisDe(assureur, etat.clubActif);
+      if (!rabais) return null;
+      const ev = evaluer(produits, etat, rabais);
+      const touchees = etat.facture
+        .filter((f) => rabais[f.prestationId] && f.montant > 0)
+        .map((f) => ({ libelle: (prestation(f.prestationId) || {}).libelle,
+                       montant: f.montant, rabais: rabais[f.prestationId] }));
+      if (!touchees.length) return null;
+      return Object.assign(ev, {
+        economie: evalContractuelle.resteACharge - ev.resteACharge,
+        touchees,
+        programme: assureur.programme_partenaires,
+      });
+    }
 
     // --- Couverture actuelle -------------------------------------------------
     let actuel = null;
@@ -80,24 +140,20 @@ window.Comparateur = (function () {
         franchises_produit: [etat.actuel.libre.franchise || 0],
         enveloppes: [], couvertures: etat.actuel.libre.couvertures,
       }];
-      actuel = {
-        assureurId: '_libre',
-        nom: etat.actuel.libre.nom || 'Caisse actuelle (saisie manuelle)',
-        saisieLibre: true,
-        lca: window.MoteurLca.calculer(lignesLca, pseudo),
-        produits: pseudo,
-      };
+      const ev = evaluer(pseudo, etat, null);
+      actuel = { assureurId: '_libre', saisieLibre: true, produits: pseudo,
+                 nom: etat.actuel.libre.nom || 'Caisse actuelle (saisie manuelle)',
+                 lamal: ev.lamal, lca: ev.lca, resteACharge: ev.resteACharge };
     } else if (etat.actuel.assureurId) {
       const a = db().assureurs.find((x) => x.id === etat.actuel.assureurId);
       if (a) {
         const produits = produitsRetenus(a, etat.actuel.produitIds);
-        actuel = { assureurId: a.id, nom: a.nom, saisieLibre: false, assureur: a,
-                   lca: window.MoteurLca.calculer(lignesLca, produits), produits };
+        const ev = evaluer(produits, etat, null);
+        actuel = { assureurId: a.id, nom: a.nom, saisieLibre: false, assureur: a, produits,
+                   lamal: ev.lamal, lca: ev.lca, resteACharge: ev.resteACharge,
+                   contractuel: ev.resteACharge, club: avecClub(a, produits, ev) };
+        if (actuel.club) actuel.resteACharge = actuel.club.resteACharge;
       }
-    }
-    if (actuel) {
-      actuel.lamal = lamal;
-      actuel.resteACharge = lamal.resteACharge + actuel.lca.resteACharge;
     }
 
     // --- Caisses comparees ---------------------------------------------------
@@ -105,20 +161,26 @@ window.Comparateur = (function () {
       .filter((a) => a.actif !== false)
       .filter((a) => !actuel || a.id !== actuel.assureurId)
       .map((a) => {
-        const filtre = (etat.filtresProduits || {})[a.id];
-        const produits = produitsRetenus(a, filtre);
-        const lca = window.MoteurLca.calculer(lignesLca, produits);
+        const produits = produitsRetenus(a, (etat.filtresProduits || {})[a.id]);
+        const ev = evaluer(produits, etat, null);
+        const club = avecClub(a, produits, ev);
         return {
-          assureurId: a.id, nom: a.nom, assureur: a, produits, lamal, lca,
-          resteACharge: lamal.resteACharge + lca.resteACharge,
+          assureurId: a.id, nom: a.nom, assureur: a, produits,
+          lamal: club ? club.lamal : ev.lamal,
+          lca: club ? club.lca : ev.lca,
+          contractuel: ev.resteACharge,
+          club,
+          resteACharge: club ? club.resteACharge : ev.resteACharge,
           produitsDisponibles: (a.produits_lca || []).filter((p) => !p.hors_perimetre_facture),
         };
       })
       .sort((x, y) => x.resteACharge - y.resteACharge || x.nom.localeCompare(y.nom));
 
-    return { lamal, actuel, concurrents, incompletes, versees,
+    return { lamal, actuel, concurrents,
+             incompletes: refs.incompletes, versees: refs.versees,
+             clubActif: !!etat.clubActif,
              totalFacture: etat.facture.reduce((s, f) => s + (Number(f.montant) || 0), 0),
-             lignesLca, lignesLamal };
+             lignesLca: refs.lignesLca, lignesLamal: refs.lignesLamal };
   }
 
   // Compare une caisse a la couverture actuelle, prestation par prestation.

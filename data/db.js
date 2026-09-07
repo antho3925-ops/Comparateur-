@@ -1160,7 +1160,8 @@ window.DB = {
         "Rabais famille jusqu'a 20% pour les enfants mineurs sur la plupart des produits, sauf Previsia et Denta Ortho. Rabais distinct de 15% sur Denta Ortho si souscrit avant la naissance.",
         "Cadre contractuel et exclusions generales saisis depuis les CGA (art. 1 a 20). Les CGA ne contiennent aucun taux ni plafond : ceux-ci figurent dans les conditions speciales (CSC) de chaque produit, qui restent a fournir.",
         "Complementa Extra et Natura sont saisis depuis leurs conditions speciales (edition 07.2015), article par article. Les autres produits reposent encore sur le recapitulatif de brochure.",
-        "Assura ne propose aucune prestation de check-up, de fitness, de depistage ni de vaccination preventive dans sa gamme LCA : verifie article par article dans les CSC, ce n'est pas une lacune de saisie."
+        "Assura ne propose aucune prestation de check-up, de fitness, de depistage ni de vaccination preventive dans sa gamme LCA : verifie article par article dans les CSC, ce n'est pas une lacune de saisie.",
+        "Le Club Assura est la seule reponse d'Assura sur le fitness, le check-up, le depistage et les vaccins de prevention, qu'aucune de ses complementaires ne rembourse. Il agit par rabais sur le prix facture, pas par prise en charge : il reduit l'ecart avec les caisses qui remboursent ces postes, il ne l'annule pas."
       ],
       "produits_lca": [
         {
@@ -2155,6 +2156,85 @@ window.DB = {
           "certains accidents d'aeronef, parachute ou parapente",
           "effets des radiations ionisantes, hors radiations prescrites medicalement",
           "transplantations d'organes"
+        ]
+      },
+      "programme_partenaires": {
+        "nom": "Club Assura",
+        "source": "assura.ch/fr/club et ses quatre pages de categories",
+        "date_verification": "2026-09-07",
+        "nature": "avantage_commercial",
+        "contractuel": false,
+        "avertissements": [
+          "Ce ne sont pas des prestations contractuelles garanties, contrairement aux montants des CSC.",
+          "Offres reservees aux assures Assura, non cumulables avec d'autres promotions et non transmissibles a un tiers.",
+          "Assura et ses partenaires peuvent les modifier ou les supprimer a tout moment.",
+          "La majorite des partenaires sante, dentaire et chirurgie oculaire sont implantes en Suisse romande. Pour un client alemanique ou tessinois, l'argument perd beaucoup de sa force.",
+          "Le catalogue evolue frequemment : reverifier avant chaque campagne commerciale."
+        ],
+        "rabais": [
+          {
+            "prestation_ids": [
+              "dentaire_soins",
+              "dentaire_prophylaxie",
+              "dentaire_prothese_implant",
+              "dentaire_orthodontie"
+            ],
+            "taux": 0.5,
+            "partenaire": "PanaDent",
+            "remarque": "Le rabais le plus eleve du Club. Autres partenaires dentaires a -20% : Clinique d'Hygiene Dentaire, Clinique Dentaire de Romanel."
+          },
+          {
+            "prestation_ids": [
+              "lunettes_lentilles_adulte",
+              "lunettes_lentilles_enfant"
+            ],
+            "taux": 0.3,
+            "partenaire": "Berdoz Vision & Audition",
+            "remarque": "Optical Web a -10%, Visual Studio Opticiens a tarif special sur une selection de montures."
+          },
+          {
+            "prestation_ids": [
+              "moyens_auxiliaires_lca"
+            ],
+            "taux": 0.3,
+            "partenaire": "Berdoz Vision & Audition",
+            "remarque": "Audition. Attends GmbH a -23% sur les produits d'incontinence absorbants."
+          },
+          {
+            "prestation_ids": [
+              "fitness_prevention",
+              "activite_physique_cours",
+              "clubs_sportifs"
+            ],
+            "taux": 0.2,
+            "partenaire": "Let's Go Fitness et 7 autres enseignes",
+            "remarque": "Fitline, Life Club, LifeFitness24, RNTL, JUNGLE BOX, Choice Health Wellness Spa, Moki Pilates. Reseau surtout romand."
+          },
+          {
+            "prestation_ids": [
+              "medicaments_liste",
+              "medicaments_hors_liste"
+            ],
+            "taux": 0.15,
+            "partenaire": "Pharmacie du Bouchet, Geneve",
+            "remarque": "Rabais permanents et taxes offertes sur les medicaments sur ordonnance. Zur Rose a -10% sur generiques et biosimilaires, MediService a -5% en livraison a domicile. Un seul point de vente physique, a Geneve."
+          },
+          {
+            "prestation_ids": [
+              "chirurgie_refractive"
+            ],
+            "taux": 0.1,
+            "partenaire": "Centre Microchirurgie Oculaire (CEMO)",
+            "remarque": "Les Cliniques de l'oeil OnO : bilan pre-operatoire environ CHF 350, operation de CHF 1'650 a 1'850 par oeil. Jules-Gonin, Oculus et Swiss Visio Network a tarif special."
+          },
+          {
+            "prestation_ids": [
+              "massage_therapeutique"
+            ],
+            "taux": 0.2,
+            "partenaire": "Choice Health Wellness Spa",
+            "remarque": "Spa, soins relaxants et therapies complementaires. Non rembourse par la LCA Assura : le rabais porte sur une prestation entierement a charge du client."
+          }
         ]
       }
     },
@@ -10491,5 +10571,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T07:56:24.791Z"
+  "genere_le": "2026-09-07T10:57:55.537Z"
 };

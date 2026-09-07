@@ -112,6 +112,8 @@ Node. Deux résultats servent de référence :
 - [x] Interface de saisie et écran de comparaison, testée dans Chromium
 - [x] Mode argumentaire : points forts et points faibles de chaque caisse
       face à la couverture actuelle, prestation par prestation
+- [x] Programmes partenaires : rabais chez les prestataires d'une caisse,
+      en couche activable et séparée du chiffrage contractuel
 - [x] Chaîne d'ingestion des PDF assureurs (téléchargement + extraction)
 - [x] 9 caisses saisies : 172 produits, 967 couvertures dont 654 chiffrées
 - [ ] 313 couvertures à chiffrer depuis les conditions particulières (`node tools/trous.mjs`)
