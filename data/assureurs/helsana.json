@@ -155,6 +155,13 @@
         {
           "prestation_id": "medecine_chinoise",
           "taux_remboursement": 0.75
+        },
+        {
+          "prestation_id": "psychotherapie_medicale",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+          "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
         }
       ]
     },
@@ -297,6 +304,13 @@
           "prestation_id": "medicaments_hors_liste",
           "taux_remboursement": 0.75,
           "conditions": "Medicaments de medecine complementaire, 75%."
+        },
+        {
+          "prestation_id": "psychotherapie_medicale",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+          "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
         }
       ]
     },
@@ -440,6 +454,13 @@
           "taux_remboursement": 0.75,
           "plafond_annuel": 10000,
           "conditions": "Jusqu'a 20 ans."
+        },
+        {
+          "prestation_id": "psychotherapie_medicale",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+          "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
         }
       ]
     },
@@ -503,6 +524,13 @@
           "taux_remboursement": 0.75,
           "plafond_annuel": 500,
           "conditions": "15% supplementaires max CHF 500 par an, ou 75% max CHF 500 pour les therapies non couvertes par COMPLETA."
+        },
+        {
+          "prestation_id": "psychotherapie_medicale",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+          "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
         }
       ]
     },

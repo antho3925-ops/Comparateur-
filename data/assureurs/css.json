@@ -189,6 +189,13 @@
         {
           "prestation_id": "gynecologie_preventive",
           "taux_remboursement": 0.9
+        },
+        {
+          "prestation_id": "psychotherapie_medicale",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+          "source_page": "CSS, pages produits myFlex, fiches produit et conditions generales officielles css.ch"
         }
       ]
     },

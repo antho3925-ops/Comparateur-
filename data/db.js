@@ -201,11 +201,11 @@ window.DB = {
         "id": "psychotherapie_medicale",
         "libelle": "Psychotherapie sur prescription (therapeute admis LAMal)",
         "groupe": "ambulatoire",
-        "categorie": "LAMal",
+        "categorie": "MIXTE",
         "unite_saisie": "montant",
         "actif": true,
         "nature": "remboursement",
-        "remarque": "Depuis le 1er juillet 2022, la psychotherapie psychologique releve du modele de prescription : sur ordonnance medicale et par un psychotherapeute admis a facturer la LAMal, elle est prise en charge par l'assurance de base. La couverture est donc IDENTIQUE chez toutes les caisses, aux seules franchise et quote-part pres. C'est le cas le plus frequent : le choisir par defaut."
+        "remarque": "Depuis le 1er juillet 2022, la psychotherapie psychologique prescrite et dispensee par un therapeute admis a facturer la LAMal est prise en charge par l'assurance de base : cette part est IDENTIQUE chez toutes les caisses. Une complementaire peut s'y ajouter pour ce qui reste a charge. Saisir le montant total et la part au tarif LAMal, comme pour une hospitalisation mi-privee."
       },
       {
         "id": "psychotherapie_non_medicale",
@@ -215,7 +215,7 @@ window.DB = {
         "unite_saisie": "montant",
         "actif": true,
         "nature": "remboursement",
-        "remarque": "Ne releve de la complementaire que dans les cas residuels : absence de prescription medicale, therapeute non admis a facturer la LAMal, methode non reconnue, ou seances au-dela de ce que la LAMal prend en charge. Ne pas l'utiliser pour une psychotherapie prescrite ordinaire, sous peine de faire porter a la complementaire une charge qui incombe a la base et de fausser la comparaison entre caisses."
+        "remarque": "Reserve aux traitements qui ne relevent pas du tout de la base : absence de prescription medicale, therapeute non admis a facturer la LAMal, methode non reconnue. Pour une psychotherapie prescrite, utiliser l'entree mixte, qui fait jouer la base puis la complementaire."
       },
       {
         "id": "logopedie_ergotherapie",
@@ -1163,7 +1163,8 @@ window.DB = {
         "La brochure ne mentionne ni Denta Sana ni Denta Ortho, saisis auparavant depuis un recapitulatif de site : ils sont remplaces par Denta Plus. Si la police d'un client cite l'un de ces deux noms, il s'agit d'un contrat anterieur dont les conditions restent a obtenir.",
         "Materna Varia, Pecunia, Previsia Maladie et les trois modules Lexa ne figurent pas dans la brochure fournie et reposent encore sur un recapitulatif de site.",
         "Assura ne propose aucune prestation de check-up, de fitness, de depistage ni de vaccination preventive dans sa gamme LCA : verifie article par article dans les CSC, ce n'est pas une lacune de saisie.",
-        "Le Club Assura est la seule reponse d'Assura sur ces postes. Il agit par rabais sur le prix facture, pas par prise en charge."
+        "Le Club Assura est la seule reponse d'Assura sur ces postes. Il agit par rabais sur le prix facture, pas par prise en charge.",
+        "Psychotherapie : la brochure Assura place la prestation de Complementa Extra en complement de l'assurance de base. Les recapitulatifs des autres caisses ne precisent pas si leurs produits completent de la meme maniere une psychotherapie prescrite : sur cette ligne, la comparaison peut sous-estimer les concurrentes tant que leurs conditions n'ont pas ete verifiees."
       ],
       "produits_lca": [
         {
@@ -1293,10 +1294,10 @@ window.DB = {
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
-              "prestation_id": "psychotherapie_non_medicale",
+              "prestation_id": "psychotherapie_medicale",
               "taux_remboursement": 1,
               "plafond_annuel": 1500,
-              "conditions": "CHF 1'500 par annee pour les frais consecutifs a des traitements medicalement prescrits, prodigues par des psychotherapeutes non medecins et des psychologues independants figurant sur la liste de l'organisation faitiere des assureurs-maladie suisses. Vient EN COMPLEMENT de l'assurance de base, qui prend en charge la psychotherapie prescrite depuis le 1er juillet 2022.",
+              "conditions": "CHF 1'500 par annee pour les frais consecutifs a des traitements medicalement prescrits, prodigues par des psychotherapeutes non medecins et des psychologues independants figurant sur la liste de l'organisation faitiere des assureurs-maladie suisses. Vient EN COMPLEMENT de l'assurance de base, qui prend en charge la psychotherapie prescrite depuis le 1er juillet 2022 : la brochure place cette prestation en regard de la mention « selon les prestations legales » du volet base.",
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
@@ -4480,6 +4481,13 @@ window.DB = {
             {
               "prestation_id": "gynecologie_preventive",
               "taux_remboursement": 0.9
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "CSS, pages produits myFlex, fiches produit et conditions generales officielles css.ch"
             }
           ]
         },
@@ -6578,6 +6586,13 @@ window.DB = {
             {
               "prestation_id": "medecine_chinoise",
               "taux_remboursement": 0.75
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
             }
           ]
         },
@@ -6720,6 +6735,13 @@ window.DB = {
               "prestation_id": "medicaments_hors_liste",
               "taux_remboursement": 0.75,
               "conditions": "Medicaments de medecine complementaire, 75%."
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
             }
           ]
         },
@@ -6863,6 +6885,13 @@ window.DB = {
               "taux_remboursement": 0.75,
               "plafond_annuel": 10000,
               "conditions": "Jusqu'a 20 ans."
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
             }
           ]
         },
@@ -6926,6 +6955,13 @@ window.DB = {
               "taux_remboursement": 0.75,
               "plafond_annuel": 500,
               "conditions": "15% supplementaires max CHF 500 par an, ou 75% max CHF 500 pour les therapies non couvertes par COMPLETA."
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "Helsana, brochure « Nos assurances et prestations en detail », edition 2025/26"
             }
           ]
         },
@@ -8062,6 +8098,13 @@ window.DB = {
               "prestation_id": "podologie",
               "taux_remboursement": 0.8,
               "enveloppe_id": "env_tc"
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "Sanitas, pages produits officielles (Vital, Dental, Hospital, Easy, Medical Private, Capital, Salary, Planning a Family)"
             }
           ]
         },
@@ -8278,6 +8321,13 @@ window.DB = {
               "prestation_id": "podologie",
               "taux_remboursement": 0.8,
               "enveloppe_id": "env_tc"
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "Sanitas, pages produits officielles (Vital, Dental, Hospital, Easy, Medical Private, Capital, Salary, Planning a Family)"
             }
           ]
         },
@@ -8959,6 +9009,13 @@ window.DB = {
               "statut": "a_completer",
               "plafond_par_seance": 80,
               "conditions": "Therapeutes reconnus SWICA."
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "SWICA, « Recapitulatif des prestations 2027 » et pages produits officielles swica.ch"
             }
           ]
         },
@@ -9114,6 +9171,13 @@ window.DB = {
               "taux_remboursement": 0.9,
               "plafond_annuel": 300,
               "conditions": "Gymnastique prenatale et postnatale."
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "SWICA, « Recapitulatif des prestations 2027 » et pages produits officielles swica.ch"
             }
           ]
         },
@@ -10171,6 +10235,13 @@ window.DB = {
             {
               "prestation_id": "rapatriement",
               "taux_remboursement": 1
+            },
+            {
+              "prestation_id": "psychotherapie_medicale",
+              "taux_remboursement": null,
+              "statut": "a_completer",
+              "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+              "source_page": "Visana, pages produits officielles visana.ch et conditions complementaires publiees"
             }
           ]
         },
@@ -10854,5 +10925,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T11:22:28.082Z"
+  "genere_le": "2026-09-07T11:24:51.789Z"
 };

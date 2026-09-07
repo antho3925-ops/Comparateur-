@@ -288,6 +288,13 @@
           "prestation_id": "podologie",
           "taux_remboursement": 0.8,
           "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "psychotherapie_medicale",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+          "source_page": "Sanitas, pages produits officielles (Vital, Dental, Hospital, Easy, Medical Private, Capital, Salary, Planning a Family)"
         }
       ]
     },
@@ -504,6 +511,13 @@
           "prestation_id": "podologie",
           "taux_remboursement": 0.8,
           "enveloppe_id": "env_tc"
+        },
+        {
+          "prestation_id": "psychotherapie_medicale",
+          "taux_remboursement": null,
+          "statut": "a_completer",
+          "conditions": "La source decrit une prestation de psychotherapie sans preciser si elle complete aussi une psychotherapie PRESCRITE, prise en charge par la base depuis le 1er juillet 2022. A verifier dans les conditions du produit : l'absence d'information n'est pas une absence de couverture.",
+          "source_page": "Sanitas, pages produits officielles (Vital, Dental, Hospital, Easy, Medical Private, Capital, Salary, Planning a Family)"
         }
       ]
     },

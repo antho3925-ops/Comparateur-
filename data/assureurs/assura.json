@@ -26,7 +26,8 @@
     "La brochure ne mentionne ni Denta Sana ni Denta Ortho, saisis auparavant depuis un recapitulatif de site : ils sont remplaces par Denta Plus. Si la police d'un client cite l'un de ces deux noms, il s'agit d'un contrat anterieur dont les conditions restent a obtenir.",
     "Materna Varia, Pecunia, Previsia Maladie et les trois modules Lexa ne figurent pas dans la brochure fournie et reposent encore sur un recapitulatif de site.",
     "Assura ne propose aucune prestation de check-up, de fitness, de depistage ni de vaccination preventive dans sa gamme LCA : verifie article par article dans les CSC, ce n'est pas une lacune de saisie.",
-    "Le Club Assura est la seule reponse d'Assura sur ces postes. Il agit par rabais sur le prix facture, pas par prise en charge."
+    "Le Club Assura est la seule reponse d'Assura sur ces postes. Il agit par rabais sur le prix facture, pas par prise en charge.",
+    "Psychotherapie : la brochure Assura place la prestation de Complementa Extra en complement de l'assurance de base. Les recapitulatifs des autres caisses ne precisent pas si leurs produits completent de la meme maniere une psychotherapie prescrite : sur cette ligne, la comparaison peut sous-estimer les concurrentes tant que leurs conditions n'ont pas ete verifiees."
   ],
   "produits_lca": [
     {
@@ -156,10 +157,10 @@
           "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
-          "prestation_id": "psychotherapie_non_medicale",
+          "prestation_id": "psychotherapie_medicale",
           "taux_remboursement": 1.0,
           "plafond_annuel": 1500,
-          "conditions": "CHF 1'500 par annee pour les frais consecutifs a des traitements medicalement prescrits, prodigues par des psychotherapeutes non medecins et des psychologues independants figurant sur la liste de l'organisation faitiere des assureurs-maladie suisses. Vient EN COMPLEMENT de l'assurance de base, qui prend en charge la psychotherapie prescrite depuis le 1er juillet 2022.",
+          "conditions": "CHF 1'500 par annee pour les frais consecutifs a des traitements medicalement prescrits, prodigues par des psychotherapeutes non medecins et des psychologues independants figurant sur la liste de l'organisation faitiere des assureurs-maladie suisses. Vient EN COMPLEMENT de l'assurance de base, qui prend en charge la psychotherapie prescrite depuis le 1er juillet 2022 : la brochure place cette prestation en regard de la mention « selon les prestations legales » du volet base.",
           "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
         },
         {
