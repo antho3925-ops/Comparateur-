@@ -291,7 +291,9 @@ tfoot td { font-weight: 700; border-top: 2px solid var(--filet-or); border-botto
 
 .rang { font-family: var(--serif); font-size: 16px; font-weight: 700; color: var(--texte-2); width: 46px; }
 tr.podium-1 .rang { color: var(--or-fonce); }
-tr.podium-1 td { background: linear-gradient(90deg, rgba(201, 169, 97, .13), transparent 60%); }
+/* Un aplat, pas un dégradé : un dégradé posé sur les cellules se redessine
+   dans chacune et zèbre la ligne au lieu de la traverser. */
+tr.podium-1 td { background: rgba(201, 169, 97, .1); }
 tr.podium-2 .rang, tr.podium-3 .rang { color: var(--marine-500); }
 
 .puce { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }

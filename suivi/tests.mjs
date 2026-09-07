@@ -295,7 +295,7 @@ section('Serveur — accès, gel des journées et cloisonnement');
 
 const dossier = await mkdtemp(join(tmpdir(), 'suivi-tests-'));
 process.env.SUIVI_CODE_ADMIN = 'code-de-test-1234';
-const { serveur, stockage, port } = await demarrer({ port: 0, hote: '127.0.0.1', racineDonnees: dossier });
+const { serveur, stockage, port } = await demarrer({ port: 0, hote: '127.0.0.1', dossierDonnees: join(dossier, 'data') });
 const base = `http://127.0.0.1:${port}`;
 
 /** Client HTTP minimal qui conserve son cookie, comme un navigateur. */

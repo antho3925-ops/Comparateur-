@@ -5,7 +5,7 @@
 
 import { readFile, writeFile, rename, mkdir } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { dirname } from 'node:path';
 import { randomUUID } from 'node:crypto';
 import { objectifsVides } from './domaine.mjs';
 
@@ -107,8 +107,4 @@ export function journaliser(etat, entree) {
   // Le journal sert au contrôle, pas à l'archivage : on garde les 5000
   // dernières entrées, largement de quoi couvrir plusieurs mois d'équipe.
   if (etat.journal.length > 5000) etat.journal.splice(0, etat.journal.length - 5000);
-}
-
-export function cheminParDefaut(racine) {
-  return join(racine, 'data', 'suivi.json');
 }

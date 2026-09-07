@@ -11,7 +11,7 @@ import { readFile, stat } from 'node:fs/promises';
 import { join, normalize, extname, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { Stockage, cheminParDefaut } from './lib/stockage.mjs';
+import { Stockage } from './lib/stockage.mjs';
 import { Securite, lireCookie } from './lib/sessions.mjs';
 import * as api from './lib/api.mjs';
 import { ErreurHttp } from './lib/api.mjs';
@@ -57,10 +57,14 @@ const ROUTES = [
   ['PUT', /^\/api\/admin\/objectifs\/(?<identifiant>[^/]+)$/, api.enregistrerObjectifs],
 ];
 
-export async function demarrer({ port = PORT, hote = HOTE, racineDonnees = RACINE } = {}) {
-  const stockage = new Stockage(cheminParDefaut(racineDonnees));
+export async function demarrer({
+  port = PORT,
+  hote = HOTE,
+  dossierDonnees = join(RACINE, 'data'),
+} = {}) {
+  const stockage = new Stockage(join(dossierDonnees, 'suivi.json'));
   await stockage.charger();
-  const securite = await Securite.charger(join(racineDonnees, 'data', 'config.json'));
+  const securite = await Securite.charger(join(dossierDonnees, 'config.json'));
 
   const serveur = createServer((requete, reponse) => {
     traiter(requete, reponse, { stockage, securite }).catch((erreur) => {

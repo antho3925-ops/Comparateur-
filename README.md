@@ -69,7 +69,8 @@ comparateur, elle a un serveur et conserve des données ; les deux projets ne
 partagent aucun fichier. Voir `suivi/README.md`.
 
 ```
-node suivi/serveur.mjs
+node suivi/serveur.mjs      # la plateforme
+node suivi/demo.mjs         # une équipe fictive, pour voir à quoi elle ressemble
 ```
 
 ## Alimenter la base depuis les documents d'un assureur

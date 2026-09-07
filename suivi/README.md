@@ -37,6 +37,19 @@ toucher aux données.
 | `SUIVI_CODE_ADMIN` | Code de l'espace administrateur |
 | `SUIVI_HTTPS=1` | À poser derrière un reverse proxy TLS : le cookie de session prend l'attribut `Secure` |
 
+## Voir la plateforme remplie
+
+```
+node suivi/demo.mjs
+```
+
+Monte une équipe fictive de cinq conseillers et six semaines d'activité sur
+`http://localhost:8090` : code administrateur `demo`, identifiants `a.roux`,
+`b.dias`, `c.meyer`, `d.perret`, `e.fontana`. Les chiffres sont tirés d'un
+générateur à graine — les mêmes d'un lancement à l'autre — et vivent dans
+`suivi/demo-donnees/`, remis à neuf à chaque démarrage. La démonstration ne
+touche jamais à `suivi/data/`.
+
 ## Les six indicateurs
 
 | Indicateur | Objectif hebdomadaire | Objectif mensuel |
@@ -107,6 +120,7 @@ journée de travail pour un conseiller et quatre heures pour l'administrateur.
 ```
 suivi/
 ├── serveur.mjs              Serveur HTTP, routage, fichiers statiques, flux temps réel
+├── demo.mjs                 Équipe fictive et six semaines d'activité, pour démonstration
 ├── tests.mjs                Suite de tests (151 cas)
 ├── lib/
 │   ├── dates.mjs            Fuseau suisse, semaines ISO, libellés en français
