@@ -396,6 +396,38 @@
       + '</div></details>';
   }
 
+  // Second axe de comparaison : la largeur de la gamme complementaire, distincte
+  // du reste a charge. Une caisse peut couvrir beaucoup de prestations et rester
+  // chere sur une facture donnee — les deux classements se lisent ensemble.
+  function blocEtendue(res) {
+    if (!res.etendues || !res.etendues.length) return '';
+    const max = res.etendues[0].chiffrees || 1;
+    const n = res.lignesFactureLca;
+
+    let h = '<div class="titre-bloc">Étendue de la gamme complémentaire</div>'
+      + '<p class="produit-src" style="margin:-4px 0 12px">Nombre de prestations distinctes que '
+      + 'chaque caisse rembourse avec un taux exploitable, produits en portefeuille fermé exclus. '
+      + 'Mesure la largeur de l\'offre, pas le coût de cette facture'
+      + (n ? ` — la colonne de droite indique combien des ${n} prestation(s) complémentaire(s) `
+           + 'de la facture en cours chaque caisse couvre.' : '.') + '</p>';
+
+    h += '<table class="compare etendue"><thead><tr><th>Caisse</th>'
+      + '<th class="num">Prestations couvertes</th><th>Part de la gamme la plus large</th>'
+      + (n ? '<th class="num">Sur cette facture</th>' : '') + '</tr></thead><tbody>';
+
+    res.etendues.forEach((e, i) => {
+      const pct = Math.round((e.chiffrees / max) * 100);
+      h += `<tr class="${e.actuelle ? 'actuelle' : ''}${i === 0 ? ' meilleure' : ''}">`
+        + `<td><span class="rang">${i + 1}</span>${esc(e.nom)}`
+        + (e.actuelle ? ' <span class="etiq actu">actuelle</span>' : '') + '</td>'
+        + `<td class="num">${e.chiffrees}`
+        + (e.aPreciser ? ` <span class="etiq prec">+${e.aPreciser} à préciser</span>` : '') + '</td>'
+        + `<td><span class="jauge"><i style="width:${pct}%"></i></span></td>`
+        + (n ? `<td class="num">${e.couvertesFacture} / ${n}</td>` : '') + '</tr>';
+    });
+    return h + '</tbody></table>';
+  }
+
   function tableauDetail(res) {
     let h = '<table class="lignes"><thead><tr><th>Prestation</th><th class="num">Base LAMal</th>'
           + '<th class="num">Part compl.</th><th class="num">Remboursé compl.</th>'
@@ -537,6 +569,8 @@
       }
     });
     h += '</tbody></table>';
+
+    h += blocEtendue(res);
 
     if (act) {
       h += '<div class="titre-bloc">Détail de la couverture actuelle</div>'

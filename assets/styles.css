@@ -479,3 +479,17 @@ details.repliable.selection-caisses { margin-bottom: 14px; }
 }
 .note-prestation.base { border-left-color: var(--marine-600); }
 .note-prestation.compl { border-left-color: var(--or); }
+
+/* ---------------------------------------------------- Etendue de gamme */
+table.compare.etendue tbody tr { cursor: default; }
+table.compare.etendue tbody tr:hover { background: transparent; }
+table.compare.etendue tbody tr.meilleure td { background: linear-gradient(90deg, #fffdf6, #fffefb); }
+table.compare.etendue tbody tr.meilleure .rang { background: var(--or); color: var(--marine-900); }
+.jauge {
+  display: block; height: 7px; border-radius: 4px; background: #eef1f5;
+  overflow: hidden; min-width: 120px;
+}
+.jauge i {
+  display: block; height: 100%; border-radius: 4px;
+  background: linear-gradient(90deg, var(--marine-600), var(--or));
+}

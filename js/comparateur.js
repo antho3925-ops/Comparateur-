@@ -107,6 +107,25 @@ window.Comparateur = (function () {
     return { lamal, lca, prep, resteACharge: lamal.resteACharge + lca.resteACharge };
   }
 
+  // Etendue de l'offre complementaire : nombre de prestations distinctes qu'une
+  // caisse rembourse effectivement, c'est-a-dire avec un taux exploitable. Mesure
+  // la largeur de la gamme, pas ce que coute une facture donnee.
+  function etendue(assureur) {
+    const remboursables = new Set(db().catalogue.prestations
+      .filter((p) => p.nature === 'remboursement' && p.actif !== false).map((p) => p.id));
+    const chiffrees = new Set();
+    const aPreciser = new Set();
+    for (const prod of assureur.produits_lca || []) {
+      if (prod.hors_perimetre_facture || prod.portefeuille_ferme) continue;
+      for (const c of prod.couvertures || []) {
+        if (!remboursables.has(c.prestation_id)) continue;
+        (c.statut === 'a_completer' ? aPreciser : chiffrees).add(c.prestation_id);
+      }
+    }
+    for (const id of chiffrees) aPreciser.delete(id);
+    return { chiffrees: chiffrees.size, aPreciser: aPreciser.size, set: chiffrees };
+  }
+
   function comparer(etat) {
     const refs = preparerLignes(etat.facture, null);
     const lamal = window.MoteurLamal.calculer(refs.lignesLamal, {
@@ -185,7 +204,22 @@ window.Comparateur = (function () {
       })
       .sort((x, y) => x.resteACharge - y.resteACharge || x.nom.localeCompare(y.nom));
 
-    return { lamal, actuel, concurrents,
+    // Classement par etendue de gamme, toutes caisses confondues, y compris la
+    // caisse actuelle : c'est un axe de comparaison distinct du reste a charge.
+    const etendues = db().assureurs
+      .filter((a) => a.actif !== false)
+      .map((a) => {
+        const e = etendue(a);
+        return {
+          assureurId: a.id, nom: a.nom, chiffrees: e.chiffrees, aPreciser: e.aPreciser,
+          couvertesFacture: refs.lignesLca.filter((l) => e.set.has(l.prestationId)).length,
+          actuelle: !!(actuel && actuel.assureurId === a.id),
+        };
+      })
+      .sort((x, y) => y.chiffrees - x.chiffrees || x.nom.localeCompare(y.nom));
+
+    return { lamal, actuel, concurrents, etendues,
+             lignesFactureLca: refs.lignesLca.length,
              nbCaisses: candidates.length,
              nbMasquees: candidates.length - concurrents.length,
              incompletes: refs.incompletes, versees: refs.versees,
@@ -232,5 +266,5 @@ window.Comparateur = (function () {
     };
   }
 
-  return { comparer, preparerLignes, prestation, argumentaire };
+  return { comparer, preparerLignes, prestation, argumentaire, etendue };
 })();
