@@ -247,6 +247,16 @@ window.DB = {
         "nature": "remboursement"
       },
       {
+        "id": "medicaments_vitaux",
+        "libelle": "Medicaments vitaux sans equivalent dans la liste des specialites",
+        "groupe": "medicaments",
+        "categorie": "LCA",
+        "unite_saisie": "montant",
+        "nature": "remboursement",
+        "actif": true,
+        "remarque": "Cas exceptionnel : medicament indispensable a la survie, enregistre Swissmedic, pour lequel il n'existe aucun equivalent dans la liste des specialites. A ne pas employer pour une boite hors liste ordinaire, sous peine de surestimer largement le remboursement."
+      },
+      {
         "id": "medicaments_medecine_alternative",
         "libelle": "Remedes et medicaments de medecine alternative",
         "groupe": "medicaments",
@@ -1234,7 +1244,7 @@ window.DB = {
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
-              "prestation_id": "medicaments_hors_liste",
+              "prestation_id": "medicaments_vitaux",
               "taux_remboursement": 1,
               "plafond_annuel": 50000,
               "conditions": "CHF 50'000 SUR LA DUREE DU CONTRAT, et non par annee, pour les medicaments vitaux sans equivalent dans la liste des specialites.",
@@ -1461,10 +1471,10 @@ window.DB = {
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             },
             {
-              "prestation_id": "medicaments_medecine_alternative",
+              "prestation_id": "medicaments_hors_liste",
               "taux_remboursement": 0.8,
               "plafond_annuel": 2000,
-              "conditions": "Medicaments enregistres par Swissmedic, 80% du prix, sur prescription medicale.",
+              "conditions": "Medicaments enregistres par Swissmedic, 80% du prix, maximum CHF 2'000 par annee, sur prescription medicale.",
               "source_page": "Brochure produits Assura SA, apercu des assurances complementaires"
             }
           ]
@@ -11107,5 +11117,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T12:52:49.310Z"
+  "genere_le": "2026-09-07T12:58:17.985Z"
 };

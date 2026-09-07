@@ -715,6 +715,9 @@
     $('#qp-atteinte').addEventListener('input', (e) => {
       etat.cumuls.quotePartAtteinte = Number(e.target.value) || 0; rendreResultat();
     });
+    $('#franchises-lca').addEventListener('change', (e) => {
+      etat.cumuls.franchisesProduitsConsommees = e.target.checked; rendreResultat();
+    });
     $('#assureur-actuel').addEventListener('change', (e) => {
       etat.actuel.assureurId = e.target.value;
       etat.actuel.produitIds = [];

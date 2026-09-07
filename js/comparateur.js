@@ -104,7 +104,9 @@ window.Comparateur = (function () {
       categorie: etat.client.categorie,
       meta: db().meta,
     });
-    const lca = window.MoteurLca.calculer(prep.lignesLca, produits);
+    const lca = window.MoteurLca.calculer(prep.lignesLca, produits, {
+      franchisesProduitsConsommees: !!etat.cumuls.franchisesProduitsConsommees,
+    });
     return { lamal, lca, prep, resteACharge: lamal.resteACharge + lca.resteACharge };
   }
 

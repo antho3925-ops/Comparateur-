@@ -160,8 +160,22 @@ window.MoteurLca = (function () {
    * @param lignes  [{prestationId, montantLca, seances, jours}]
    * @param produits produits retenus pour cet assureur (deja filtres)
    */
-  function calculer(lignes, produits) {
+  function calculer(lignes, produits, options) {
     const cumuls = nouveauxCumuls();
+    // Franchises des complementaires deja atteintes plus tot dans l'annee : on
+    // les marque consommees d'entree, sans quoi elles seraient deduites une
+    // seconde fois sur la facture en cours.
+    if (options && options.franchisesProduitsConsommees) {
+      const enorme = Number.MAX_SAFE_INTEGER;
+      for (const p of produits) {
+        cumuls.franchise[cle(p.id, 'franchise')] = enorme;
+        for (const c of p.couvertures || []) {
+          if (c.franchise_prestation > 0) {
+            cumuls.franchisePrestation[cle(p.id, c.prestation_id, 'fr')] = enorme;
+          }
+        }
+      }
+    }
     const parLigne = [];
     let totalRembourse = 0;
     let totalLca = 0;

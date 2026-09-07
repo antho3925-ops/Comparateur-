@@ -161,6 +161,16 @@
       "nature": "remboursement"
     },
     {
+      "id": "medicaments_vitaux",
+      "libelle": "Medicaments vitaux sans equivalent dans la liste des specialites",
+      "groupe": "medicaments",
+      "categorie": "LCA",
+      "unite_saisie": "montant",
+      "nature": "remboursement",
+      "actif": true,
+      "remarque": "Cas exceptionnel : medicament indispensable a la survie, enregistre Swissmedic, pour lequel il n'existe aucun equivalent dans la liste des specialites. A ne pas employer pour une boite hors liste ordinaire, sous peine de surestimer largement le remboursement."
+    },
+    {
       "id": "medicaments_medecine_alternative",
       "libelle": "Remedes et medicaments de medecine alternative",
       "groupe": "medicaments",
