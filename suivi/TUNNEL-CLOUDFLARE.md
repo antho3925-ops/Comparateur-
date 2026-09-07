@@ -30,7 +30,11 @@ Vérifiez : `cloudflared --version` doit répondre.
 
 ## 2. Essayer tout de suite, sans rien configurer
 
-Deux fenêtres, ou le script `demarrer` fourni plus bas.
+**Sous Windows, le plus simple est de double-cliquer sur `DEMARRER.bat`** : il
+lance la plateforme et le tunnel ensemble, et affiche l'adresse. Rien à taper.
+Sur macOS, `./demarrer.sh` fait la même chose.
+
+À la main, ce sont deux fenêtres :
 
 ```
 node suivi/serveur.mjs

@@ -241,8 +241,9 @@ suivi/
 ├── Dockerfile               Image sans dépendance, état sur un volume monté
 ├── HEBERGEMENT.md           Où faire tourner la plateforme, et à quel prix
 ├── TUNNEL-CLOUDFLARE.md     Publier depuis un poste du bureau, pas à pas
-├── demarrer.sh              Plateforme + tunnel ensemble (macOS, Linux)
+├── DEMARRER.bat             Windows : à double-cliquer, rien à taper
 ├── demarrer.ps1             Plateforme + tunnel ensemble (Windows)
+├── demarrer.sh              Plateforme + tunnel ensemble (macOS, Linux)
 ├── demo.mjs                 Équipe fictive et six semaines d'activité, pour démonstration
 ├── gestion.mjs              Gestion des accès en ligne de commande
 ├── equipe-initiale.json     Conseillers créés au tout premier démarrage
