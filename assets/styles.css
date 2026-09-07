@@ -46,6 +46,16 @@
   --ombre-3: 0 14px 40px rgba(6, 13, 24, .14);
   --anneau:  0 0 0 3px rgba(201, 169, 97, .3);
 
+  /* Reprise de la direction artistique du logo Swiss Times Fiduciary :
+     capitales serif a interlettrage large, filets dores, marine profond.
+     Pile systeme plutot qu'une police distante, l'outil devant fonctionner
+     hors ligne. Les chiffres restent en sans-serif : les chasses tabulaires
+     d'une serif classique sont a hauteur variable, illisibles en colonne. */
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua",
+           Georgia, "Times New Roman", serif;
+  --filet-or: color-mix(in srgb, var(--or) 42%, var(--bord));
+  --filet-or-fort: color-mix(in srgb, var(--or) 70%, var(--bord));
+
   --r-s: 8px;
   --r:   12px;
   --r-l: 16px;
@@ -160,18 +170,28 @@ h1, h2, h3, h4 { margin: 0; font-weight: 650; letter-spacing: -.012em; text-wrap
   box-shadow: var(--ombre-2);
 }
 .entete-in {
-  max-width: 1240px; margin: 0 auto; min-height: 70px;
+  max-width: 1240px; margin: 0 auto; min-height: 72px;
   display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  flex-wrap: wrap; padding: 10px 0;
+}
+@media (max-width: 620px) {
+  .entete { padding: 0 18px; }
+  .entete h1 { font-size: 15px; letter-spacing: .08em; }
+  .btn-reset { padding: 10px 16px; }
 }
 .marque { display: flex; align-items: center; gap: 14px; min-width: 0; }
 .sceau {
-  width: 40px; height: 40px; flex: none; border-radius: 10px;
+  width: 42px; height: 42px; flex: none; border-radius: 10px;
   background: linear-gradient(150deg, var(--or-clair), var(--or-fonce));
   color: #0a1628; display: grid; place-items: center;
-  font-size: 13px; font-weight: 800; letter-spacing: .04em;
+  font-family: var(--serif); font-size: 14px; font-weight: 700; letter-spacing: .06em;
   box-shadow: 0 2px 12px rgba(201, 169, 97, .35), inset 0 1px 0 rgba(255, 255, 255, .45);
 }
-.entete h1 { font-size: 17px; color: #fff; }
+.entete h1 {
+  font-family: var(--serif); font-size: 19px; font-weight: 600;
+  letter-spacing: .11em; text-transform: uppercase; color: #fff;
+}
+.entete h1 em { font-style: normal; color: var(--or-clair); }
 .entete .sous {
   font-size: 12px; color: #93a7c2; margin-top: 3px;
   display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
@@ -204,6 +224,7 @@ h1, h2, h3, h4 { margin: 0; font-weight: 650; letter-spacing: -.012em; text-wrap
 
 /* ------------------------------------------------------------------- Cartes */
 .carte {
+  position: relative;
   background: var(--surface);
   border: 1px solid var(--bord);
   border-radius: var(--r);
@@ -212,16 +233,23 @@ h1, h2, h3, h4 { margin: 0; font-weight: 650; letter-spacing: -.012em; text-wrap
   overflow: hidden;
   transition: box-shadow var(--t), border-color var(--t);
 }
+/* Filet dore en tete de carte, comme le trait du bandeau. */
+.carte::before {
+  content: ''; position: absolute; inset: 0 0 auto 0; height: 2px;
+  background: linear-gradient(90deg,
+    var(--or) 0%, var(--or-clair) 22%, color-mix(in srgb, var(--or) 25%, transparent) 70%, transparent 100%);
+}
 .carte:hover { box-shadow: var(--ombre-2); }
 .carte > header {
-  padding: 15px 20px;
-  border-bottom: 1px solid var(--bord);
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--filet-or);
   background: linear-gradient(180deg, var(--surface), var(--surface-2));
   display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
 }
 .carte > header h2 {
-  font-size: 12.5px; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--texte-2); font-weight: 700; display: flex; align-items: center;
+  font-family: var(--serif); font-size: 14px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .17em;
+  color: var(--texte); display: flex; align-items: center;
 }
 .carte .corps { padding: 20px; }
 .etape {
@@ -301,8 +329,9 @@ details.repliable > div { padding: 0 15px 15px; animation: deplier var(--t-lent)
   border: 1px solid var(--bord); border-radius: var(--r-s); background: var(--surface-2);
 }
 .produits .grp {
-  font-size: 10.5px; text-transform: uppercase; letter-spacing: .11em; color: var(--texte-3);
-  padding: 12px 9px 5px; font-weight: 700;
+  font-family: var(--serif); font-size: 11.5px; text-transform: uppercase;
+  letter-spacing: .15em; color: var(--texte-2);
+  padding: 13px 9px 6px; font-weight: 600;
 }
 .produit {
   display: flex; gap: 11px; align-items: flex-start; padding: 9px 10px;
@@ -326,10 +355,16 @@ details.repliable > div { padding: 0 15px 15px; animation: deplier var(--t-lent)
   transition: border-color var(--t), box-shadow var(--t);
   animation: entree var(--t-lent) both;
 }
+/* Liseré doré, à la manière du bandeau. La famille de prestations se lit sur
+   la puce, où la teinte reste porteuse d'information sans encombrer la ligne. */
 .ligne-facture::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
   border-radius: var(--r-s) 0 0 var(--r-s);
-  background: hsl(var(--teinte) 62% var(--teinte-l));
+  background: linear-gradient(180deg, var(--or-clair), var(--or) 45%, var(--or-fonce));
+}
+.ligne-facture::after {
+  content: ''; position: absolute; left: 4px; top: 0; bottom: 0; width: 2px;
+  background: hsl(var(--teinte) 62% var(--teinte-l) / .55);
   transition: background var(--t);
 }
 .ligne-facture:focus-within { border-color: var(--bord-fort); box-shadow: var(--ombre-1); }
@@ -372,7 +407,7 @@ details.repliable > div { padding: 0 15px 15px; animation: deplier var(--t-lent)
 
 .chiffre-cle {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 1px;
-  background: var(--bord); border: 1px solid var(--bord);
+  background: var(--bord); border: 1px solid var(--bord); border-top: 2px solid var(--or);
   border-radius: var(--r); overflow: hidden; box-shadow: var(--ombre-1);
 }
 .chiffre-cle > div {
@@ -380,8 +415,8 @@ details.repliable > div { padding: 0 15px 15px; animation: deplier var(--t-lent)
   transition: background var(--t);
 }
 .chiffre-cle .l {
-  font-size: 10.5px; color: var(--texte-3); text-transform: uppercase;
-  letter-spacing: .1em; font-weight: 700; margin-bottom: 7px;
+  font-family: var(--serif); font-size: 11.5px; color: var(--texte-2);
+  text-transform: uppercase; letter-spacing: .15em; font-weight: 600; margin-bottom: 8px;
 }
 .chiffre-cle .v {
   font-size: 27px; font-weight: 680; color: var(--texte);
@@ -395,14 +430,15 @@ details.repliable > div { padding: 0 15px 15px; animation: deplier var(--t-lent)
 .chiffre-cle > div.phare .v { color: var(--vert-vif); }
 
 .titre-bloc {
-  font-size: 12.5px; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--texte-2); font-weight: 700; margin: 30px 0 12px;
-  padding-bottom: 9px; border-bottom: 1px solid var(--bord);
-  display: flex; align-items: center; gap: 10px;
+  font-family: var(--serif); font-size: 14.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .17em;
+  color: var(--texte); margin: 32px 0 13px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--filet-or);
+  display: flex; align-items: center; gap: 12px;
 }
 .titre-bloc::before {
-  content: ''; width: 3px; height: 13px; border-radius: 2px; flex: none;
-  background: linear-gradient(180deg, var(--or), var(--or-fonce));
+  content: ''; width: 3px; height: 15px; border-radius: 2px; flex: none;
+  background: linear-gradient(180deg, var(--or-clair), var(--or-fonce));
 }
 
 table.compare {
@@ -412,9 +448,10 @@ table.compare {
 }
 table.compare th, table.compare td { padding: 12px 14px; text-align: left; }
 table.compare thead th {
-  font-size: 10.5px; text-transform: uppercase; letter-spacing: .09em;
-  color: var(--texte-3); font-weight: 700; background: var(--surface-2);
-  border-bottom: 1px solid var(--bord); white-space: nowrap;
+  font-family: var(--serif); font-size: 11.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .13em;
+  color: var(--texte-2); background: var(--surface-2);
+  border-bottom: 1px solid var(--filet-or-fort); white-space: nowrap;
 }
 table.compare tbody td { border-bottom: 1px solid var(--bord); }
 table.compare tbody tr:last-child td { border-bottom: 0; }
@@ -484,9 +521,10 @@ table.lignes tbody tr:last-child td { border-bottom: 0; }
   background: var(--surface); padding: 16px; margin-bottom: 18px; box-shadow: var(--ombre-1);
 }
 .argu-titre {
-  font-size: 11px; text-transform: uppercase; letter-spacing: .1em;
-  color: var(--texte-2); font-weight: 700; margin-bottom: 13px;
-  padding-bottom: 9px; border-bottom: 1px solid var(--bord);
+  font-family: var(--serif); font-size: 12.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .15em;
+  color: var(--texte); margin-bottom: 13px;
+  padding-bottom: 10px; border-bottom: 1px solid var(--filet-or);
 }
 .argu-bloc { margin-bottom: 15px; }
 .argu-bloc:last-child { margin-bottom: 0; }
@@ -573,8 +611,10 @@ details.repliable.vigilance { margin-top: 16px; background: var(--surface); }
 details.repliable.vigilance > summary { color: var(--ambre); }
 details.repliable.vigilance > summary::before { border-left-color: var(--ambre); }
 .titre-vigilance {
-  font-size: 11px; text-transform: uppercase; letter-spacing: .09em; font-weight: 700;
-  color: var(--texte-3); margin: 16px 0 8px;
+  font-family: var(--serif); font-size: 12px; text-transform: uppercase;
+  letter-spacing: .15em; font-weight: 600;
+  color: var(--texte-2); margin: 18px 0 9px;
+  padding-bottom: 7px; border-bottom: 1px solid var(--filet-or);
 }
 ul.liste-excl { margin: 0; padding: 0; list-style: none; columns: 2; column-gap: 28px; }
 @media (max-width: 780px) { ul.liste-excl { columns: 1; } }
@@ -627,9 +667,11 @@ ul.liste-excl li::before {
   display: block; margin: 0 auto; box-shadow: var(--ombre-3);
 }
 .mentions {
-  max-width: 780px; margin: 20px auto 0; text-align: center;
+  max-width: 780px; margin: 0 auto; padding-top: 20px; text-align: center;
   font-size: 11.5px; color: var(--texte-3); line-height: 1.6;
+  border-top: 1px solid var(--filet-or);
 }
+.bandeau img { margin-bottom: 22px; }
 .mentions strong { color: var(--texte-2); }
 
 /* -------------------------------------------------------------- Impression */

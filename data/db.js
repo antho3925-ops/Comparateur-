@@ -316,7 +316,7 @@ window.DB = {
         "groupe": "hospitalier",
         "categorie": "MIXTE",
         "unite_saisie": "montant_et_jours",
-        "remarque": "La LAMal prend en charge le tarif de la division commune ; la LCA couvre le surcout. Saisir si possible les deux montants separement (montant_part_lamal).",
+        "remarque": "La LAMal prend en charge le tarif de la division commune ; la complementaire couvre le surcout. La facture de l'hopital distingue en general les deux montants.",
         "actif": true,
         "nature": "remboursement"
       },
@@ -11054,5 +11054,5 @@ window.DB = {
     "swica": "assets/logos/swica.png",
     "visana": "assets/logos/visana.png"
   },
-  "genere_le": "2026-09-07T12:12:16.019Z"
+  "genere_le": "2026-09-07T12:21:48.131Z"
 };
