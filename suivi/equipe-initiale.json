@@ -1,0 +1,15 @@
+{
+  "_lisez-moi": [
+    "Équipe de départ, appliquée une seule fois : au tout premier démarrage,",
+    "quand la base ne contient encore aucun conseiller. Ensuite ce fichier",
+    "n'est plus jamais relu — les arrivées et les départs passent par l'onglet",
+    "« Accès » de l'espace administrateur, ou par node suivi/gestion.mjs.",
+    "Modifier ce fichier ne change donc rien à une installation déjà en service.",
+    "Aucun code d'accès administrateur ici : il ne doit pas vivre dans le dépôt."
+  ],
+  "conseillers": [
+    { "identifiant": "s.ragaa", "nom": "Sofiane Ragaa" },
+    { "identifiant": "t.billetorte", "nom": "Thomas Billetorte" },
+    { "identifiant": "m.kavoukdjian", "nom": "Melchior Kavoukdjian" }
+  ]
+}

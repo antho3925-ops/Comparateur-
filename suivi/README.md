@@ -20,21 +20,34 @@ La plateforme écoute sur `http://localhost:8080` et s'ouvre dans n'importe quel
 navigateur. Aucune dépendance à installer : Node seul suffit (version 18 ou
 plus récente, pour `fetch` et `Intl`).
 
-Au tout premier démarrage, un code administrateur est tiré au hasard et affiché
-**une seule fois** sur la console. Notez-le. Pour en fixer un vous-même :
+Au tout premier démarrage, l'équipe de départ décrite dans
+`suivi/equipe-initiale.json` est installée — les conseillers peuvent se
+connecter aussitôt — et un code administrateur est tiré au hasard, affiché
+**une seule fois** sur la console. Pour en fixer un vous-même :
 
 ```
 SUIVI_CODE_ADMIN='votre-code' node suivi/serveur.mjs
 ```
 
 La variable d'environnement fait autorité : la redéfinir change le code sans
-toucher aux données.
+toucher aux données. Le code peut aussi se poser une fois pour toutes, sans
+rester dans l'historique du shell à chaque démarrage :
+
+```
+node suivi/gestion.mjs code-admin
+```
+
+**Aucun code d'accès ne figure dans le dépôt** — seule son empreinte `scrypt`
+salée est écrite dans `suivi/data/config.json`, hors versionnement. Un code
+inscrit dans le dépôt serait lisible par tous ceux qui y ont accès, ce qui
+retirerait à l'espace administrateur la seule chose qui le protège.
 
 | Variable | Effet |
 |---|---|
 | `PORT` | Port d'écoute (8080 par défaut) |
 | `HOTE` | Interface d'écoute (`0.0.0.0` par défaut) |
 | `SUIVI_CODE_ADMIN` | Code de l'espace administrateur |
+| `SUIVI_DONNEES` | Dossier de l'état et de la configuration (`suivi/data` par défaut) |
 | `SUIVI_HTTPS=1` | À poser derrière un reverse proxy TLS : le cookie de session prend l'attribut `Secure` |
 
 ## Voir la plateforme remplie
@@ -116,6 +129,42 @@ ouverts rechargent leurs chiffres. Une saisie de conseiller apparaît sur le
 tableau de bord du responsable sans rechargement. Une pastille indique l'état de
 la liaison.
 
+## Gérer les accès
+
+Tout se fait depuis l'onglet **Accès** de l'espace administrateur : créer,
+renommer, désactiver, réactiver. La même chose en ligne de commande, utile
+quand il n'existe encore aucun accès administrateur — donc personne pour ouvrir
+cet onglet :
+
+```
+node suivi/gestion.mjs lister
+node suivi/gestion.mjs ajouter p.dupont Pauline Dupont
+node suivi/gestion.mjs renommer p.dupont Pauline Dupont-Meier
+node suivi/gestion.mjs desactiver p.dupont
+node suivi/gestion.mjs reactiver p.dupont
+node suivi/gestion.mjs code-admin <code>
+```
+
+**À lancer serveur arrêté** : le serveur garde l'état en mémoire et réécrirait
+le fichier par-dessus à sa prochaine modification.
+
+L'identifiant est enregistré en minuscules ; la connexion, elle, ne tient pas
+compte de la casse — `S.ragaa`, `s.ragaa` et `S.RAGAA` ouvrent la même page. Le
+code administrateur, lui, est sensible à la casse.
+
+Désactiver plutôt que supprimer : les chiffres déjà saisis restent au dossier et
+continuent de compter dans les totaux passés, mais la personne ne peut plus se
+connecter ni saisir.
+
+### L'équipe de départ
+
+`suivi/equipe-initiale.json` liste les conseillers créés **au tout premier
+démarrage**, quand la base est encore vierge. Passé ce moment le fichier n'est
+plus jamais relu : le modifier ne change rien à une installation en service, et
+une équipe vidée de tous ses conseillers ne verra pas ressusciter les anciens.
+La base reste la seule source de vérité ; ce fichier n'est qu'un point de
+départ, et ne contient que des identifiants et des noms — jamais un secret.
+
 ## Accès
 
 Un conseiller se connecte avec **son seul identifiant, sans mot de passe** :
@@ -140,12 +189,15 @@ journée de travail pour un conseiller et quatre heures pour l'administrateur.
 suivi/
 ├── serveur.mjs              Serveur HTTP, routage, fichiers statiques, flux temps réel
 ├── demo.mjs                 Équipe fictive et six semaines d'activité, pour démonstration
-├── tests.mjs                Suite de tests (151 cas)
+├── gestion.mjs              Gestion des accès en ligne de commande
+├── equipe-initiale.json     Conseillers créés au tout premier démarrage
+├── tests.mjs                Suite de tests (182 cas)
 ├── lib/
 │   ├── dates.mjs            Fuseau suisse, semaines ISO, libellés en français
 │   ├── domaine.mjs          Indicateurs, cumuls, écarts, classement — fonctions pures
 │   ├── stockage.mjs         Persistance JSON atomique et diffusion des changements
 │   ├── sessions.mjs         Cookies signés, code administrateur, identifiants
+│   ├── installation.mjs     Amorçage de l'équipe de départ, une seule fois
 │   └── api.mjs              Gestionnaires de routes
 ├── public/
 │   ├── index.html           Connexion conseiller
@@ -177,7 +229,7 @@ tronqué.
 node suivi/tests.mjs
 ```
 
-151 tests. Les tests de dates et de règles métier sont unitaires ; les tests
+182 tests. Les tests de dates et de règles métier sont unitaires ; les tests
 d'accès démarrent un vrai serveur sur un port libre, avec un dossier de données
 jetable, et parlent HTTP comme le ferait un navigateur.
 
@@ -190,8 +242,9 @@ semaine et par mois ; totaux d'équipe et objectifs cumulés ; classement, ex
 l'impossibilité pour un conseiller de voir la page d'un collègue, d'atteindre le
 tableau de bord ou de fixer ses propres objectifs, le gel des journées passées
 y compris pour l'administrateur, la prise d'effet immédiate d'un changement
-d'objectif, la désactivation et la réactivation d'un accès, et le cloisonnement
-des fichiers servis.
+d'objectif, la désactivation et la réactivation d'un accès, le cloisonnement
+des fichiers servis, et l'amorçage de l'équipe de départ — qui ne joue qu'une
+fois, jamais sur une base déjà peuplée, et refuse un identifiant invalide.
 
 ## Mise en service
 

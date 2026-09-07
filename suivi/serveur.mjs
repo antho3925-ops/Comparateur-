@@ -12,6 +12,7 @@ import { join, normalize, extname, dirname, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import { Stockage } from './lib/stockage.mjs';
+import { installerEquipeInitiale } from './lib/installation.mjs';
 import { Securite, lireCookie } from './lib/sessions.mjs';
 import * as api from './lib/api.mjs';
 import { ErreurHttp } from './lib/api.mjs';
@@ -19,6 +20,10 @@ import { ErreurHttp } from './lib/api.mjs';
 const RACINE = dirname(fileURLToPath(import.meta.url));
 const PUBLIC = join(RACINE, 'public');
 const PORT = Number(process.env.PORT) || 8080;
+// Là où vivent l'état et la configuration. Même variable que pour
+// suivi/gestion.mjs, sans quoi la commande de gestion et le serveur
+// travailleraient chacun sur un dossier différent sans le dire.
+const DONNEES = process.env.SUIVI_DONNEES || join(RACINE, 'data');
 const HOTE = process.env.HOTE || '0.0.0.0';
 // Derrière un reverse proxy TLS, poser SUIVI_HTTPS=1 pour que le cookie de
 // session porte l'attribut Secure.
@@ -60,10 +65,12 @@ const ROUTES = [
 export async function demarrer({
   port = PORT,
   hote = HOTE,
-  dossierDonnees = join(RACINE, 'data'),
+  dossierDonnees = DONNEES,
+  equipeInitiale = join(RACINE, 'equipe-initiale.json'),
 } = {}) {
   const stockage = new Stockage(join(dossierDonnees, 'suivi.json'));
   await stockage.charger();
+  const installes = await installerEquipeInitiale(stockage, equipeInitiale);
   const securite = await Securite.charger(join(dossierDonnees, 'config.json'));
 
   const serveur = createServer((requete, reponse) => {
@@ -75,7 +82,7 @@ export async function demarrer({
   });
 
   await new Promise((resoudre) => serveur.listen(port, hote, resoudre));
-  return { serveur, stockage, securite, port: serveur.address().port };
+  return { serveur, stockage, securite, installes, port: serveur.address().port };
 }
 
 async function traiter(requete, reponse, contexte) {
@@ -232,8 +239,12 @@ const lanceDirectement = process.argv[1]
   && fileURLToPath(import.meta.url) === normalize(process.argv[1]);
 
 if (lanceDirectement) {
-  const { port, securite } = await demarrer();
+  const { port, securite, installes } = await demarrer();
   console.log(`Suivi de performance — http://localhost:${port}`);
+  if (installes.length) {
+    console.log(`\n  Équipe de départ installée — ${installes.length} accès conseiller :`);
+    for (const c of installes) console.log(`    ${c.identifiant.padEnd(16)} ${c.nom}`);
+  }
   if (securite.codeGenere) {
     console.log(`\n  Code administrateur (affiché une seule fois) : ${securite.codeGenere}`);
     console.log('  Notez-le. Pour en fixer un vous-même : SUIVI_CODE_ADMIN=… node suivi/serveur.mjs\n');

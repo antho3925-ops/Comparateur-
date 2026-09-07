@@ -112,6 +112,9 @@ function construireEtat() {
 
   return {
     version: 1,
+    // La démonstration a sa propre équipe : elle se déclare installée pour que
+    // l'équipe de départ du dépôt ne vienne pas s'y ajouter.
+    installe: true,
     conseillers: CONSEILLERS.map(({ identifiant, nom }) => ({
       identifiant, nom, actif: true, cree: `${decale(jourCourant, -120)}T08:00:00.000Z`,
     })),

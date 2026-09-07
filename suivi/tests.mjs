@@ -20,6 +20,8 @@ import {
   ecart, cumuler, bilanPeriode, bilanEquipe, classement,
 } from './lib/domaine.mjs';
 import { normaliserIdentifiant } from './lib/sessions.mjs';
+import { Stockage } from './lib/stockage.mjs';
+import { installerEquipeInitiale } from './lib/installation.mjs';
 import { demarrer } from './serveur.mjs';
 
 let reussis = 0;
@@ -332,12 +334,89 @@ egal('un identifiant avec barre oblique est refusé', normaliserIdentifiant('a/.
 egal('un identifiant trop long est refusé', normaliserIdentifiant('a'.repeat(40)), null);
 
 // ===========================================================================
+section('Équipe de départ');
+// ===========================================================================
+
+{
+  const { readFile, writeFile, mkdtemp, rm } = await import('node:fs/promises');
+  const { tmpdir: dossierTemporaire } = await import('node:os');
+  const bac = await mkdtemp(join(dossierTemporaire(), 'suivi-install-'));
+
+  const livree = JSON.parse(await readFile(new URL('./equipe-initiale.json', import.meta.url), 'utf8'));
+  egal('le dépôt livre une équipe de départ de trois conseillers', livree.conseillers.length, 3);
+  egal('avec les identifiants attendus',
+    livree.conseillers.map((c) => c.identifiant),
+    ['s.ragaa', 't.billetorte', 'm.kavoukdjian']);
+  // Un conseiller n'a qu'un identifiant et un nom : aucun secret ne doit
+  // pouvoir se glisser dans le fichier versionné, code administrateur compris.
+  egal('l’équipe de départ ne porte que des identifiants et des noms',
+    [...new Set(livree.conseillers.flatMap((c) => Object.keys(c)))].sort(),
+    ['identifiant', 'nom']);
+
+  const fichierEquipe = join(bac, 'equipe.json');
+  await writeFile(fichierEquipe, JSON.stringify({
+    conseillers: [
+      { identifiant: 'S.Ragaa', nom: 'Sofiane Ragaa' },
+      { identifiant: 't.billetorte', nom: 'Thomas Billetorte' },
+    ],
+  }));
+
+  const base = new Stockage(join(bac, 'suivi.json'));
+  await base.charger();
+  const crees = await installerEquipeInitiale(base, fichierEquipe);
+  egal('sur une base vierge, l’équipe de départ est installée', crees.length, 2);
+  egal('les identifiants sont normalisés en minuscules',
+    base.lire().conseillers.map((c) => c.identifiant).sort(), ['s.ragaa', 't.billetorte']);
+  egal('les conseillers créés sont actifs', base.lire().conseillers.every((c) => c.actif), true);
+  egal('la base est marquée installée', base.lire().installe, true);
+
+  egal('un second démarrage n’installe rien', (await installerEquipeInitiale(base, fichierEquipe)).length, 0);
+
+  await base.modifier((e) => { e.conseillers = []; });
+  egal('et une équipe vidée ne ressuscite pas les anciens',
+    (await installerEquipeInitiale(base, fichierEquipe)).length, 0);
+
+  const autre = new Stockage(join(bac, 'autre.json'));
+  await autre.charger();
+  await autre.modifier((e) => {
+    e.conseillers.push({ identifiant: 'x.y', nom: 'Déjà Là', actif: true, cree: '2026-01-01T00:00:00.000Z' });
+  });
+  egal('une base qui a déjà un conseiller n’est jamais amorcée',
+    (await installerEquipeInitiale(autre, fichierEquipe)).length, 0);
+
+  const vide = new Stockage(join(bac, 'vide.json'));
+  await vide.charger();
+  egal('un fichier d’équipe absent ne fait rien',
+    (await installerEquipeInitiale(vide, join(bac, 'inexistant.json'))).length, 0);
+  egal('et ne marque pas la base comme installée', Boolean(vide.lire().installe), false);
+
+  const bancal = join(bac, 'bancal.json');
+  await writeFile(bancal, JSON.stringify({ conseillers: [{ identifiant: 'a b', nom: 'Espace Interdit' }] }));
+  let refus = false;
+  try {
+    await installerEquipeInitiale(vide, bancal);
+  } catch {
+    refus = true;
+  }
+  egal('un identifiant invalide dans l’équipe de départ arrête le démarrage', refus, true);
+
+  await rm(bac, { recursive: true, force: true });
+}
+
+// ===========================================================================
 section('Serveur — accès, gel des journées et cloisonnement');
 // ===========================================================================
 
 const dossier = await mkdtemp(join(tmpdir(), 'suivi-tests-'));
 process.env.SUIVI_CODE_ADMIN = 'code-de-test-1234';
-const { serveur, stockage, port } = await demarrer({ port: 0, hote: '127.0.0.1', dossierDonnees: join(dossier, 'data') });
+const { serveur, stockage, port } = await demarrer({
+  port: 0,
+  hote: '127.0.0.1',
+  dossierDonnees: join(dossier, 'data'),
+  // Ces tests partent d'une base réellement vierge : ils créent leurs propres
+  // conseillers et ne doivent pas hériter de l'équipe de départ du dépôt.
+  equipeInitiale: join(dossier, 'pas-d-equipe-initiale.json'),
+});
 const base = `http://127.0.0.1:${port}`;
 
 /** Client HTTP minimal qui conserve son cookie, comme un navigateur. */
