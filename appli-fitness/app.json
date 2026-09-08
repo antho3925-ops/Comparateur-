@@ -1,0 +1,47 @@
+{
+  "expo": {
+    "name": "Fitness",
+    "slug": "appli-fitness",
+    "version": "0.1.0",
+    "scheme": "applifitness",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.applifitness.app",
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "L'appareil photo sert à photographier vos repas pour en estimer les calories."
+      }
+    },
+    "android": {
+      "package": "com.applifitness.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#E6F4FE",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "permissions": [
+        "android.permission.CAMERA"
+      ],
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "bundler": "metro",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-apple-authentication",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "L'appareil photo sert à photographier vos repas pour en estimer les calories."
+        }
+      ]
+    ]
+  }
+}

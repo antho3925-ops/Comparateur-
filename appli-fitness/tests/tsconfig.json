@@ -1,0 +1,14 @@
+{
+  "comment": "Les tests tournent sous Node (node --test), pas sous React Native : ils ont donc leur propre configuration, avec les extensions .ts dans les imports que le strip-types de Node exige.",
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "types": ["node"],
+    "strict": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "skipLibCheck": true
+  },
+  "include": ["**/*.ts", "../src/metier/**/*.ts"]
+}
