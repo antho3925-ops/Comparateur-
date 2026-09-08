@@ -1,12 +1,12 @@
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useCallback, useState } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Alert, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { useAbonnement } from '../../src/abonnement/AbonnementContext';
 import { useAuth } from '../../src/auth/AuthContext';
 import { deconnexion } from '../../src/auth/connexion';
 import { enregistrerPoids, historiquePoids } from '../../src/donnees/poids';
-import { majProfil } from '../../src/donnees/profil';
+import { majProfil, supprimerCompte } from '../../src/donnees/profil';
 import { libelleCourt } from '../../src/metier/dates';
 import {
   LIBELLES_OBJECTIF,
@@ -95,6 +95,31 @@ export default function Profil() {
       console.warn('objectif non modifie', e);
       setErreur("L'objectif n'a pas pu etre modifie.");
     }
+  }
+
+  function confirmerSuppression() {
+    Alert.alert(
+      'Supprimer votre compte ?',
+      'Vos repas, vos pesees et vos seances seront effaces definitivement. '
+        + 'Cette action est irreversible.',
+      [
+        { text: 'Annuler', style: 'cancel' },
+        {
+          text: 'Supprimer',
+          style: 'destructive',
+          onPress: () => {
+            void (async () => {
+              try {
+                await supprimerCompte();
+              } catch (e) {
+                console.warn('suppression de compte en echec', e);
+                setErreur("Le compte n'a pas pu etre supprime.");
+              }
+            })();
+          },
+        },
+      ],
+    );
   }
 
   return (
@@ -210,6 +235,10 @@ export default function Profil() {
           void deconnexion();
         }}
       />
+
+      <Pressable accessibilityRole="button" onPress={confirmerSuppression}>
+        <Text style={styles.supprimer}>Supprimer mon compte</Text>
+      </Pressable>
     </Ecran>
   );
 }
@@ -253,4 +282,10 @@ const styles = StyleSheet.create({
     borderBottomColor: couleurs.bordure,
   },
   poidsHistorique: { ...typo.corps, color: couleurs.texte },
+  supprimer: {
+    ...typo.petit,
+    color: couleurs.alerte,
+    textAlign: 'center',
+    paddingVertical: espace.m,
+  },
 });

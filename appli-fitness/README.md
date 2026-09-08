@@ -30,6 +30,12 @@ appliquees **aussi cote serveur** : un declencheur PostgreSQL refuse le repas
 au-dela du quota, et `users.palier` n'est modifiable que par le webhook
 RevenueCat. Sans cela, n'importe quel client pourrait s'attribuer Premium.
 
+## Vous debutez ?
+
+Lisez **[GUIDE-PUBLICATION.md](GUIDE-PUBLICATION.md)** : les memes etapes, mais
+expliquees pour quelqu'un qui n'a jamais publie d'application, avec les couts et
+les delais.
+
 ## Mise en route
 
 ### 1. Dependances
@@ -59,6 +65,8 @@ supabase functions deploy analyser-repas
 
 supabase secrets set REVENUECAT_AUTH_HEADER=<valeur secrete au choix>
 supabase functions deploy webhook-revenuecat --no-verify-jwt
+
+supabase functions deploy supprimer-compte
 ```
 
 Puis, dans RevenueCat → *Integrations → Webhooks*, renseigner l'URL de
@@ -116,7 +124,7 @@ src/
   ui/                    Theme et composants
 supabase/
   migrations/            Schema, RLS, quotas, classements, stockage
-  functions/             analyser-repas (vision), webhook-revenuecat
+  functions/             analyser-repas, webhook-revenuecat, supprimer-compte
   tests/                 Verification du schema sur PostgreSQL
 tests/                   Tests de la logique metier
 ```

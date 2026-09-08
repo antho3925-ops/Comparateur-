@@ -68,3 +68,13 @@ export async function majProfil(
 
   return data as Utilisateur;
 }
+
+/**
+ * Suppression definitive du compte et de toutes ses donnees.
+ * Apple l'exige pour toute app qui permet de creer un compte.
+ */
+export async function supprimerCompte(): Promise<void> {
+  const { error } = await supabase.functions.invoke('supprimer-compte');
+  if (error) throw error;
+  await supabase.auth.signOut();
+}
