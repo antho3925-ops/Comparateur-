@@ -98,6 +98,11 @@
            '</article>';
   }).join('');
 
+  $('#supplements').innerHTML = SUPPLEMENTS.map(function (s) {
+    return '<li><span class="supp-nom">' + esc(s.nom) + '</span>' +
+           '<span class="supp-prix">' + esc(s.prix) + '</span></li>';
+  }).join('');
+
   $('#tarifs-note').textContent = TARIFS_NOTE;
 
   /* -------------------------------- Galerie ------------------------------ */

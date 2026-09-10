@@ -1,43 +1,43 @@
 /* ---------------------------------------------------------------------------
    Mina Tantra — contenu du site
    ---------------------------------------------------------------------------
-   C'est LE SEUL fichier a modifier au quotidien.
-   Tout ce qui est ecrit ici s'affiche automatiquement sur le site :
-   les masseuses, les horaires, les tarifs, la galerie et les coordonnees.
+   C'est LE SEUL fichier à modifier au quotidien.
+   Tout ce qui est écrit ici s'affiche automatiquement sur le site :
+   les masseuses, les horaires, les tarifs, la galerie et les coordonnées.
 
    Pour ajouter une masseuse :
-     1. deposer sa photo dans  photos/masseuses/   (ex. : luna.jpg)
-     2. copier un bloc { ... } ci-dessous, le coller a la suite,
+     1. déposer sa photo dans  photos/masseuses/   (ex. : luna.jpg)
+     2. copier un bloc { ... } ci-dessous, le coller à la suite,
         et remplacer le texte entre les guillemets.
-     3. enregistrer le fichier, puis rafraichir la page (F5).
+     3. enregistrer le fichier, puis rafraîchir la page (F5).
 
-   Une masseuse sans photo s'affiche quand meme, avec son initiale.
+   Une masseuse sans photo s'affiche quand même, avec son initiale.
 --------------------------------------------------------------------------- */
 
 const SALON = {
   nom: 'Mina Tantra',
-  slogan: 'Salon de massage erotique & tantrique',
+  slogan: 'Salon de massage érotique & tantrique',
   ville: 'La Chaux-de-Fonds',
-  adresse: 'La Chaux-de-Fonds, Neuchatel — adresse exacte communiquee lors de la prise de rendez-vous',
-  telephone: '+41 77 276 13 70',   // <- votre numero
-  whatsapp: '+41772761370',        // <- meme numero, sans espaces, pour le lien WhatsApp
-  email: '',                       // <- une adresse ici fait apparaitre le bouton e-mail
-  parking: 'Parking prive a proximite immediate, entree discrete.',
+  adresse: 'La Chaux-de-Fonds, Neuchâtel — adresse exacte communiquée lors de la prise de rendez-vous',
+  telephone: '+41 77 276 13 70',   // <- votre numéro
+  whatsapp: '+41772761370',        // <- même numéro, sans espaces, pour le lien WhatsApp
+  email: '',                       // <- une adresse ici fait apparaître le bouton e-mail
+  parking: 'Parking privé à proximité immédiate, entrée discrète.',
 };
 
 /* Le texte d'accueil (le « mot du salon »).
-   Chaque paragraphe est une ligne entre guillemets, separee par une virgule. */
+   Chaque paragraphe est une ligne entre guillemets, séparée par une virgule. */
 const PRESENTATION = [
-  "Cela fait des annees que Mina Tantra accompagne une clientele fidele, discrete et exigeante. Des annees a affiner un savoir-faire, a former nos masseuses et a cultiver une seule idee : le massage erotique est un art du soin avant d'etre autre chose.",
-  "Aujourd'hui, nous ouvrons un nouveau chapitre : Mina Tantra s'installe a La Chaux-de-Fonds. Un ecrin chaleureux, pense pour la detente, la lumiere douce et le silence, a deux pas du centre — avec la meme exigence de qualite et la meme discretion absolue.",
-  "Vous serez recu sans precipitation, dans un cadre propre et raffine, par des masseuses attentives qui prennent le temps de comprendre ce que vous venez chercher. Rien n'est impose, tout est propose. Ici, on respire.",
+  "Cela fait des années que Mina Tantra accompagne une clientèle fidèle, discrète et exigeante. Des années à affiner un savoir-faire, à former nos masseuses et à cultiver une seule idée : le massage érotique est un art du soin avant d'être autre chose.",
+  "Aujourd'hui, nous ouvrons un nouveau chapitre : Mina Tantra s'installe à La Chaux-de-Fonds. Un écrin chaleureux, pensé pour la détente, la lumière douce et le silence, à deux pas du centre — avec la même exigence de qualité et la même discrétion absolue.",
+  "Vous serez reçu sans précipitation, dans un cadre propre et raffiné, par des masseuses attentives qui prennent le temps de comprendre ce que vous venez chercher. Rien n'est imposé, tout est proposé. Ici, on respire.",
 ];
 
-/* Les trois arguments affiches sous le mot du salon. */
+/* Les trois arguments affichés sous le mot du salon. */
 const ATOUTS = [
-  { titre: 'Des annees d\'experience', texte: "Une equipe formee, un savoir-faire eprouve et des centaines de clients qui reviennent." },
-  { titre: 'Discretion totale', texte: "Entree a l'abri des regards, aucune trace, aucun jugement. Ce qui se passe ici reste ici." },
-  { titre: 'Un cadre soigne', texte: "Cabines chauffees, linge frais a chaque soin, douche a disposition, huiles de qualite." },
+  { titre: "Des années d'expérience", texte: "Une équipe formée, un savoir-faire éprouvé et des centaines de clients qui reviennent." },
+  { titre: 'Discrétion totale',       texte: "Entrée à l'abri des regards, aucune trace, aucun jugement. Ce qui se passe ici reste ici." },
+  { titre: 'Un cadre soigné',         texte: "Cabines chauffées, linge frais à chaque soin, douche à disposition, huiles de qualité." },
 ];
 
 /* --------------------------------- MASSEUSES ------------------------------- */
@@ -46,20 +46,20 @@ const MASSEUSES = [
     prenom: 'Mina',
     photo: 'photos/masseuses/mina.jpg',
     age: 29,
-    origine: 'Bresil',
-    langues: 'Francais, portugais, anglais',
-    specialites: ['Tantra', 'Body-body', 'Californien'],
-    presentation: "Fondatrice du salon. Douce, solaire et profondement a l'ecoute, Mina pratique un tantra lent qui prend son temps.",
+    origine: 'Brésil',
+    langues: 'Français, portugais, anglais',
+    specialites: ['Tantra', 'Body body', 'Érotique'],
+    presentation: "Fondatrice du salon. Douce, solaire et profondément à l'écoute, Mina pratique un tantra lent qui prend son temps.",
     disponible: true,
   },
   {
     prenom: 'Lena',
     photo: 'photos/masseuses/lena.jpg',
     age: 26,
-    origine: 'Europe de l\'Est',
-    langues: 'Francais, anglais, russe',
-    specialites: ['Nuru', 'Body-body', 'Quatre mains'],
-    presentation: "Petillante et joueuse, Lena aime les massages enveloppants et les ambiances legeres.",
+    origine: "Europe de l'Est",
+    langues: 'Français, anglais, russe',
+    specialites: ['Body body', 'Érotique', 'Tantra réciproque'],
+    presentation: "Pétillante et joueuse, Lena aime les massages enveloppants et les ambiances légères.",
     disponible: true,
   },
   {
@@ -67,10 +67,10 @@ const MASSEUSES = [
     photo: 'photos/masseuses/sofia.jpg',
     age: 32,
     origine: 'Espagne',
-    langues: 'Francais, espagnol',
-    specialites: ['Tantra', 'Prostatique', 'Relaxant'],
-    presentation: "Experimentee et posee, Sofia est la masseuse des premieres fois : elle explique, rassure et guide.",
-    disponible: false,   // false = affiche « bientot de retour »
+    langues: 'Français, espagnol',
+    specialites: ['Tantra', 'Prostatique', 'Érotique'],
+    presentation: "Expérimentée et posée, Sofia est la masseuse des premières fois : elle explique, rassure et guide.",
+    disponible: false,   // false = affiche « bientôt de retour »
   },
 ];
 
@@ -82,58 +82,68 @@ const HORAIRES = [
   { jour: 'Jeudi',    heures: '10h00 – 22h00' },
   { jour: 'Vendredi', heures: '10h00 – 23h00' },
   { jour: 'Samedi',   heures: '12h00 – 23h00' },
-  { jour: 'Dimanche', heures: 'Ferme' },
+  { jour: 'Dimanche', heures: 'Fermé' },
 ];
 
-const HORAIRES_NOTE = "Sur rendez-vous, de preference une a deux heures a l'avance. Les demandes en dehors de ces horaires sont etudiees au cas par cas.";
+const HORAIRES_NOTE = "Sur rendez-vous, de préférence une à deux heures à l'avance. Les demandes en dehors de ces horaires sont étudiées au cas par cas.";
 
 /* ----------------------------------- TARIFS -------------------------------- */
 const TARIFS = [
   {
-    nom: 'Massage sensuel',
-    resume: 'Le classique de la maison : huiles chaudes, corps a corps progressif, tout le dos et le devant.',
+    nom: 'Massage érotique',
+    resume: "Huiles chaudes et mains expertes, tout le corps, dans une montée progressive.",
     lignes: [
-      { duree: '30 minutes', prix: 'CHF 120.–' },
-      { duree: '45 minutes', prix: 'CHF 160.–' },
-      { duree: '1 heure',    prix: 'CHF 200.–' },
+      { duree: '30 minutes', prix: 'CHF 150.–' },
     ],
   },
   {
-    nom: 'Rituel tantrique',
-    resume: 'Un soin long, lent et complet, respiration guidee et travail sur tout le corps.',
+    nom: 'Massage body body',
+    resume: "Corps à corps intégral : la masseuse masse avec tout son corps, glissé et enveloppant.",
     lignes: [
-      { duree: '1 heure',     prix: 'CHF 250.–' },
-      { duree: '1 h 30',      prix: 'CHF 330.–' },
-      { duree: '2 heures',    prix: 'CHF 420.–' },
+      { duree: '40 minutes', prix: 'CHF 250.–' },
+    ],
+  },
+  {
+    nom: 'Massage tantra',
+    resume: "Le soin signature de la maison : respiration guidée, lenteur et travail sur tout le corps.",
+    lignes: [
+      { duree: '40 minutes', prix: 'CHF 200.–' },
+      { duree: '1 heure',    prix: 'CHF 300.–' },
     ],
     vedette: true,
   },
   {
-    nom: 'Quatre mains',
-    resume: 'Deux masseuses, un seul rythme. L\'experience la plus demandee du salon.',
+    nom: 'Massage tantra réciproque',
+    resume: "Le même rituel, à deux : vous massez à votre tour, guidé pas à pas par la masseuse.",
     lignes: [
-      { duree: '45 minutes', prix: 'CHF 320.–' },
-      { duree: '1 heure',    prix: 'CHF 400.–' },
+      { duree: '40 minutes', prix: 'CHF 250.–' },
+      { duree: '1 heure',    prix: 'CHF 350.–' },
     ],
   },
 ];
 
-const TARIFS_NOTE = "Paiement en especes ou par Twint sur place. Les tarifs comprennent la cabine, le linge, la douche et une boisson.";
+/* Les suppléments, affichés sous les tarifs. */
+const SUPPLEMENTS = [
+  { nom: 'Supplément prostatique',    prix: 'CHF 50.–' },
+  { nom: 'Deuxième éjaculation',      prix: 'CHF 50.–' },
+];
+
+const TARIFS_NOTE = "Paiement en espèces ou par Twint sur place. Les tarifs comprennent la cabine, le linge, la douche et une boisson.";
 
 /* ---------------------------------- GALERIE -------------------------------- */
-/* Deposer les images dans photos/salon/ puis ajouter une ligne ici. */
+/* Déposer les images dans photos/salon/ puis ajouter une ligne ici. */
 const GALERIE = [
   { src: 'photos/salon/salon-1.jpg', legende: 'La cabine principale' },
-  { src: 'photos/salon/salon-2.jpg', legende: 'L\'espace d\'accueil' },
+  { src: 'photos/salon/salon-2.jpg', legende: "L'espace d'accueil" },
   { src: 'photos/salon/salon-3.jpg', legende: 'La douche' },
   { src: 'photos/salon/salon-4.jpg', legende: 'Les huiles' },
 ];
 
 /* ----------------------------------- REGLES -------------------------------- */
 const REGLES = [
-  'Salon reserve aux personnes majeures (18 ans revolus).',
-  'Hygiene irreprochable exigee — une douche est a votre disposition a l\'arrivee.',
-  'Les masseuses sont libres d\'accepter ou de refuser une demande, sans discussion.',
-  'Aucune photo, aucune video, aucun enregistrement dans le salon.',
-  'Toute personne en etat d\'ebriete ou irrespectueuse sera raccompagnee.',
+  'Salon réservé aux personnes majeures (18 ans révolus).',
+  "Hygiène irréprochable exigée — une douche est à votre disposition à l'arrivée.",
+  "Les masseuses sont libres d'accepter ou de refuser une demande, sans discussion.",
+  'Aucune photo, aucune vidéo, aucun enregistrement dans le salon.',
+  "Toute personne en état d'ébriété ou irrespectueuse sera raccompagnée.",
 ];
