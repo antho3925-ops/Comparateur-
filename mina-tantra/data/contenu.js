@@ -19,9 +19,9 @@ const SALON = {
   slogan: 'Salon de massage erotique & tantrique',
   ville: 'La Chaux-de-Fonds',
   adresse: 'La Chaux-de-Fonds, Neuchatel — adresse exacte communiquee lors de la prise de rendez-vous',
-  telephone: '+41 00 000 00 00',   // <- votre numero
-  whatsapp: '+41000000000',        // <- meme numero, sans espaces, pour le lien WhatsApp
-  email: 'contact@minatantra.ch',  // <- laisser vide ('') pour masquer le bouton e-mail
+  telephone: '+41 77 276 13 70',   // <- votre numero
+  whatsapp: '+41772761370',        // <- meme numero, sans espaces, pour le lien WhatsApp
+  email: '',                       // <- une adresse ici fait apparaitre le bouton e-mail
   parking: 'Parking prive a proximite immediate, entree discrete.',
 };
 

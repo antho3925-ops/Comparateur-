@@ -62,8 +62,10 @@ Tout est dans `data/contenu.js`, dans les listes `HORAIRES`, `TARIFS`,
 Le jour en cours est mis en évidence automatiquement dans le tableau
 des horaires.
 
-**À faire avant la mise en ligne :** remplacer le numéro de téléphone
-`+41 00 000 00 00` et l'adresse dans `SALON` par les vraies coordonnées.
+Le numéro du salon (`+41 77 276 13 70`) est déjà renseigné, et sert aussi
+au bouton WhatsApp. Le bouton e-mail n'apparaît que si `email` contient une
+adresse. **À faire avant la mise en ligne :** compléter l'adresse exacte
+dans `SALON` si vous souhaitez l'afficher.
 
 ## Mise en ligne
 
