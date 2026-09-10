@@ -77,16 +77,16 @@ const MASSEUSES = [
 
 /* ---------------------------------- HORAIRES ------------------------------- */
 const HORAIRES = [
-  { jour: 'Lundi',    heures: '10h00 – 22h00' },
-  { jour: 'Mardi',    heures: '10h00 – 22h00' },
-  { jour: 'Mercredi', heures: '10h00 – 22h00' },
-  { jour: 'Jeudi',    heures: '10h00 – 22h00' },
-  { jour: 'Vendredi', heures: '10h00 – 23h00' },
-  { jour: 'Samedi',   heures: '12h00 – 23h00' },
-  { jour: 'Dimanche', heures: 'Fermé' },
+  { jour: 'Lundi',    heures: '09h00 – 21h00' },
+  { jour: 'Mardi',    heures: '09h00 – 21h00' },
+  { jour: 'Mercredi', heures: '09h00 – 21h00' },
+  { jour: 'Jeudi',    heures: '09h00 – 21h00' },
+  { jour: 'Vendredi', heures: '09h00 – 21h00' },
+  { jour: 'Samedi',   heures: '09h00 – 21h00' },
+  { jour: 'Dimanche', heures: '09h00 – 21h00' },
 ];
 
-const HORAIRES_NOTE = "Sur rendez-vous, de préférence une à deux heures à l'avance. Les demandes en dehors de ces horaires sont étudiées au cas par cas.";
+const HORAIRES_NOTE = "Ouvert sept jours sur sept, dimanche compris. Sur rendez-vous, de préférence une à deux heures à l'avance ; les demandes en dehors de ces horaires sont étudiées au cas par cas.";
 
 /* ----------------------------------- TARIFS -------------------------------- */
 const TARIFS = [
