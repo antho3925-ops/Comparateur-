@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mina Tantra — Massage érotique et tantrique à La Chaux-de-Fonds</title>
+<meta name="description" content="Mina Tantra, salon de massage érotique et tantrique. Après des années d'expérience, nous nous installons à La Chaux-de-Fonds. Masseuses, horaires et tarifs.">
+<meta name="robots" content="index, follow">
+<meta name="rating" content="adult">
+<link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+
+<!-- ------------------------------ Contrôle d'âge ------------------------- -->
+<div class="porte" id="porte" hidden>
+  <div class="porte-carte">
+    <p class="porte-marque">Mina&nbsp;Tantra</p>
+    <h1>Ce site est réservé aux adultes</h1>
+    <p class="porte-texte">
+      Il contient des textes et des images à caractère sensuel destinés à un
+      public majeur. En entrant, vous certifiez avoir 18 ans révolus et
+      consulter ce site de votre plein gré.
+    </p>
+    <div class="porte-actions">
+      <button type="button" class="btn btn-plein" id="porte-oui">J'ai 18 ans ou plus — entrer</button>
+      <a class="btn btn-vide" href="https://www.google.ch">Quitter</a>
+    </div>
+  </div>
+</div>
+
+<!-- --------------------------------- En-tête ----------------------------- -->
+<header class="entete" id="entete">
+  <div class="conteneur entete-in">
+    <a class="marque" href="#accueil">
+      <span class="marque-nom">Mina Tantra</span>
+      <span class="marque-sous">La Chaux-de-Fonds</span>
+    </a>
+
+    <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <nav class="menu" id="menu">
+      <a href="#accueil">Accueil</a>
+      <a href="#masseuses">Masseuses</a>
+      <a href="#horaires">Horaires</a>
+      <a href="#tarifs">Tarifs</a>
+      <a href="#galerie">Le salon</a>
+      <a href="#contact" class="menu-cta">Rendez-vous</a>
+    </nav>
+  </div>
+</header>
+
+<!-- --------------------------------- Hero -------------------------------- -->
+<section class="hero" id="accueil">
+  <div class="hero-voile"></div>
+  <div class="conteneur hero-in">
+    <p class="hero-eyebrow">Nouveau &middot; Ouverture à La Chaux-de-Fonds</p>
+    <h1 class="hero-titre">Mina Tantra</h1>
+    <p class="hero-slogan">Massage érotique &amp; tantrique — l'art de prendre son temps</p>
+    <div class="hero-actions">
+      <a class="btn btn-plein" href="#masseuses">Voir les masseuses</a>
+      <a class="btn btn-vide" href="#contact">Prendre rendez-vous</a>
+    </div>
+    <ul class="hero-puces">
+      <li>Sur rendez-vous</li>
+      <li>Discrétion absolue</li>
+      <li>7j/7 sauf dimanche</li>
+    </ul>
+  </div>
+  <a class="hero-fleche" href="#presentation" aria-label="Descendre">&#8595;</a>
+</section>
+
+<!-- ----------------------------- Présentation ---------------------------- -->
+<section class="section" id="presentation">
+  <div class="conteneur">
+    <p class="chapeau">Le mot du salon</p>
+    <h2 class="titre">Des années d'expérience,<br>une nouvelle adresse</h2>
+    <div class="presentation" id="presentation-texte"></div>
+    <div class="atouts" id="atouts"></div>
+  </div>
+</section>
+
+<!-- ------------------------------ Masseuses ------------------------------ -->
+<section class="section section-sombre" id="masseuses">
+  <div class="conteneur">
+    <p class="chapeau">Notre équipe</p>
+    <h2 class="titre">Les masseuses</h2>
+    <p class="intro">
+      Chacune a sa personnalité, ses spécialités et sa façon de masser.
+      Prenez le temps de choisir — et si vous hésitez, appelez-nous, nous vous guiderons.
+    </p>
+    <div class="grille-masseuses" id="grille-masseuses"></div>
+  </div>
+</section>
+
+<!-- ------------------------------- Horaires ------------------------------ -->
+<section class="section" id="horaires">
+  <div class="conteneur conteneur-etroit">
+    <p class="chapeau">Quand nous trouver</p>
+    <h2 class="titre">Horaires d'ouverture</h2>
+    <table class="horaires" id="horaires-table"></table>
+    <p class="note" id="horaires-note"></p>
+  </div>
+</section>
+
+<!-- -------------------------------- Tarifs ------------------------------- -->
+<section class="section section-sombre" id="tarifs">
+  <div class="conteneur">
+    <p class="chapeau">En toute transparence</p>
+    <h2 class="titre">Nos tarifs</h2>
+    <div class="grille-tarifs" id="grille-tarifs"></div>
+    <p class="note" id="tarifs-note"></p>
+  </div>
+</section>
+
+<!-- ------------------------------- Galerie ------------------------------- -->
+<section class="section" id="galerie">
+  <div class="conteneur">
+    <p class="chapeau">L'écrin</p>
+    <h2 class="titre">Le salon</h2>
+    <p class="intro">Un lieu calme, chaud et net. Quelques images pour vous en faire une idée.</p>
+    <div class="galerie" id="grille-galerie"></div>
+  </div>
+</section>
+
+<!-- -------------------------------- Contact ------------------------------ -->
+<section class="section section-contact" id="contact">
+  <div class="conteneur">
+    <p class="chapeau">On vous attend</p>
+    <h2 class="titre">Prendre rendez-vous</h2>
+    <div class="contact-grille">
+      <div class="contact-bloc">
+        <h3>Nous appeler</h3>
+        <p class="contact-tel" id="contact-tel"></p>
+        <div class="contact-boutons" id="contact-boutons"></div>
+        <p class="note">Un appel vaut mieux qu'un message : nous confirmons la disponibilité en direct.</p>
+      </div>
+      <div class="contact-bloc">
+        <h3>Nous rejoindre</h3>
+        <p id="contact-adresse"></p>
+        <p class="note" id="contact-parking"></p>
+      </div>
+      <div class="contact-bloc">
+        <h3>Le cadre</h3>
+        <ul class="regles" id="regles"></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- --------------------------------- Pied -------------------------------- -->
+<footer class="pied">
+  <div class="conteneur pied-in">
+    <p class="pied-marque">Mina Tantra</p>
+    <p class="pied-texte">
+      Salon de massage érotique et tantrique — La Chaux-de-Fonds, Neuchâtel.
+      Site strictement réservé aux personnes majeures (18+).
+    </p>
+    <p class="pied-mini">
+      Les massages proposés sont des prestations de bien-être entre adultes
+      consentants. Aucune donnée personnelle n'est collectée sur ce site.
+    </p>
+    <p class="pied-mini">&copy; <span id="annee"></span> Mina Tantra</p>
+  </div>
+</footer>
+
+<!-- ------------------------------- Lightbox ------------------------------ -->
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox-fermer" id="lightbox-fermer" aria-label="Fermer">&times;</button>
+  <img id="lightbox-img" src="" alt="">
+  <p class="lightbox-legende" id="lightbox-legende"></p>
+</div>
+
+<script src="data/contenu.js"></script>
+<script src="js/site.js"></script>
+</body>
+</html>

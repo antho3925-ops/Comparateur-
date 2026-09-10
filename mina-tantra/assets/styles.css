@@ -1,0 +1,301 @@
+/* ============================================================================
+   Mina Tantra — feuille de style
+   Palette : nuit prune, or chaud, chair claire.
+   ========================================================================== */
+
+:root{
+  --nuit:      #120b12;
+  --nuit-2:    #1b1018;
+  --nuit-3:    #241621;
+  --or:        #c9a227;
+  --or-clair:  #e6c766;
+  --rose:      #d98a8a;
+  --texte:     #efe6e2;
+  --texte-doux:#b9a9a6;
+  --bord:      rgba(201,162,39,.22);
+  --serif: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --max: 1120px;
+}
+
+*{ box-sizing:border-box; }
+html{ scroll-behavior:smooth; scroll-padding-top:76px; }
+body{
+  margin:0;
+  background:var(--nuit);
+  color:var(--texte);
+  font-family:var(--sans);
+  font-size:16px;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+body.bloque{ overflow:hidden; }
+img{ max-width:100%; display:block; }
+a{ color:inherit; }
+
+.conteneur{ width:100%; max-width:var(--max); margin:0 auto; padding-inline:22px; }
+.conteneur-etroit{ max-width:720px; }
+
+/* ------------------------------- Boutons --------------------------------- */
+.btn{
+  display:inline-block; padding:14px 28px; border-radius:999px;
+  font-size:.82rem; letter-spacing:.16em; text-transform:uppercase;
+  text-decoration:none; border:1px solid var(--or); cursor:pointer;
+  font-family:var(--sans); transition:.25s ease;
+}
+.btn-plein{ background:var(--or); color:#1a1208; border-color:var(--or); font-weight:600; }
+.btn-plein:hover{ background:var(--or-clair); border-color:var(--or-clair); }
+.btn-vide{ background:transparent; color:var(--or-clair); }
+.btn-vide:hover{ background:rgba(201,162,39,.12); }
+
+/* -------------------------------- En-tête -------------------------------- */
+.entete{
+  position:fixed; inset:0 0 auto 0; z-index:60;
+  background:rgba(18,11,18,.55); backdrop-filter:blur(10px);
+  border-bottom:1px solid transparent; transition:.3s ease;
+}
+.entete.colle{ background:rgba(18,11,18,.96); border-bottom-color:var(--bord); }
+.entete-in{ display:flex; align-items:center; justify-content:space-between; height:76px; }
+
+.marque{ text-decoration:none; line-height:1.1; }
+.marque-nom{ display:block; font-family:var(--serif); font-size:1.6rem; letter-spacing:.06em; color:var(--texte); }
+.marque-sous{ display:block; font-size:.62rem; letter-spacing:.34em; text-transform:uppercase; color:var(--or); }
+
+.menu{ display:flex; align-items:center; gap:30px; }
+.menu a{
+  text-decoration:none; font-size:.76rem; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--texte-doux); padding:6px 0;
+  border-bottom:1px solid transparent; transition:.2s;
+}
+.menu a:hover, .menu a.actif{ color:var(--or-clair); border-bottom-color:var(--or); }
+.menu .menu-cta{
+  border:1px solid var(--or); border-radius:999px; padding:10px 20px;
+  color:var(--or-clair);
+}
+.menu .menu-cta:hover{ background:var(--or); color:#1a1208; border-bottom-color:var(--or); }
+
+.burger{ display:none; background:none; border:0; padding:10px; cursor:pointer; }
+.burger span{ display:block; width:26px; height:2px; margin:5px 0; background:var(--texte); transition:.3s; }
+.burger[aria-expanded="true"] span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+.burger[aria-expanded="true"] span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+
+/* --------------------------------- Hero ---------------------------------- */
+.hero{
+  position:relative; min-height:92vh; display:flex; align-items:center;
+  text-align:center; overflow:hidden;
+  background:
+    radial-gradient(120% 90% at 50% 0%, rgba(217,138,138,.14), transparent 60%),
+    linear-gradient(180deg, rgba(18,11,18,.72), rgba(18,11,18,.93)),
+    url('../photos/salon/hero.jpg') center/cover no-repeat,
+    linear-gradient(160deg, #2a1622, #120b12 65%);
+}
+.hero-voile{
+  position:absolute; inset:auto 0 0 0; height:180px;
+  background:linear-gradient(180deg, transparent, var(--nuit));
+}
+.hero-in{ position:relative; padding-block:130px 90px; }
+.hero-eyebrow{
+  margin:0 0 18px; font-size:.7rem; letter-spacing:.34em; text-transform:uppercase; color:var(--or);
+}
+.hero-titre{
+  font-family:var(--serif); font-weight:400; margin:0;
+  font-size:clamp(3.2rem, 11vw, 6.4rem); line-height:1; letter-spacing:.02em;
+}
+.hero-slogan{
+  margin:18px auto 34px; max-width:560px; color:var(--texte-doux);
+  font-size:clamp(1rem, 2.4vw, 1.15rem); font-style:italic; font-family:var(--serif);
+  letter-spacing:.04em;
+}
+.hero-actions{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
+.hero-puces{
+  list-style:none; display:flex; gap:26px; justify-content:center; flex-wrap:wrap;
+  margin:44px 0 0; padding:0; font-size:.72rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--texte-doux);
+}
+.hero-puces li{ position:relative; }
+.hero-puces li+li::before{
+  content:''; position:absolute; left:-14px; top:50%; width:4px; height:4px;
+  border-radius:50%; background:var(--or); transform:translateY(-50%);
+}
+.hero-fleche{
+  position:absolute; left:50%; bottom:26px; transform:translateX(-50%);
+  color:var(--or); text-decoration:none; font-size:1.3rem; opacity:.75;
+  animation:flotte 2.4s ease-in-out infinite;
+}
+@keyframes flotte{ 0%,100%{ transform:translate(-50%,0);} 50%{ transform:translate(-50%,8px);} }
+
+/* ------------------------------- Sections -------------------------------- */
+.section{ padding-block:96px; }
+.section-sombre{ background:var(--nuit-2); border-block:1px solid var(--bord); }
+.chapeau{
+  margin:0 0 10px; font-size:.7rem; letter-spacing:.34em;
+  text-transform:uppercase; color:var(--or);
+}
+.titre{
+  font-family:var(--serif); font-weight:400; margin:0 0 26px;
+  font-size:clamp(2rem, 5vw, 3rem); line-height:1.15;
+}
+.intro{ max-width:640px; color:var(--texte-doux); margin:0 0 40px; }
+.note{ font-size:.86rem; color:var(--texte-doux); font-style:italic; margin-top:22px; }
+
+.presentation{ max-width:760px; }
+.presentation p{ margin:0 0 20px; font-size:1.05rem; color:#ddd0cb; }
+.presentation p:first-child::first-letter{
+  font-family:var(--serif); font-size:3.4rem; float:left; line-height:.86;
+  padding:6px 12px 0 0; color:var(--or);
+}
+
+.atouts{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:22px; margin-top:56px; }
+.atout{ border:1px solid var(--bord); border-radius:14px; padding:26px 24px; background:rgba(255,255,255,.02); }
+.atout h3{ font-family:var(--serif); font-weight:400; font-size:1.35rem; margin:0 0 10px; color:var(--or-clair); }
+.atout p{ margin:0; color:var(--texte-doux); font-size:.94rem; }
+
+/* ------------------------------ Masseuses -------------------------------- */
+.grille-masseuses{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:28px; }
+.fiche{
+  border:1px solid var(--bord); border-radius:16px; overflow:hidden;
+  background:var(--nuit-3); display:flex; flex-direction:column;
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+.fiche:hover{ transform:translateY(-6px); box-shadow:0 18px 40px rgba(0,0,0,.45); }
+.fiche-photo{ position:relative; aspect-ratio:3/4; background:linear-gradient(160deg,#3a2130,#1d1119); overflow:hidden; }
+.fiche-photo img{ width:100%; height:100%; object-fit:cover; }
+.fiche-initiale{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  font-family:var(--serif); font-size:5rem; color:rgba(201,162,39,.45);
+}
+.fiche-etat{
+  position:absolute; top:14px; left:14px; padding:6px 14px; border-radius:999px;
+  font-size:.66rem; letter-spacing:.18em; text-transform:uppercase;
+  background:rgba(18,11,18,.78); border:1px solid var(--bord); color:var(--or-clair);
+}
+.fiche-etat.absente{ color:var(--texte-doux); }
+.fiche-corps{ padding:22px 22px 26px; flex:1; display:flex; flex-direction:column; }
+.fiche-nom{ font-family:var(--serif); font-weight:400; font-size:1.8rem; margin:0; }
+.fiche-meta{ font-size:.76rem; letter-spacing:.14em; text-transform:uppercase; color:var(--or); margin:4px 0 14px; }
+.fiche-texte{ margin:0 0 18px; color:var(--texte-doux); font-size:.94rem; flex:1; }
+.fiche-langues{ font-size:.82rem; color:var(--texte-doux); margin:0 0 14px; }
+.tags{ display:flex; flex-wrap:wrap; gap:8px; }
+.tag{
+  font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
+  border:1px solid var(--bord); border-radius:999px; padding:5px 12px; color:var(--texte-doux);
+}
+
+/* ------------------------------- Horaires -------------------------------- */
+.horaires{ width:100%; border-collapse:collapse; }
+.horaires td{ padding:15px 4px; border-bottom:1px solid var(--bord); }
+.horaires td:first-child{ font-size:.8rem; letter-spacing:.2em; text-transform:uppercase; color:var(--texte-doux); }
+.horaires td:last-child{ text-align:right; font-family:var(--serif); font-size:1.25rem; color:var(--or-clair); }
+.horaires tr.ferme td:last-child{ color:var(--texte-doux); font-style:italic; }
+.horaires tr.aujourdhui td{ background:rgba(201,162,39,.07); }
+.horaires tr.aujourdhui td:first-child{ color:var(--or); }
+
+/* -------------------------------- Tarifs --------------------------------- */
+.grille-tarifs{ display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:24px; }
+.carte-tarif{
+  border:1px solid var(--bord); border-radius:16px; padding:30px 26px;
+  background:rgba(255,255,255,.02); display:flex; flex-direction:column;
+}
+.carte-tarif.vedette{ border-color:var(--or); background:rgba(201,162,39,.06); position:relative; }
+.carte-tarif.vedette::after{
+  content:'Le plus demandé'; position:absolute; top:-12px; left:26px;
+  background:var(--or); color:#1a1208; font-size:.62rem; font-weight:600;
+  letter-spacing:.16em; text-transform:uppercase; padding:5px 14px; border-radius:999px;
+}
+.carte-tarif h3{ font-family:var(--serif); font-weight:400; font-size:1.7rem; margin:0 0 8px; }
+.carte-tarif .resume{ color:var(--texte-doux); font-size:.92rem; margin:0 0 22px; }
+.lignes{ list-style:none; margin:0; padding:0; }
+.lignes li{ display:flex; justify-content:space-between; gap:12px; padding:11px 0; border-top:1px solid var(--bord); }
+.lignes .duree{ font-size:.84rem; letter-spacing:.1em; text-transform:uppercase; color:var(--texte-doux); }
+.lignes .prix{ font-family:var(--serif); font-size:1.2rem; color:var(--or-clair); white-space:nowrap; }
+
+/* -------------------------------- Galerie -------------------------------- */
+.galerie{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+.vignette{
+  position:relative; aspect-ratio:4/3; border-radius:12px; overflow:hidden;
+  border:1px solid var(--bord); background:linear-gradient(150deg,#31192a,#1a1018);
+  cursor:pointer; padding:0;
+}
+.vignette img{ width:100%; height:100%; object-fit:cover; transition:transform .5s ease; }
+.vignette:hover img{ transform:scale(1.06); }
+.vignette-legende{
+  position:absolute; inset:auto 0 0 0; padding:26px 14px 12px; text-align:left;
+  background:linear-gradient(180deg,transparent,rgba(18,11,18,.9));
+  font-size:.78rem; letter-spacing:.1em; color:var(--texte);
+}
+.vignette-vide{
+  position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+  color:rgba(201,162,39,.4); font-size:.72rem; letter-spacing:.2em; text-transform:uppercase;
+}
+
+/* -------------------------------- Contact -------------------------------- */
+.section-contact{
+  background:
+    radial-gradient(90% 70% at 50% 0%, rgba(217,138,138,.1), transparent 60%),
+    var(--nuit-2);
+  border-top:1px solid var(--bord);
+}
+.contact-grille{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:34px; }
+.contact-bloc h3{
+  font-size:.74rem; letter-spacing:.24em; text-transform:uppercase;
+  color:var(--or); margin:0 0 14px; font-weight:600;
+}
+.contact-tel{ font-family:var(--serif); font-size:1.9rem; margin:0 0 18px; color:var(--texte); }
+.contact-tel a{ text-decoration:none; }
+.contact-boutons{ display:flex; flex-wrap:wrap; gap:10px; }
+.contact-boutons .btn{ padding:11px 20px; font-size:.72rem; }
+.regles{ margin:0; padding:0; list-style:none; }
+.regles li{ padding-left:20px; position:relative; margin-bottom:10px; color:var(--texte-doux); font-size:.92rem; }
+.regles li::before{ content:'✦'; position:absolute; left:0; color:var(--or); font-size:.75rem; top:3px; }
+
+/* --------------------------------- Pied ---------------------------------- */
+.pied{ background:var(--nuit); border-top:1px solid var(--bord); padding-block:52px; text-align:center; }
+.pied-marque{ font-family:var(--serif); font-size:1.7rem; margin:0 0 10px; color:var(--or-clair); }
+.pied-texte{ margin:0 auto 14px; max-width:560px; color:var(--texte-doux); font-size:.92rem; }
+.pied-mini{ margin:6px auto; max-width:600px; font-size:.76rem; color:rgba(185,169,166,.7); }
+
+/* ------------------------------ Porte 18+ -------------------------------- */
+.porte{
+  position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center;
+  padding:22px; background:rgba(10,6,10,.94); backdrop-filter:blur(8px);
+}
+.porte-carte{
+  max-width:520px; width:100%; text-align:center; border:1px solid var(--bord);
+  border-radius:18px; padding:44px 30px; background:var(--nuit-2);
+}
+.porte-marque{ font-family:var(--serif); font-size:2rem; margin:0 0 6px; color:var(--or-clair); }
+.porte-carte h1{ font-family:var(--serif); font-weight:400; font-size:1.5rem; margin:0 0 16px; }
+.porte-texte{ color:var(--texte-doux); font-size:.94rem; margin:0 0 28px; }
+.porte-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+/* ------------------------------- Lightbox -------------------------------- */
+.lightbox{
+  position:fixed; inset:0; z-index:150; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:14px; padding:30px;
+  background:rgba(10,6,10,.95);
+}
+.lightbox img{ max-height:80vh; border-radius:10px; }
+.lightbox-legende{ color:var(--texte-doux); font-size:.86rem; letter-spacing:.1em; margin:0; }
+.lightbox-fermer{
+  position:absolute; top:18px; right:24px; background:none; border:0;
+  color:var(--texte); font-size:2.4rem; line-height:1; cursor:pointer;
+}
+
+/* -------------------------------- Mobile --------------------------------- */
+@media (max-width:820px){
+  .burger{ display:block; }
+  .menu{
+    position:fixed; inset:76px 0 auto 0; flex-direction:column; gap:0;
+    background:rgba(18,11,18,.98); border-bottom:1px solid var(--bord);
+    max-height:0; overflow:hidden; transition:max-height .35s ease;
+  }
+  .menu.ouvert{ max-height:420px; }
+  .menu a{ width:100%; text-align:center; padding:17px 0; border-bottom:1px solid rgba(201,162,39,.12); }
+  .menu .menu-cta{ border:0; border-radius:0; color:var(--or); }
+  .section{ padding-block:70px; }
+  .hero{ min-height:88vh; }
+}
+
+/* Etats masques (le [hidden] natif est neutralise par display:flex) */
+.porte[hidden], .lightbox[hidden]{ display:none !important; }
