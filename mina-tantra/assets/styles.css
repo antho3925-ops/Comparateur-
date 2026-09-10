@@ -190,7 +190,7 @@ a{ color:inherit; }
 .grille-masseuses.solo{ grid-template-columns:1fr; }
 .solo .fiche{ display:grid; grid-template-columns:minmax(0,400px) minmax(0,1fr); }
 .solo .fiche:hover{ transform:none; }
-.solo .fiche-photo{ aspect-ratio:auto; min-height:420px; }
+.solo .fiche-photo{ aspect-ratio:auto; min-height:530px; }
 .solo .fiche-corps{ padding:34px 34px 34px; justify-content:center; }
 .solo .fiche-nom{ font-size:2.4rem; }
 .solo .fiche-texte{ flex:0 0 auto; font-size:1rem; }
