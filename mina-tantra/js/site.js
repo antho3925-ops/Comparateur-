@@ -187,6 +187,17 @@
     encodeURIComponent(adresseComplete) + '">Voir sur la carte &rarr;</a>';
   $('#contact-parking').textContent = SALON.parking || '';
 
+  if (SALON.photoEntree) {
+    var legendeEntree = SALON.photoEntreeLegende || "L'entrée";
+    $('#contact-photo').innerHTML =
+      '<button type="button" class="vignette vignette-entree"' +
+        ' data-src="' + esc(SALON.photoEntree) + '" data-legende="' + esc(legendeEntree) + '">' +
+        '<img src="' + esc(SALON.photoEntree) + '" alt="' + esc(legendeEntree) + '" loading="lazy"' +
+        ' onerror="this.closest(\'.vignette\').style.display=\'none\'">' +
+        '<span class="vignette-legende">' + esc(legendeEntree) + '</span>' +
+      '</button>';
+  }
+
   $('#regles').innerHTML = REGLES.map(function (r) {
     return '<li>' + esc(r) + '</li>';
   }).join('');

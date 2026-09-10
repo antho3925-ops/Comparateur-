@@ -13,6 +13,7 @@ mina-tantra/
 ├── data/contenu.js         >>> LE FICHIER À MODIFIER <<<
 │                           masseuses, horaires, tarifs, galerie, coordonnées
 ├── assets/styles.css       Le graphisme (couleurs, polices, mise en page)
+├── assets/favicon*         L'icône affichée dans l'onglet du navigateur
 ├── js/site.js              Affiche le contenu, menu, galerie, contrôle 18+
 └── photos/
     ├── masseuses/          Les photos des masseuses
@@ -80,11 +81,38 @@ au bouton WhatsApp. L'adresse (`Rue des Ponts 34, 2300 La Chaux-de-Fonds`)
 alimente le bloc contact, le lien « Voir sur la carte » et le pied de page.
 Le bouton e-mail n'apparaît que si `email` contient une adresse.
 
-## Mise en ligne
+## Mise en ligne (Infomaniak)
 
-Le site est entièrement statique : n'importe quel hébergement suffit
-(Infomaniak, Hostpoint, Netlify, GitHub Pages…). Il faut y copier le
-contenu du dossier `mina-tantra/` tel quel, en gardant l'arborescence.
+Le site est entièrement statique : ni PHP, ni base de données, ni
+installation. Il suffit de copier le **contenu** du dossier `mina-tantra/`
+à la racine web de l'hébergement, en gardant l'arborescence.
+
+1. Chez Infomaniak, prendre un **hébergement Web** et un **nom de domaine**
+   (par exemple `minatantra.ch`). Compter quelques francs par mois pour
+   l'hébergement et une dizaine de francs par an pour le domaine `.ch` —
+   les tarifs exacts sont à vérifier sur leur site, ils changent.
+2. Dans le Manager Infomaniak, créer le site et récupérer les accès **FTP**
+   (serveur, utilisateur, mot de passe).
+3. Avec FileZilla (gratuit), se connecter et déposer dans le dossier web
+   (`/web` ou `/sites/minatantra.ch/` selon la configuration) :
+
+   ```
+   index.html
+   assets/
+   data/
+   js/
+   photos/
+   ```
+
+   `index.html` doit se trouver **à la racine**, pas dans un sous-dossier.
+4. Activer le **certificat SSL Let's Encrypt** (gratuit, en un clic dans le
+   Manager) pour que le site soit en `https://`.
+
+Pour modifier le site ensuite, on change le fichier concerné et on le
+redépose au même endroit par FTP — inutile de tout renvoyer.
+
+Le site fonctionne aussi sans hébergement : il suffit d'ouvrir `index.html`
+depuis le disque pour le montrer sur un ordinateur ou une tablette.
 
 ## Contrôle d'âge
 

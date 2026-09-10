@@ -24,6 +24,8 @@ const SALON = {
   whatsapp: '+41772761370',        // <- même numéro, sans espaces, pour le lien WhatsApp
   email: '',                       // <- une adresse ici fait apparaître le bouton e-mail
   parking: 'Entrée discrète, stationnement à proximité.',
+  photoEntree: 'photos/salon/entree.jpg',   // la façade, pour trouver la porte sans hésiter
+  photoEntreeLegende: "L'entrée de l'immeuble, Rue des Ponts 34",
 };
 
 /* Le texte d'accueil (le « mot du salon »).

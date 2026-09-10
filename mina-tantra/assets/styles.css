@@ -290,6 +290,9 @@ a{ color:inherit; }
 }
 .contact-lien:hover{ border-bottom-color:var(--or); }
 
+.vignette-entree{ width:100%; margin-top:18px; aspect-ratio:4/3; }
+.vignette-entree .vignette-legende{ font-size:.72rem; letter-spacing:.08em; }
+
 .regles{ margin:0; padding:0; list-style:none; }
 .regles li{ padding-left:20px; position:relative; margin-bottom:10px; color:var(--texte-doux); font-size:.92rem; }
 .regles li::before{ content:'✦'; position:absolute; left:0; color:var(--or); font-size:.75rem; top:3px; }
