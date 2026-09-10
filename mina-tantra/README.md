@@ -14,6 +14,9 @@ mina-tantra/
 │                           masseuses, horaires, tarifs, galerie, coordonnées
 ├── assets/styles.css       Le graphisme (couleurs, polices, mise en page)
 ├── assets/favicon*         L'icône affichée dans l'onglet du navigateur
+├── assets/partage.jpg      L'aperçu affiché quand le lien est partagé (WhatsApp…)
+├── robots.txt              Autorise ou interdit les moteurs de recherche
+├── sitemap.xml             La liste des pages, pour Google
 ├── js/site.js              Affiche le contenu, menu, galerie, contrôle 18+
 └── photos/
     ├── masseuses/          Les photos des masseuses
@@ -98,6 +101,8 @@ installation. Il suffit de copier le **contenu** du dossier `mina-tantra/`
 
    ```
    index.html
+   robots.txt
+   sitemap.xml
    assets/
    data/
    js/
@@ -113,6 +118,22 @@ redépose au même endroit par FTP — inutile de tout renvoyer.
 
 Le site fonctionne aussi sans hébergement : il suffit d'ouvrir `index.html`
 depuis le disque pour le montrer sur un ordinateur ou une tablette.
+
+## Référencement
+
+Le site est configuré pour l'adresse **https://mina-tantra.ch** : adresse
+canonique, aperçu de partage (`assets/partage.jpg`, ce qui s'affiche quand on
+envoie le lien par WhatsApp) et fiche d'établissement pour Google — nom,
+adresse, téléphone et horaires, générés automatiquement depuis
+`data/contenu.js`, donc toujours à jour.
+
+Pour **rester invisible dans Google**, ouvrir `robots.txt` et remplacer
+`Allow: /` par `Disallow: /`. Les moteurs cessent alors de référencer le site ;
+le lien continue de fonctionner pour qui le connaît.
+
+Si au contraire vous voulez apparaître dans les recherches locales, créez
+une fiche Google Business Profile avec exactement les mêmes nom, adresse et
+téléphone que sur le site.
 
 ## Contrôle d'âge
 

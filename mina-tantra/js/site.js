@@ -205,6 +205,48 @@
   $('#pied-adresse').textContent = adresseComplete;
   $('#annee').textContent = new Date().getFullYear();
 
+  /* ------------------- Données structurées (fiche Google) ---------------- */
+  var JOURS_SCHEMA = {
+    'lundi': 'Monday', 'mardi': 'Tuesday', 'mercredi': 'Wednesday',
+    'jeudi': 'Thursday', 'vendredi': 'Friday', 'samedi': 'Saturday',
+    'dimanche': 'Sunday'
+  };
+
+  var ouvertures = HORAIRES.map(function (h) {
+    var plage = String(h.heures).match(/(\d{1,2})h(\d{2}).*?(\d{1,2})h(\d{2})/);
+    var jour = JOURS_SCHEMA[h.jour.toLowerCase()];
+    if (!plage || !jour) return null;                       // jour fermé
+    return {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: jour,
+      opens: ('0' + plage[1]).slice(-2) + ':' + plage[2],
+      closes: ('0' + plage[3]).slice(-2) + ':' + plage[4]
+    };
+  }).filter(Boolean);
+
+  var site = SALON.site || '';
+  $('#donnees-structurees').textContent = JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'HealthAndBeautyBusiness',
+    name: SALON.nom,
+    description: SALON.slogan,
+    url: site || undefined,
+    image: site ? site + '/assets/partage.jpg' : undefined,
+    telephone: SALON.telephone,
+    priceRange: 'CHF 150–350',
+    currenciesAccepted: 'CHF',
+    paymentAccepted: 'Espèces, Twint',
+    address: {
+      '@type': 'PostalAddress',
+      streetAddress: SALON.adresse,
+      postalCode: (SALON.codePostal || '').split(' ')[0],
+      addressLocality: SALON.ville,
+      addressRegion: 'NE',
+      addressCountry: 'CH'
+    },
+    openingHoursSpecification: ouvertures
+  });
+
   /* --------------------------- Menu & navigation ------------------------- */
   var entete = $('#entete');
   var menu   = $('#menu');

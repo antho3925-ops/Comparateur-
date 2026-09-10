@@ -1,0 +1,8 @@
+# Mina Tantra — https://mina-tantra.ch
+# Le site est ouvert aux moteurs de recherche.
+# Pour le rendre invisible dans Google, remplacer "Allow: /" par "Disallow: /".
+
+User-agent: *
+Allow: /
+
+Sitemap: https://mina-tantra.ch/sitemap.xml

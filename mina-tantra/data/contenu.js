@@ -18,6 +18,7 @@ const SALON = {
   nom: 'Mina Tantra',
   slogan: 'Salon de massage érotique & tantrique',
   ville: 'La Chaux-de-Fonds',
+  site: 'https://mina-tantra.ch',
   adresse: 'Rue des Ponts 34',
   codePostal: '2300 La Chaux-de-Fonds',
   telephone: '+41 77 276 13 70',   // <- votre numéro
