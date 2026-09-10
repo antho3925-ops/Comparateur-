@@ -263,6 +263,15 @@ a{ color:inherit; }
 .contact-tel a{ text-decoration:none; }
 .contact-boutons{ display:flex; flex-wrap:wrap; gap:10px; }
 .contact-boutons .btn{ padding:11px 20px; font-size:.72rem; }
+.contact-adresse-rue{ display:block; font-family:var(--serif); font-size:1.5rem; color:var(--texte); }
+.contact-adresse-ville{ display:block; font-size:.95rem; color:var(--texte-doux); letter-spacing:.06em; }
+.contact-lien{
+  display:inline-block; margin-top:12px; color:var(--or-clair); text-decoration:none;
+  font-size:.76rem; letter-spacing:.18em; text-transform:uppercase;
+  border-bottom:1px solid var(--bord); padding-bottom:3px;
+}
+.contact-lien:hover{ border-bottom-color:var(--or); }
+
 .regles{ margin:0; padding:0; list-style:none; }
 .regles li{ padding-left:20px; position:relative; margin-bottom:10px; color:var(--texte-doux); font-size:.92rem; }
 .regles li::before{ content:'✦'; position:absolute; left:0; color:var(--or); font-size:.75rem; top:3px; }

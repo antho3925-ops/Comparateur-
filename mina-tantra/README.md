@@ -63,9 +63,9 @@ Le jour en cours est mis en évidence automatiquement dans le tableau
 des horaires.
 
 Le numéro du salon (`+41 77 276 13 70`) est déjà renseigné, et sert aussi
-au bouton WhatsApp. Le bouton e-mail n'apparaît que si `email` contient une
-adresse. **À faire avant la mise en ligne :** compléter l'adresse exacte
-dans `SALON` si vous souhaitez l'afficher.
+au bouton WhatsApp. L'adresse (`Rue des Ponts 34, 2300 La Chaux-de-Fonds`)
+alimente le bloc contact, le lien « Voir sur la carte » et le pied de page.
+Le bouton e-mail n'apparaît que si `email` contient une adresse.
 
 ## Mise en ligne
 

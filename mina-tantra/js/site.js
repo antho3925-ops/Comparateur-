@@ -163,13 +163,20 @@
   }
   $('#contact-boutons').innerHTML = boutons.join('');
 
-  $('#contact-adresse').textContent = SALON.adresse;
+  var adresseComplete = [SALON.adresse, SALON.codePostal].filter(Boolean).join(', ');
+  $('#contact-adresse').innerHTML =
+    '<span class="contact-adresse-rue">' + esc(SALON.adresse) + '</span>' +
+    (SALON.codePostal ? '<span class="contact-adresse-ville">' + esc(SALON.codePostal) + '</span>' : '') +
+    '<a class="contact-lien" target="_blank" rel="noopener"' +
+    ' href="https://www.google.com/maps/search/?api=1&query=' +
+    encodeURIComponent(adresseComplete) + '">Voir sur la carte &rarr;</a>';
   $('#contact-parking').textContent = SALON.parking || '';
 
   $('#regles').innerHTML = REGLES.map(function (r) {
     return '<li>' + esc(r) + '</li>';
   }).join('');
 
+  $('#pied-adresse').textContent = adresseComplete;
   $('#annee').textContent = new Date().getFullYear();
 
   /* --------------------------- Menu & navigation ------------------------- */
