@@ -134,10 +134,9 @@ const TARIFS_NOTE = "Paiement en espèces ou par Twint sur place. Les tarifs com
 /* ---------------------------------- GALERIE -------------------------------- */
 /* Déposer les images dans photos/salon/ puis ajouter une ligne ici. */
 const GALERIE = [
-  { src: 'photos/salon/salon-1.jpg', legende: 'La cabine principale' },
-  { src: 'photos/salon/salon-2.jpg', legende: "L'espace d'accueil" },
-  { src: 'photos/salon/salon-3.jpg', legende: 'La douche' },
-  { src: 'photos/salon/salon-4.jpg', legende: 'Les huiles' },
+  { src: 'photos/salon/salon-1.jpg', legende: 'Le futon et la cheminée' },
+  { src: 'photos/salon/salon-2.jpg', legende: "L'espace tantra" },
+  { src: 'photos/salon/salon-3.jpg', legende: 'Le miroir doré' },
 ];
 
 /* ----------------------------------- REGLES -------------------------------- */

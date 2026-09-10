@@ -85,9 +85,9 @@ a{ color:inherit; }
   position:relative; min-height:92vh; display:flex; align-items:center;
   text-align:center; overflow:hidden;
   background:
-    radial-gradient(120% 90% at 50% 0%, rgba(217,138,138,.14), transparent 60%),
-    linear-gradient(180deg, rgba(18,11,18,.72), rgba(18,11,18,.93)),
-    url('../photos/salon/hero.jpg') center/cover no-repeat,
+    radial-gradient(110% 80% at 50% 42%, rgba(18,11,18,.15), rgba(18,11,18,.78) 100%),
+    linear-gradient(180deg, rgba(18,11,18,.62) 0%, rgba(18,11,18,.48) 38%, rgba(18,11,18,.92) 100%),
+    url('../photos/salon/hero.jpg') center 40%/cover no-repeat,
     linear-gradient(160deg, #2a1622, #120b12 65%);
 }
 .hero-voile{
@@ -96,19 +96,23 @@ a{ color:inherit; }
 }
 .hero-in{ position:relative; padding-block:130px 90px; }
 .hero-eyebrow{
+  text-shadow:0 2px 14px rgba(10,6,10,.9);
   margin:0 0 18px; font-size:.7rem; letter-spacing:.34em; text-transform:uppercase; color:var(--or);
 }
 .hero-titre{
   font-family:var(--serif); font-weight:400; margin:0;
   font-size:clamp(3.2rem, 11vw, 6.4rem); line-height:1; letter-spacing:.02em;
+  text-shadow:0 4px 34px rgba(10,6,10,.85);
 }
 .hero-slogan{
+  text-shadow:0 2px 18px rgba(10,6,10,.9);
   margin:18px auto 34px; max-width:560px; color:var(--texte-doux);
   font-size:clamp(1rem, 2.4vw, 1.15rem); font-style:italic; font-family:var(--serif);
   letter-spacing:.04em;
 }
 .hero-actions{ display:flex; gap:14px; justify-content:center; flex-wrap:wrap; }
 .hero-puces{
+  text-shadow:0 2px 14px rgba(10,6,10,.9);
   list-style:none; display:flex; gap:26px; justify-content:center; flex-wrap:wrap;
   margin:44px 0 0; padding:0; font-size:.72rem; letter-spacing:.2em;
   text-transform:uppercase; color:var(--texte-doux);
@@ -229,7 +233,7 @@ a{ color:inherit; }
 .supp-prix{ font-family:var(--serif); font-size:1.1rem; color:var(--or-clair); white-space:nowrap; order:2; }
 
 /* -------------------------------- Galerie -------------------------------- */
-.galerie{ display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:16px; }
+.galerie{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:16px; }
 .vignette{
   position:relative; aspect-ratio:4/3; border-radius:12px; overflow:hidden;
   border:1px solid var(--bord); background:linear-gradient(150deg,#31192a,#1a1018);
