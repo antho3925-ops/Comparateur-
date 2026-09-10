@@ -18,6 +18,7 @@ mina-tantra/
 ├── robots.txt              Autorise ou interdit les moteurs de recherche
 ├── sitemap.xml             La liste des pages, pour Google
 ├── js/site.js              Affiche le contenu, menu, galerie, contrôle 18+
+├── tools/exporter.py       Replie tout le site dans un seul fichier HTML
 └── photos/
     ├── masseuses/          Les photos des masseuses
     └── salon/              Les photos du salon + hero.jpg (image de fond)
@@ -115,6 +116,29 @@ installation. Il suffit de copier le **contenu** du dossier `mina-tantra/`
 
 Pour modifier le site ensuite, on change le fichier concerné et on le
 redépose au même endroit par FTP — inutile de tout renvoyer.
+
+### Variante : le site en un seul fichier
+
+Le gestionnaire de fichiers d'Infomaniak (WebFTP) ne sait pas décompresser
+une archive, et créer les dossiers à la main depuis un téléphone est
+fastidieux. D'où cette commande :
+
+```
+python3 tools/exporter.py
+```
+
+Elle fabrique `dist/index.html` : la page entière, avec le style, le script
+et **toutes les photos** incorporés dedans (environ 2 Mo). Il n'y a plus
+qu'un fichier à déposer à la racine du site, sans aucun dossier à créer.
+
+À déposer à côté, à la racine également : `partage.jpg` (l'aperçu des liens
+partagés), `robots.txt` et `sitemap.xml`.
+
+Après chaque modification de `data/contenu.js`, relancer la commande et
+redéposer `dist/index.html`. L'inconvénient de cette variante : le visiteur
+télécharge les 2 Mo à chaque première visite, et la moindre correction
+demande de renvoyer tout le fichier. Dès que possible, mieux vaut revenir
+au dépôt normal, en dossiers, depuis un ordinateur.
 
 Le site fonctionne aussi sans hébergement : il suffit d'ouvrir `index.html`
 depuis le disque pour le montrer sur un ordinateur ou une tablette.
