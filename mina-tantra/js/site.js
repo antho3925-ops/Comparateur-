@@ -37,6 +37,12 @@
   }).join('');
 
   /* ------------------------------- Masseuses ----------------------------- */
+  var solo = MASSEUSES.length === 1;
+  $('#masseuses-chapeau').textContent = solo ? 'Qui vous reçoit' : 'Notre équipe';
+  $('#masseuses-titre').textContent   = solo ? 'La masseuse' : 'Les masseuses';
+  $('#masseuses-intro').textContent   = typeof MASSEUSES_INTRO === 'string' ? MASSEUSES_INTRO : '';
+  $('#grille-masseuses').classList.toggle('solo', solo);
+
   $('#grille-masseuses').innerHTML = MASSEUSES.map(function (m) {
     var meta = [];
     if (m.age)     meta.push(m.age + ' ans');
@@ -55,6 +61,14 @@
       return '<span class="tag">' + esc(s) + '</span>';
     }).join('');
 
+    var vignettes = (m.photos || []).map(function (src, i) {
+      return '<button type="button" class="vignette vignette-mini"' +
+               ' data-src="' + esc(src) + '" data-legende="' + esc(m.prenom) + '">' +
+               '<img src="' + esc(src) + '" alt="' + esc(m.prenom) + '" loading="lazy"' +
+               ' onerror="this.closest(\'.vignette\').style.display=\'none\'">' +
+             '</button>';
+    }).join('');
+
     return '' +
       '<article class="fiche">' +
         '<div class="fiche-photo">' +
@@ -67,6 +81,7 @@
           '<p class="fiche-texte">' + esc(m.presentation) + '</p>' +
           (m.langues ? '<p class="fiche-langues">Langues : ' + esc(m.langues) + '</p>' : '') +
           '<div class="tags">' + tags + '</div>' +
+          (vignettes ? '<div class="fiche-vignettes">' + vignettes + '</div>' : '') +
         '</div>' +
       '</article>';
   }).join('');
@@ -106,8 +121,9 @@
   $('#tarifs-note').textContent = TARIFS_NOTE;
 
   /* -------------------------------- Galerie ------------------------------ */
-  $('#grille-galerie').innerHTML = GALERIE.map(function (g, i) {
-    return '<button type="button" class="vignette" data-i="' + i + '">' +
+  $('#grille-galerie').innerHTML = GALERIE.map(function (g) {
+    return '<button type="button" class="vignette"' +
+             ' data-src="' + esc(g.src) + '" data-legende="' + esc(g.legende || '') + '">' +
              '<span class="vignette-vide">Photo à venir</span>' +
              '<img src="' + esc(g.src) + '" alt="' + esc(g.legende || 'Le salon') + '"' +
              ' loading="lazy" onerror="this.style.display=\'none\'">' +
@@ -119,15 +135,14 @@
   var lbImg = $('#lightbox-img');
   var lbLeg = $('#lightbox-legende');
 
-  $('#grille-galerie').addEventListener('click', function (ev) {
+  document.addEventListener('click', function (ev) {
     var bouton = ev.target.closest('.vignette');
     if (!bouton) return;
     var img = bouton.querySelector('img');
     if (!img || img.style.display === 'none') return;      // pas de photo déposée
-    var item = GALERIE[bouton.dataset.i];
-    lbImg.src = item.src;
-    lbImg.alt = item.legende || '';
-    lbLeg.textContent = item.legende || '';
+    lbImg.src = bouton.dataset.src;
+    lbImg.alt = bouton.dataset.legende || '';
+    lbLeg.textContent = bouton.dataset.legende || '';
     lightbox.hidden = false;
     document.body.classList.add('bloque');
   });

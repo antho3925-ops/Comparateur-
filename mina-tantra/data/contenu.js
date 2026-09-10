@@ -31,49 +31,39 @@ const SALON = {
 const PRESENTATION = [
   "Cela fait des années que Mina Tantra accompagne une clientèle fidèle, discrète et exigeante. Des années à affiner un savoir-faire, à former nos masseuses et à cultiver une seule idée : le massage érotique est un art du soin avant d'être autre chose.",
   "Aujourd'hui, nous ouvrons un nouveau chapitre : Mina Tantra s'installe à La Chaux-de-Fonds. Un écrin chaleureux, pensé pour la détente, la lumière douce et le silence, à deux pas du centre — avec la même exigence de qualité et la même discrétion absolue.",
-  "Vous serez reçu sans précipitation, dans un cadre propre et raffiné, par des masseuses attentives qui prennent le temps de comprendre ce que vous venez chercher. Rien n'est imposé, tout est proposé. Ici, on respire.",
+  "Vous serez reçu sans précipitation, dans un cadre propre et raffiné, par une masseuse attentive qui prend le temps de comprendre ce que vous venez chercher. Rien n'est imposé, tout est proposé. Ici, on respire.",
 ];
 
 /* Les trois arguments affichés sous le mot du salon. */
 const ATOUTS = [
-  { titre: "Des années d'expérience", texte: "Une équipe formée, un savoir-faire éprouvé et des centaines de clients qui reviennent." },
+  { titre: "Des années d'expérience", texte: "Un savoir-faire éprouvé, patiemment affiné, et des centaines de clients qui reviennent." },
   { titre: 'Discrétion totale',       texte: "Entrée à l'abri des regards, aucune trace, aucun jugement. Ce qui se passe ici reste ici." },
   { titre: 'Un cadre soigné',         texte: "Cabines chauffées, linge frais à chaque soin, douche à disposition, huiles de qualité." },
 ];
 
 /* --------------------------------- MASSEUSES ------------------------------- */
+/* `photo`  = la grande photo de la fiche.
+   `photos` = les petites vignettes sous la fiche (cliquables en plein écran).  */
 const MASSEUSES = [
   {
     prenom: 'Mina',
-    photo: 'photos/masseuses/mina.jpg',
-    age: 29,
-    origine: 'Brésil',
-    langues: 'Français, portugais, anglais',
-    specialites: ['Tantra', 'Body body', 'Érotique'],
-    presentation: "Fondatrice du salon. Douce, solaire et profondément à l'écoute, Mina pratique un tantra lent qui prend son temps.",
+    photo: 'photos/masseuses/mina-1.jpg',
+    photos: [
+      'photos/masseuses/mina-1.jpg',
+      'photos/masseuses/mina-2.jpg',
+      'photos/masseuses/mina-3.jpg',
+      'photos/masseuses/mina-4.jpg',
+    ],
+    origine: 'Française',
+    langues: 'Français, anglais, espagnol',
+    specialites: ['Tantra', 'Tantra réciproque', 'Body body', 'Érotique'],
+    presentation: "Française, Mina est spécialiste du tantra : un massage lent, enveloppant, affiné au fil des années. Douce, raffinée et attentionnée, elle prend le temps de vous accueillir et de comprendre ce que vous venez chercher avant que les mains ne parlent. Rien n'est pressé — chaque soin est pensé pour vous seul.",
     disponible: true,
-  },
-  {
-    prenom: 'Lena',
-    photo: 'photos/masseuses/lena.jpg',
-    age: 26,
-    origine: "Europe de l'Est",
-    langues: 'Français, anglais, russe',
-    specialites: ['Body body', 'Érotique', 'Tantra réciproque'],
-    presentation: "Pétillante et joueuse, Lena aime les massages enveloppants et les ambiances légères.",
-    disponible: true,
-  },
-  {
-    prenom: 'Sofia',
-    photo: 'photos/masseuses/sofia.jpg',
-    age: 32,
-    origine: 'Espagne',
-    langues: 'Français, espagnol',
-    specialites: ['Tantra', 'Prostatique', 'Érotique'],
-    presentation: "Expérimentée et posée, Sofia est la masseuse des premières fois : elle explique, rassure et guide.",
-    disponible: false,   // false = affiche « bientôt de retour »
   },
 ];
+
+/* Le texte affiché sous le titre de la section. */
+const MASSEUSES_INTRO = "Aujourd'hui, c'est Mina qui vous reçoit. Rendez-vous à convenir par téléphone : elle vous dira sans détour ce qu'elle peut vous proposer et à quel moment.";
 
 /* ---------------------------------- HORAIRES ------------------------------- */
 const HORAIRES = [
@@ -143,7 +133,7 @@ const GALERIE = [
 const REGLES = [
   'Salon réservé aux personnes majeures (18 ans révolus).',
   "Hygiène irréprochable exigée — une douche est à votre disposition à l'arrivée.",
-  "Les masseuses sont libres d'accepter ou de refuser une demande, sans discussion.",
+  "La masseuse est libre d'accepter ou de refuser une demande, sans discussion.",
   'Aucune photo, aucune vidéo, aucun enregistrement dans le salon.',
   "Toute personne en état d'ébriété ou irrespectueuse sera raccompagnée.",
 ];

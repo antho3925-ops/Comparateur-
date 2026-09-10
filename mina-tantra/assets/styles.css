@@ -164,7 +164,7 @@ a{ color:inherit; }
 }
 .fiche:hover{ transform:translateY(-6px); box-shadow:0 18px 40px rgba(0,0,0,.45); }
 .fiche-photo{ position:relative; aspect-ratio:3/4; background:linear-gradient(160deg,#3a2130,#1d1119); overflow:hidden; }
-.fiche-photo img{ width:100%; height:100%; object-fit:cover; }
+.fiche-photo img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 .fiche-initiale{
   position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
   font-family:var(--serif); font-size:5rem; color:rgba(201,162,39,.45);
@@ -185,6 +185,20 @@ a{ color:inherit; }
   font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;
   border:1px solid var(--bord); border-radius:999px; padding:5px 12px; color:var(--texte-doux);
 }
+
+/* Une seule masseuse : fiche large, photo à gauche */
+.grille-masseuses.solo{ grid-template-columns:1fr; }
+.solo .fiche{ display:grid; grid-template-columns:minmax(0,400px) minmax(0,1fr); }
+.solo .fiche:hover{ transform:none; }
+.solo .fiche-photo{ aspect-ratio:auto; min-height:420px; }
+.solo .fiche-corps{ padding:34px 34px 34px; justify-content:center; }
+.solo .fiche-nom{ font-size:2.4rem; }
+.solo .fiche-texte{ flex:0 0 auto; font-size:1rem; }
+
+.fiche-vignettes{ display:flex; gap:10px; margin-top:20px; flex-wrap:wrap; }
+.vignette-mini{ width:74px; aspect-ratio:1/1; border-radius:9px; flex:0 0 auto; }
+.vignette-mini img{ transition:transform .4s ease, opacity .3s ease; opacity:.85; }
+.vignette-mini:hover img{ opacity:1; }
 
 /* ------------------------------- Horaires -------------------------------- */
 .horaires{ width:100%; border-collapse:collapse; }
@@ -315,6 +329,10 @@ a{ color:inherit; }
 
 /* -------------------------------- Mobile --------------------------------- */
 @media (max-width:820px){
+  .solo .fiche{ grid-template-columns:1fr; }
+  .solo .fiche-photo{ aspect-ratio:3/4; min-height:0; }
+  .solo .fiche-corps{ padding:24px 22px 28px; }
+  .solo .fiche-nom{ font-size:2rem; }
   .burger{ display:block; }
   .menu{
     position:fixed; inset:76px 0 auto 0; flex-direction:column; gap:0;

@@ -29,15 +29,28 @@ mina-tantra/
 ```js
   {
     prenom: 'Luna',
-    photo: 'photos/masseuses/luna.jpg',
-    age: 27,
+    photo: 'photos/masseuses/luna-1.jpg',      // la grande photo de la fiche
+    photos: [                                  // les vignettes sous la fiche
+      'photos/masseuses/luna-1.jpg',
+      'photos/masseuses/luna-2.jpg',
+    ],
+    age: 27,                                   // facultatif
     origine: 'Italie',
     langues: 'Français, italien',
-    specialites: ['Tantra', 'Body-body'],
+    specialites: ['Tantra', 'Body body'],
     presentation: "Deux phrases pour la présenter.",
     disponible: true,          // false = « Bientôt de retour »
   },
 ```
+
+Les vignettes s'ouvrent en plein écran quand on clique dessus. Le champ
+`photos` est facultatif : sans lui, seule la grande photo s'affiche.
+
+Tant qu'il n'y a **qu'une seule masseuse**, la section s'intitule « La
+masseuse » et sa fiche s'affiche en grand, photo à gauche. Dès qu'une
+deuxième est ajoutée, le titre passe à « Les masseuses » et les fiches se
+rangent en colonnes — il n'y a rien à changer pour cela. La phrase
+d'introduction de la section se modifie dans `MASSEUSES_INTRO`.
 
 3. Enregistrer, puis rafraîchir la page (F5).
 
