@@ -59,7 +59,7 @@ la somme.
 - **Commission LPP automatique** : 1.5 % du montant transféré (arrondie au
   centime), comptée une fois l'argent reçu.
 - **Commission Everlife automatique** : CHF 150.– à la signature (une fois le
-  contrôle qualité validé), CHF 400.–
+  contrôle qualité validé, à partir de 3 contrats Everlife signés dans le mois), CHF 400.–
   une fois le client payé ou en paiement direct ; un autre montant saisi à la
   main n'est jamais écrasé.
 - **Points acquis** : les points notés ne comptent qu'une fois acquis — un
