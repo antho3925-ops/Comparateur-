@@ -99,9 +99,12 @@
         g.pointsEnAttente ? `+ ${pts(g.pointsEnAttente)} pts en attente`
           : filtre.type === 'tous' ? 'Tous types confondus' : M.TYPES[filtre.type].libelle],
       [tousMois ? 'Commissions générées' : 'Commission du mois', 'CHF ' + chf(g.commissions),
-        `CHF ${chf(g.commissionsPercues)} perçus · CHF ${chf(g.commissionsAttendues)} à recevoir`],
+        `CHF ${chf(g.commissionsPercues)} perçus · CHF ${chf(g.commissionsAttendues)} à recevoir`
+        + (g.commissionsEnAttenteFonds ? ` · + CHF ${chf(g.commissionsEnAttenteFonds)} LPP en attente de l'argent` : '')],
       ['Commission générale', 'CHF ' + chf(general.commissions),
-        `CHF ${chf(general.commissionsAttendues)} pas encore arrivés`, general.commissionsAttendues > 0],
+        `CHF ${chf(general.commissionsAttendues)} pas encore arrivés`
+        + (general.commissionsEnAttenteFonds ? ` · + CHF ${chf(general.commissionsEnAttenteFonds)} LPP en attente de l'argent` : ''),
+        general.commissionsAttendues > 0],
       ['À policer', Fmt.nombre(general.aPolicer), 'Tous mois confondus', general.aPolicer > 0],
       ['À commissionner', Fmt.nombre(general.aCommissionner), 'Tous mois confondus', general.aCommissionner > 0],
     ].map(tuile).join('');
@@ -126,7 +129,8 @@
       <td class="num" data-l="Montant CHF">${c.type === 'everlife' ? '' : chf(c.montant)}</td>
       <td class="num ${!M.CLOS.has(c.statut) && !M.pointsAcquis(c) && c.points ? 'en-attente' : ''}" data-l="Points"
           title="${!M.CLOS.has(c.statut) && !M.pointsAcquis(c) ? (c.type === 'lpp' ? 'Compte à réception de l\'argent' : 'Compte une fois le client payé') : ''}">${pts(c.points)}</td>
-      <td class="num" data-l="Commission CHF">${chf(c.montantCommission)}</td>
+      <td class="num ${!M.CLOS.has(c.statut) && !M.commissionAcquise(c) && c.montantCommission ? 'en-attente' : ''}" data-l="Commission CHF"
+          title="${!M.CLOS.has(c.statut) && !M.commissionAcquise(c) ? 'Acquise à réception de l\'argent' : ''}">${chf(c.montantCommission)}</td>
       <td data-l="Statut"><span class="statut ${c.statut}">${M.STATUTS[c.statut]}</span>${
         c.dateFondsRecus ? `<div class="c">le ${dateCh(c.dateFondsRecus)}</div>` : ''}</td>
       <td class="centre" data-l="Policé">${interrupteur('police', c.police, c.datePolice, 'Policé')}</td>
@@ -233,6 +237,10 @@
     const type = form.elements.type.value;
     $('bloc-montant').hidden = !M.TYPES[type].montant;
     if (M.TYPES[type].montant) $('lbl-montant').textContent = M.TYPES[type].montant;
+    // Simple rappel des montants usuels, rien n'est calcule a partir de lui.
+    $('aide-commission').textContent = type === 'everlife'
+      ? 'Everlife : CHF 150.– à la signature, CHF 400.– une fois l\'apport payé.'
+      : type === 'lpp' ? 'Comptée une fois l\'argent reçu sur le libre passage.' : '';
     $('bloc-paiement-direct').hidden = type !== 'everlife';
     // Liste des statuts propre au type ; le statut choisi est garde s'il existe.
     const sel = form.elements.statut, avant = sel.value;

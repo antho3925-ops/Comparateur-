@@ -53,6 +53,10 @@ la somme.
   transfert LPP quand l'argent est reçu, un Everlife quand le client a payé
   (case « Le client a payé », cliquable aussi dans la liste) ou en paiement
   direct. En attendant, ils s'affichent en ambre et à part (« pts en attente »).
+- **Commission LPP** : acquise seulement à réception de l'argent ; avant, elle
+  s'affiche à part (« LPP en attente de l'argent ») hors des totaux. Everlife et
+  maladie : comptée dès la saisie (rappel Everlife : CHF 150.– à la signature,
+  CHF 400.– une fois l'apport payé).
 - Un contrat **refusé ou annulé** est perdu : il ne vaut plus ni points, ni
   commission, ni montant, dans tous les totaux et le récapitulatif.
 - **Récapitulatif mensuel** : par mois, contrats maladie et moyenne des
@@ -65,7 +69,7 @@ la somme.
   régulièrement.
 
 ```
-node tools/tests-suivi.mjs     # 101 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 108 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement

@@ -59,7 +59,7 @@ ok('LPP : 45000', t.montantParType.lpp === 45000);
 ok('complémentaires en cours : 85.40 (refusé exclu)', Math.abs(t.parType.maladie.montantActif - 85.4) < 1e-9);
 ok('Everlife : aucun montant cumulé', t.montantParType.everlife === 0);
 ok('à policer : 1 (le refusé ne compte pas)', t.aPolicer === 1, JSON.stringify(t));
-ok('à commissionner : 2 (le refusé ne compte pas)', t.aCommissionner === 2);
+ok('à commissionner : 1 (refusé exclu, LPP sans argent reçu pas encore dû)', t.aCommissionner === 1);
 ok('Everlife : montant ignoré', c({ nom: 'A', type: 'everlife', montant: 200 }).montant === null);
 ok('Everlife : 1 contrat signé', t.parType.everlife.signes === 1);
 ok('LPP : 1 signé (transmis compte)', t.parType.lpp.signes === 1);
@@ -157,6 +157,22 @@ const tlp = M.totaux([
   c({ nom: 'E', type: 'lpp', points: 4, statut: 'argent_recu' }),
 ]).parType.lpp;
 ok('LPP : 4 points acquis, 8 en attente', tlp.points === 4 && tlp.pointsEnAttente === 8);
+
+console.log('\n\x1b[1mCommission LPP\x1b[0m');
+const cl = M.totaux([
+  c({ nom: 'A', type: 'lpp', montantCommission: 1200, statut: 'transfert_attente' }),
+  c({ nom: 'B', type: 'lpp', montantCommission: 600, statut: 'argent_recu' }),
+  c({ nom: 'C', type: 'lpp', montantCommission: 900, statut: 'argent_recu', commissionne: true }),
+  c({ nom: 'D', type: 'lpp', montantCommission: 700, statut: 'annule' }),
+]);
+ok('LPP : commission comptée seulement argent reçu (1500)', cl.commissions === 1500, JSON.stringify(cl));
+ok('LPP : 1200 en attente de l\'argent, hors total', cl.commissionsEnAttenteFonds === 1200);
+ok('LPP : 900 perçus, 600 à recevoir', cl.commissionsPercues === 900 && cl.commissionsAttendues === 600);
+ok('LPP : à commissionner seulement une fois l\'argent reçu (1)', cl.aCommissionner === 1);
+ok('LPP annulé : ni comptée ni en attente', cl.commissions + cl.commissionsEnAttenteFonds === 2700);
+const ce = M.totaux([c({ nom: 'E', type: 'everlife', montantCommission: 150, statut: 'signe' })]);
+ok('Everlife non payé : commission inchangée, comptée (150)', ce.commissions === 150 && ce.commissionsEnAttenteFonds === 0);
+ok('maladie : commission comptée dès la saisie', M.commissionAcquise(c({ nom: 'F', type: 'maladie' })));
 
 console.log('\n\x1b[1mMois\x1b[0m');
 const mois = [

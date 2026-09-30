@@ -41,6 +41,14 @@
     return true;
   }
 
+  // Meme logique pour la commission LPP : elle n'est acquise qu'une fois
+  // l'argent recu sur le libre passage. Everlife et maladie : des la saisie.
+  function commissionAcquise(c) {
+    if (CLOS.has(c.statut)) return false;
+    if (c.type === 'lpp') return c.statut === 'argent_recu';
+    return true;
+  }
+
   // Ramene un statut au vocabulaire du type (sauvegardes anterieures, import).
   function statutPour(type, statut, fondsRecus) {
     if (type === 'lpp') {
@@ -158,6 +166,7 @@
       commissions: 0,          // commissions des contrats en cours
       commissionsPercues: 0,   // dont deja commissionnees
       commissionsAttendues: 0, // dont pas encore arrivees
+      commissionsEnAttenteFonds: 0, // LPP : notees, acquises a reception de l'argent
       parType: {},
     };
     for (const type of Object.keys(TYPES)) {
@@ -186,11 +195,15 @@
       t.montantParType[c.type] += c.montant ?? 0;
       if (c.montant != null) { p.montantActif += c.montant; p.avecMontant += 1; }
       const com = c.montantCommission ?? 0;
-      t.commissions += com;
-      if (c.commissionne) t.commissionsPercues += com;
-      else t.commissionsAttendues += com;
       if (!c.police) t.aPolicer += 1;
-      if (!c.commissionne) t.aCommissionner += 1;
+      if (commissionAcquise(c)) {
+        t.commissions += com;
+        if (c.commissionne) t.commissionsPercues += com;
+        else t.commissionsAttendues += com;
+        if (!c.commissionne) t.aCommissionner += 1;
+      } else {
+        t.commissionsEnAttenteFonds += com;
+      }
       if (c.type === 'lpp' && c.montant != null) {
         if (c.statut === 'argent_recu') p.fondsRecus += c.montant;
         else if (SIGNES.has(c.statut)) p.fondsAttente += c.montant;
@@ -225,6 +238,7 @@
     ['Points', (c) => c.points ?? ''],
     ['Commission CHF', (c) => c.montantCommission ?? ''],
     ['Points acquis', (c) => (pointsAcquis(c) ? 'oui' : 'non')],
+    ['Commission acquise', (c) => (commissionAcquise(c) ? 'oui' : 'non')],
     ['Statut', (c) => STATUTS[c.statut]],
     ['Date de signature', (c) => c.dateSignature],
     ['Mois', (c) => libelleMois(moisDe(c))],
@@ -276,6 +290,6 @@
   }
 
   racine.SuiviModele = {
-    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
+    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, commissionAcquise, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
