@@ -31,6 +31,36 @@
   // Un contrat compte comme signe des sa signature, et le reste ensuite.
   const SIGNES = new Set(['signe', 'transmis', 'accepte', 'transfert_attente', 'argent_recu']);
 
+  // Bareme des points. Maladie : selon la prime complementaire mensuelle, et
+  // seulement si la base LAMal a ete signee avec (complementaire seule :
+  // commission, mais aucun point). LPP : 150 points par 100'000 CHF
+  // transferes, au prorata. Everlife : points notes a la main.
+  function pointsMaladie(prime, baseSignee) {
+    if (prime == null) return null;
+    if (!baseSignee || prime < 25) return 0;
+    return prime <= 50 ? 50 : 100;
+  }
+  function pointsLpp(montant) {
+    return montant == null ? null : Math.round(montant * 150 / 100000 * 100) / 100;
+  }
+  function pointsCalcules(type, montant, baseSignee, pointsSaisis) {
+    if (type === 'maladie') return pointsMaladie(montant, baseSignee);
+    if (type === 'lpp') return pointsLpp(montant);
+    return pointsSaisis;
+  }
+
+  // Commission Everlife : CHF 150 a la signature, CHF 400 une fois l'apport
+  // paye (ou en paiement direct). Un montant saisi a la main autre que ces
+  // valeurs usuelles n'est jamais ecrase.
+  function commissionEverlife(c) {
+    if (CLOS.has(c.statut)) return null;
+    if (c.clientPaye || c.paiementDirect) return 400;
+    return SIGNES.has(c.statut) ? 150 : null;
+  }
+  function commissionEverlifeAjustee(actuelle, c) {
+    return actuelle == null || actuelle === 150 || actuelle === 400 ? commissionEverlife(c) : actuelle;
+  }
+
   // Les points notes ne comptent qu'une fois acquis : un transfert LPP quand
   // l'argent est recu, un Everlife quand le client a paye (ou paie en direct).
   // Un contrat perdu n'en rapporte jamais.
@@ -86,7 +116,7 @@
       prenom:            texte(brut.prenom),
       compagnie:         texte(brut.compagnie),
       montant:           brut.type === 'everlife' ? null : nombre(brut.montant),
-      points:            nombre(brut.points),
+      points:            null, // calcule plus bas selon le bareme du type
       statut:            statutPour(TYPES[brut.type] ? brut.type : 'maladie', brut.statut,
                                     brut.type === 'lpp' && oui(brut.fondsRecus)),
       dateSignature:     date(brut.dateSignature),
@@ -98,6 +128,8 @@
       // Propre a Everlife : sans objet pour les autres types.
       paiementDirect:    brut.type === 'everlife' && oui(brut.paiementDirect),
       clientPaye:        brut.type === 'everlife' && oui(brut.clientPaye),
+      // Propre a la maladie : base LAMal signee en plus de la complementaire.
+      baseSignee:        (!TYPES[brut.type] || brut.type === 'maladie') && oui(brut.baseSignee),
       // Propre au LPP : date d'arrivee de l'argent sur le libre passage.
       dateFondsRecus:    brut.type === 'lpp' ? date(brut.dateFondsRecus) : '',
       note:              texte(brut.note),
@@ -105,6 +137,7 @@
       modifie:           texte(brut.modifie) || maintenant,
     };
     if (c.statut !== 'argent_recu') c.dateFondsRecus = '';
+    c.points = pointsCalcules(c.type, c.montant, c.baseSignee, nombre(brut.points));
     if (!c.nom && !c.prenom) return null;
     return c;
   }
@@ -247,6 +280,7 @@
     ['Commissionné', (c) => (c.commissionne ? 'oui' : 'non')],
     ['Date de commission', (c) => c.dateCommission],
     ['Date de réception des fonds', (c) => c.dateFondsRecus],
+    ['Base LAMal signée', (c) => (c.type === 'maladie' ? (c.baseSignee ? 'oui' : 'non') : '')],
     ['Client a payé', (c) => (c.type === 'everlife' ? (c.clientPaye ? 'oui' : 'non') : '')],
     ['Paiement direct', (c) => (c.type === 'everlife' ? (c.paiementDirect ? 'oui' : 'non') : '')],
     ['Note', (c) => c.note],
@@ -290,6 +324,6 @@
   }
 
   racine.SuiviModele = {
-    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, commissionAcquise, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
+    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, pointsMaladie, pointsLpp, pointsCalcules, commissionEverlife, commissionEverlifeAjustee, commissionAcquise, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

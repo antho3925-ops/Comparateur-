@@ -113,6 +113,9 @@
   function ligne(c) {
     const typ = M.TYPES[c.type];
     const nom = [c.nom, c.prenom].filter(Boolean).join(' ');
+    const base = c.type !== 'maladie' || M.CLOS.has(c.statut) ? ''
+      : `<button type="button" class="paye ${c.baseSignee ? 'oui' : ''}" data-base aria-pressed="${c.baseSignee}">${
+          c.baseSignee ? 'Base + complémentaire' : 'Complémentaire seule'}</button>`;
     const paye = c.type !== 'everlife' || M.CLOS.has(c.statut) ? ''
       : c.paiementDirect ? '<span class="paye oui">Paiement direct</span>'
       : `<button type="button" class="paye ${c.clientPaye ? 'oui' : ''}" data-paye aria-pressed="${c.clientPaye}">${
@@ -125,7 +128,7 @@
     return `<tr data-id="${esc(c.id)}" class="${M.CLOS.has(c.statut) ? 'clos' : ''}">
       <td class="client"><div class="n">${esc(nom)}</div>${sous ? `<div class="c">${esc(sous)}</div>` : ''}${
         c.note ? `<div class="c">${esc(c.note)}</div>` : ''}</td>
-      <td data-l="Type"><span class="type ${c.type}">${typ.court}</span>${paye}</td>
+      <td data-l="Type"><span class="type ${c.type}">${typ.court}</span>${base}${paye}</td>
       <td class="num" data-l="Montant CHF">${c.type === 'everlife' ? '' : chf(c.montant)}</td>
       <td class="num ${!M.CLOS.has(c.statut) && !M.pointsAcquis(c) && c.points ? 'en-attente' : ''}" data-l="Points"
           title="${!M.CLOS.has(c.statut) && !M.pointsAcquis(c) ? (c.type === 'lpp' ? 'Compte à réception de l\'argent' : 'Compte une fois le client payé') : ''}">${pts(c.points)}</td>
@@ -242,6 +245,14 @@
       ? 'Everlife : CHF 150.– à la signature, CHF 400.– une fois l\'apport payé.'
       : type === 'lpp' ? 'Comptée une fois l\'argent reçu sur le libre passage.' : '';
     $('bloc-paiement-direct').hidden = type !== 'everlife';
+    $('bloc-base').hidden = type !== 'maladie';
+    // Maladie et LPP : points calcules, le champ n'est plus saisissable.
+    form.elements.points.readOnly = type !== 'everlife';
+    $('aide-points').textContent = type === 'maladie'
+      ? 'Calculés : moins de CHF 25.– = 0, de 25 à 50 = 50, plus de 50 = 100 — avec la base LAMal.'
+      : type === 'lpp' ? 'Calculés : 150 points par CHF 100\'000 transférés, comptés à réception de l\'argent.'
+      : 'À noter ; comptés une fois le client payé ou en paiement direct.';
+    majAuto();
     // Liste des statuts propre au type ; le statut choisi est garde s'il existe.
     const sel = form.elements.statut, avant = sel.value;
     sel.innerHTML = M.STATUTS_PAR_TYPE[type].map((v) => `<option value="${v}">${M.STATUTS[v]}</option>`).join('');
@@ -251,6 +262,21 @@
     const deja = contrats.filter((c) => c.type === type).map((c) => c.compagnie).filter(Boolean);
     const proposees = [...new Set([...(type === 'maladie' ? CAISSES : []), ...deja])].sort();
     $('compagnies').innerHTML = proposees.map((p) => `<option value="${esc(p)}">`).join('');
+  }
+
+  // Recalcule dans la fiche ce qui decoule des regles : points maladie et LPP,
+  // commission Everlife (sauf montant saisi a la main).
+  function majAuto() {
+    const f = form.elements, type = f.type.value;
+    const nb = (v) => (v === '' ? null : Number(v));
+    if (type !== 'everlife') {
+      const p = M.pointsCalcules(type, nb(f.montant.value), f.baseSignee.checked, null);
+      f.points.value = p ?? '';
+    } else {
+      const com = M.commissionEverlifeAjustee(nb(f.montantCommission.value),
+        { statut: f.statut.value, clientPaye: f.clientPaye.checked, paiementDirect: f.paiementDirect.checked });
+      f.montantCommission.value = com ?? '';
+    }
   }
 
   function majFonds() {
@@ -272,6 +298,7 @@
     f.commissionne.checked = !!src.commissionne;
     f.paiementDirect.checked = !!src.paiementDirect;
     f.clientPaye.checked = !!src.clientPaye;
+    f.baseSignee.checked = !!src.baseSignee;
     f.dateFondsRecus.value = src.dateFondsRecus || '';
     $('dlg-titre').textContent = c ? 'Modifier le contrat' : 'Nouveau contrat';
     $('btn-supprimer').hidden = !c;
@@ -300,6 +327,7 @@
       montantCommission: f.montantCommission.value,
       paiementDirect: f.paiementDirect.checked,
       clientPaye: f.clientPaye.checked,
+      baseSignee: f.baseSignee.checked,
       dateFondsRecus: f.dateFondsRecus.value,
       note: f.note.value,
       cree: avant?.cree,
@@ -412,7 +440,16 @@
         return;
       }
       if (e.target.closest('[data-paye]')) {
-        contrats = contrats.map((x) => (x.id === c.id ? { ...c, clientPaye: !c.clientPaye, modifie: new Date().toISOString() } : x));
+        const maj = { ...c, clientPaye: !c.clientPaye, modifie: new Date().toISOString() };
+        maj.montantCommission = M.commissionEverlifeAjustee(c.montantCommission, maj);
+        contrats = contrats.map((x) => (x.id === c.id ? maj : x));
+        enregistrer();
+        rendre();
+        return;
+      }
+      if (e.target.closest('[data-base]')) {
+        const maj = M.normaliser({ ...c, baseSignee: !c.baseSignee, modifie: new Date().toISOString() });
+        contrats = contrats.map((x) => (x.id === c.id ? maj : x));
         enregistrer();
         rendre();
         return;
@@ -426,8 +463,10 @@
 
     $('btn-nouveau').addEventListener('click', () => ouvrir(null));
     form.addEventListener('submit', soumettre);
+    form.addEventListener('input', (e) => { if (e.target.name === 'montant') majAuto(); });
     form.addEventListener('change', (e) => {
       if (e.target.name === 'type') majLibelles();
+      if (['statut', 'clientPaye', 'paiementDirect', 'baseSignee'].includes(e.target.name)) majAuto();
       // Cocher « policé » ou « commissionné » propose la date du jour.
       if (e.target.name === 'police' && e.target.checked && !form.elements.datePolice.value) {
         form.elements.datePolice.value = aujourdhui();

@@ -208,6 +208,10 @@ textarea { resize: vertical; }
 .case-everlife { display: inline-flex; margin-top: 16px; }
 .case-everlife[hidden], .case-lpp[hidden] { display: none; }
 .case-lpp { margin-top: 16px; }
+#bloc-base { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 16px; }
+#bloc-base[hidden] { display: none; }
+#bloc-base .produit-src { flex-basis: 100%; margin: 2px 0 0; }
+input[readonly] { background: var(--surface-3); color: var(--texte-2); cursor: default; }
 #bloc-paiement-direct { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 #bloc-paiement-direct[hidden] { display: none; }
 #bloc-paiement-direct .produit-src { flex-basis: 100%; margin: 2px 0 0; }

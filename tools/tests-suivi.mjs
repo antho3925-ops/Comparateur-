@@ -33,7 +33,7 @@ ok('paiement direct ignoré hors Everlife', c({ nom: 'A', type: 'lpp', paiementD
 ok('espaces retirés', c({ nom: '  Dupont ' }).nom === 'Dupont');
 
 const base = [
-  c({ id: '1', nom: 'Dupont', prenom: 'Marie', type: 'maladie', montant: 85.4, points: 12, statut: 'accepte', police: true, commissionne: true, montantCommission: 300, compagnie: 'CSS', dateSignature: '2026-03-01' }),
+  c({ id: '1', nom: 'Dupont', prenom: 'Marie', type: 'maladie', montant: 85.4, baseSignee: true, statut: 'accepte', police: true, commissionne: true, montantCommission: 300, compagnie: 'CSS', dateSignature: '2026-03-01' }),
   c({ id: '2', nom: 'Martin', prenom: 'Paul', type: 'everlife', montant: 200, points: 30, statut: 'signe', montantCommission: 450, dateSignature: '2026-05-10' }),
   c({ id: '3', nom: 'Rochat', prenom: 'Luc', type: 'lpp', montant: 45000, points: 8, statut: 'transmis', police: true, dateSignature: '2026-04-02' }),
   c({ id: '4', nom: 'Favre', prenom: 'Anne', type: 'maladie', montant: 60, points: 5, statut: 'refuse', montantCommission: 100 }),
@@ -52,8 +52,8 @@ ok('tri par nom : Dupont, Favre, Martin, Rochat',
 
 console.log('\n\x1b[1mTotaux\x1b[0m');
 const t = M.totaux(base);
-ok('points acquis : 12 (Everlife non payé, LPP non reçu, refusé perdu)', t.points === 12, JSON.stringify(t));
-ok('points en attente : 38 (30 Everlife + 8 LPP)', t.pointsEnAttente === 38);
+ok('points acquis : 100 (maladie ; Everlife non payé, LPP non reçu, refusé perdu)', t.points === 100, JSON.stringify(t));
+ok('points en attente : 97.5 (30 Everlife + 67.5 LPP pour 45\'000)', t.pointsEnAttente === 97.5);
 ok('complémentaires maladie : 85.40 (refusé exclu)', Math.abs(t.montantParType.maladie - 85.4) < 1e-9);
 ok('LPP : 45000', t.montantParType.lpp === 45000);
 ok('complémentaires en cours : 85.40 (refusé exclu)', Math.abs(t.parType.maladie.montantActif - 85.4) < 1e-9);
@@ -117,19 +117,19 @@ ok('LPP : une simple proposition n\'est pas de l\'argent en attente', tp.fondsAt
 
 console.log('\n\x1b[1mContrat perdu\x1b[0m');
 const perdu = [
-  c({ nom: 'L', type: 'maladie', montant: 90, points: 10, montantCommission: 400, statut: 'signe' }),
+  c({ nom: 'L', type: 'maladie', montant: 90, baseSignee: true, montantCommission: 400, statut: 'signe' }),
   c({ nom: 'M', type: 'everlife', points: 25, montantCommission: 800, statut: 'annule', paiementDirect: true }),
   c({ nom: 'N', type: 'lpp', montant: 30000, points: 6, montantCommission: 900, statut: 'refuse' }),
 ];
 const tpd = M.totaux(perdu);
-ok('annulé ou refusé : points perdus (10 restent)', tpd.points === 10, JSON.stringify(tpd));
+ok('annulé ou refusé : points perdus (100 restent)', tpd.points === 100, JSON.stringify(tpd));
 ok('annulé ou refusé : commissions perdues (400 restent)', tpd.commissions === 400);
 ok('Everlife annulé : ni signé, ni paiement direct, ni points',
   tpd.parType.everlife.signes === 0 && tpd.parType.everlife.paiementDirect === 0 && tpd.parType.everlife.points === 0);
 ok('LPP refusé : montant et points perdus', tpd.parType.lpp.montantActif === 0 && tpd.parType.lpp.points === 0);
 ok('contrat perdu : toujours compté comme saisi', tpd.parType.everlife.nombre === 1);
 const recapP = M.recapMensuel(perdu)[0].totaux;
-ok('récapitulatif mensuel : mêmes pertes (10 pts, CHF 400)', recapP.points === 10 && recapP.commissions === 400);
+ok('récapitulatif mensuel : mêmes pertes (100 pts, CHF 400)', recapP.points === 100 && recapP.commissions === 400);
 ok('LPP : moyenne sur un seul transfert = son montant',
   M.totaux([lpp[0]]).parType.lpp.moyenne === 40000);
 
@@ -153,10 +153,43 @@ const tev = M.totaux([
 ok('Everlife : 30 points acquis, 40 en attente', tev.points === 30 && tev.pointsEnAttente === 40, JSON.stringify(tev));
 ok('Everlife : 2 clients payés dont 1 en direct', tev.payes === 2 && tev.paiementDirect === 1);
 const tlp = M.totaux([
-  c({ nom: 'D', type: 'lpp', points: 8, statut: 'transfert_attente' }),
-  c({ nom: 'E', type: 'lpp', points: 4, statut: 'argent_recu' }),
+  c({ nom: 'D', type: 'lpp', montant: 100000, statut: 'transfert_attente' }),
+  c({ nom: 'E', type: 'lpp', montant: 40000, statut: 'argent_recu' }),
 ]).parType.lpp;
-ok('LPP : 4 points acquis, 8 en attente', tlp.points === 4 && tlp.pointsEnAttente === 8);
+ok('LPP : 60 points acquis (40\'000 reçus), 150 en attente (100\'000)', tlp.points === 60 && tlp.pointsEnAttente === 150, JSON.stringify(tlp));
+
+console.log('\n\x1b[1mBarème des points\x1b[0m');
+const pm = (prime, base = true) => c({ nom: 'A', type: 'maladie', montant: prime, baseSignee: base, points: 999 }).points;
+ok('maladie 24.95 : 0 point', pm(24.95) === 0);
+ok('maladie 25.00 : 50 points', pm(25) === 50);
+ok('maladie 50.00 : 50 points', pm(50) === 50);
+ok('maladie 50.05 : 100 points', pm(50.05) === 100);
+ok('maladie 120 : 100 points', pm(120) === 100);
+ok('maladie sans base : 0 point', pm(120, false) === 0);
+ok('maladie sans montant : pas de points', pm(null) === null);
+ok('maladie : points saisis à la main ignorés', pm(30) === 50);
+const cm = M.totaux([c({ nom: 'B', type: 'maladie', montant: 80, montantCommission: 250, statut: 'signe' })]);
+ok('complémentaire seule : commission comptée, 0 point', cm.commissions === 250 && cm.points === 0);
+const pl = (montant) => c({ nom: 'C', type: 'lpp', montant, statut: 'argent_recu', points: 999 }).points;
+ok('LPP 100\'000 : 150 points', pl(100000) === 150);
+ok('LPP 200\'000 : 300 points', pl(200000) === 300);
+ok('LPP 50\'000 : 75 points', pl(50000) === 75);
+ok('LPP 45\'000 : 67.5 points', pl(45000) === 67.5);
+ok('LPP 12\'345 : 18.52 points (arrondi au centième)', pl(12345) === 18.52);
+ok('Everlife : points saisis conservés', c({ nom: 'D', type: 'everlife', points: 42 }).points === 42);
+
+console.log('\n\x1b[1mCommission Everlife automatique\x1b[0m');
+const ev = (x) => M.commissionEverlife(c({ nom: 'E', type: 'everlife', ...x }));
+ok('proposition : pas de commission', ev({ statut: 'proposition' }) === null);
+ok('signé : 150', ev({ statut: 'signe' }) === 150);
+ok('client a payé : 400', ev({ statut: 'signe', clientPaye: true }) === 400);
+ok('paiement direct : 400', ev({ statut: 'signe', paiementDirect: true }) === 400);
+ok('annulé : aucune', ev({ statut: 'annule', clientPaye: true }) === null);
+const aj = (actuelle, x) => M.commissionEverlifeAjustee(actuelle, c({ nom: 'E', type: 'everlife', ...x }));
+ok('150 automatique passe à 400 au paiement', aj(150, { statut: 'signe', clientPaye: true }) === 400);
+ok('vide rempli à 150 à la signature', aj(null, { statut: 'signe' }) === 150);
+ok('montant saisi à la main (275) jamais écrasé', aj(275, { statut: 'signe', clientPaye: true }) === 275);
+ok('400 redescend à 150 si « payé » est décoché', aj(400, { statut: 'signe' }) === 150);
 
 console.log('\n\x1b[1mCommission LPP\x1b[0m');
 const cl = M.totaux([
@@ -176,7 +209,7 @@ ok('maladie : commission comptée dès la saisie', M.commissionAcquise(c({ nom: 
 
 console.log('\n\x1b[1mMois\x1b[0m');
 const mois = [
-  c({ nom: 'A', type: 'maladie', montant: 100, points: 10, dateSignature: '2026-08-14', montantCommission: 200, commissionne: true }),
+  c({ nom: 'A', type: 'maladie', montant: 100, baseSignee: true, dateSignature: '2026-08-14', montantCommission: 200, commissionne: true }),
   c({ nom: 'B', type: 'everlife', points: 20, statut: 'signe', clientPaye: true, dateSignature: '2026-09-02', montantCommission: 500 }),
   c({ nom: 'C', type: 'lpp', montant: 30000, points: 5, statut: 'argent_recu', dateSignature: '2026-09-30', montantCommission: 700 }),
   c({ nom: 'D', type: 'maladie', points: 3 }),
@@ -187,10 +220,10 @@ ok('libellé « Septembre 2026 »', M.libelleMois('2026-09') === 'Septembre 2026
 ok('décalage décembre → janvier', M.decalerMois('2026-12', 1) === '2027-01');
 ok('décalage janvier → décembre', M.decalerMois('2026-01', -1) === '2025-12');
 const sept = M.totaux(M.filtrer(mois, { mois: '2026-09' }));
-ok('septembre : 25 points (août non repris)', sept.points === 25);
+ok('septembre : 65 points (20 Everlife payé + 45 LPP reçu, août non repris)', sept.points === 65, JSON.stringify(sept));
 ok('septembre : commission du mois 1200', sept.commissions === 1200);
 ok('septembre : 1 Everlife signé', sept.parType.everlife.signes === 1);
-ok('tous les mois : 38 points', M.totaux(M.filtrer(mois, { mois: 'tous' })).points === 38);
+ok('tous les mois : 165 points', M.totaux(M.filtrer(mois, { mois: 'tous' })).points === 165);
 const recap = M.recapMensuel(mois);
 ok('récap : 3 mois, le plus récent en tête', recap.length === 3 && recap[0].mois === '2026-09', recap.map((r) => r.mois).join());
 ok('récap août : 200 perçus, 0 à recevoir',

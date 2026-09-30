@@ -49,6 +49,16 @@ la somme.
   « transmis à la compagnie » : **transfert en attente** puis **argent reçu**
   (avec la date d'arrivée sur le compte de libre passage). Le bloc LPP totalise
   l'argent en attente et l'argent reçu.
+- **Barème des points**, calculés automatiquement :
+  - maladie, selon la prime complémentaire mensuelle — moins de CHF 25.– : 0 ;
+    de 25 à 50 : 50 ; plus de 50 : 100 — et seulement si la **base LAMal** a été
+    signée avec (case « Base LAMal signée aussi ») ; complémentaire seule :
+    commission sans points ;
+  - LPP : 150 points par CHF 100'000 transférés, au prorata (50'000 → 75) ;
+  - Everlife : points notés à la main.
+- **Commission Everlife automatique** : CHF 150.– à la signature, CHF 400.–
+  une fois le client payé ou en paiement direct ; un autre montant saisi à la
+  main n'est jamais écrasé.
 - **Points acquis** : les points notés ne comptent qu'une fois acquis — un
   transfert LPP quand l'argent est reçu, un Everlife quand le client a payé
   (case « Le client a payé », cliquable aussi dans la liste) ou en paiement
@@ -69,7 +79,7 @@ la somme.
   régulièrement.
 
 ```
-node tools/tests-suivi.mjs     # 108 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 132 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement
