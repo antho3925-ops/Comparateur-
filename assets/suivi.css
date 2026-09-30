@@ -312,3 +312,21 @@ body.clavier-ouvert .page { padding-bottom: calc(var(--hauteur-clavier, 300px) +
    de rester collee en bas, ou elle masquerait le champ en cours de saisie. */
 body.clavier-ouvert .dlg footer { position: static; }
 .clavier.pave .k { flex: 1 !important; }
+
+/* En-tete compact sur telephone : une seule ligne (sceau, titre, bouton),
+   sous-titre et pastille masques, pour laisser la place aux chiffres. */
+@media (max-width: 620px) {
+  .entete { padding-left: 14px; padding-right: 14px; }
+  .entete-in { min-height: 0; flex-wrap: nowrap; gap: 10px; padding: 8px 0; }
+  .entete .marque { gap: 10px; min-width: 0; }
+  .entete .sceau { width: 32px; height: 32px; border-radius: 8px; font-size: 11px; }
+  .entete h1 { font-size: 13.5px; letter-spacing: .07em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .entete .sous { display: none; }
+  .entete .btn-reset { padding: 9px 13px; font-size: 13.5px; flex: none; }
+  .entete .texte-long { display: none; }
+}
+@media (max-width: 390px) {
+  .entete h1 { font-size: 12px; letter-spacing: .04em; }
+  .entete .sceau { width: 28px; height: 28px; font-size: 10px; }
+  .entete .btn-reset { padding: 8px 11px; font-size: 13px; }
+}
