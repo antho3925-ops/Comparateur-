@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Suivi – Mode d'emploi</title>
+<!-- Source du PDF docs/mode-emploi-suivi.pdf — regenerer : node tools/mode-emploi.mjs -->
+<style>
+  @page { size: A4; margin: 0; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: "Segoe UI", "Helvetica Neue", Arial, "Noto Color Emoji", sans-serif;
+    color: #1d2433; font-size: 11.5pt; line-height: 1.45;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  }
+  .page {
+    width: 210mm; height: 297mm; padding: 11mm 14mm 14mm; overflow: hidden;
+    page-break-after: always; position: relative;
+    background: #fffdf7;
+  }
+  .page:last-child { page-break-after: auto; }
+  .e { font-family: "Noto Color Emoji"; font-style: normal; }
+
+  /* En-tete */
+  .haut {
+    display: flex; align-items: center; gap: 14px;
+    background: linear-gradient(135deg, #12203a, #1d3a6b);
+    color: #fff; border-radius: 18px; padding: 14px 18px; margin-bottom: 12px;
+  }
+  .haut img { width: 64px; height: 64px; border-radius: 14px; }
+  .haut h1 { margin: 0; font-size: 25pt; line-height: 1.05; }
+  .haut h1 small { display: block; font-size: 12pt; font-weight: 500; color: #e3ce97; margin-top: 4px; }
+  .qr { margin-left: auto; background: #fff; border-radius: 10px; padding: 5px; text-align: center; }
+  .qr img { width: 72px; height: 72px; display: block; border-radius: 0; }
+  .qr span { display: block; white-space: nowrap; color: #12203a; font-size: 7pt; font-weight: 700; margin-top: 2px; }
+  .lien {
+    text-align: center; font-size: 11pt; margin: 0 0 12px;
+    background: #fff3d6; border: 2px dashed #e0b54c; border-radius: 12px; padding: 7px;
+  }
+  .lien b { color: #12203a; }
+
+  /* Blocs */
+  h2 { font-size: 15pt; margin: 0 0 7px; display: flex; align-items: center; gap: 8px; }
+  h2 .num {
+    display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%;
+    background: #12203a; color: #ffd66b; font-size: 12pt;
+  }
+  .bloc { border-radius: 16px; padding: 10px 14px; margin-bottom: 9px; }
+  .bleu   { background: #e8f1ff; }
+  .vert   { background: #e6f7ee; }
+  .rose   { background: #fdeaf3; }
+  .jaune  { background: #fff4d6; }
+  .violet { background: #efe9ff; }
+  .rouge  { background: #ffecea; }
+  p { margin: 0 0 5px; }
+  ul { margin: 0; padding-left: 0; list-style: none; }
+  li { margin: 3px 0; padding-left: 26px; text-indent: -26px; }
+  li .e { display: inline-block; width: 22px; text-indent: 0; }
+
+  .deux { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .trois { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 9px; }
+  .carte { background: #fff; border-radius: 13px; padding: 9px 11px; box-shadow: 0 1px 0 rgba(0,0,0,.06); }
+  .carte h3 { margin: 0 0 5px; font-size: 12.5pt; }
+  .carte p, .carte li { font-size: 10.3pt; }
+  .gros { font-size: 22pt; line-height: 1; margin-bottom: 3px; }
+  .etiq { display: inline-block; text-indent: 0; border-radius: 20px; padding: 1px 9px; font-weight: 700; font-size: 9.5pt; }
+  .etiq.ok { background: #d3f3e2; color: #0a6b48; }
+  .etiq.att { background: #ffe9b8; color: #8a6100; }
+  .etiq.non { background: #ffd9d6; color: #a32720; }
+  .fin {
+    position: absolute; left: 14mm; right: 14mm; bottom: 6mm;
+    text-align: center; font-size: 9pt; color: #7d8ca3;
+  }
+  b { color: #12203a; }
+</style>
+</head>
+<body>
+
+<!-- ============================ PAGE 1 ============================ -->
+<section class="page">
+  <div class="haut">
+    <img src="../assets/icones/icone-512.png" alt="">
+    <h1>Suivi <span class="e">📈</span><small>Le mode d'emploi en 2 minutes</small></h1>
+    <div class="qr"><img src="../assets/qr-suivi.svg" alt=""><span>Scanne-moi <span class="e">📷</span></span></div>
+  </div>
+
+  <p class="lien"><span class="e">🔗</span> <b>antho3925-ops.github.io/Comparateur-/suivi.html</b></p>
+
+  <div class="bloc bleu">
+    <h2><span class="num">1</span> J'installe l'appli <span class="e">📲</span></h2>
+    <div class="deux">
+      <div class="carte">
+        <h3><span class="e">🍎</span> iPhone</h3>
+        <ul>
+          <li><span class="e">🧭</span> J'ouvre le lien dans <b>Safari</b></li>
+          <li><span class="e">⬆️</span> Je touche <b>Partager</b></li>
+          <li><span class="e">➕</span> <b>« Sur l'écran d'accueil »</b></li>
+        </ul>
+      </div>
+      <div class="carte">
+        <h3><span class="e">🤖</span> Android</h3>
+        <ul>
+          <li><span class="e">🌐</span> J'ouvre le lien dans <b>Chrome</b></li>
+          <li><span class="e">⋮</span> Menu en haut à droite</li>
+          <li><span class="e">➕</span> <b>« Installer l'application »</b></li>
+        </ul>
+      </div>
+    </div>
+    <p style="margin-top:8px"><span class="e">👉</span> Ensuite, je l'ouvre <b>toujours depuis l'icône « Suivi »</b>.</p>
+  </div>
+
+  <div class="bloc vert">
+    <h2><span class="num">2</span> Mes chiffres sont à moi <span class="e">🔒</span></h2>
+    <ul>
+      <li><span class="e">💾</span> Tout s'enregistre <b>tout seul</b>, sur <b>mon téléphone</b></li>
+      <li><span class="e">🙈</span> Personne d'autre ne voit mes chiffres</li>
+      <li><span class="e">✈️</span> Ça marche même <b>sans internet</b></li>
+    </ul>
+  </div>
+
+  <div class="bloc jaune">
+    <h2><span class="num">3</span> J'ajoute un contrat <span class="e">✍️</span></h2>
+    <p><span class="e">➕</span> <b>+ Nouveau</b> → je choisis le type → je remplis → <b>Enregistrer</b> <span class="e">✅</span></p>
+    <p><span class="e">✏️</span> Pour changer quelque chose : <b>Modifier</b> sur la ligne du contrat.</p>
+  </div>
+
+  <div class="bloc rose">
+    <h2><span class="num">4</span> L'appli calcule pour moi <span class="e">🧮</span></h2>
+    <div class="trois">
+      <div class="carte">
+        <div class="gros e">🏥</div>
+        <h3>Maladie</h3>
+        <p>Je note la <b>prime complémentaire</b> et je coche <b>« Base signée aussi »</b>.</p>
+        <p><span class="e">⭐</span> Points :<br>moins de 25.– → <b>0</b><br>25 à 50.– → <b>50</b><br>plus de 50.– → <b>100</b></p>
+        <p style="font-size:9.3pt">Sans la base : commission oui, points non.</p>
+      </div>
+      <div class="carte">
+        <div class="gros e">🌟</div>
+        <h3>Everlife</h3>
+        <p>Je note les <b>points</b> et je coche <b>« Le client a payé »</b> ou <b>« Paiement direct »</b>.</p>
+        <p><span class="e">💰</span> Commission :<br><b>150.–</b> à la signature<br><b>400.–</b> une fois payé</p>
+      </div>
+      <div class="carte">
+        <div class="gros e">🏦</div>
+        <h3>Transfert LPP</h3>
+        <p>Je note le <b>montant transféré</b>, c'est tout !</p>
+        <p><span class="e">⭐</span> <b>150 points</b> par 100'000.–</p>
+        <p><span class="e">💰</span> Commission : <b>1.5 %</b> du montant</p>
+      </div>
+    </div>
+  </div>
+
+  <p class="fin">Suivi des contrats — page 1/2 <span class="e">😊</span></p>
+</section>
+
+<!-- ============================ PAGE 2 ============================ -->
+<section class="page">
+  <div class="bloc violet">
+    <h2><span class="num">5</span> Quand est-ce que ça compte ? <span class="e">⏳</span></h2>
+    <ul>
+      <li><span class="e">🏦</span> <b>LPP</b> : points et commission comptent quand le statut est <span class="etiq ok">Argent reçu</span></li>
+      <li><span class="e">🌟</span> <b>Everlife</b> : les points comptent quand le client <span class="etiq ok">a payé</span></li>
+      <li><span class="e">🟡</span> En attendant, ils sont <span class="etiq att">en attente</span> : affichés en jaune, pas encore comptés</li>
+      <li><span class="e">❌</span> Contrat <span class="etiq non">Annulé</span> ou <span class="etiq non">Refusé</span> : je perds les points et la commission</li>
+    </ul>
+  </div>
+
+  <div class="bloc bleu">
+    <h2><span class="num">6</span> Les boutons rapides <span class="e">👆</span></h2>
+    <p>Dans la liste, je touche directement :</p>
+    <div class="deux">
+      <div class="carte"><span class="e">📄</span> <b>Policé</b> : Non → Oui</div>
+      <div class="carte"><span class="e">💸</span> <b>Commissionné</b> : Non → Oui</div>
+      <div class="carte"><span class="e">🏥</span> <b>Complémentaire seule</b> → <b>Base + complémentaire</b></div>
+      <div class="carte"><span class="e">🌟</span> <b>Pas encore payé</b> → <b>Client a payé</b></div>
+    </div>
+    <p style="margin-top:7px"><span class="e">📅</span> La date du jour s'ajoute toute seule.</p>
+  </div>
+
+  <div class="bloc vert">
+    <h2><span class="num">7</span> Mes résultats du mois <span class="e">🏆</span></h2>
+    <ul>
+      <li><span class="e">🗓️</span> <b>Chaque mois repart à zéro</b> — les flèches <b>‹ ›</b> pour changer de mois</li>
+      <li><span class="e">⭐</span> <b>Points du mois</b> et <b>commission du mois</b></li>
+      <li><span class="e">💼</span> <b>Commission générale</b> : tout, dont ce qui n'est pas encore arrivé</li>
+      <li><span class="e">📌</span> <b>À policer / À commissionner</b> : ce qu'il me reste à suivre</li>
+      <li><span class="e">📊</span> <b>Récapitulatif mensuel</b> en bas : un résumé par mois</li>
+    </ul>
+  </div>
+
+  <div class="bloc jaune">
+    <h2><span class="num">8</span> Ma sauvegarde <span class="e">💾</span></h2>
+    <ul>
+      <li><span class="e">📤</span> <b>Exporter la sauvegarde</b> quand l'appli me le rappelle (tous les 7 jours)</li>
+      <li><span class="e">📁</span> Je garde le fichier en lieu sûr</li>
+      <li><span class="e">📱</span> Nouveau téléphone ? J'installe l'appli puis <b>Importer une sauvegarde</b></li>
+      <li><span class="e">📗</span> <b>Exporter pour Excel</b> pour avoir un tableau</li>
+      <li><span class="e">⚠️</span> <b>Je ne supprime jamais l'icône</b> sans avoir exporté : ça effacerait mes contrats</li>
+    </ul>
+  </div>
+
+  <div class="bloc rouge">
+    <h2><span class="num">?</span> Un petit souci ? <span class="e">🆘</span></h2>
+    <ul>
+      <li><span class="e">⌨️</span> <b>Le clavier ne s'ouvre pas</b> (iPhone) : pas de panique, le <b>clavier de secours</b> de l'appli apparaît. Sinon, je redémarre l'iPhone.</li>
+      <li><span class="e">🔄</span> <b>Pour avoir la dernière version</b> : je ferme complètement l'appli et je la rouvre avec internet, deux fois.</li>
+    </ul>
+  </div>
+
+  <p class="fin">Bonnes ventes ! <span class="e">🚀🎉</span> — page 2/2</p>
+</section>
+
+</body>
+</html>
