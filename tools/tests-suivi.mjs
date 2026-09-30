@@ -66,12 +66,43 @@ ok('moyenne complémentaire : 85.40 (le refusé ne compte pas)', Math.abs(t.parT
 const t2 = M.totaux([...base, c({ nom: 'X', type: 'maladie', montant: 114.6, statut: 'signe' }), c({ nom: 'Y', type: 'maladie', statut: 'signe' })]);
 ok('moyenne sur deux contrats en cours : 100.00 (sans montant ignoré)', Math.abs(t2.parType.maladie.moyenne - 100) < 1e-9);
 ok('moyenne sans aucun montant : null', M.totaux([c({ nom: 'Z', type: 'maladie' })]).parType.maladie.moyenne === null);
-ok('commissions notées : 850', t.commissions === 850);
+ok('commissions : 750 (les 100 du contrat refusé ne comptent pas)', t.commissions === 750);
 ok('commissions perçues : 300', t.commissionsPercues === 300);
 ok('commissions à recevoir : 450 (le refusé ne compte pas)', t.commissionsAttendues === 450, JSON.stringify(t));
 ok('tri par commission : Martin en tête', M.trier(base, 'commission')[0].id === '2');
 ok('commission notée sans être commissionné : conservée',
   c({ nom: 'A', montantCommission: '120', commissionne: false }).montantCommission === 120);
+
+console.log('\n\x1b[1mAnnulation et LPP\x1b[0m');
+const an = [
+  c({ nom: 'A', type: 'maladie', montantCommission: 300, statut: 'signe' }),
+  c({ nom: 'B', type: 'maladie', montantCommission: 500, statut: 'annule' }),
+  c({ nom: 'C', type: 'maladie', montantCommission: 200, statut: 'refuse', commissionne: true }),
+];
+const ta = M.totaux(an);
+ok('annulé : commission retirée du total (300)', ta.commissions === 300, JSON.stringify(ta));
+ok('refusé déjà coché commissionné : rien de perçu', ta.commissionsPercues === 0);
+ok('à recevoir : 300', ta.commissionsAttendues === 300);
+const avant = M.totaux([an[0], { ...an[1], statut: 'signe' }]);
+ok('passer un contrat à annulé retire sa commission (800 → 300)', avant.commissions === 800 && ta.commissions === 300);
+ok('perçu + à recevoir = total', ta.commissionsPercues + ta.commissionsAttendues === ta.commissions);
+
+const lpp = [
+  c({ nom: 'D', type: 'lpp', montant: 40000, statut: 'transmis' }),
+  c({ nom: 'E', type: 'lpp', montant: 20000, statut: 'accepte', fondsRecus: true, dateFondsRecus: '2026-09-15' }),
+  c({ nom: 'F', type: 'lpp', montant: 99000, statut: 'annule' }),
+  c({ nom: 'G', type: 'lpp', statut: 'signe' }),
+];
+const tl = M.totaux(lpp).parType.lpp;
+ok('LPP : moyenne 30000 (annulé et sans montant exclus)', tl.moyenne === 30000, JSON.stringify(tl));
+ok('LPP : montant en cours 60000', tl.montantActif === 60000);
+ok('LPP : 40000 en attente de réception', tl.fondsAttente === 40000);
+ok('LPP : 20000 reçus sur le libre passage', tl.fondsRecus === 20000);
+ok('LPP annulé : ni en attente ni reçu', tl.fondsAttente + tl.fondsRecus === 60000);
+ok('LPP : date de réception conservée', lpp[1].dateFondsRecus === '2026-09-15');
+ok('fonds reçus ignoré hors LPP', c({ nom: 'H', type: 'maladie', fondsRecus: true }).fondsRecus === false);
+ok('LPP : moyenne sur un seul transfert = son montant',
+  M.totaux([lpp[0]]).parType.lpp.moyenne === 40000);
 
 console.log('\n\x1b[1mMois\x1b[0m');
 const mois = [

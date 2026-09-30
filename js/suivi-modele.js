@@ -57,6 +57,9 @@
       montantCommission: nombre(brut.montantCommission),
       // Propre a Everlife : sans objet pour les autres types.
       paiementDirect:    brut.type === 'everlife' && oui(brut.paiementDirect),
+      // Propre au LPP : l'argent est-il arrive sur le compte de libre passage ?
+      fondsRecus:        brut.type === 'lpp' && oui(brut.fondsRecus),
+      dateFondsRecus:    brut.type === 'lpp' && oui(brut.fondsRecus) ? date(brut.dateFondsRecus) : '',
       note:              texte(brut.note),
       cree:              texte(brut.cree) || maintenant,
       modifie:           texte(brut.modifie) || maintenant,
@@ -116,16 +119,19 @@
       montantParType: { maladie: 0, everlife: 0, lpp: 0 },
       aPolicer: 0,
       aCommissionner: 0,
-      commissions: 0,        // toutes les commissions notees
-      commissionsPercues: 0, // sur les contrats deja commissionnes
-      commissionsAttendues: 0, // sur les contrats en cours pas encore commissionnes
+      // Un contrat refuse ou annule ne rapporte rien : sa commission sort de
+      // tous les totaux, meme si elle avait ete notee ou cochee.
+      commissions: 0,          // commissions des contrats en cours
+      commissionsPercues: 0,   // dont deja commissionnees
+      commissionsAttendues: 0, // dont pas encore arrivees
       parType: {},
     };
     for (const type of Object.keys(TYPES)) {
       // montantActif / avecMontant : contrats en cours (ni refuses ni annules)
       // portant un montant, base de la moyenne par contrat.
       t.parType[type] = { nombre: 0, signes: 0, points: 0, montant: 0, montantActif: 0,
-                          avecMontant: 0, moyenne: null, paiementDirect: 0 };
+                          avecMontant: 0, moyenne: null, paiementDirect: 0,
+                          fondsAttente: 0, fondsRecus: 0 };
     }
     for (const c of contrats) {
       const p = t.parType[c.type];
@@ -137,13 +143,16 @@
       if (!CLOS.has(c.statut) && c.montant != null) { p.montantActif += c.montant; p.avecMontant += 1; }
       t.points += c.points ?? 0;
       t.montantParType[c.type] += c.montant ?? 0;
+      if (CLOS.has(c.statut)) continue;
       const com = c.montantCommission ?? 0;
       t.commissions += com;
       if (c.commissionne) t.commissionsPercues += com;
-      if (CLOS.has(c.statut)) continue;
-      if (!c.commissionne) t.commissionsAttendues += com;
+      else t.commissionsAttendues += com;
       if (!c.police) t.aPolicer += 1;
       if (!c.commissionne) t.aCommissionner += 1;
+      if (c.type === 'lpp' && c.montant != null) {
+        if (c.fondsRecus) p.fondsRecus += c.montant; else p.fondsAttente += c.montant;
+      }
     }
     for (const p of Object.values(t.parType)) {
       if (p.avecMontant) p.moyenne = p.montantActif / p.avecMontant;
@@ -180,6 +189,8 @@
     ['Date de police', (c) => c.datePolice],
     ['Commissionné', (c) => (c.commissionne ? 'oui' : 'non')],
     ['Date de commission', (c) => c.dateCommission],
+    ['Fonds reçus sur le libre passage', (c) => (c.type === 'lpp' ? (c.fondsRecus ? 'oui' : 'non') : '')],
+    ['Date de réception des fonds', (c) => c.dateFondsRecus],
     ['Paiement direct', (c) => (c.type === 'everlife' ? (c.paiementDirect ? 'oui' : 'non') : '')],
     ['Note', (c) => c.note],
   ];

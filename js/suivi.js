@@ -74,6 +74,10 @@
       ],
       lpp: [
         ['Montant transféré', 'CHF ' + chf(l.montantActif), 'Hors refusés et annulés'],
+        ['Moyenne par transfert', l.moyenne == null ? '—' : 'CHF ' + chf(l.moyenne),
+          l.avecMontant ? `Sur ${l.avecMontant} transfert(s) en cours` : 'Aucun montant noté'],
+        ['En attente de réception', 'CHF ' + chf(l.fondsAttente), 'Pas encore sur le libre passage', l.fondsAttente > 0],
+        ['Reçu sur le libre passage', 'CHF ' + chf(l.fondsRecus), 'Arrivé sur le compte'],
         ['Transferts', Fmt.nombre(l.nombre), `${l.signes} signé(s)`],
         ['Points', pts(l.points), 'Somme des points'],
       ],
@@ -105,6 +109,9 @@
   function ligne(c) {
     const typ = M.TYPES[c.type];
     const nom = [c.nom, c.prenom].filter(Boolean).join(' ');
+    const fonds = c.type !== 'lpp' ? ''
+      : `<button type="button" class="fonds ${c.fondsRecus ? 'recu' : ''}" data-fonds aria-pressed="${c.fondsRecus}">${
+          c.fondsRecus ? 'Argent reçu' + (c.dateFondsRecus ? ' le ' + dateCh(c.dateFondsRecus) : '') : 'Argent en attente'}</button>`;
     const sous = [c.compagnie, c.paiementDirect && 'paiement direct', c.dateSignature && 'signé le ' + dateCh(c.dateSignature)].filter(Boolean).join(' · ');
     const interrupteur = (champ, actif, dateIso, libelle) =>
       `<button type="button" class="oui-non" data-bascule="${champ}" aria-pressed="${actif}"
@@ -113,7 +120,7 @@
     return `<tr data-id="${esc(c.id)}" class="${M.CLOS.has(c.statut) ? 'clos' : ''}">
       <td class="client"><div class="n">${esc(nom)}</div>${sous ? `<div class="c">${esc(sous)}</div>` : ''}${
         c.note ? `<div class="c">${esc(c.note)}</div>` : ''}</td>
-      <td data-l="Type"><span class="type ${c.type}">${typ.court}</span></td>
+      <td data-l="Type"><span class="type ${c.type}">${typ.court}</span>${fonds}</td>
       <td class="num" data-l="Montant CHF">${c.type === 'everlife' ? '' : chf(c.montant)}</td>
       <td class="num" data-l="Points">${pts(c.points)}</td>
       <td class="num" data-l="Commission CHF">${chf(c.montantCommission)}</td>
@@ -134,7 +141,8 @@
         const p = M.totaux(rangs).parType[type];
         const resume = [`${rangs.length} contrat(s)`,
           type === 'everlife' ? `${p.signes} signé(s)` : 'CHF ' + chf(p.montantActif),
-          type === 'maladie' && p.moyenne != null ? 'moyenne CHF ' + chf(p.moyenne) : '',
+          type !== 'everlife' && p.moyenne != null ? 'moyenne CHF ' + chf(p.moyenne) : '',
+          type === 'lpp' && p.fondsAttente ? 'CHF ' + chf(p.fondsAttente) + ' en attente' : '',
           `${pts(p.points)} pts`].filter(Boolean).join(' · ');
         return `<tr class="section ${type}"><th colspan="9">${M.TYPES[type].libelle}<span>${resume}</span></th></tr>`
           + rangs.map(ligne).join('');
@@ -222,6 +230,7 @@
     $('bloc-montant').hidden = !M.TYPES[type].montant;
     if (M.TYPES[type].montant) $('lbl-montant').textContent = M.TYPES[type].montant;
     $('bloc-paiement-direct').hidden = type !== 'everlife';
+    $('bloc-fonds').hidden = type !== 'lpp';
     $('lbl-compagnie').textContent = type === 'lpp' ? 'Institution de prévoyance / libre passage' : 'Compagnie';
     const deja = contrats.filter((c) => c.type === type).map((c) => c.compagnie).filter(Boolean);
     const proposees = [...new Set([...(type === 'maladie' ? CAISSES : []), ...deja])].sort();
@@ -243,6 +252,8 @@
     f.police.checked = !!src.police;
     f.commissionne.checked = !!src.commissionne;
     f.paiementDirect.checked = !!src.paiementDirect;
+    f.fondsRecus.checked = !!src.fondsRecus;
+    f.dateFondsRecus.value = src.dateFondsRecus || '';
     $('dlg-titre').textContent = c ? 'Modifier le contrat' : 'Nouveau contrat';
     $('btn-supprimer').hidden = !c;
     majLibelles();
@@ -267,6 +278,8 @@
       dateCommission: f.commissionne.checked ? f.dateCommission.value : '',
       montantCommission: f.montantCommission.value,
       paiementDirect: f.paiementDirect.checked,
+      fondsRecus: f.fondsRecus.checked,
+      dateFondsRecus: f.dateFondsRecus.value,
       note: f.note.value,
       cree: avant?.cree,
       modifie: new Date().toISOString(),
@@ -378,6 +391,14 @@
         rendre();
         return;
       }
+      if (e.target.closest('[data-fonds]')) {
+        const recu = !c.fondsRecus;
+        const maj = { ...c, fondsRecus: recu, dateFondsRecus: recu ? aujourdhui() : '', modifie: new Date().toISOString() };
+        contrats = contrats.map((x) => (x.id === c.id ? maj : x));
+        enregistrer();
+        rendre();
+        return;
+      }
       if (e.target.closest('[data-modifier]')) ouvrir(c);
     });
     $('lignes').addEventListener('dblclick', (e) => {
@@ -392,6 +413,9 @@
       // Cocher « policé » ou « commissionné » propose la date du jour.
       if (e.target.name === 'police' && e.target.checked && !form.elements.datePolice.value) {
         form.elements.datePolice.value = aujourdhui();
+      }
+      if (e.target.name === 'fondsRecus' && e.target.checked && !form.elements.dateFondsRecus.value) {
+        form.elements.dateFondsRecus.value = aujourdhui();
       }
       if (e.target.name === 'commissionne' && e.target.checked && !form.elements.dateCommission.value) {
         form.elements.dateCommission.value = aujourdhui();

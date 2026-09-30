@@ -44,6 +44,11 @@ la somme.
 - **Commission du mois** (générée par les contrats signés ce mois-là) et
   **commission générale** (tous mois confondus, avec ce qui n'est pas encore
   arrivé).
+- **LPP** : moyenne par transfert, et suivi de l'argent sur le compte de libre
+  passage — **en attente de réception** ou **reçu** (avec sa date), bascule
+  cliquable dans la liste.
+- Un contrat **refusé ou annulé** ne rapporte rien : sa commission sort de
+  tous les totaux, même si elle avait été notée.
 - **Récapitulatif mensuel** : par mois, contrats maladie et moyenne des
   complémentaires, Everlife signés, LPP transféré, points, commission générée,
   perçue et à recevoir.
@@ -54,7 +59,7 @@ la somme.
   régulièrement.
 
 ```
-node tools/tests-suivi.mjs     # 62 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 75 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement
