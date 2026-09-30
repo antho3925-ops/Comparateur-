@@ -109,9 +109,6 @@
   function ligne(c) {
     const typ = M.TYPES[c.type];
     const nom = [c.nom, c.prenom].filter(Boolean).join(' ');
-    const fonds = c.type !== 'lpp' ? ''
-      : `<button type="button" class="fonds ${c.fondsRecus ? 'recu' : ''}" data-fonds aria-pressed="${c.fondsRecus}">${
-          c.fondsRecus ? 'Argent reçu' + (c.dateFondsRecus ? ' le ' + dateCh(c.dateFondsRecus) : '') : 'Argent en attente'}</button>`;
     const sous = [c.compagnie, c.paiementDirect && 'paiement direct', c.dateSignature && 'signé le ' + dateCh(c.dateSignature)].filter(Boolean).join(' · ');
     const interrupteur = (champ, actif, dateIso, libelle) =>
       `<button type="button" class="oui-non" data-bascule="${champ}" aria-pressed="${actif}"
@@ -120,11 +117,12 @@
     return `<tr data-id="${esc(c.id)}" class="${M.CLOS.has(c.statut) ? 'clos' : ''}">
       <td class="client"><div class="n">${esc(nom)}</div>${sous ? `<div class="c">${esc(sous)}</div>` : ''}${
         c.note ? `<div class="c">${esc(c.note)}</div>` : ''}</td>
-      <td data-l="Type"><span class="type ${c.type}">${typ.court}</span>${fonds}</td>
+      <td data-l="Type"><span class="type ${c.type}">${typ.court}</span></td>
       <td class="num" data-l="Montant CHF">${c.type === 'everlife' ? '' : chf(c.montant)}</td>
       <td class="num" data-l="Points">${pts(c.points)}</td>
       <td class="num" data-l="Commission CHF">${chf(c.montantCommission)}</td>
-      <td data-l="Statut"><span class="statut ${c.statut}">${M.STATUTS[c.statut]}</span></td>
+      <td data-l="Statut"><span class="statut ${c.statut}">${M.STATUTS[c.statut]}</span>${
+        c.dateFondsRecus ? `<div class="c">le ${dateCh(c.dateFondsRecus)}</div>` : ''}</td>
       <td class="centre" data-l="Policé">${interrupteur('police', c.police, c.datePolice, 'Policé')}</td>
       <td class="centre" data-l="Commissionné">${interrupteur('commissionne', c.commissionne, c.dateCommission, 'Commissionné')}</td>
       <td class="actions"><button type="button" class="btn-modifier" data-modifier>Modifier</button></td>
@@ -230,11 +228,19 @@
     $('bloc-montant').hidden = !M.TYPES[type].montant;
     if (M.TYPES[type].montant) $('lbl-montant').textContent = M.TYPES[type].montant;
     $('bloc-paiement-direct').hidden = type !== 'everlife';
-    $('bloc-fonds').hidden = type !== 'lpp';
+    // Liste des statuts propre au type ; le statut choisi est garde s'il existe.
+    const sel = form.elements.statut, avant = sel.value;
+    sel.innerHTML = M.STATUTS_PAR_TYPE[type].map((v) => `<option value="${v}">${M.STATUTS[v]}</option>`).join('');
+    sel.value = M.statutPour(type, avant || 'proposition');
+    majFonds();
     $('lbl-compagnie').textContent = type === 'lpp' ? 'Institution de prévoyance / libre passage' : 'Compagnie';
     const deja = contrats.filter((c) => c.type === type).map((c) => c.compagnie).filter(Boolean);
     const proposees = [...new Set([...(type === 'maladie' ? CAISSES : []), ...deja])].sort();
     $('compagnies').innerHTML = proposees.map((p) => `<option value="${esc(p)}">`).join('');
+  }
+
+  function majFonds() {
+    $('bloc-fonds').hidden = !(form.elements.type.value === 'lpp' && form.elements.statut.value === 'argent_recu');
   }
 
   function ouvrir(c) {
@@ -248,15 +254,15 @@
       f[k].value = src[k] || '';
     }
     for (const k of ['montant', 'points', 'montantCommission']) f[k].value = src[k] ?? '';
-    f.statut.value = src.statut;
     f.police.checked = !!src.police;
     f.commissionne.checked = !!src.commissionne;
     f.paiementDirect.checked = !!src.paiementDirect;
-    f.fondsRecus.checked = !!src.fondsRecus;
     f.dateFondsRecus.value = src.dateFondsRecus || '';
     $('dlg-titre').textContent = c ? 'Modifier le contrat' : 'Nouveau contrat';
     $('btn-supprimer').hidden = !c;
     majLibelles();
+    f.statut.value = src.statut;
+    majFonds();
     dlg.showModal();
     f.nom.focus();
   }
@@ -278,7 +284,6 @@
       dateCommission: f.commissionne.checked ? f.dateCommission.value : '',
       montantCommission: f.montantCommission.value,
       paiementDirect: f.paiementDirect.checked,
-      fondsRecus: f.fondsRecus.checked,
       dateFondsRecus: f.dateFondsRecus.value,
       note: f.note.value,
       cree: avant?.cree,
@@ -350,7 +355,6 @@
   document.addEventListener('DOMContentLoaded', () => {
     const optionsStatut = Object.entries(M.STATUTS).map(([v, l]) => `<option value="${v}">${l}</option>`).join('');
     $('f-statut').insertAdjacentHTML('beforeend', optionsStatut);
-    $('c-statut').innerHTML = optionsStatut;
 
     $('onglets').addEventListener('click', (e) => {
       const b = e.target.closest('button[data-type]');
@@ -391,14 +395,6 @@
         rendre();
         return;
       }
-      if (e.target.closest('[data-fonds]')) {
-        const recu = !c.fondsRecus;
-        const maj = { ...c, fondsRecus: recu, dateFondsRecus: recu ? aujourdhui() : '', modifie: new Date().toISOString() };
-        contrats = contrats.map((x) => (x.id === c.id ? maj : x));
-        enregistrer();
-        rendre();
-        return;
-      }
       if (e.target.closest('[data-modifier]')) ouvrir(c);
     });
     $('lignes').addEventListener('dblclick', (e) => {
@@ -414,7 +410,8 @@
       if (e.target.name === 'police' && e.target.checked && !form.elements.datePolice.value) {
         form.elements.datePolice.value = aujourdhui();
       }
-      if (e.target.name === 'fondsRecus' && e.target.checked && !form.elements.dateFondsRecus.value) {
+      if (e.target.name === 'statut') majFonds();
+      if (e.target.name === 'statut' && e.target.value === 'argent_recu' && !form.elements.dateFondsRecus.value) {
         form.elements.dateFondsRecus.value = aujourdhui();
       }
       if (e.target.name === 'commissionne' && e.target.checked && !form.elements.dateCommission.value) {

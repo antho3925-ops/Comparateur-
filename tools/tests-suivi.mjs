@@ -52,8 +52,8 @@ ok('tri par nom : Dupont, Favre, Martin, Rochat',
 
 console.log('\n\x1b[1mTotaux\x1b[0m');
 const t = M.totaux(base);
-ok('points : 55', t.points === 55);
-ok('complémentaires maladie : 145.40', Math.abs(t.montantParType.maladie - 145.4) < 1e-9);
+ok('points : 50 (les 5 du contrat refusé sont perdus)', t.points === 50);
+ok('complémentaires maladie : 85.40 (refusé exclu)', Math.abs(t.montantParType.maladie - 85.4) < 1e-9);
 ok('LPP : 45000', t.montantParType.lpp === 45000);
 ok('complémentaires en cours : 85.40 (refusé exclu)', Math.abs(t.parType.maladie.montantActif - 85.4) < 1e-9);
 ok('Everlife : aucun montant cumulé', t.montantParType.everlife === 0);
@@ -100,7 +100,35 @@ ok('LPP : 40000 en attente de réception', tl.fondsAttente === 40000);
 ok('LPP : 20000 reçus sur le libre passage', tl.fondsRecus === 20000);
 ok('LPP annulé : ni en attente ni reçu', tl.fondsAttente + tl.fondsRecus === 60000);
 ok('LPP : date de réception conservée', lpp[1].dateFondsRecus === '2026-09-15');
-ok('fonds reçus ignoré hors LPP', c({ nom: 'H', type: 'maladie', fondsRecus: true }).fondsRecus === false);
+ok('ancienne sauvegarde : LPP « transmis » devient « transfert en attente »', lpp[0].statut === 'transfert_attente');
+ok('ancienne sauvegarde : LPP coché « argent reçu » devient statut Argent reçu', lpp[1].statut === 'argent_recu');
+ok('LPP : « transmis à la compagnie » absent des statuts', !M.STATUTS_PAR_TYPE.lpp.includes('transmis'));
+ok('LPP : statuts Transfert en attente et Argent reçu',
+  M.STATUTS_PAR_TYPE.lpp.includes('transfert_attente') && M.STATUTS_PAR_TYPE.lpp.includes('argent_recu'));
+ok('maladie : « argent reçu » ramené à accepté', c({ nom: 'H', type: 'maladie', statut: 'argent_recu' }).statut === 'accepte');
+ok('date de réception effacée hors Argent reçu',
+  c({ nom: 'I', type: 'lpp', statut: 'transfert_attente', dateFondsRecus: '2026-09-01' }).dateFondsRecus === '');
+const tp = M.totaux([
+  c({ nom: 'J', type: 'lpp', montant: 10000, statut: 'proposition' }),
+  c({ nom: 'K', type: 'lpp', montant: 5000, statut: 'transfert_attente' }),
+]).parType.lpp;
+ok('LPP : une simple proposition n\'est pas de l\'argent en attente', tp.fondsAttente === 5000);
+
+console.log('\n\x1b[1mContrat perdu\x1b[0m');
+const perdu = [
+  c({ nom: 'L', type: 'maladie', montant: 90, points: 10, montantCommission: 400, statut: 'signe' }),
+  c({ nom: 'M', type: 'everlife', points: 25, montantCommission: 800, statut: 'annule', paiementDirect: true }),
+  c({ nom: 'N', type: 'lpp', montant: 30000, points: 6, montantCommission: 900, statut: 'refuse' }),
+];
+const tpd = M.totaux(perdu);
+ok('annulé ou refusé : points perdus (10 restent)', tpd.points === 10, JSON.stringify(tpd));
+ok('annulé ou refusé : commissions perdues (400 restent)', tpd.commissions === 400);
+ok('Everlife annulé : ni signé, ni paiement direct, ni points',
+  tpd.parType.everlife.signes === 0 && tpd.parType.everlife.paiementDirect === 0 && tpd.parType.everlife.points === 0);
+ok('LPP refusé : montant et points perdus', tpd.parType.lpp.montantActif === 0 && tpd.parType.lpp.points === 0);
+ok('contrat perdu : toujours compté comme saisi', tpd.parType.everlife.nombre === 1);
+const recapP = M.recapMensuel(perdu)[0].totaux;
+ok('récapitulatif mensuel : mêmes pertes (10 pts, CHF 400)', recapP.points === 10 && recapP.commissions === 400);
 ok('LPP : moyenne sur un seul transfert = son montant',
   M.totaux([lpp[0]]).parType.lpp.moyenne === 40000);
 

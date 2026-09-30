@@ -22,7 +22,8 @@ conseiller. Pour chaque contrat — **assurance maladie** (complémentaire),
 montant (prime complémentaire ou montant LPP transféré — Everlife se compte en
 contrats signés, sans montant), le
 nombre de points, le statut (proposition, signé, transmis, accepté, refusé,
-annulé), puis deux interrupteurs cliquables directement dans la liste :
+annulé — pour le LPP : transfert en attente et argent reçu à la place de
+transmis et accepté), puis deux interrupteurs cliquables directement dans la liste :
 **policé** et **déjà commissionné**, chacun avec sa date. Chaque contrat porte
 aussi le **montant de sa commission**, noté à tout moment, qu'elle soit déjà
 perçue ou encore attendue. Les contrats Everlife portent en plus une case
@@ -44,11 +45,12 @@ la somme.
 - **Commission du mois** (générée par les contrats signés ce mois-là) et
   **commission générale** (tous mois confondus, avec ce qui n'est pas encore
   arrivé).
-- **LPP** : moyenne par transfert, et suivi de l'argent sur le compte de libre
-  passage — **en attente de réception** ou **reçu** (avec sa date), bascule
-  cliquable dans la liste.
-- Un contrat **refusé ou annulé** ne rapporte rien : sa commission sort de
-  tous les totaux, même si elle avait été notée.
+- **LPP** : moyenne par transfert. Les statuts propres au LPP remplacent
+  « transmis à la compagnie » : **transfert en attente** puis **argent reçu**
+  (avec la date d'arrivée sur le compte de libre passage). Le bloc LPP totalise
+  l'argent en attente et l'argent reçu.
+- Un contrat **refusé ou annulé** est perdu : il ne vaut plus ni points, ni
+  commission, ni montant, dans tous les totaux et le récapitulatif.
 - **Récapitulatif mensuel** : par mois, contrats maladie et moyenne des
   complémentaires, Everlife signés, LPP transféré, points, commission générée,
   perçue et à recevoir.
@@ -59,7 +61,7 @@ la somme.
   régulièrement.
 
 ```
-node tools/tests-suivi.mjs     # 75 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 87 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement

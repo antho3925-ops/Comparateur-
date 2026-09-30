@@ -13,15 +13,36 @@
     signe:       'Signé',
     transmis:    'Transmis à la compagnie',
     accepte:     'Accepté',
+    transfert_attente: 'Transfert en attente',
+    argent_recu: 'Argent reçu',
     refuse:      'Refusé',
     annule:      'Annulé',
   };
-  // Un contrat refuse ou annule ne sera ni police ni commissionne : il sort des
-  // listes « a faire ».
+  // Un transfert LPP ne passe pas par la compagnie : il attend l'argent sur le
+  // compte de libre passage, puis l'argent est recu.
+  const STATUTS_PAR_TYPE = {
+    maladie:  ['proposition', 'signe', 'transmis', 'accepte', 'refuse', 'annule'],
+    everlife: ['proposition', 'signe', 'transmis', 'accepte', 'refuse', 'annule'],
+    lpp:      ['proposition', 'signe', 'transfert_attente', 'argent_recu', 'refuse', 'annule'],
+  };
+  // Un contrat refuse ou annule est perdu : ni points, ni commission, ni
+  // montant ; il sort aussi des listes « a faire ».
   const CLOS = new Set(['refuse', 'annule']);
-  // Un contrat compte comme signe des sa signature, et le reste une fois
-  // transmis puis accepte.
-  const SIGNES = new Set(['signe', 'transmis', 'accepte']);
+  // Un contrat compte comme signe des sa signature, et le reste ensuite.
+  const SIGNES = new Set(['signe', 'transmis', 'accepte', 'transfert_attente', 'argent_recu']);
+
+  // Ramene un statut au vocabulaire du type (sauvegardes anterieures, import).
+  function statutPour(type, statut, fondsRecus) {
+    if (type === 'lpp') {
+      if (!CLOS.has(statut) && fondsRecus) return 'argent_recu';
+      if (statut === 'transmis') return 'transfert_attente';
+      if (statut === 'accepte') return 'transfert_attente';
+    } else {
+      if (statut === 'transfert_attente') return 'transmis';
+      if (statut === 'argent_recu') return 'accepte';
+    }
+    return STATUTS_PAR_TYPE[type].includes(statut) ? statut : 'proposition';
+  }
 
   const texte = (v) => (v == null ? '' : String(v).trim());
   const nombre = (v) => {
@@ -48,7 +69,8 @@
       compagnie:         texte(brut.compagnie),
       montant:           brut.type === 'everlife' ? null : nombre(brut.montant),
       points:            nombre(brut.points),
-      statut:            STATUTS[brut.statut] ? brut.statut : 'proposition',
+      statut:            statutPour(TYPES[brut.type] ? brut.type : 'maladie', brut.statut,
+                                    brut.type === 'lpp' && oui(brut.fondsRecus)),
       dateSignature:     date(brut.dateSignature),
       police:            oui(brut.police),
       datePolice:        date(brut.datePolice),
@@ -57,13 +79,13 @@
       montantCommission: nombre(brut.montantCommission),
       // Propre a Everlife : sans objet pour les autres types.
       paiementDirect:    brut.type === 'everlife' && oui(brut.paiementDirect),
-      // Propre au LPP : l'argent est-il arrive sur le compte de libre passage ?
-      fondsRecus:        brut.type === 'lpp' && oui(brut.fondsRecus),
-      dateFondsRecus:    brut.type === 'lpp' && oui(brut.fondsRecus) ? date(brut.dateFondsRecus) : '',
+      // Propre au LPP : date d'arrivee de l'argent sur le libre passage.
+      dateFondsRecus:    brut.type === 'lpp' ? date(brut.dateFondsRecus) : '',
       note:              texte(brut.note),
       cree:              texte(brut.cree) || maintenant,
       modifie:           texte(brut.modifie) || maintenant,
     };
+    if (c.statut !== 'argent_recu') c.dateFondsRecus = '';
     if (!c.nom && !c.prenom) return null;
     return c;
   }
@@ -136,14 +158,15 @@
     for (const c of contrats) {
       const p = t.parType[c.type];
       p.nombre += 1;
-      p.points += c.points ?? 0;
-      p.montant += c.montant ?? 0;
-      if (SIGNES.has(c.statut)) p.signes += 1;
-      if (c.paiementDirect) p.paiementDirect += 1;
-      if (!CLOS.has(c.statut) && c.montant != null) { p.montantActif += c.montant; p.avecMontant += 1; }
-      t.points += c.points ?? 0;
-      t.montantParType[c.type] += c.montant ?? 0;
+      if (c.paiementDirect && !CLOS.has(c.statut)) p.paiementDirect += 1;
+      // Un contrat perdu ne vaut ni points, ni commission, ni montant.
       if (CLOS.has(c.statut)) continue;
+      if (SIGNES.has(c.statut)) p.signes += 1;
+      p.points += c.points ?? 0;
+      t.points += c.points ?? 0;
+      p.montant += c.montant ?? 0;
+      t.montantParType[c.type] += c.montant ?? 0;
+      if (c.montant != null) { p.montantActif += c.montant; p.avecMontant += 1; }
       const com = c.montantCommission ?? 0;
       t.commissions += com;
       if (c.commissionne) t.commissionsPercues += com;
@@ -151,7 +174,8 @@
       if (!c.police) t.aPolicer += 1;
       if (!c.commissionne) t.aCommissionner += 1;
       if (c.type === 'lpp' && c.montant != null) {
-        if (c.fondsRecus) p.fondsRecus += c.montant; else p.fondsAttente += c.montant;
+        if (c.statut === 'argent_recu') p.fondsRecus += c.montant;
+        else if (SIGNES.has(c.statut)) p.fondsAttente += c.montant;
       }
     }
     for (const p of Object.values(t.parType)) {
@@ -189,7 +213,6 @@
     ['Date de police', (c) => c.datePolice],
     ['Commissionné', (c) => (c.commissionne ? 'oui' : 'non')],
     ['Date de commission', (c) => c.dateCommission],
-    ['Fonds reçus sur le libre passage', (c) => (c.type === 'lpp' ? (c.fondsRecus ? 'oui' : 'non') : '')],
     ['Date de réception des fonds', (c) => c.dateFondsRecus],
     ['Paiement direct', (c) => (c.type === 'everlife' ? (c.paiementDirect ? 'oui' : 'non') : '')],
     ['Note', (c) => c.note],
@@ -233,6 +256,6 @@
   }
 
   racine.SuiviModele = {
-    TYPES, STATUTS, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
+    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
