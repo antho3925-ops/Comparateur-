@@ -2,7 +2,9 @@
    Suivi des contrats — complète styles.css (jetons, en-tête, cartes, champs).
    ========================================================================== */
 
-.suivi-chiffres { margin-bottom: 20px; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+.suivi-chiffres { margin-bottom: 20px; display: flex; flex-wrap: wrap; }
+/* Chaque ligne de tuiles s'etire sur toute la largeur, quel qu'en soit le nombre. */
+.suivi-chiffres > div { flex: 1 1 190px; }
 .suivi-chiffres .v { font-size: 24px; }
 .suivi-chiffres .s { font-size: 12px; color: var(--texte-3); margin-top: 4px; }
 .suivi-chiffres > div.alerte .v { color: var(--ambre); }
@@ -160,7 +162,4 @@ textarea { resize: vertical; }
 
 .erreur-form { color: var(--rouge); font-size: 13px; font-weight: 600; margin: 12px 0 0; }
 
-/* Sur deux colonnes, une tuile seule en dernière ligne prend toute la largeur. */
-@media (max-width: 480px) {
-  .suivi-chiffres > div:last-child:nth-child(odd) { grid-column: 1 / -1; }
-}
+@media (max-width: 480px) { .suivi-chiffres > div { flex-basis: 140px; } }

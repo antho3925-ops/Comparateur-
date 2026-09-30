@@ -66,8 +66,9 @@
       tuiles.push(['LPP transféré', 'CHF ' + chf(t.montantParType.lpp), 'Montants connus']);
     }
     tuiles.push(['À policer', Fmt.nombre(t.aPolicer), 'Hors refusés et annulés', t.aPolicer > 0]);
-    tuiles.push(['À commissionner', Fmt.nombre(t.aCommissionner),
-      t.commissions ? `CHF ${chf(t.commissions)} déjà perçus` : 'Hors refusés et annulés', t.aCommissionner > 0]);
+    tuiles.push(['À commissionner', Fmt.nombre(t.aCommissionner), 'Hors refusés et annulés', t.aCommissionner > 0]);
+    tuiles.push(['Commissions', 'CHF ' + chf(t.commissions),
+      `CHF ${chf(t.commissionsPercues)} perçus · CHF ${chf(t.commissionsAttendues)} à recevoir`]);
     $('chiffres').innerHTML = tuiles.map(([l, v, s, alerte]) =>
       `<div class="${alerte ? 'alerte' : ''}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${esc(s)}</div></div>`
     ).join('');
@@ -87,6 +88,7 @@
       <td data-l="Type"><span class="type ${c.type}">${typ.court}</span></td>
       <td class="num" data-l="Montant CHF">${chf(c.montant)}</td>
       <td class="num" data-l="Points">${pts(c.points)}</td>
+      <td class="num" data-l="Commission CHF">${chf(c.montantCommission)}</td>
       <td data-l="Statut"><span class="statut ${c.statut}">${M.STATUTS[c.statut]}</span></td>
       <td class="centre" data-l="Policé">${interrupteur('police', c.police, c.datePolice, 'Policé')}</td>
       <td class="centre" data-l="Commissionné">${interrupteur('commissionne', c.commissionne, c.dateCommission, 'Commissionné')}</td>
@@ -116,6 +118,7 @@
       <td>${visibles.length} contrat(s)</td><td></td>
       <td class="num">${typesVus.size === 1 ? 'CHF ' + chf(montant) : ''}</td>
       <td class="num">${pts(t.points)} pts</td>
+      <td class="num">CHF ${chf(t.commissions)}</td>
       <td></td>
       <td class="centre">${visibles.filter((c) => c.police).length} policé(s)</td>
       <td class="centre">${visibles.filter((c) => c.commissionne).length} commissionné(s)</td>
@@ -180,7 +183,7 @@
       datePolice: f.police.checked ? f.datePolice.value : '',
       commissionne: f.commissionne.checked,
       dateCommission: f.commissionne.checked ? f.dateCommission.value : '',
-      montantCommission: f.commissionne.checked ? f.montantCommission.value : '',
+      montantCommission: f.montantCommission.value,
       paiementDirect: f.paiementDirect.checked,
       note: f.note.value,
       cree: avant?.cree,
@@ -277,7 +280,6 @@
         const actif = !c[champ];
         const maj = { ...c, [champ]: actif, [champDate]: actif ? (c[champDate] || aujourdhui()) : '',
                       modifie: new Date().toISOString() };
-        if (champ === 'commissionne' && !actif) maj.montantCommission = null;
         contrats = contrats.map((x) => (x.id === c.id ? maj : x));
         enregistrer();
         rendre();

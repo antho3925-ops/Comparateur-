@@ -83,6 +83,7 @@
     nom:     (a, b) => (a.nom + ' ' + a.prenom).localeCompare(b.nom + ' ' + b.prenom, 'fr', { sensitivity: 'base' }),
     montant: (a, b) => (b.montant ?? -1) - (a.montant ?? -1),
     points:  (a, b) => (b.points ?? -1) - (a.points ?? -1),
+    commission: (a, b) => (b.montantCommission ?? -1) - (a.montantCommission ?? -1),
   };
   function trier(contrats, cle = 'recent') {
     return [...contrats].sort(TRIS[cle] || TRIS.recent);
@@ -95,13 +96,18 @@
       montantParType: { maladie: 0, everlife: 0, lpp: 0 },
       aPolicer: 0,
       aCommissionner: 0,
-      commissions: 0,
+      commissions: 0,        // toutes les commissions notees
+      commissionsPercues: 0, // sur les contrats deja commissionnes
+      commissionsAttendues: 0, // sur les contrats en cours pas encore commissionnes
     };
     for (const c of contrats) {
       t.points += c.points ?? 0;
       t.montantParType[c.type] += c.montant ?? 0;
-      t.commissions += c.montantCommission ?? 0;
+      const com = c.montantCommission ?? 0;
+      t.commissions += com;
+      if (c.commissionne) t.commissionsPercues += com;
       if (CLOS.has(c.statut)) continue;
+      if (!c.commissionne) t.commissionsAttendues += com;
       if (!c.police) t.aPolicer += 1;
       if (!c.commissionne) t.aCommissionner += 1;
     }
@@ -117,13 +123,13 @@
     ['Compagnie', (c) => c.compagnie],
     ['Montant CHF', (c) => c.montant ?? ''],
     ['Points', (c) => c.points ?? ''],
+    ['Commission CHF', (c) => c.montantCommission ?? ''],
     ['Statut', (c) => STATUTS[c.statut]],
     ['Date de signature', (c) => c.dateSignature],
     ['Policé', (c) => (c.police ? 'oui' : 'non')],
     ['Date de police', (c) => c.datePolice],
     ['Commissionné', (c) => (c.commissionne ? 'oui' : 'non')],
     ['Date de commission', (c) => c.dateCommission],
-    ['Commission CHF', (c) => c.montantCommission ?? ''],
     ['Paiement direct', (c) => (c.type === 'everlife' ? (c.paiementDirect ? 'oui' : 'non') : '')],
     ['Note', (c) => c.note],
   ];

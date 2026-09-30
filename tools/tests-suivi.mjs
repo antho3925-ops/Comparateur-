@@ -34,9 +34,9 @@ ok('espaces retirés', c({ nom: '  Dupont ' }).nom === 'Dupont');
 
 const base = [
   c({ id: '1', nom: 'Dupont', prenom: 'Marie', type: 'maladie', montant: 85.4, points: 12, statut: 'accepte', police: true, commissionne: true, montantCommission: 300, compagnie: 'CSS', dateSignature: '2026-03-01' }),
-  c({ id: '2', nom: 'Martin', prenom: 'Paul', type: 'everlife', montant: 200, points: 30, statut: 'signe', dateSignature: '2026-05-10' }),
+  c({ id: '2', nom: 'Martin', prenom: 'Paul', type: 'everlife', montant: 200, points: 30, statut: 'signe', montantCommission: 450, dateSignature: '2026-05-10' }),
   c({ id: '3', nom: 'Rochat', prenom: 'Luc', type: 'lpp', montant: 45000, points: 8, statut: 'transmis', police: true, dateSignature: '2026-04-02' }),
-  c({ id: '4', nom: 'Favre', prenom: 'Anne', type: 'maladie', montant: 60, points: 5, statut: 'refuse' }),
+  c({ id: '4', nom: 'Favre', prenom: 'Anne', type: 'maladie', montant: 60, points: 5, statut: 'refuse', montantCommission: 100 }),
 ];
 
 console.log('\n\x1b[1mFiltres et tri\x1b[0m');
@@ -57,12 +57,18 @@ ok('complémentaires maladie : 145.40', Math.abs(t.montantParType.maladie - 145.
 ok('LPP : 45000', t.montantParType.lpp === 45000);
 ok('à policer : 1 (le refusé ne compte pas)', t.aPolicer === 1, JSON.stringify(t));
 ok('à commissionner : 2 (le refusé ne compte pas)', t.aCommissionner === 2);
-ok('commissions perçues : 300', t.commissions === 300);
+ok('commissions notées : 850', t.commissions === 850);
+ok('commissions perçues : 300', t.commissionsPercues === 300);
+ok('commissions à recevoir : 450 (le refusé ne compte pas)', t.commissionsAttendues === 450, JSON.stringify(t));
+ok('tri par commission : Martin en tête', M.trier(base, 'commission')[0].id === '2');
+ok('commission notée sans être commissionné : conservée',
+  c({ nom: 'A', montantCommission: '120', commissionne: false }).montantCommission === 120);
 
 console.log('\n\x1b[1mCSV\x1b[0m');
 const csv = M.versCsv([c({ nom: 'Dupont; "fils"', prenom: 'Jean', montant: 12.5, note: 'ligne1\nligne2' })]);
 ok('BOM UTF-8 en tête', csv.charCodeAt(0) === 0xfeff);
 ok('en-tête au point-virgule', csv.split('\r\n')[0].startsWith('﻿Nom;Prénom;Type'));
+ok('CSV : Commission CHF juste après Points', csv.includes(';Points;Commission CHF;'));
 ok('champ à point-virgule et guillemets échappé', csv.includes('"Dupont; ""fils"""'));
 const csvE = M.versCsv([c({ nom: 'E', type: 'everlife', paiementDirect: true }), c({ nom: 'M' })]).split('\r\n');
 ok('CSV : colonne Paiement direct, oui pour Everlife, vide sinon',
