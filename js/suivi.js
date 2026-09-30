@@ -273,7 +273,7 @@
     if (M.TYPES[type].montant) $('lbl-montant').textContent = M.TYPES[type].montant;
     // Simple rappel des montants usuels, rien n'est calcule a partir de lui.
     $('aide-commission').textContent = type === 'everlife'
-      ? 'Everlife : CHF 150.– à la signature, CHF 400.– une fois l\'apport payé.'
+      ? 'Everlife : CHF 150.– à la signature (une fois le contrôle qualité validé), CHF 400.– une fois l\'apport payé.'
       : type === 'lpp' ? 'Calculée : 1.5 % du montant transféré, comptée une fois l\'argent reçu.' : '';
     form.elements.montantCommission.readOnly = type === 'lpp';
     $('bloc-paiement-direct').hidden = type !== 'everlife';
