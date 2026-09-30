@@ -80,6 +80,26 @@ la somme.
   pour Excel. Les données n'existent que sur l'appareil : exporter
   régulièrement.
 
+### Lien pour les téléphones (GitHub Pages)
+
+Sur téléphone, un fichier HTML ouvert depuis l'app Fichiers ne s'exécute pas :
+le suivi se diffuse donc par un lien, hébergé gratuitement par GitHub Pages.
+
+    https://antho3925-ops.github.io/Comparateur-/suivi.html
+
+- **Seule l'application vide est en ligne** ; les contrats restent enregistrés
+  sur chaque téléphone et ne passent jamais par GitHub.
+- **Application installable** (`suivi.webmanifest`, icônes `assets/icones/`) :
+  sur iPhone, Safari → Partager → « Sur l'écran d'accueil » ; sur Android,
+  Chrome → « Installer l'application ». Toujours l'ouvrir ensuite depuis l'icône.
+- **Hors connexion** après la première ouverture (`sw-suivi.js`, réseau
+  d'abord puis cache) ; chaque version poussée arrive seule à la prochaine
+  ouverture en ligne.
+- Activation, une seule fois : dépôt → Settings → Pages → *Deploy from a
+  branch* → branche `claude/offline-health-insurance-app-h8xpdb`, dossier
+  `/ (root)` → Save. `.nojekyll` sert les fichiers tels quels.
+- Icônes régénérées par `node tools/icones.mjs`.
+
 ### Où vivent les données du suivi
 
 - **Chaque appareil a ses propres chiffres.** Les contrats sont enregistrés dans
@@ -120,6 +140,8 @@ hors ligne en ouvrant `index.html` directement.
 .
 ├── index.html                     Comparateur
 ├── suivi.html                     Suivi des contrats (maladie, Everlife, LPP)
+├── suivi.webmanifest              Suivi installable sur l'écran d'accueil
+├── sw-suivi.js                    Suivi hors connexion une fois ouvert en ligne
 ├── build.mjs                      Compile data/*.json -> data/db.js (+ validation)
 ├── dist/                          Export en fichier unique (généré, non versionné)
 ├── tools/

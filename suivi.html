@@ -7,6 +7,15 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="stylesheet" href="assets/styles.css">
 <link rel="stylesheet" href="assets/suivi.css">
+<!-- Application installable (ecran d'accueil), hors connexion une fois ouverte -->
+<link rel="manifest" href="suivi.webmanifest">
+<meta name="theme-color" content="#0a1628">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Suivi STF">
+<link rel="apple-touch-icon" href="assets/icones/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="assets/icones/icone-192.png">
 </head>
 <body>
 
@@ -29,6 +38,18 @@
 <main class="page">
 
   <div class="avertissement" id="alerte-stockage" hidden></div>
+
+  <div class="rappel-sauvegarde installer" id="aide-installation" hidden>
+    <div>
+      <strong>Installez l'application sur votre iPhone.</strong>
+      Touchez <b>Partager</b> <span aria-hidden="true">⎋</span> puis <b>« Sur l'écran d'accueil »</b>.
+      Ouvrez-la ensuite toujours depuis l'icône : elle fonctionne hors connexion et garde vos
+      contrats durablement. Les contrats saisis ici dans Safari ne sont pas repris par l'icône.
+    </div>
+    <div class="rappel-actions">
+      <button class="btn secondaire" type="button" id="aide-installation-ok">Compris</button>
+    </div>
+  </div>
 
   <div class="rappel-sauvegarde" id="rappel-sauvegarde" role="status" hidden>
     <div>

@@ -242,6 +242,10 @@ button.paye:hover { box-shadow: 0 0 0 2px color-mix(in srgb, var(--or) 25%, tran
 .table-suivi td[data-l="Statut"] .c { font-size: 11.5px; color: var(--texte-3); margin: 2px 0 0 14px; }
 .table-suivi td.client { min-width: 160px; }
 
+/* Application installee en plein ecran : l'en-tete passe sous la barre d'etat. */
+.entete { padding-top: env(safe-area-inset-top); }
+.rappel-sauvegarde.installer { border-left-color: var(--marine-500); }
+
 /* Rappel d'export de la sauvegarde */
 .rappel-sauvegarde {
   display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;

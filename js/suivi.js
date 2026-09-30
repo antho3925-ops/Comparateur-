@@ -541,6 +541,23 @@
       if (f) importer(f);
     });
 
+    // En ligne (lien https) : fonctionnement hors connexion une fois ouvert.
+    // Sans effet quand le fichier est ouvert en local (file://).
+    if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+      navigator.serviceWorker.register('sw-suivi.js').catch(() => {});
+    }
+    // iPhone dans Safari (pas encore installe) : explique l'ajout a l'ecran
+    // d'accueil, seule facon d'avoir une sauvegarde durable sur iOS.
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent)
+      || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const installee = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+    $('aide-installation').hidden = !(ios && !installee && location.protocol === 'https:'
+      && !lireLocal('stf-suivi-aide-installation-vue'));
+    $('aide-installation-ok').addEventListener('click', () => {
+      ecrireLocal('stf-suivi-aide-installation-vue', '1');
+      $('aide-installation').hidden = true;
+    });
+
     // Un autre onglet a enregistre : on reprend ses donnees aussitot.
     window.addEventListener('storage', (e) => {
       if (e.key !== CLE && e.key !== null) return;
