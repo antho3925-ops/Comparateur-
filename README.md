@@ -80,7 +80,27 @@ la somme.
   pour Excel. Les données n'existent que sur l'appareil : exporter
   régulièrement.
 
+### Où vivent les données du suivi
+
+- **Chaque appareil a ses propres chiffres.** Les contrats sont enregistrés dans
+  le navigateur de l'appareil qui les saisit, jamais envoyés ailleurs. Deux
+  collègues qui ouvrent le même lien ou le même fichier ont chacun leur liste,
+  invisible pour l'autre.
+- **Les chiffres restent notés** après fermeture de l'onglet, du navigateur ou
+  de l'appareil, et chaque modification est enregistrée aussitôt (relue pour
+  vérification). Deux onglets ouverts se tiennent à jour l'un l'autre.
+- **Même appareil, même navigateur = mêmes données** : un collègue qui utilise
+  votre session voit vos contrats. Un autre navigateur (Chrome / Safari) sur le
+  même appareil a, lui, une liste séparée.
+- **Ce qui efface les données** : vider les données de navigation, la
+  navigation privée (tout disparaît à la fermeture), désinstaller le
+  navigateur, changer d'appareil. Sur iPhone, ouvrir le fichier dans Safari
+  (pas en aperçu depuis Mail ou Fichiers) ; Safari peut effacer les données
+  d'un site non utilisé pendant sept jours, sauf s'il est ajouté à l'écran
+  d'accueil. D'où l'export régulier de la sauvegarde.
+
 ```
+node tools/verif-stockage.mjs  # 16 verifications en navigateur : appareils, fermeture, onglets, reseau
 node tools/tests-suivi.mjs     # 137 tests du modele (filtres, totaux, CSV, import)
 ```
 

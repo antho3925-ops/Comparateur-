@@ -87,6 +87,8 @@ facture — mais reste un fichier de clients soumis à la LPD.
 | Lieu de stockage | `localStorage` du navigateur, sur l'appareil du conseiller uniquement |
 | Transmission | Aucune : pas de `fetch`, `XMLHttpRequest` ni ressource externe |
 | Sauvegarde | Fichier JSON exporté à la main, à ranger dans le dossier sécurisé du cabinet |
+| Cloisonnement | Chaque navigateur de chaque appareil a sa propre liste ; aucun partage entre collègues |
+| Vérification | `node tools/verif-stockage.mjs` : deux appareils, fermeture du navigateur, deux onglets, absence de trafic réseau |
 
 ```bash
 grep -n "fetch(\|XMLHttpRequest\|WebSocket\|sendBeacon" js/suivi*.js suivi.html

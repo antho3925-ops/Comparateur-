@@ -28,13 +28,28 @@
   }
   function enregistrer() {
     try {
-      localStorage.setItem(CLE, JSON.stringify({ version: 1, contrats }));
-      stockageOk = true;
+      const texte = JSON.stringify({ version: 1, contrats });
+      localStorage.setItem(CLE, texte);
+      // Relecture : l'enregistrement n'est tenu pour fait qu'une fois verifie.
+      stockageOk = localStorage.getItem(CLE) === texte;
     } catch {
       stockageOk = false;
     }
     alerteStockage();
   }
+
+  // Toute modification repart de ce qui est enregistre, et non de la copie en
+  // memoire : si l'application est ouverte dans deux onglets, la saisie faite
+  // dans l'autre onglet n'est jamais ecrasee.
+  function modifier(transformer) {
+    if (stockageOk) {
+      const frais = charger();
+      if (stockageOk) contrats = frais;
+    }
+    contrats = transformer(contrats);
+    enregistrer();
+  }
+  const remplacer = (id, maj) => (liste) => liste.map((x) => (x.id === id ? maj(x) : x));
   function alerteStockage() {
     const el = $('alerte-stockage');
     el.hidden = stockageOk;
@@ -342,10 +357,9 @@
       f.nom.focus();
       return;
     }
-    contrats = avant ? contrats.map((x) => (x.id === id ? c : x)) : [...contrats, c];
+    modifier((liste) => (liste.some((x) => x.id === c.id) ? liste.map((x) => (x.id === c.id ? c : x)) : [...liste, c]));
     // Un contrat signe un autre mois ne doit pas disparaitre de l'ecran.
     if (filtre.mois !== 'tous' && M.moisDe(c) !== filtre.mois) filtre.mois = M.moisDe(c);
-    enregistrer();
     dlg.close();
     rendre();
   }
@@ -376,6 +390,7 @@
   async function importer(fichier) {
     try {
       const { contrats: importes, rejetes } = M.lireSauvegarde(await fichier.text());
+      if (stockageOk) contrats = charger();
       let message;
       if (contrats.length && confirm(
         `${importes.length} contrat(s) dans le fichier.\n\nOK : fusionner avec les ${contrats.length} contrat(s) déjà présents.\n`
@@ -433,26 +448,25 @@
       if (bascule) {
         const champ = bascule.dataset.bascule;
         const champDate = champ === 'police' ? 'datePolice' : 'dateCommission';
-        const actif = !c[champ];
-        const maj = { ...c, [champ]: actif, [champDate]: actif ? (c[champDate] || aujourdhui()) : '',
-                      modifie: new Date().toISOString() };
-        contrats = contrats.map((x) => (x.id === c.id ? maj : x));
-        enregistrer();
+        modifier(remplacer(c.id, (x) => {
+          const actif = !x[champ];
+          return { ...x, [champ]: actif, [champDate]: actif ? (x[champDate] || aujourdhui()) : '',
+                   modifie: new Date().toISOString() };
+        }));
         rendre();
         return;
       }
       if (e.target.closest('[data-paye]')) {
-        const maj = { ...c, clientPaye: !c.clientPaye, modifie: new Date().toISOString() };
-        maj.montantCommission = M.commissionEverlifeAjustee(c.montantCommission, maj);
-        contrats = contrats.map((x) => (x.id === c.id ? maj : x));
-        enregistrer();
+        modifier(remplacer(c.id, (x) => {
+          const maj = { ...x, clientPaye: !x.clientPaye, modifie: new Date().toISOString() };
+          maj.montantCommission = M.commissionEverlifeAjustee(x.montantCommission, maj);
+          return maj;
+        }));
         rendre();
         return;
       }
       if (e.target.closest('[data-base]')) {
-        const maj = M.normaliser({ ...c, baseSignee: !c.baseSignee, modifie: new Date().toISOString() });
-        contrats = contrats.map((x) => (x.id === c.id ? maj : x));
-        enregistrer();
+        modifier(remplacer(c.id, (x) => M.normaliser({ ...x, baseSignee: !x.baseSignee, modifie: new Date().toISOString() })));
         rendre();
         return;
       }
@@ -487,8 +501,7 @@
       const id = form.elements.id.value;
       const c = contrats.find((x) => x.id === id);
       if (!c || !confirm(`Supprimer le contrat de ${[c.prenom, c.nom].filter(Boolean).join(' ')} ?`)) return;
-      contrats = contrats.filter((x) => x.id !== id);
-      enregistrer();
+      modifier((liste) => liste.filter((x) => x.id !== id));
       dlg.close();
       rendre();
     });
@@ -502,8 +515,22 @@
       if (f) importer(f);
     });
 
-    // Demande au navigateur de ne pas purger ces donnees sous pression d'espace.
-    navigator.storage?.persist?.().catch(() => {});
+    // Un autre onglet a enregistre : on reprend ses donnees aussitot.
+    window.addEventListener('storage', (e) => {
+      if (e.key !== CLE && e.key !== null) return;
+      contrats = charger();
+      rendre();
+    });
+
+    // Demande au navigateur de ne pas effacer ces donnees de lui-meme
+    // (manque d'espace, nettoyage automatique), et affiche la reponse.
+    Promise.resolve(navigator.storage?.persist?.())
+      .catch(() => false)
+      .then((accorde) => {
+        $('etat-stockage').textContent = accorde
+          ? 'Ce navigateur garantit de ne pas effacer ces données de lui-même.'
+          : 'Ce navigateur ne garantit pas la conservation à long terme : exportez une sauvegarde régulièrement.';
+      });
     alerteStockage();
     rendre();
   });
