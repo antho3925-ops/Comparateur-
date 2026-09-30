@@ -166,12 +166,20 @@
 .actions-sauvegarde { display: flex; gap: 10px; flex-wrap: wrap; }
 
 /* Fenêtre de saisie */
+.dlg-fond {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; justify-content: center; align-items: flex-start;
+  overflow-y: auto; -webkit-overflow-scrolling: touch; overscroll-behavior: contain;
+  padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom));
+  background: rgba(6, 13, 24, .55);
+}
+.dlg-fond[hidden] { display: none; }
+body.fenetre-ouverte { overflow: hidden; }
 .dlg {
-  border: 1px solid var(--bord); border-radius: var(--r-l); padding: 0;
-  width: min(680px, calc(100vw - 24px)); max-height: calc(100vh - 24px);
+  border: 1px solid var(--bord); border-radius: var(--r-l); padding: 0; margin: auto 0;
+  width: min(680px, 100%);
   background: var(--surface); color: var(--texte); box-shadow: var(--ombre-3);
 }
-.dlg::backdrop { background: rgba(6, 13, 24, .55); backdrop-filter: blur(2px); }
 .dlg header {
   display: flex; align-items: center; justify-content: space-between;
   padding: 16px 20px; border-bottom: 1px solid var(--filet-or);
@@ -262,3 +270,6 @@ button.paye:hover { box-shadow: 0 0 0 2px color-mix(in srgb, var(--or) 25%, tran
 .rappel-sauvegarde[hidden] { display: none; }
 .rappel-sauvegarde strong { color: var(--ambre); display: block; margin-bottom: 2px; }
 .rappel-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+/* Pas de surbrillance bleue au toucher sur les cases et boutons. */
+.bascule, .choix-type label, .oui-non, .paye, .btn, .btn-modifier { -webkit-tap-highlight-color: transparent; }

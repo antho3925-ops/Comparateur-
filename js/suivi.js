@@ -253,6 +253,18 @@
 
   // ------------------------------------------------------------ Fenetre
   const dlg = $('dlg-contrat');
+  const fenetre = {
+    ouvrir() {
+      dlg.hidden = false;
+      dlg.scrollTop = 0;
+      document.body.classList.add('fenetre-ouverte');
+    },
+    fermer() {
+      dlg.hidden = true;
+      document.body.classList.remove('fenetre-ouverte');
+      document.activeElement?.blur?.();
+    },
+  };
   const form = $('form-contrat');
 
   function majLibelles() {
@@ -336,7 +348,7 @@
     majLibelles();
     f.statut.value = src.statut;
     majFonds();
-    dlg.showModal();
+    fenetre.ouvrir();
     placerCurseur(f.nom);
   }
 
@@ -374,7 +386,7 @@
     modifier((liste) => (liste.some((x) => x.id === c.id) ? liste.map((x) => (x.id === c.id ? c : x)) : [...liste, c]));
     // Un contrat signe un autre mois ne doit pas disparaitre de l'ecran.
     if (filtre.mois !== 'tous' && M.moisDe(c) !== filtre.mois) filtre.mois = M.moisDe(c);
-    dlg.close();
+    fenetre.fermer();
     rendre();
   }
 
@@ -526,14 +538,15 @@
         form.elements.dateCommission.value = aujourdhui();
       }
     });
-    $('btn-annuler').addEventListener('click', () => dlg.close());
-    $('btn-fermer').addEventListener('click', () => dlg.close());
+    $('btn-annuler').addEventListener('click', () => fenetre.fermer());
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !dlg.hidden) fenetre.fermer(); });
+    $('btn-fermer').addEventListener('click', () => fenetre.fermer());
     $('btn-supprimer').addEventListener('click', () => {
       const id = form.elements.id.value;
       const c = contrats.find((x) => x.id === id);
       if (!c || !confirm(`Supprimer le contrat de ${[c.prenom, c.nom].filter(Boolean).join(' ')} ?`)) return;
       modifier((liste) => liste.filter((x) => x.id !== id));
-      dlg.close();
+      fenetre.fermer();
       rendre();
     });
 

@@ -191,11 +191,14 @@
 
 </main>
 
-<dialog id="dlg-contrat" class="dlg">
-  <form method="dialog" id="form-contrat" novalidate>
+<!-- Fenetre de saisie : simple calque, pas d'element <dialog>. En application
+     installee sur iPhone, les champs d'un <dialog> modal n'ouvrent pas le clavier. -->
+<div id="dlg-contrat" class="dlg-fond" role="dialog" aria-modal="true" aria-labelledby="dlg-titre" hidden>
+ <div class="dlg">
+  <form id="form-contrat" novalidate>
     <header>
       <h2 id="dlg-titre">Nouveau contrat</h2>
-      <button type="button" class="fermer" id="btn-fermer" aria-label="Fermer" autofocus>×</button>
+      <button type="button" class="fermer" id="btn-fermer" aria-label="Fermer">×</button>
     </header>
     <div class="corps">
       <input type="hidden" name="id">
@@ -292,7 +295,8 @@
       <button type="submit" class="btn" id="btn-enregistrer">Enregistrer</button>
     </footer>
   </form>
-</dialog>
+ </div>
+</div>
 
 <script src="js/format.js"></script>
 <script src="js/suivi-modele.js"></script>
