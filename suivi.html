@@ -30,6 +30,7 @@
 
   <div class="avertissement" id="alerte-stockage" hidden></div>
 
+  <section class="blocs-types" id="blocs-types" aria-live="polite"></section>
   <section class="chiffre-cle suivi-chiffres" id="chiffres" aria-live="polite"></section>
 
   <section class="carte">
@@ -143,7 +144,7 @@
           <label for="c-prenom">Prénom</label>
           <input id="c-prenom" name="prenom" autocomplete="off">
         </div>
-        <div>
+        <div id="bloc-montant">
           <label for="c-montant" id="lbl-montant">Montant (CHF)</label>
           <input id="c-montant" name="montant" type="number" min="0" step="0.05" inputmode="decimal">
         </div>

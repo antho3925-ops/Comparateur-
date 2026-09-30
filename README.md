@@ -19,7 +19,8 @@ estimations fondées sur les grilles saisies, destinées au conseil.
 Seconde page, indépendante du comparateur : le carnet de production du
 conseiller. Pour chaque contrat — **assurance maladie** (complémentaire),
 **Everlife** ou **transfert LPP** — on note le nom et le prénom du client, le
-montant (prime complémentaire, prime Everlife ou montant LPP transféré), le
+montant (prime complémentaire ou montant LPP transféré — Everlife se compte en
+contrats signés, sans montant), le
 nombre de points, le statut (proposition, signé, transmis, accepté, refusé,
 annulé), puis deux interrupteurs cliquables directement dans la liste :
 **policé** et **déjà commissionné**, chacun avec sa date. Chaque contrat porte
@@ -32,16 +33,19 @@ la somme.
   ouvrir par double-clic, sur ordinateur comme sur téléphone.
 - Les saisies sont **conservées dans le navigateur de l'appareil**
   (`localStorage`) et survivent à la fermeture de la page.
-- Tuiles de synthèse : nombre de contrats, total des points, montants par type,
-  contrats restant à policer et à commissionner, total des commissions
+- Synthèse en trois blocs séparés : **maladie** (contrats, total des
+  complémentaires, **moyenne par contrat**, points), **Everlife** (contrats
+  signés, paiement direct, points) et **LPP** (montant transféré, transferts,
+  points) ; puis total des points, contrats restant à policer et à commissionner, total des commissions
   (perçues / à recevoir).
+- En vue « Tous », la liste est découpée en trois sections avec leurs totaux.
 - Filtres par type, statut, policé, commissionné, recherche par nom ou compagnie.
 - **Sauvegarde** : export / import JSON (fusion ou remplacement) et export CSV
   pour Excel. Les données n'existent que sur l'appareil : exporter
   régulièrement.
 
 ```
-node tools/tests-suivi.mjs     # 42 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 50 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement

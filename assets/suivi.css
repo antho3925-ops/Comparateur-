@@ -9,6 +9,36 @@
 .suivi-chiffres .s { font-size: 12px; color: var(--texte-3); margin-top: 4px; }
 .suivi-chiffres > div.alerte .v { color: var(--ambre); }
 
+/* Un bloc par type : maladie, Everlife, LPP */
+.blocs-types { display: grid; grid-template-columns: 4fr 3fr 3fr; gap: 14px; margin-bottom: 14px; }
+.blocs-types.seul { grid-template-columns: 1fr; }
+@media (max-width: 1060px) { .blocs-types { grid-template-columns: 1fr; } }
+.bloc-type h3 {
+  display: flex; align-items: center; gap: 9px; margin: 0 0 8px 2px;
+  font-family: var(--serif); font-size: 12.5px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: .14em; color: var(--texte-2);
+}
+.bloc-type h3::before { content: ''; width: 9px; height: 9px; border-radius: 3px; background: var(--or); }
+.bloc-type.maladie h3::before  { background: hsl(212 60% 50%); }
+.bloc-type.everlife h3::before { background: hsl(316 55% 55%); }
+.bloc-type .suivi-chiffres { margin-bottom: 0; height: calc(100% - 26px); }
+.bloc-type .suivi-chiffres .v { font-size: 22px; }
+.bloc-type .suivi-chiffres > div { flex-basis: 150px; }
+.bloc-type.maladie .suivi-chiffres  { border-top-color: hsl(212 60% 50%); }
+.bloc-type.everlife .suivi-chiffres { border-top-color: hsl(316 55% 55%); }
+
+/* Sections de la liste en vue « Tous » */
+.table-suivi tr.section th {
+  padding: 18px 12px 8px; text-align: left; border-bottom: 1px solid var(--filet-or);
+  font-family: var(--serif); font-size: 12.5px; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--texte);
+}
+.table-suivi tr.section th span {
+  margin-left: 12px; font-family: inherit; font-size: 12px; letter-spacing: 0; text-transform: none;
+  color: var(--texte-3); font-weight: 500; font-variant-numeric: tabular-nums;
+}
+.table-suivi tr.section:hover { background: transparent; }
+
 /* Onglets de type */
 .onglets {
   display: inline-flex; gap: 2px; padding: 3px; border-radius: 10px;
@@ -96,6 +126,9 @@
     background: var(--surface);
   }
   .table-suivi tbody td { border: 0; padding: 0; }
+  .table-suivi tbody tr.section { display: block; border: 0; background: transparent; padding: 10px 2px 4px; margin: 0; }
+  .table-suivi tr.section th { display: block; padding: 0; border: 0; }
+  .table-suivi tr.section th span { display: block; margin: 3px 0 0; }
   .table-suivi td.client { grid-column: 1 / -1; }
   .table-suivi td.num, .table-suivi td.centre { text-align: left; }
   .table-suivi td[data-l]::before {

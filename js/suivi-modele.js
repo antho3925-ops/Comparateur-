@@ -3,7 +3,8 @@
 (function (racine) {
   const TYPES = {
     maladie:  { libelle: 'Assurance maladie', court: 'Maladie',  montant: 'Prime complémentaire (CHF / mois)' },
-    everlife: { libelle: 'Everlife',          court: 'Everlife', montant: 'Prime Everlife (CHF)' },
+    // Everlife se compte en contrats signes : aucun montant n'est saisi.
+    everlife: { libelle: 'Everlife',          court: 'Everlife', montant: null },
     lpp:      { libelle: 'Transfert LPP',     court: 'LPP',      montant: 'Montant transféré (CHF)' },
   };
 
@@ -18,6 +19,9 @@
   // Un contrat refuse ou annule ne sera ni police ni commissionne : il sort des
   // listes « a faire ».
   const CLOS = new Set(['refuse', 'annule']);
+  // Un contrat compte comme signe des sa signature, et le reste une fois
+  // transmis puis accepte.
+  const SIGNES = new Set(['signe', 'transmis', 'accepte']);
 
   const texte = (v) => (v == null ? '' : String(v).trim());
   const nombre = (v) => {
@@ -42,7 +46,7 @@
       nom:               texte(brut.nom),
       prenom:            texte(brut.prenom),
       compagnie:         texte(brut.compagnie),
-      montant:           nombre(brut.montant),
+      montant:           brut.type === 'everlife' ? null : nombre(brut.montant),
       points:            nombre(brut.points),
       statut:            STATUTS[brut.statut] ? brut.statut : 'proposition',
       dateSignature:     date(brut.dateSignature),
@@ -99,8 +103,22 @@
       commissions: 0,        // toutes les commissions notees
       commissionsPercues: 0, // sur les contrats deja commissionnes
       commissionsAttendues: 0, // sur les contrats en cours pas encore commissionnes
+      parType: {},
     };
+    for (const type of Object.keys(TYPES)) {
+      // montantActif / avecMontant : contrats en cours (ni refuses ni annules)
+      // portant un montant, base de la moyenne par contrat.
+      t.parType[type] = { nombre: 0, signes: 0, points: 0, montant: 0, montantActif: 0,
+                          avecMontant: 0, moyenne: null, paiementDirect: 0 };
+    }
     for (const c of contrats) {
+      const p = t.parType[c.type];
+      p.nombre += 1;
+      p.points += c.points ?? 0;
+      p.montant += c.montant ?? 0;
+      if (SIGNES.has(c.statut)) p.signes += 1;
+      if (c.paiementDirect) p.paiementDirect += 1;
+      if (!CLOS.has(c.statut) && c.montant != null) { p.montantActif += c.montant; p.avecMontant += 1; }
       t.points += c.points ?? 0;
       t.montantParType[c.type] += c.montant ?? 0;
       const com = c.montantCommission ?? 0;
@@ -110,6 +128,9 @@
       if (!c.commissionne) t.commissionsAttendues += com;
       if (!c.police) t.aPolicer += 1;
       if (!c.commissionne) t.aCommissionner += 1;
+    }
+    for (const p of Object.values(t.parType)) {
+      if (p.avecMontant) p.moyenne = p.montantActif / p.avecMontant;
     }
     return t;
   }
@@ -121,7 +142,7 @@
     ['Prénom', (c) => c.prenom],
     ['Type', (c) => TYPES[c.type].libelle],
     ['Compagnie', (c) => c.compagnie],
-    ['Montant CHF', (c) => c.montant ?? ''],
+    ['Montant CHF', (c) => (c.type === 'everlife' ? '' : c.montant ?? '')],
     ['Points', (c) => c.points ?? ''],
     ['Commission CHF', (c) => c.montantCommission ?? ''],
     ['Statut', (c) => STATUTS[c.statut]],
@@ -172,6 +193,6 @@
   }
 
   racine.SuiviModele = {
-    TYPES, STATUTS, CLOS, normaliser, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
+    TYPES, STATUTS, CLOS, SIGNES, normaliser, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

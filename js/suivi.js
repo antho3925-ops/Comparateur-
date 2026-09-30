@@ -49,29 +49,50 @@
   const filtre = { type: 'tous', statut: 'tous', police: 'tous', commissionne: 'tous', recherche: '', tri: 'recent' };
 
   // ------------------------------------------------------------ Rendu
+  const tuile = ([l, v, s, alerte]) =>
+    `<div class="${alerte ? 'alerte' : ''}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${esc(s)}</div></div>`;
+
+  // Maladie, Everlife et LPP ont chacun leur bloc : leurs montants ne
+  // s'additionnent pas (prime mensuelle, nombre de contrats, capital transfere).
   function rendreChiffres() {
+    const t = M.totaux(contrats);
+    const m = t.parType.maladie, e = t.parType.everlife, l = t.parType.lpp;
+    const blocs = {
+      maladie: [
+        ['Contrats', Fmt.nombre(m.nombre), `${m.signes} signé(s)`],
+        ['Complémentaires', 'CHF ' + chf(m.montantActif), 'Hors refusés et annulés'],
+        ['Moyenne par contrat', m.moyenne == null ? '—' : 'CHF ' + chf(m.moyenne),
+          m.avecMontant ? `Sur ${m.avecMontant} contrat(s) en cours` : 'Aucun montant noté'],
+        ['Points', pts(m.points), 'Somme des points'],
+      ],
+      everlife: [
+        ['Contrats signés', Fmt.nombre(e.signes), `Sur ${e.nombre} saisi(s)`],
+        ['Paiement direct', Fmt.nombre(e.paiementDirect), 'Contrats cochés'],
+        ['Points', pts(e.points), 'Somme des points'],
+      ],
+      lpp: [
+        ['Montant transféré', 'CHF ' + chf(l.montantActif), 'Hors refusés et annulés'],
+        ['Transferts', Fmt.nombre(l.nombre), `${l.signes} signé(s)`],
+        ['Points', pts(l.points), 'Somme des points'],
+      ],
+    };
+    $('blocs-types').innerHTML = Object.entries(blocs)
+      .filter(([type]) => filtre.type === 'tous' || filtre.type === type)
+      .map(([type, tuiles]) => `<div class="bloc-type ${type}">
+        <h3>${M.TYPES[type].libelle}</h3>
+        <div class="chiffre-cle suivi-chiffres">${tuiles.map(tuile).join('')}</div></div>`)
+      .join('');
+    $('blocs-types').classList.toggle('seul', filtre.type !== 'tous');
+
     const actifs = contrats.filter((c) => filtre.type === 'tous' || c.type === filtre.type);
-    const t = M.totaux(actifs);
-    const tuiles = [
-      ['Contrats', Fmt.nombre(t.nombre), `${actifs.filter((c) => c.statut === 'accepte').length} accepté(s)`],
-      ['Points', pts(t.points), 'Somme des points'],
-    ];
-    if (filtre.type === 'tous' || filtre.type === 'maladie') {
-      tuiles.push(['Complémentaires', 'CHF ' + chf(t.montantParType.maladie), 'Primes maladie cumulées']);
-    }
-    if (filtre.type === 'tous' || filtre.type === 'everlife') {
-      tuiles.push(['Everlife', 'CHF ' + chf(t.montantParType.everlife), 'Primes cumulées']);
-    }
-    if (filtre.type === 'tous' || filtre.type === 'lpp') {
-      tuiles.push(['LPP transféré', 'CHF ' + chf(t.montantParType.lpp), 'Montants connus']);
-    }
-    tuiles.push(['À policer', Fmt.nombre(t.aPolicer), 'Hors refusés et annulés', t.aPolicer > 0]);
-    tuiles.push(['À commissionner', Fmt.nombre(t.aCommissionner), 'Hors refusés et annulés', t.aCommissionner > 0]);
-    tuiles.push(['Commissions', 'CHF ' + chf(t.commissions),
-      `CHF ${chf(t.commissionsPercues)} perçus · CHF ${chf(t.commissionsAttendues)} à recevoir`]);
-    $('chiffres').innerHTML = tuiles.map(([l, v, s, alerte]) =>
-      `<div class="${alerte ? 'alerte' : ''}"><div class="l">${l}</div><div class="v">${v}</div><div class="s">${esc(s)}</div></div>`
-    ).join('');
+    const g = M.totaux(actifs);
+    $('chiffres').innerHTML = [
+      ['Points au total', pts(g.points), filtre.type === 'tous' ? 'Tous types confondus' : M.TYPES[filtre.type].libelle],
+      ['À policer', Fmt.nombre(g.aPolicer), 'Hors refusés et annulés', g.aPolicer > 0],
+      ['À commissionner', Fmt.nombre(g.aCommissionner), 'Hors refusés et annulés', g.aCommissionner > 0],
+      ['Commissions', 'CHF ' + chf(g.commissions),
+        `CHF ${chf(g.commissionsPercues)} perçus · CHF ${chf(g.commissionsAttendues)} à recevoir`],
+    ].map(tuile).join('');
   }
 
   function ligne(c) {
@@ -86,7 +107,7 @@
       <td class="client"><div class="n">${esc(nom)}</div>${sous ? `<div class="c">${esc(sous)}</div>` : ''}${
         c.note ? `<div class="c">${esc(c.note)}</div>` : ''}</td>
       <td data-l="Type"><span class="type ${c.type}">${typ.court}</span></td>
-      <td class="num" data-l="Montant CHF">${chf(c.montant)}</td>
+      <td class="num" data-l="Montant CHF">${c.type === 'everlife' ? '' : chf(c.montant)}</td>
       <td class="num" data-l="Points">${pts(c.points)}</td>
       <td class="num" data-l="Commission CHF">${chf(c.montantCommission)}</td>
       <td data-l="Statut"><span class="statut ${c.statut}">${M.STATUTS[c.statut]}</span></td>
@@ -98,7 +119,22 @@
 
   function rendreListe() {
     const visibles = M.trier(M.filtrer(contrats, filtre), filtre.tri);
-    $('lignes').innerHTML = visibles.map(ligne).join('');
+    // Vue « Tous » : une section par type, chacune avec son propre total.
+    if (filtre.type === 'tous') {
+      $('lignes').innerHTML = Object.keys(M.TYPES).map((type) => {
+        const rangs = visibles.filter((c) => c.type === type);
+        if (!rangs.length) return '';
+        const p = M.totaux(rangs).parType[type];
+        const resume = [`${rangs.length} contrat(s)`,
+          type === 'everlife' ? `${p.signes} signé(s)` : 'CHF ' + chf(p.montantActif),
+          type === 'maladie' && p.moyenne != null ? 'moyenne CHF ' + chf(p.moyenne) : '',
+          `${pts(p.points)} pts`].filter(Boolean).join(' · ');
+        return `<tr class="section ${type}"><th colspan="9">${M.TYPES[type].libelle}<span>${resume}</span></th></tr>`
+          + rangs.map(ligne).join('');
+      }).join('');
+    } else {
+      $('lignes').innerHTML = visibles.map(ligne).join('');
+    }
     const vide = $('vide');
     if (!visibles.length) {
       vide.hidden = false;
@@ -110,13 +146,13 @@
     }
     vide.hidden = true;
     const t = M.totaux(visibles);
-    const montant = Object.values(t.montantParType).reduce((a, b) => a + b, 0);
+    const montant = Object.values(t.parType).reduce((a, p) => a + p.montantActif, 0);
     // Additionner une prime mensuelle et un capital LPP n'a pas de sens : le
     // total des montants n'apparait que sur un seul type.
     const typesVus = new Set(visibles.map((c) => c.type));
     $('pied-table').innerHTML = `<tr>
       <td>${visibles.length} contrat(s)</td><td></td>
-      <td class="num">${typesVus.size === 1 ? 'CHF ' + chf(montant) : ''}</td>
+      <td class="num">${typesVus.size === 1 && !typesVus.has('everlife') ? 'CHF ' + chf(montant) : ''}</td>
       <td class="num">${pts(t.points)} pts</td>
       <td class="num">CHF ${chf(t.commissions)}</td>
       <td></td>
@@ -138,7 +174,8 @@
 
   function majLibelles() {
     const type = form.elements.type.value;
-    $('lbl-montant').textContent = M.TYPES[type].montant;
+    $('bloc-montant').hidden = !M.TYPES[type].montant;
+    if (M.TYPES[type].montant) $('lbl-montant').textContent = M.TYPES[type].montant;
     $('bloc-paiement-direct').hidden = type !== 'everlife';
     $('lbl-compagnie').textContent = type === 'lpp' ? 'Institution de prévoyance / libre passage' : 'Compagnie';
     const deja = contrats.filter((c) => c.type === type).map((c) => c.compagnie).filter(Boolean);
