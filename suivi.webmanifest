@@ -1,6 +1,6 @@
 {
-  "name": "Suivi des contrats STF",
-  "short_name": "Suivi STF",
+  "name": "Suivi des contrats",
+  "short_name": "Suivi",
   "description": "Suivi des contrats maladie, Everlife et transferts LPP, hors connexion.",
   "lang": "fr",
   "start_url": "./suivi.html",
