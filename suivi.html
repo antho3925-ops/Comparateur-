@@ -30,6 +30,18 @@
 
   <div class="avertissement" id="alerte-stockage" hidden></div>
 
+  <div class="rappel-sauvegarde" id="rappel-sauvegarde" role="status" hidden>
+    <div>
+      <strong>Pensez à exporter votre sauvegarde.</strong>
+      <span id="rappel-texte"></span>
+      Vos contrats ne sont enregistrés que sur cet appareil : une copie vous protège en cas de panne ou de changement d'ordinateur.
+    </div>
+    <div class="rappel-actions">
+      <button class="btn" type="button" id="rappel-exporter">Exporter maintenant</button>
+      <button class="btn secondaire" type="button" id="rappel-plus-tard">Plus tard</button>
+    </div>
+  </div>
+
   <nav class="barre-mois" aria-label="Mois affiché">
     <button type="button" class="fleche" id="mois-prec" aria-label="Mois précédent">‹</button>
     <select id="f-mois" aria-label="Mois"></select>

@@ -237,6 +237,17 @@ ok('récap août : 200 perçus, 0 à recevoir',
   recap[1].totaux.commissionsPercues === 200 && recap[1].totaux.commissionsAttendues === 0);
 ok('récap septembre : 950 à recevoir', recap[0].totaux.commissionsAttendues === 950);
 
+console.log('\n\x1b[1mRappel de sauvegarde\x1b[0m');
+const now = new Date('2026-09-30T10:00:00Z');
+const rs = (x) => M.rappelSauvegarde({ nbContrats: 3, maintenant: now, ...x });
+ok('aucun contrat : pas de rappel', M.rappelSauvegarde({ nbContrats: 0, maintenant: now }) === null);
+ok('jamais exporté : rappel', rs({})?.jamais === true);
+ok('exporté il y a 6 jours : pas de rappel', rs({ derniere: '2026-09-24T09:00:00Z' }) === null);
+ok('exporté il y a 7 jours : rappel', rs({ derniere: '2026-09-23T09:00:00Z' })?.jours === 7);
+ok('ancien format « 20.09.2026 » compris : rappel (9 à 10 jours selon le fuseau)', rs({ derniere: '20.09.2026' })?.jours >= 9);
+ok('« plus tard » : masqué jusqu\'au lendemain', rs({ reporteJusqua: '2026-10-01T10:00:00Z' }) === null);
+ok('report expiré : rappel de retour', rs({ reporteJusqua: '2026-09-29T10:00:00Z' })?.jamais === true);
+
 console.log('\n\x1b[1mCSV\x1b[0m');
 const csv = M.versCsv([c({ nom: 'Dupont; "fils"', prenom: 'Jean', montant: 12.5, note: 'ligne1\nligne2' })]);
 ok('BOM UTF-8 en tête', csv.charCodeAt(0) === 0xfeff);

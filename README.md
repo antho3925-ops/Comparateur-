@@ -98,10 +98,13 @@ la somme.
   (pas en aperçu depuis Mail ou Fichiers) ; Safari peut effacer les données
   d'un site non utilisé pendant sept jours, sauf s'il est ajouté à l'écran
   d'accueil. D'où l'export régulier de la sauvegarde.
+- **Rappel d'export** : un bandeau s'affiche dès que la dernière sauvegarde
+  exportée date de 7 jours ou plus (ou n'a jamais été faite), avec « Exporter
+  maintenant » ou « Plus tard » (masqué jusqu'au lendemain).
 
 ```
 node tools/verif-stockage.mjs  # 16 verifications en navigateur : appareils, fermeture, onglets, reseau
-node tools/tests-suivi.mjs     # 137 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 144 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement

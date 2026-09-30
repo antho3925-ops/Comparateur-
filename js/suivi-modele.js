@@ -330,7 +330,32 @@
     return { contrats: [...parId.values()], ajoutes, maj };
   }
 
+  // Rappel d'export : des qu'il y a des contrats et que la derniere sauvegarde
+  // exportee date de 7 jours ou plus (ou n'a jamais ete faite), sauf report.
+  const DELAI_RAPPEL_JOURS = 7;
+  const JOUR = 24 * 3600 * 1000;
+  // Accepte l'ISO actuel comme l'ancien format « jj.mm.aaaa ».
+  function lireDateSauvegarde(v) {
+    const t = texte(v);
+    const ch = t.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+    const d = new Date(ch ? `${ch[3]}-${ch[2]}-${ch[1]}T12:00:00` : t);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+  function joursDepuis(v, maintenant = new Date()) {
+    const d = lireDateSauvegarde(v);
+    return d ? Math.floor((maintenant - d) / JOUR) : null;
+  }
+  function rappelSauvegarde({ nbContrats, derniere, reporteJusqua, maintenant = new Date() }) {
+    if (!nbContrats) return null;
+    const report = lireDateSauvegarde(reporteJusqua);
+    if (report && report > maintenant) return null;
+    const jours = joursDepuis(derniere, maintenant);
+    if (jours != null && jours < DELAI_RAPPEL_JOURS) return null;
+    return { jamais: jours == null, jours };
+  }
+
   racine.SuiviModele = {
+    DELAI_RAPPEL_JOURS, lireDateSauvegarde, joursDepuis, rappelSauvegarde,
     TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, pointsMaladie, pointsLpp, pointsCalcules, commissionEverlife, commissionEverlifeAjustee, commissionLpp, TAUX_COMMISSION_LPP, commissionAcquise, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

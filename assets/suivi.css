@@ -241,3 +241,14 @@ button.paye:hover { box-shadow: 0 0 0 2px color-mix(in srgb, var(--or) 25%, tran
 .table-suivi tbody tr.clos td[data-l="Points"] { text-decoration: line-through; }
 .table-suivi td[data-l="Statut"] .c { font-size: 11.5px; color: var(--texte-3); margin: 2px 0 0 14px; }
 .table-suivi td.client { min-width: 160px; }
+
+/* Rappel d'export de la sauvegarde */
+.rappel-sauvegarde {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap;
+  background: var(--ambre-fond); border: 1px solid var(--ambre-bord); border-left: 4px solid var(--or);
+  border-radius: var(--r-s); padding: 13px 16px; margin-bottom: 16px;
+  font-size: 13.5px; color: var(--texte-2); animation: entree var(--t-lent) both;
+}
+.rappel-sauvegarde[hidden] { display: none; }
+.rappel-sauvegarde strong { color: var(--ambre); display: block; margin-bottom: 2px; }
+.rappel-actions { display: flex; gap: 8px; flex-wrap: wrap; }

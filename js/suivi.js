@@ -4,6 +4,7 @@
   const M = window.SuiviModele;
   const CLE = 'stf-suivi-contrats-v1';
   const CLE_SAUVEGARDE = 'stf-suivi-derniere-sauvegarde';
+  const CLE_REPORT = 'stf-suivi-rappel-reporte';
   const CAISSES = ['Assura', 'AXA', 'CONCORDIA', 'CSS', 'Groupe Mutuel', 'Helsana', 'Sanitas', 'SWICA', 'Visana'];
 
   const $ = (id) => document.getElementById(id);
@@ -243,8 +244,11 @@
     rendreChiffres();
     rendreRecap();
     rendreListe();
-    const d = lireDerniereSauvegarde();
-    $('derniere-sauvegarde').textContent = d ? `Dernière sauvegarde exportée : ${d}.` : 'Aucune sauvegarde exportée pour l\'instant.';
+    const d = M.lireDateSauvegarde(lireDerniereSauvegarde());
+    $('derniere-sauvegarde').textContent = d
+      ? `Dernière sauvegarde exportée : ${d.toLocaleDateString('fr-CH')}.`
+      : 'Aucune sauvegarde exportée pour l\'instant.';
+    rendreRappel();
   }
 
   // ------------------------------------------------------------ Fenetre
@@ -365,6 +369,23 @@
   }
 
   // ------------------------------------------------------------ Sauvegarde
+  function lireLocal(cle) {
+    try { return localStorage.getItem(cle) || ''; } catch { return ''; }
+  }
+  function ecrireLocal(cle, valeur) {
+    try { localStorage.setItem(cle, valeur); } catch { /* sans stockage, rien a retenir */ }
+  }
+  function rendreRappel() {
+    const r = M.rappelSauvegarde({
+      nbContrats: contrats.length, derniere: lireDerniereSauvegarde(), reporteJusqua: lireLocal(CLE_REPORT),
+    });
+    $('rappel-sauvegarde').hidden = !r;
+    if (r) {
+      $('rappel-texte').textContent = r.jamais
+        ? `Aucune sauvegarde de vos ${contrats.length} contrat(s) n'a encore été exportée.`
+        : `Dernière sauvegarde exportée il y a ${r.jours} jours.`;
+    }
+  }
   function lireDerniereSauvegarde() {
     try { return localStorage.getItem(CLE_SAUVEGARDE) || ''; } catch { return ''; }
   }
@@ -380,7 +401,7 @@
     const d = aujourdhui();
     telecharger(`suivi-contrats-${d}.json`,
       JSON.stringify({ version: 1, exporte: new Date().toISOString(), contrats }, null, 2), 'application/json');
-    try { localStorage.setItem(CLE_SAUVEGARDE, dateCh(d)); } catch { /* sans stockage, rien a retenir */ }
+    ecrireLocal(CLE_SAUVEGARDE, new Date().toISOString());
     rendre();
   }
   function exporterCsv() {
@@ -507,6 +528,11 @@
     });
 
     $('btn-export-json').addEventListener('click', exporterJson);
+    $('rappel-exporter').addEventListener('click', exporterJson);
+    $('rappel-plus-tard').addEventListener('click', () => {
+      ecrireLocal(CLE_REPORT, new Date(Date.now() + 24 * 3600 * 1000).toISOString());
+      rendreRappel();
+    });
     $('btn-export-csv').addEventListener('click', exporterCsv);
     $('btn-import').addEventListener('click', () => $('fichier-import').click());
     $('fichier-import').addEventListener('change', (e) => {
