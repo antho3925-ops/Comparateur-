@@ -28,6 +28,8 @@ ok('type inconnu : maladie', c({ nom: 'A', type: 'auto' }).type === 'maladie');
 ok('statut inconnu : proposition', c({ nom: 'A', statut: 'xyz' }).statut === 'proposition');
 ok('date mal formée : vide', c({ nom: 'A', dateSignature: '31.12.2026' }).dateSignature === '');
 ok('policé « oui » lu vrai', c({ nom: 'A', police: 'oui' }).police === true);
+ok('paiement direct retenu sur Everlife', c({ nom: 'A', type: 'everlife', paiementDirect: true }).paiementDirect === true);
+ok('paiement direct ignoré hors Everlife', c({ nom: 'A', type: 'lpp', paiementDirect: true }).paiementDirect === false);
 ok('espaces retirés', c({ nom: '  Dupont ' }).nom === 'Dupont');
 
 const base = [
@@ -62,6 +64,9 @@ const csv = M.versCsv([c({ nom: 'Dupont; "fils"', prenom: 'Jean', montant: 12.5,
 ok('BOM UTF-8 en tête', csv.charCodeAt(0) === 0xfeff);
 ok('en-tête au point-virgule', csv.split('\r\n')[0].startsWith('﻿Nom;Prénom;Type'));
 ok('champ à point-virgule et guillemets échappé', csv.includes('"Dupont; ""fils"""'));
+const csvE = M.versCsv([c({ nom: 'E', type: 'everlife', paiementDirect: true }), c({ nom: 'M' })]).split('\r\n');
+ok('CSV : colonne Paiement direct, oui pour Everlife, vide sinon',
+  csvE[0].includes('Paiement direct') && csvE[1].endsWith(';oui;') && csvE[2].endsWith(';;'), csvE.join(' / '));
 ok('saut de ligne dans la note protégé', csv.includes('"ligne1\nligne2"'));
 
 console.log('\n\x1b[1mSauvegarde\x1b[0m');

@@ -150,6 +150,8 @@ textarea { resize: vertical; }
 }
 .choix-type input:focus-visible + span { box-shadow: var(--anneau); }
 
+.case-everlife { display: inline-flex; margin-top: 16px; }
+.case-everlife[hidden] { display: none; }
 .suivi-etats { margin-top: 18px; }
 .etat-bloc { border: 1px solid var(--bord); border-radius: var(--r-s); padding: 12px; background: var(--surface-2); }
 .etat-bloc .bascule { display: inline-flex; }

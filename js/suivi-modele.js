@@ -51,6 +51,8 @@
       commissionne:      oui(brut.commissionne),
       dateCommission:    date(brut.dateCommission),
       montantCommission: nombre(brut.montantCommission),
+      // Propre a Everlife : sans objet pour les autres types.
+      paiementDirect:    brut.type === 'everlife' && oui(brut.paiementDirect),
       note:              texte(brut.note),
       cree:              texte(brut.cree) || maintenant,
       modifie:           texte(brut.modifie) || maintenant,
@@ -122,6 +124,7 @@
     ['Commissionné', (c) => (c.commissionne ? 'oui' : 'non')],
     ['Date de commission', (c) => c.dateCommission],
     ['Commission CHF', (c) => c.montantCommission ?? ''],
+    ['Paiement direct', (c) => (c.type === 'everlife' ? (c.paiementDirect ? 'oui' : 'non') : '')],
     ['Note', (c) => c.note],
   ];
   const cellule = (v) => {

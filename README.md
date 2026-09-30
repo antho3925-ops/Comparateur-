@@ -23,7 +23,9 @@ montant (prime complémentaire, prime Everlife ou montant LPP transféré), le
 nombre de points, le statut (proposition, signé, transmis, accepté, refusé,
 annulé), puis deux interrupteurs cliquables directement dans la liste :
 **policé** et **déjà commissionné**, chacun avec sa date (et le montant de la
-commission si on le connaît).
+commission si on le connaît). Les contrats Everlife portent en plus une case
+**paiement direct**. Les points se saisissent à la main ; l'application en fait
+la somme.
 
 - Fonctionne **hors connexion** : `dist/suivi.html` est un fichier unique à
   ouvrir par double-clic, sur ordinateur comme sur téléphone.
@@ -37,7 +39,7 @@ commission si on le connaît).
   régulièrement.
 
 ```
-node tools/tests-suivi.mjs     # 34 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 37 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement

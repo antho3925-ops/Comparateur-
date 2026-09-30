@@ -76,7 +76,7 @@
   function ligne(c) {
     const typ = M.TYPES[c.type];
     const nom = [c.nom, c.prenom].filter(Boolean).join(' ');
-    const sous = [c.compagnie, c.dateSignature && 'signé le ' + dateCh(c.dateSignature)].filter(Boolean).join(' · ');
+    const sous = [c.compagnie, c.paiementDirect && 'paiement direct', c.dateSignature && 'signé le ' + dateCh(c.dateSignature)].filter(Boolean).join(' · ');
     const interrupteur = (champ, actif, dateIso, libelle) =>
       `<button type="button" class="oui-non" data-bascule="${champ}" aria-pressed="${actif}"
          aria-label="${libelle} : ${actif ? 'oui' : 'non'}">${actif ? 'Oui' : 'Non'}${
@@ -136,6 +136,7 @@
   function majLibelles() {
     const type = form.elements.type.value;
     $('lbl-montant').textContent = M.TYPES[type].montant;
+    $('bloc-paiement-direct').hidden = type !== 'everlife';
     $('lbl-compagnie').textContent = type === 'lpp' ? 'Institution de prévoyance / libre passage' : 'Compagnie';
     const deja = contrats.filter((c) => c.type === type).map((c) => c.compagnie).filter(Boolean);
     const proposees = [...new Set([...(type === 'maladie' ? CAISSES : []), ...deja])].sort();
@@ -156,6 +157,7 @@
     f.statut.value = src.statut;
     f.police.checked = !!src.police;
     f.commissionne.checked = !!src.commissionne;
+    f.paiementDirect.checked = !!src.paiementDirect;
     $('dlg-titre').textContent = c ? 'Modifier le contrat' : 'Nouveau contrat';
     $('btn-supprimer').hidden = !c;
     majLibelles();
@@ -179,6 +181,7 @@
       commissionne: f.commissionne.checked,
       dateCommission: f.commissionne.checked ? f.dateCommission.value : '',
       montantCommission: f.commissionne.checked ? f.montantCommission.value : '',
+      paiementDirect: f.paiementDirect.checked,
       note: f.note.value,
       cree: avant?.cree,
       modifie: new Date().toISOString(),
