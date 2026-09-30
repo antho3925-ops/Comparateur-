@@ -73,6 +73,29 @@ ok('tri par commission : Martin en tête', M.trier(base, 'commission')[0].id ===
 ok('commission notée sans être commissionné : conservée',
   c({ nom: 'A', montantCommission: '120', commissionne: false }).montantCommission === 120);
 
+console.log('\n\x1b[1mMois\x1b[0m');
+const mois = [
+  c({ nom: 'A', type: 'maladie', montant: 100, points: 10, dateSignature: '2026-08-14', montantCommission: 200, commissionne: true }),
+  c({ nom: 'B', type: 'everlife', points: 20, statut: 'signe', dateSignature: '2026-09-02', montantCommission: 500 }),
+  c({ nom: 'C', type: 'lpp', montant: 30000, points: 5, dateSignature: '2026-09-30', montantCommission: 700 }),
+  c({ nom: 'D', type: 'maladie', points: 3 }),
+];
+ok('mois de signature', M.moisDe(mois[0]) === '2026-08');
+ok('sans signature : mois de saisie', M.moisDe(mois[3]) === '2026-01');
+ok('libellé « Septembre 2026 »', M.libelleMois('2026-09') === 'Septembre 2026');
+ok('décalage décembre → janvier', M.decalerMois('2026-12', 1) === '2027-01');
+ok('décalage janvier → décembre', M.decalerMois('2026-01', -1) === '2025-12');
+const sept = M.totaux(M.filtrer(mois, { mois: '2026-09' }));
+ok('septembre : 25 points (août non repris)', sept.points === 25);
+ok('septembre : commission du mois 1200', sept.commissions === 1200);
+ok('septembre : 1 Everlife signé', sept.parType.everlife.signes === 1);
+ok('tous les mois : 38 points', M.totaux(M.filtrer(mois, { mois: 'tous' })).points === 38);
+const recap = M.recapMensuel(mois);
+ok('récap : 3 mois, le plus récent en tête', recap.length === 3 && recap[0].mois === '2026-09', recap.map((r) => r.mois).join());
+ok('récap août : 200 perçus, 0 à recevoir',
+  recap[1].totaux.commissionsPercues === 200 && recap[1].totaux.commissionsAttendues === 0);
+ok('récap septembre : 1200 à recevoir', recap[0].totaux.commissionsAttendues === 1200);
+
 console.log('\n\x1b[1mCSV\x1b[0m');
 const csv = M.versCsv([c({ nom: 'Dupont; "fils"', prenom: 'Jean', montant: 12.5, note: 'ligne1\nligne2' })]);
 ok('BOM UTF-8 en tête', csv.charCodeAt(0) === 0xfeff);

@@ -65,9 +65,25 @@
     return c;
   }
 
+  // Les compteurs repartent de zero chaque mois : un contrat appartient au
+  // mois de sa signature, a defaut au mois de sa saisie.
+  const NOMS_MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet',
+                     'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+  const moisDe = (c) => (c.dateSignature || c.cree || '').slice(0, 7);
+  function libelleMois(mois) {
+    if (!/^\d{4}-\d{2}$/.test(mois || '')) return 'Sans date';
+    const nom = NOMS_MOIS[Number(mois.slice(5)) - 1];
+    return nom[0].toUpperCase() + nom.slice(1) + ' ' + mois.slice(0, 4);
+  }
+  function decalerMois(mois, n) {
+    const d = new Date(Date.UTC(Number(mois.slice(0, 4)), Number(mois.slice(5)) - 1 + n, 1));
+    return d.toISOString().slice(0, 7);
+  }
+
   function filtrer(contrats, f = {}) {
     const q = texte(f.recherche).toLowerCase();
     return contrats.filter((c) => {
+      if (f.mois && f.mois !== 'tous' && moisDe(c) !== f.mois) return false;
       if (f.type && f.type !== 'tous' && c.type !== f.type) return false;
       if (f.statut && f.statut !== 'tous' && c.statut !== f.statut) return false;
       if (f.police === 'oui' && !c.police) return false;
@@ -135,6 +151,18 @@
     return t;
   }
 
+  // Un recapitulatif par mois, du plus recent au plus ancien.
+  function recapMensuel(contrats) {
+    const parMois = new Map();
+    for (const c of contrats) {
+      const m = moisDe(c);
+      if (!parMois.has(m)) parMois.set(m, []);
+      parMois.get(m).push(c);
+    }
+    return [...parMois.keys()].sort().reverse()
+      .map((mois) => ({ mois, libelle: libelleMois(mois), totaux: totaux(parMois.get(mois)) }));
+  }
+
   // CSV pour Excel suisse romand : separateur « ; », decimales au point,
   // BOM UTF-8 pour que les accents s'affichent a l'ouverture.
   const COLONNES = [
@@ -147,6 +175,7 @@
     ['Commission CHF', (c) => c.montantCommission ?? ''],
     ['Statut', (c) => STATUTS[c.statut]],
     ['Date de signature', (c) => c.dateSignature],
+    ['Mois', (c) => libelleMois(moisDe(c))],
     ['Policé', (c) => (c.police ? 'oui' : 'non')],
     ['Date de police', (c) => c.datePolice],
     ['Commissionné', (c) => (c.commissionne ? 'oui' : 'non')],
@@ -193,6 +222,6 @@
   }
 
   racine.SuiviModele = {
-    TYPES, STATUTS, CLOS, SIGNES, normaliser, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
+    TYPES, STATUTS, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

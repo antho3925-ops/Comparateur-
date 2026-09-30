@@ -30,6 +30,14 @@
 
   <div class="avertissement" id="alerte-stockage" hidden></div>
 
+  <nav class="barre-mois" aria-label="Mois affiché">
+    <button type="button" class="fleche" id="mois-prec" aria-label="Mois précédent">‹</button>
+    <select id="f-mois" aria-label="Mois"></select>
+    <button type="button" class="fleche" id="mois-suiv" aria-label="Mois suivant">›</button>
+    <button type="button" class="btn secondaire mini" id="mois-courant">Mois en cours</button>
+    <span class="produit-src">Points et nombres de contrats repartent de zéro chaque mois (mois de signature).</span>
+  </nav>
+
   <section class="blocs-types" id="blocs-types" aria-live="polite"></section>
   <section class="chiffre-cle suivi-chiffres" id="chiffres" aria-live="polite"></section>
 
@@ -97,6 +105,35 @@
         </table>
       </div>
       <div class="vide" id="vide" hidden></div>
+    </div>
+  </section>
+
+  <section class="carte">
+    <header>
+      <h2>Récapitulatif mensuel</h2>
+      <span class="produit-src">Cliquez un mois pour l'afficher</span>
+    </header>
+    <div class="corps">
+      <div class="table-suivi-conteneur">
+        <table class="table-suivi table-recap">
+          <thead>
+            <tr>
+              <th>Mois</th>
+              <th class="num">Maladie</th>
+              <th class="num">Moyenne compl.</th>
+              <th class="num">Everlife signés</th>
+              <th class="num">LPP transféré</th>
+              <th class="num">Points</th>
+              <th class="num">Commission générée</th>
+              <th class="num">Perçue</th>
+              <th class="num">À recevoir</th>
+            </tr>
+          </thead>
+          <tbody id="recap"></tbody>
+          <tfoot id="pied-recap"></tfoot>
+        </table>
+      </div>
+      <div class="vide" id="recap-vide" hidden>Le récapitulatif se remplit avec les contrats saisis.</div>
     </div>
   </section>
 

@@ -9,6 +9,25 @@
 .suivi-chiffres .s { font-size: 12px; color: var(--texte-3); margin-top: 4px; }
 .suivi-chiffres > div.alerte .v { color: var(--ambre); }
 
+/* Navigation par mois */
+.barre-mois { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.barre-mois select {
+  width: auto; min-width: 190px; font-family: var(--serif); font-size: 15px; font-weight: 600;
+  letter-spacing: .04em;
+}
+.barre-mois .fleche {
+  width: 38px; height: 40px; border-radius: var(--r-s); border: 1px solid var(--bord-fort);
+  background: var(--surface); color: var(--texte); font-size: 22px; line-height: 1; cursor: pointer;
+}
+.barre-mois .fleche:hover:not(:disabled) { border-color: var(--or); }
+.barre-mois .fleche:disabled { opacity: .35; cursor: default; }
+.barre-mois .produit-src { margin-left: 6px; }
+
+/* Récapitulatif mensuel */
+.table-recap tbody tr[data-mois] { cursor: pointer; }
+.table-recap tbody tr.choisi td { background: color-mix(in srgb, var(--or) 11%, var(--surface)); }
+.table-recap td.attendu { color: var(--ambre); font-weight: 650; }
+
 /* Un bloc par type : maladie, Everlife, LPP */
 .blocs-types { display: grid; grid-template-columns: 4fr 3fr 3fr; gap: 14px; margin-bottom: 14px; }
 .blocs-types.seul { grid-template-columns: 1fr; }

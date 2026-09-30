@@ -46,7 +46,8 @@
   }
 
   let contrats = charger();
-  const filtre = { type: 'tous', statut: 'tous', police: 'tous', commissionne: 'tous', recherche: '', tri: 'recent' };
+  const moisCourant = () => new Date().toISOString().slice(0, 7);
+  const filtre = { mois: moisCourant(), type: 'tous', statut: 'tous', police: 'tous', commissionne: 'tous', recherche: '', tri: 'recent' };
 
   // ------------------------------------------------------------ Rendu
   const tuile = ([l, v, s, alerte]) =>
@@ -55,7 +56,8 @@
   // Maladie, Everlife et LPP ont chacun leur bloc : leurs montants ne
   // s'additionnent pas (prime mensuelle, nombre de contrats, capital transfere).
   function rendreChiffres() {
-    const t = M.totaux(contrats);
+    const duMois = M.filtrer(contrats, { mois: filtre.mois });
+    const t = M.totaux(duMois);
     const m = t.parType.maladie, e = t.parType.everlife, l = t.parType.lpp;
     const blocs = {
       maladie: [
@@ -84,14 +86,19 @@
       .join('');
     $('blocs-types').classList.toggle('seul', filtre.type !== 'tous');
 
-    const actifs = contrats.filter((c) => filtre.type === 'tous' || c.type === filtre.type);
-    const g = M.totaux(actifs);
+    // Le mois pour ce qui se produit ; tous les mois pour ce qui reste a suivre.
+    const tousMois = filtre.mois === 'tous';
+    const g = M.totaux(M.filtrer(contrats, { mois: filtre.mois, type: filtre.type }));
+    const general = M.totaux(M.filtrer(contrats, { type: filtre.type }));
     $('chiffres').innerHTML = [
-      ['Points au total', pts(g.points), filtre.type === 'tous' ? 'Tous types confondus' : M.TYPES[filtre.type].libelle],
-      ['À policer', Fmt.nombre(g.aPolicer), 'Hors refusés et annulés', g.aPolicer > 0],
-      ['À commissionner', Fmt.nombre(g.aCommissionner), 'Hors refusés et annulés', g.aCommissionner > 0],
-      ['Commissions', 'CHF ' + chf(g.commissions),
+      [tousMois ? 'Points' : 'Points du mois', pts(g.points),
+        filtre.type === 'tous' ? 'Tous types confondus' : M.TYPES[filtre.type].libelle],
+      [tousMois ? 'Commissions générées' : 'Commission du mois', 'CHF ' + chf(g.commissions),
         `CHF ${chf(g.commissionsPercues)} perçus · CHF ${chf(g.commissionsAttendues)} à recevoir`],
+      ['Commission générale', 'CHF ' + chf(general.commissions),
+        `CHF ${chf(general.commissionsAttendues)} pas encore arrivés`, general.commissionsAttendues > 0],
+      ['À policer', Fmt.nombre(general.aPolicer), 'Tous mois confondus', general.aPolicer > 0],
+      ['À commissionner', Fmt.nombre(general.aCommissionner), 'Tous mois confondus', general.aCommissionner > 0],
     ].map(tuile).join('');
   }
 
@@ -138,9 +145,11 @@
     const vide = $('vide');
     if (!visibles.length) {
       vide.hidden = false;
-      vide.textContent = contrats.length
-        ? 'Aucun contrat ne correspond aux filtres.'
-        : 'Aucun contrat pour l\'instant. Ajoutez-en un avec « Nouveau contrat ».';
+      const moisVide = filtre.mois !== 'tous' && !M.filtrer(contrats, { mois: filtre.mois }).length;
+      vide.textContent = !contrats.length
+        ? 'Aucun contrat pour l\'instant. Ajoutez-en un avec « Nouveau contrat ».'
+        : moisVide ? `Aucun contrat signé en ${M.libelleMois(filtre.mois).toLowerCase()}.`
+        : 'Aucun contrat ne correspond aux filtres.';
       $('pied-table').innerHTML = '';
       return;
     }
@@ -161,8 +170,44 @@
       <td></td></tr>`;
   }
 
+  function rendreMois() {
+    const presents = new Set(contrats.map(M.moisDe).filter(Boolean));
+    presents.add(moisCourant());
+    if (filtre.mois !== 'tous') presents.add(filtre.mois);
+    $('f-mois').innerHTML = [...presents].sort().reverse()
+      .map((m) => `<option value="${m}">${M.libelleMois(m)}</option>`).join('')
+      + '<option value="tous">Tous les mois</option>';
+    $('f-mois').value = filtre.mois;
+    $('mois-prec').disabled = $('mois-suiv').disabled = filtre.mois === 'tous';
+  }
+
+  function rendreRecap() {
+    const recap = M.recapMensuel(M.filtrer(contrats, { type: filtre.type }));
+    $('recap-vide').hidden = recap.length > 0;
+    const rangee = (libelle, t, attrs = '') => {
+      const m = t.parType.maladie, e = t.parType.everlife, l = t.parType.lpp;
+      return `<tr ${attrs}>
+        <td class="client"><div class="n">${libelle}</div></td>
+        <td class="num" data-l="Maladie">${m.nombre} · CHF ${chf(m.montantActif)}</td>
+        <td class="num" data-l="Moyenne compl.">${m.moyenne == null ? '—' : 'CHF ' + chf(m.moyenne)}</td>
+        <td class="num" data-l="Everlife signés">${e.signes}</td>
+        <td class="num" data-l="LPP transféré">${l.nombre ? 'CHF ' + chf(l.montantActif) : '—'}</td>
+        <td class="num" data-l="Points">${pts(t.points)}</td>
+        <td class="num" data-l="Commission générée">CHF ${chf(t.commissions)}</td>
+        <td class="num" data-l="Perçue">CHF ${chf(t.commissionsPercues)}</td>
+        <td class="num ${t.commissionsAttendues > 0 ? 'attendu' : ''}" data-l="À recevoir">CHF ${chf(t.commissionsAttendues)}</td>
+      </tr>`;
+    };
+    $('recap').innerHTML = recap.map((r) =>
+      rangee(r.libelle, r.totaux, `data-mois="${r.mois}" class="${r.mois === filtre.mois ? 'choisi' : ''}"`)).join('');
+    $('pied-recap').innerHTML = recap.length > 1
+      ? rangee('Total', M.totaux(M.filtrer(contrats, { type: filtre.type }))).replace('<tr >', '<tr>') : '';
+  }
+
   function rendre() {
+    rendreMois();
     rendreChiffres();
+    rendreRecap();
     rendreListe();
     const d = lireDerniereSauvegarde();
     $('derniere-sauvegarde').textContent = d ? `Dernière sauvegarde exportée : ${d}.` : 'Aucune sauvegarde exportée pour l\'instant.';
@@ -234,6 +279,8 @@
       return;
     }
     contrats = avant ? contrats.map((x) => (x.id === id ? c : x)) : [...contrats, c];
+    // Un contrat signe un autre mois ne doit pas disparaitre de l'ecran.
+    if (filtre.mois !== 'tous' && M.moisDe(c) !== filtre.mois) filtre.mois = M.moisDe(c);
     enregistrer();
     dlg.close();
     rendre();
@@ -301,6 +348,15 @@
     });
     const lier = (id, cle) => $(id).addEventListener('input', (e) => { filtre[cle] = e.target.value; rendre(); });
     lier('f-recherche', 'recherche');
+    lier('f-mois', 'mois');
+    const allerAu = (mois) => { filtre.mois = mois; rendre(); };
+    $('mois-prec').addEventListener('click', () => allerAu(M.decalerMois(filtre.mois, -1)));
+    $('mois-suiv').addEventListener('click', () => allerAu(M.decalerMois(filtre.mois, 1)));
+    $('mois-courant').addEventListener('click', () => allerAu(moisCourant()));
+    $('recap').addEventListener('click', (e) => {
+      const tr = e.target.closest('tr[data-mois]');
+      if (tr) { allerAu(tr.dataset.mois); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+    });
     lier('f-statut', 'statut');
     lier('f-police', 'police');
     lier('f-commission', 'commissionne');

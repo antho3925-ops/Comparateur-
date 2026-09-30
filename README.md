@@ -38,6 +38,15 @@ la somme.
   signés, paiement direct, points) et **LPP** (montant transféré, transferts,
   points) ; puis total des points, contrats restant à policer et à commissionner, total des commissions
   (perçues / à recevoir).
+- **Suivi mensuel** : points et nombres de contrats repartent de zéro chaque
+  mois (mois de la date de signature). Un sélecteur passe d'un mois à l'autre,
+  ou affiche tous les mois.
+- **Commission du mois** (générée par les contrats signés ce mois-là) et
+  **commission générale** (tous mois confondus, avec ce qui n'est pas encore
+  arrivé).
+- **Récapitulatif mensuel** : par mois, contrats maladie et moyenne des
+  complémentaires, Everlife signés, LPP transféré, points, commission générée,
+  perçue et à recevoir.
 - En vue « Tous », la liste est découpée en trois sections avec leurs totaux.
 - Filtres par type, statut, policé, commissionné, recherche par nom ou compagnie.
 - **Sauvegarde** : export / import JSON (fusion ou remplacement) et export CSV
@@ -45,7 +54,7 @@ la somme.
   régulièrement.
 
 ```
-node tools/tests-suivi.mjs     # 50 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 62 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement
