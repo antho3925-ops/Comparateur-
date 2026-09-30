@@ -14,7 +14,7 @@ Ces trois points sont vérifiables dans le code du projet :
 | Aucune ressource externe n'est chargée | Aucune URL distante dans `index.html` ; polices, styles et données sont locaux |
 
 ```bash
-grep -rn "localStorage\|sessionStorage\|indexedDB\|document.cookie" js/ index.html
+grep -rn "localStorage\|sessionStorage\|indexedDB\|document.cookie" js/ index.html --exclude='suivi*'
 grep -rn "fetch(\|XMLHttpRequest\|WebSocket\|sendBeacon" js/ index.html
 grep -nE "https?://" index.html
 ```
@@ -74,3 +74,26 @@ déposés dans `assets/logos/` sont des marques protégées appartenant à chaqu
 assureur : leur affichage sert à identifier la caisse et n'implique ni lien, ni
 partenariat, ni approbation. Se conformer aux conditions d'usage de chaque
 charte graphique.
+
+## 4. Suivi des contrats (`suivi.html`)
+
+Le suivi des contrats est une page distincte, qui **enregistre** des données
+nominatives : nom, prénom, montants, points, statut, dates de police et de
+commission. Il ne contient aucune donnée de santé — pas de diagnostic ni de
+facture — mais reste un fichier de clients soumis à la LPD.
+
+| Point | Mise en œuvre |
+|---|---|
+| Lieu de stockage | `localStorage` du navigateur, sur l'appareil du conseiller uniquement |
+| Transmission | Aucune : pas de `fetch`, `XMLHttpRequest` ni ressource externe |
+| Sauvegarde | Fichier JSON exporté à la main, à ranger dans le dossier sécurisé du cabinet |
+
+```bash
+grep -n "fetch(\|XMLHttpRequest\|WebSocket\|sendBeacon" js/suivi*.js suivi.html
+```
+
+Règles d'usage : n'utiliser le suivi que sur un appareil professionnel protégé
+par un mot de passe ; ne pas l'ouvrir dans un navigateur partagé ; ne noter dans
+le champ « Note » aucune information de santé ; supprimer un contrat qui n'a
+plus lieu d'être suivi ; traiter les fichiers exportés (JSON, CSV) comme des
+fichiers clients.

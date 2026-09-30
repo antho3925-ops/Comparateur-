@@ -6,6 +6,7 @@
 //   node tools/exporter.mjs
 //     dist/comparateur.html   fichier autonome, a distribuer
 //     dist/artifact.html      meme page sans enveloppe html/head/body, pour publication
+//     dist/suivi.html         suivi des contrats, fichier autonome
 import { readFileSync, writeFileSync, mkdirSync, existsSync, statSync } from 'node:fs';
 import { extname } from 'node:path';
 
@@ -61,7 +62,22 @@ writeFileSync('dist/comparateur.html',
   + `<meta name="robots" content="noindex, nofollow">\n<title>${TITRE}</title>\n${styles}\n`
   + `</head>\n<body>\n${page}</body>\n</html>\n`);
 
+// --- Suivi des contrats ----------------------------------------------------
+const suivi = lire('suivi.html');
+let corpsSuivi = suivi.slice(suivi.indexOf('<body>') + 6, suivi.lastIndexOf('</body>'));
+corpsSuivi = corpsSuivi.replace(/\s*<script src="[^"]*"><\/script>/g, '');
+const scriptsSuivi = ['js/format.js', 'js/suivi-modele.js', 'js/suivi.js']
+  .map((f) => `<script>\n${lire(f)}\n</script>`)
+  .join('\n');
+writeFileSync('dist/suivi.html',
+  `<!doctype html>\n<html lang="fr">\n<head>\n<meta charset="utf-8">\n`
+  + `<meta name="viewport" content="width=device-width, initial-scale=1">\n`
+  + `<meta name="robots" content="noindex, nofollow">\n<title>Suivi des contrats</title>\n`
+  + `<style>\n${lire('assets/styles.css')}\n${lire('assets/suivi.css')}\n</style>\n`
+  + `</head>\n<body>\n${corpsSuivi}\n${scriptsSuivi}\n${amorce}\n</body>\n</html>\n`);
+
 const ko = (f) => Math.round(statSync(f).size / 1024);
 console.log(`dist/comparateur.html  ${ko('dist/comparateur.html')} Ko  (autonome, hors ligne)`);
 console.log(`dist/artifact.html     ${ko('dist/artifact.html')} Ko  (pour publication)`);
+console.log(`dist/suivi.html        ${ko('dist/suivi.html')} Ko  (suivi des contrats, autonome)`);
 console.log(`${nbLogos} logo(s) et le bandeau integres en donnees`);

@@ -14,6 +14,32 @@ renseignée à chaque rendez-vous.
 **Ce n'est pas un décompte officiel de caisse.** Les résultats sont des
 estimations fondées sur les grilles saisies, destinées au conseil.
 
+## Suivi des contrats (`suivi.html`)
+
+Seconde page, indépendante du comparateur : le carnet de production du
+conseiller. Pour chaque contrat — **assurance maladie** (complémentaire),
+**Everlife** ou **transfert LPP** — on note le nom et le prénom du client, le
+montant (prime complémentaire, prime Everlife ou montant LPP transféré), le
+nombre de points, le statut (proposition, signé, transmis, accepté, refusé,
+annulé), puis deux interrupteurs cliquables directement dans la liste :
+**policé** et **déjà commissionné**, chacun avec sa date (et le montant de la
+commission si on le connaît).
+
+- Fonctionne **hors connexion** : `dist/suivi.html` est un fichier unique à
+  ouvrir par double-clic, sur ordinateur comme sur téléphone.
+- Les saisies sont **conservées dans le navigateur de l'appareil**
+  (`localStorage`) et survivent à la fermeture de la page.
+- Tuiles de synthèse : nombre de contrats, total des points, montants par type,
+  contrats restant à policer et à commissionner.
+- Filtres par type, statut, policé, commissionné, recherche par nom ou compagnie.
+- **Sauvegarde** : export / import JSON (fusion ou remplacement) et export CSV
+  pour Excel. Les données n'existent que sur l'appareil : exporter
+  régulièrement.
+
+```
+node tools/tests-suivi.mjs     # 34 tests du modele (filtres, totaux, CSV, import)
+```
+
 ## Fonctionnement
 
 Application web statique : HTML + JavaScript + fichiers de données locaux.
@@ -25,12 +51,14 @@ hors ligne en ouvrant `index.html` directement.
 
 ```
 .
-├── index.html                     Page unique de l'application
+├── index.html                     Comparateur
+├── suivi.html                     Suivi des contrats (maladie, Everlife, LPP)
 ├── build.mjs                      Compile data/*.json -> data/db.js (+ validation)
 ├── dist/                          Export en fichier unique (généré, non versionné)
 ├── tools/
 │   ├── exporter.mjs               Replie tout le projet dans un fichier HTML unique
 │   ├── tests.mjs                  Suite de tests du moteur de calcul
+│   ├── tests-suivi.mjs            Tests du modele de suivi des contrats
 │   ├── sources.py                 Téléchargement des PDF assureurs + extraction du texte
 │   └── trous.mjs                  Liste les couvertures connues mais non chiffrées
 ├── assets/
@@ -39,6 +67,8 @@ hors ligne en ouvrant `index.html` directement.
 │   └── logos/                     Logos des caisses — déposer les fichiers puis relancer le build
 ├── js/
 │   ├── app.js                     Interface, saisie, bouton Réinitialiser
+│   ├── suivi-modele.js            Suivi : types, statuts, filtres, totaux, CSV, import
+│   ├── suivi.js                   Suivi : interface et stockage local
 │   ├── moteur-lamal.js            Franchise, quote-part, plafonds, forfait hospitalier
 │   ├── moteur-lca.js              Taux, plafonds, enveloppes partagées
 │   ├── comparateur.js             Boucle sur les assureurs et classement
@@ -101,6 +131,8 @@ C'est la forme à donner aux collègues.
 
 `dist/artifact.html` est la même page sans son enveloppe `html`/`head`/`body`,
 pour publication en lien partagé.
+
+`dist/suivi.html` est le suivi des contrats, lui aussi en fichier unique.
 
 Ces deux fichiers sont régénérés à chaque export et ne sont pas versionnés.
 

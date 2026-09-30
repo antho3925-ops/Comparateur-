@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suivi des contrats</title>
+<meta name="robots" content="noindex, nofollow">
+<link rel="stylesheet" href="assets/styles.css">
+<link rel="stylesheet" href="assets/suivi.css">
+</head>
+<body>
+
+<header class="entete">
+  <div class="entete-in">
+    <div class="marque">
+      <div class="sceau" aria-hidden="true">STF</div>
+      <div>
+        <h1>Suivi <em>des contrats</em></h1>
+        <div class="sous">
+          <span>Maladie, Everlife et transferts LPP — hors connexion</span>
+          <span class="pastille" title="Les données restent dans ce navigateur, sur cet appareil">Enregistré sur cet appareil</span>
+        </div>
+      </div>
+    </div>
+    <button class="btn-reset" id="btn-nouveau" type="button">+ Nouveau contrat</button>
+  </div>
+</header>
+
+<main class="page">
+
+  <div class="avertissement" id="alerte-stockage" hidden></div>
+
+  <section class="chiffre-cle suivi-chiffres" id="chiffres" aria-live="polite"></section>
+
+  <section class="carte">
+    <header>
+      <h2>Contrats</h2>
+      <div class="onglets" role="tablist" id="onglets">
+        <button type="button" role="tab" data-type="tous" aria-selected="true">Tous</button>
+        <button type="button" role="tab" data-type="maladie">Maladie</button>
+        <button type="button" role="tab" data-type="everlife">Everlife</button>
+        <button type="button" role="tab" data-type="lpp">LPP</button>
+      </div>
+    </header>
+    <div class="corps">
+      <div class="filtres">
+        <div class="f-recherche">
+          <label for="f-recherche">Rechercher</label>
+          <input type="search" id="f-recherche" placeholder="Nom, prénom, compagnie…" autocomplete="off">
+        </div>
+        <div>
+          <label for="f-statut">Statut</label>
+          <select id="f-statut"><option value="tous">Tous</option></select>
+        </div>
+        <div>
+          <label for="f-police">Policé</label>
+          <select id="f-police">
+            <option value="tous">Tous</option><option value="oui">Oui</option><option value="non">Non</option>
+          </select>
+        </div>
+        <div>
+          <label for="f-commission">Commissionné</label>
+          <select id="f-commission">
+            <option value="tous">Tous</option><option value="oui">Oui</option><option value="non">Non</option>
+          </select>
+        </div>
+        <div>
+          <label for="f-tri">Trier par</label>
+          <select id="f-tri">
+            <option value="recent">Plus récent</option>
+            <option value="nom">Nom</option>
+            <option value="montant">Montant</option>
+            <option value="points">Points</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-suivi-conteneur">
+        <table class="table-suivi">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Type</th>
+              <th class="num">Montant CHF</th>
+              <th class="num">Points</th>
+              <th>Statut</th>
+              <th class="centre">Policé</th>
+              <th class="centre">Commissionné</th>
+              <th aria-label="Actions"></th>
+            </tr>
+          </thead>
+          <tbody id="lignes"></tbody>
+          <tfoot id="pied-table"></tfoot>
+        </table>
+      </div>
+      <div class="vide" id="vide" hidden></div>
+    </div>
+  </section>
+
+  <section class="carte">
+    <header><h2>Sauvegarde</h2></header>
+    <div class="corps">
+      <p class="produit-src" style="margin:0 0 14px">
+        Les contrats sont conservés dans ce navigateur, sur cet appareil uniquement. Vider les
+        données du navigateur ou changer d'ordinateur les fait disparaître : exportez une
+        sauvegarde régulièrement et rangez-la dans le dossier sécurisé du cabinet.
+        <span id="derniere-sauvegarde"></span>
+      </p>
+      <div class="actions-sauvegarde">
+        <button class="btn" type="button" id="btn-export-json">Exporter la sauvegarde</button>
+        <button class="btn secondaire" type="button" id="btn-import">Importer une sauvegarde</button>
+        <button class="btn secondaire" type="button" id="btn-export-csv">Exporter pour Excel (CSV)</button>
+        <input type="file" id="fichier-import" accept=".json,application/json" hidden>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<dialog id="dlg-contrat" class="dlg">
+  <form method="dialog" id="form-contrat" novalidate>
+    <header>
+      <h2 id="dlg-titre">Nouveau contrat</h2>
+      <button type="button" class="fermer" id="btn-fermer" aria-label="Fermer">×</button>
+    </header>
+    <div class="corps">
+      <input type="hidden" name="id">
+      <fieldset class="choix-type">
+        <legend>Type de contrat</legend>
+        <label><input type="radio" name="type" value="maladie" checked><span>Maladie</span></label>
+        <label><input type="radio" name="type" value="everlife"><span>Everlife</span></label>
+        <label><input type="radio" name="type" value="lpp"><span>Transfert LPP</span></label>
+      </fieldset>
+
+      <div class="grille g2">
+        <div>
+          <label for="c-nom">Nom</label>
+          <input id="c-nom" name="nom" autocomplete="off" required>
+        </div>
+        <div>
+          <label for="c-prenom">Prénom</label>
+          <input id="c-prenom" name="prenom" autocomplete="off">
+        </div>
+        <div>
+          <label for="c-montant" id="lbl-montant">Montant (CHF)</label>
+          <input id="c-montant" name="montant" type="number" min="0" step="0.05" inputmode="decimal">
+        </div>
+        <div>
+          <label for="c-points">Nombre de points</label>
+          <input id="c-points" name="points" type="number" step="0.01" inputmode="decimal">
+        </div>
+        <div>
+          <label for="c-compagnie" id="lbl-compagnie">Compagnie</label>
+          <input id="c-compagnie" name="compagnie" list="compagnies" autocomplete="off">
+          <datalist id="compagnies"></datalist>
+        </div>
+        <div>
+          <label for="c-statut">Statut</label>
+          <select id="c-statut" name="statut"></select>
+        </div>
+        <div>
+          <label for="c-date-signature">Date de signature</label>
+          <input id="c-date-signature" name="dateSignature" type="date">
+        </div>
+      </div>
+
+      <div class="grille g2 suivi-etats">
+        <div class="etat-bloc">
+          <label class="bascule"><input type="checkbox" name="police"><span>Policé</span></label>
+          <div class="etat-detail">
+            <label for="c-date-police">Date de police</label>
+            <input id="c-date-police" name="datePolice" type="date">
+          </div>
+        </div>
+        <div class="etat-bloc">
+          <label class="bascule"><input type="checkbox" name="commissionne"><span>Déjà commissionné</span></label>
+          <div class="etat-detail">
+            <div class="grille g2">
+              <div>
+                <label for="c-date-commission">Date</label>
+                <input id="c-date-commission" name="dateCommission" type="date">
+              </div>
+              <div>
+                <label for="c-montant-commission">Commission CHF</label>
+                <input id="c-montant-commission" name="montantCommission" type="number" min="0" step="0.05" inputmode="decimal">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <label for="c-note">Note</label>
+        <textarea id="c-note" name="note" rows="2"></textarea>
+      </div>
+      <p class="erreur-form" id="erreur-form" role="alert" hidden></p>
+    </div>
+    <footer>
+      <button type="button" class="btn danger" id="btn-supprimer" hidden>Supprimer</button>
+      <span class="espace"></span>
+      <button type="button" class="btn secondaire" id="btn-annuler">Annuler</button>
+      <button type="submit" class="btn" id="btn-enregistrer">Enregistrer</button>
+    </footer>
+  </form>
+</dialog>
+
+<script src="js/format.js"></script>
+<script src="js/suivi-modele.js"></script>
+<script src="js/suivi.js"></script>
+</body>
+</html>
