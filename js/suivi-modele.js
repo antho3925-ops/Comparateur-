@@ -55,16 +55,39 @@
     return montant == null ? null : Math.round(montant * TAUX_COMMISSION_LPP * 100) / 100;
   }
 
-  // Commission Everlife : CHF 150 a la signature, CHF 400 une fois l'apport
-  // paye (ou en paiement direct). Un montant saisi a la main autre que ces
-  // valeurs usuelles n'est jamais ecrase.
-  function commissionEverlife(c) {
+  // Commission Everlife : CHF 400 une fois l'apport paye (ou en paiement
+  // direct). Avant, CHF 150 a la signature, mais seulement a partir de
+  // 3 contrats Everlife signes dans le mois : le 3e fait alors passer a 150
+  // tous ceux du mois, les deux premiers compris. Un contrat refuse ou annule
+  // ne compte pas. Un montant saisi a la main autre que ces valeurs usuelles
+  // n'est jamais ecrase.
+  const SEUIL_EVERLIFE_MOIS = 3;
+  function everlifeSignesParMois(contrats) {
+    const n = new Map();
+    for (const c of contrats) {
+      if (c.type !== 'everlife' || !SIGNES.has(c.statut)) continue;
+      const m = moisDe(c);
+      n.set(m, (n.get(m) || 0) + 1);
+    }
+    return n;
+  }
+  function commissionEverlife(c, signesDuMois = SEUIL_EVERLIFE_MOIS) {
     if (CLOS.has(c.statut)) return null;
     if (c.clientPaye || c.paiementDirect) return 400;
-    return SIGNES.has(c.statut) ? 150 : null;
+    return SIGNES.has(c.statut) && signesDuMois >= SEUIL_EVERLIFE_MOIS ? 150 : null;
   }
-  function commissionEverlifeAjustee(actuelle, c) {
-    return actuelle == null || actuelle === 150 || actuelle === 400 ? commissionEverlife(c) : actuelle;
+  function commissionEverlifeAjustee(actuelle, c, signesDuMois) {
+    return actuelle == null || actuelle === 150 || actuelle === 400
+      ? commissionEverlife(c, signesDuMois) : actuelle;
+  }
+  // Remet a jour les commissions Everlife automatiques de toute la liste.
+  function recalculerCommissionsEverlife(contrats) {
+    const n = everlifeSignesParMois(contrats);
+    return contrats.map((c) => {
+      if (c.type !== 'everlife') return c;
+      const v = commissionEverlifeAjustee(c.montantCommission, c, n.get(moisDe(c)) || 0);
+      return v === c.montantCommission ? c : { ...c, montantCommission: v };
+    });
   }
 
   // Les points notes ne comptent qu'une fois acquis : un transfert LPP quand
@@ -356,6 +379,6 @@
 
   racine.SuiviModele = {
     DELAI_RAPPEL_JOURS, lireDateSauvegarde, joursDepuis, rappelSauvegarde,
-    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, pointsMaladie, pointsLpp, pointsCalcules, commissionEverlife, commissionEverlifeAjustee, commissionLpp, TAUX_COMMISSION_LPP, commissionAcquise, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
+    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, pointsMaladie, pointsLpp, pointsCalcules, commissionEverlife, commissionEverlifeAjustee, everlifeSignesParMois, recalculerCommissionsEverlife, SEUIL_EVERLIFE_MOIS, commissionLpp, TAUX_COMMISSION_LPP, commissionAcquise, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -58,10 +58,12 @@ la somme.
   - Everlife : points notés à la main.
 - **Commission LPP automatique** : 1.5 % du montant transféré (arrondie au
   centime), comptée une fois l'argent reçu.
-- **Commission Everlife automatique** : CHF 150.– à la signature (une fois le
-  contrôle qualité validé, à partir de 3 contrats Everlife signés dans le mois), CHF 400.–
-  une fois le client payé ou en paiement direct ; un autre montant saisi à la
-  main n'est jamais écrasé.
+- **Commission Everlife automatique** : CHF 400.– une fois le client payé ou
+  en paiement direct ; avant, CHF 150.– à la signature (une fois le contrôle
+  qualité validé) **à partir de 3 contrats Everlife signés dans le mois** — le
+  3e fait passer à 150.– tous ceux du mois, les deux premiers compris ; un
+  contrat refusé ou annulé ne compte pas. Recalculé à chaque modification ;
+  un autre montant saisi à la main n'est jamais écrasé.
 - **Points acquis** : les points notés ne comptent qu'une fois acquis — un
   transfert LPP quand l'argent est reçu, un Everlife quand le client a payé
   (case « Le client a payé », cliquable aussi dans la liste) ou en paiement
@@ -130,7 +132,7 @@ le suivi se diffuse donc par un lien, hébergé gratuitement par GitHub Pages.
 
 ```
 node tools/verif-stockage.mjs  # 16 verifications en navigateur : appareils, fermeture, onglets, reseau
-node tools/tests-suivi.mjs     # 144 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 155 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement

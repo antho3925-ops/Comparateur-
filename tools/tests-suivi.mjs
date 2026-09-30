@@ -198,6 +198,30 @@ ok('vide rempli à 150 à la signature', aj(null, { statut: 'signe' }) === 150);
 ok('montant saisi à la main (275) jamais écrasé', aj(275, { statut: 'signe', clientPaye: true }) === 275);
 ok('400 redescend à 150 si « payé » est décoché', aj(400, { statut: 'signe' }) === 150);
 
+console.log('\n\x1b[1mEverlife : 150.– à partir de 3 signés dans le mois\x1b[0m');
+const evm = (id, x) => c({ id, nom: id, type: 'everlife', statut: 'signe', dateSignature: '2026-09-10', ...x });
+const com = (liste, id) => M.recalculerCommissionsEverlife(liste).find((x) => x.id === id).montantCommission;
+const deux = [evm('A'), evm('B')];
+ok('2 signés dans le mois : pas de 150', com(deux, 'A') === null && com(deux, 'B') === null);
+const trois = [...deux, evm('C')];
+ok('3e signé : les 3 passent à 150 (les deux premiers compris)', ['A', 'B', 'C'].every((id) => com(trois, id) === 150));
+ok('client payé : 400 même seul dans le mois', com([evm('D', { clientPaye: true })], 'D') === 400);
+ok('paiement direct : 400 même seul', com([evm('D', { paiementDirect: true })], 'D') === 400);
+const avecAnnule = [...deux, evm('E', { statut: 'annule' })];
+ok('un annulé ne compte pas dans les 3', com(avecAnnule, 'A') === null && com(avecAnnule, 'E') === null);
+const autreMois = [...deux, evm('F', { dateSignature: '2026-10-02' })];
+ok('un contrat d\'un autre mois ne compte pas', com(autreMois, 'A') === null);
+const propo = [...deux, evm('G', { statut: 'proposition' })];
+ok('une simple proposition ne compte pas', com(propo, 'A') === null);
+const retombe = [evm('A', { montantCommission: 150 }), evm('B', { montantCommission: 150 }), evm('C', { statut: 'annule', montantCommission: 150 })];
+ok('3e annulé : les deux autres retombent à 0', com(retombe, 'A') === null && com(retombe, 'B') === null);
+const manuel = [evm('A', { montantCommission: 275 }), evm('B')];
+ok('montant saisi à la main (275) jamais écrasé', com(manuel, 'A') === 275);
+ok('transmis et accepté comptent comme signés',
+  com([evm('A'), evm('B', { statut: 'transmis' }), evm('C', { statut: 'accepte' })], 'A') === 150);
+ok('les autres types ne sont pas touchés',
+  com([c({ id: 'M', nom: 'M', type: 'maladie', montantCommission: 150 })], 'M') === 150);
+
 console.log('\n\x1b[1mCommission LPP\x1b[0m');
 const cl = M.totaux([
   c({ nom: 'A', type: 'lpp', montant: 80000, statut: 'transfert_attente' }),

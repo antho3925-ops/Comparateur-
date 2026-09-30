@@ -28,6 +28,9 @@
     }
   }
   function enregistrer() {
+    // La commission Everlife depend du nombre de contrats signes dans le mois :
+    // toute modification peut la faire changer sur les autres contrats.
+    contrats = M.recalculerCommissionsEverlife(contrats);
     try {
       const texte = JSON.stringify({ version: 1, contrats });
       localStorage.setItem(CLE, texte);
@@ -62,6 +65,8 @@
   }
 
   let contrats = charger();
+  // Contrats saisis avant la regle des 3 Everlife par mois : mis a jour une fois.
+  if (M.recalculerCommissionsEverlife(contrats).some((c, i) => c !== contrats[i])) enregistrer();
   const moisCourant = () => new Date().toISOString().slice(0, 7);
   const filtre = { mois: moisCourant(), type: 'tous', statut: 'tous', police: 'tous', commissionne: 'tous', recherche: '', tri: 'recent' };
 
@@ -306,8 +311,13 @@
       f.points.value = p ?? '';
       if (type === 'lpp') f.montantCommission.value = M.commissionLpp(nb(f.montant.value)) ?? '';
     } else {
-      const com = M.commissionEverlifeAjustee(nb(f.montantCommission.value),
-        { statut: f.statut.value, clientPaye: f.clientPaye.checked, paiementDirect: f.paiementDirect.checked });
+      const ce = { type: 'everlife', statut: f.statut.value, clientPaye: f.clientPaye.checked,
+                   paiementDirect: f.paiementDirect.checked, dateSignature: f.dateSignature.value };
+      // Contrats Everlife signes le meme mois, celui-ci compris s'il est signe.
+      const autres = contrats.filter((x) => x.id !== f.id.value && x.type === 'everlife'
+        && M.SIGNES.has(x.statut) && M.moisDe(x) === M.moisDe(ce)).length;
+      const com = M.commissionEverlifeAjustee(nb(f.montantCommission.value), ce,
+        autres + (M.SIGNES.has(ce.statut) ? 1 : 0));
       f.montantCommission.value = com ?? '';
     }
   }
@@ -502,7 +512,6 @@
       if (e.target.closest('[data-paye]')) {
         modifier(remplacer(c.id, (x) => {
           const maj = { ...x, clientPaye: !x.clientPaye, modifie: new Date().toISOString() };
-          maj.montantCommission = M.commissionEverlifeAjustee(x.montantCommission, maj);
           return maj;
         }));
         rendre();
@@ -525,7 +534,7 @@
     form.addEventListener('input', (e) => { if (e.target.name === 'montant') majAuto(); });
     form.addEventListener('change', (e) => {
       if (e.target.name === 'type') majLibelles();
-      if (['statut', 'clientPaye', 'paiementDirect', 'baseSignee'].includes(e.target.name)) majAuto();
+      if (['statut', 'clientPaye', 'paiementDirect', 'baseSignee', 'dateSignature'].includes(e.target.name)) majAuto();
       // Cocher « policé » ou « commissionné » propose la date du jour.
       if (e.target.name === 'police' && e.target.checked && !form.elements.datePolice.value) {
         form.elements.datePolice.value = aujourdhui();
