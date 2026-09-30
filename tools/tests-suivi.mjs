@@ -52,7 +52,8 @@ ok('tri par nom : Dupont, Favre, Martin, Rochat',
 
 console.log('\n\x1b[1mTotaux\x1b[0m');
 const t = M.totaux(base);
-ok('points : 50 (les 5 du contrat refusé sont perdus)', t.points === 50);
+ok('points acquis : 12 (Everlife non payé, LPP non reçu, refusé perdu)', t.points === 12, JSON.stringify(t));
+ok('points en attente : 38 (30 Everlife + 8 LPP)', t.pointsEnAttente === 38);
 ok('complémentaires maladie : 85.40 (refusé exclu)', Math.abs(t.montantParType.maladie - 85.4) < 1e-9);
 ok('LPP : 45000', t.montantParType.lpp === 45000);
 ok('complémentaires en cours : 85.40 (refusé exclu)', Math.abs(t.parType.maladie.montantActif - 85.4) < 1e-9);
@@ -132,11 +133,36 @@ ok('récapitulatif mensuel : mêmes pertes (10 pts, CHF 400)', recapP.points ===
 ok('LPP : moyenne sur un seul transfert = son montant',
   M.totaux([lpp[0]]).parType.lpp.moyenne === 40000);
 
+console.log('\n\x1b[1mPoints acquis\x1b[0m');
+const pa = (x) => M.pointsAcquis(c(x));
+ok('LPP transfert en attente : points pas encore acquis', !pa({ nom: 'A', type: 'lpp', statut: 'transfert_attente', points: 5 }));
+ok('LPP signé : points pas encore acquis', !pa({ nom: 'A', type: 'lpp', statut: 'signe', points: 5 }));
+ok('LPP argent reçu : points acquis', pa({ nom: 'A', type: 'lpp', statut: 'argent_recu', points: 5 }));
+ok('Everlife non payé : points pas encore acquis', !pa({ nom: 'A', type: 'everlife', statut: 'signe', points: 5 }));
+ok('Everlife client a payé : points acquis', pa({ nom: 'A', type: 'everlife', statut: 'signe', clientPaye: true }));
+ok('Everlife paiement direct : points acquis', pa({ nom: 'A', type: 'everlife', statut: 'signe', paiementDirect: true }));
+ok('Everlife payé mais annulé : points perdus', !pa({ nom: 'A', type: 'everlife', statut: 'annule', clientPaye: true }));
+ok('LPP reçu puis refusé : points perdus', !pa({ nom: 'A', type: 'lpp', statut: 'refuse' }));
+ok('maladie : points acquis dès la saisie', pa({ nom: 'A', type: 'maladie', statut: 'proposition' }));
+ok('« client a payé » ignoré hors Everlife', c({ nom: 'A', type: 'lpp', clientPaye: true }).clientPaye === false);
+const tev = M.totaux([
+  c({ nom: 'A', type: 'everlife', points: 10, statut: 'signe', clientPaye: true }),
+  c({ nom: 'B', type: 'everlife', points: 20, statut: 'signe', paiementDirect: true }),
+  c({ nom: 'C', type: 'everlife', points: 40, statut: 'signe' }),
+]).parType.everlife;
+ok('Everlife : 30 points acquis, 40 en attente', tev.points === 30 && tev.pointsEnAttente === 40, JSON.stringify(tev));
+ok('Everlife : 2 clients payés dont 1 en direct', tev.payes === 2 && tev.paiementDirect === 1);
+const tlp = M.totaux([
+  c({ nom: 'D', type: 'lpp', points: 8, statut: 'transfert_attente' }),
+  c({ nom: 'E', type: 'lpp', points: 4, statut: 'argent_recu' }),
+]).parType.lpp;
+ok('LPP : 4 points acquis, 8 en attente', tlp.points === 4 && tlp.pointsEnAttente === 8);
+
 console.log('\n\x1b[1mMois\x1b[0m');
 const mois = [
   c({ nom: 'A', type: 'maladie', montant: 100, points: 10, dateSignature: '2026-08-14', montantCommission: 200, commissionne: true }),
-  c({ nom: 'B', type: 'everlife', points: 20, statut: 'signe', dateSignature: '2026-09-02', montantCommission: 500 }),
-  c({ nom: 'C', type: 'lpp', montant: 30000, points: 5, dateSignature: '2026-09-30', montantCommission: 700 }),
+  c({ nom: 'B', type: 'everlife', points: 20, statut: 'signe', clientPaye: true, dateSignature: '2026-09-02', montantCommission: 500 }),
+  c({ nom: 'C', type: 'lpp', montant: 30000, points: 5, statut: 'argent_recu', dateSignature: '2026-09-30', montantCommission: 700 }),
   c({ nom: 'D', type: 'maladie', points: 3 }),
 ];
 ok('mois de signature', M.moisDe(mois[0]) === '2026-08');

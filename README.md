@@ -49,6 +49,10 @@ la somme.
   « transmis à la compagnie » : **transfert en attente** puis **argent reçu**
   (avec la date d'arrivée sur le compte de libre passage). Le bloc LPP totalise
   l'argent en attente et l'argent reçu.
+- **Points acquis** : les points notés ne comptent qu'une fois acquis — un
+  transfert LPP quand l'argent est reçu, un Everlife quand le client a payé
+  (case « Le client a payé », cliquable aussi dans la liste) ou en paiement
+  direct. En attendant, ils s'affichent en ambre et à part (« pts en attente »).
 - Un contrat **refusé ou annulé** est perdu : il ne vaut plus ni points, ni
   commission, ni montant, dans tous les totaux et le récapitulatif.
 - **Récapitulatif mensuel** : par mois, contrats maladie et moyenne des
@@ -61,7 +65,7 @@ la somme.
   régulièrement.
 
 ```
-node tools/tests-suivi.mjs     # 87 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 101 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement

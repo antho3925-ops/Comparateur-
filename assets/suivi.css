@@ -208,6 +208,19 @@ textarea { resize: vertical; }
 .case-everlife { display: inline-flex; margin-top: 16px; }
 .case-everlife[hidden], .case-lpp[hidden] { display: none; }
 .case-lpp { margin-top: 16px; }
+#bloc-paiement-direct { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+#bloc-paiement-direct[hidden] { display: none; }
+#bloc-paiement-direct .produit-src { flex-basis: 100%; margin: 2px 0 0; }
+.paye {
+  display: block; margin-top: 6px; border: 1px solid var(--ambre-bord); border-radius: 20px;
+  background: var(--ambre-fond); color: var(--ambre); white-space: nowrap; width: max-content;
+  font: inherit; font-size: 11.5px; font-weight: 650; padding: 3px 10px;
+}
+button.paye { cursor: pointer; }
+button.paye:hover { box-shadow: 0 0 0 2px color-mix(in srgb, var(--or) 25%, transparent); }
+.paye.oui { background: var(--vert-fond); color: var(--vert); border-color: var(--vert-vif); }
+/* Points notés mais pas encore acquis */
+.table-suivi td.en-attente { color: var(--ambre); font-style: italic; }
 .case-lpp[hidden] { display: none; }
 .suivi-etats { margin-top: 18px; }
 .etat-bloc { border: 1px solid var(--bord); border-radius: var(--r-s); padding: 12px; background: var(--surface-2); }

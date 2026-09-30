@@ -31,6 +31,16 @@
   // Un contrat compte comme signe des sa signature, et le reste ensuite.
   const SIGNES = new Set(['signe', 'transmis', 'accepte', 'transfert_attente', 'argent_recu']);
 
+  // Les points notes ne comptent qu'une fois acquis : un transfert LPP quand
+  // l'argent est recu, un Everlife quand le client a paye (ou paie en direct).
+  // Un contrat perdu n'en rapporte jamais.
+  function pointsAcquis(c) {
+    if (CLOS.has(c.statut)) return false;
+    if (c.type === 'lpp') return c.statut === 'argent_recu';
+    if (c.type === 'everlife') return c.clientPaye || c.paiementDirect;
+    return true;
+  }
+
   // Ramene un statut au vocabulaire du type (sauvegardes anterieures, import).
   function statutPour(type, statut, fondsRecus) {
     if (type === 'lpp') {
@@ -79,6 +89,7 @@
       montantCommission: nombre(brut.montantCommission),
       // Propre a Everlife : sans objet pour les autres types.
       paiementDirect:    brut.type === 'everlife' && oui(brut.paiementDirect),
+      clientPaye:        brut.type === 'everlife' && oui(brut.clientPaye),
       // Propre au LPP : date d'arrivee de l'argent sur le libre passage.
       dateFondsRecus:    brut.type === 'lpp' ? date(brut.dateFondsRecus) : '',
       note:              texte(brut.note),
@@ -138,6 +149,7 @@
     const t = {
       nombre: contrats.length,
       points: 0,
+      pointsEnAttente: 0, // notes mais pas encore acquis (LPP non recu, Everlife non paye)
       montantParType: { maladie: 0, everlife: 0, lpp: 0 },
       aPolicer: 0,
       aCommissionner: 0,
@@ -151,7 +163,7 @@
     for (const type of Object.keys(TYPES)) {
       // montantActif / avecMontant : contrats en cours (ni refuses ni annules)
       // portant un montant, base de la moyenne par contrat.
-      t.parType[type] = { nombre: 0, signes: 0, points: 0, montant: 0, montantActif: 0,
+      t.parType[type] = { nombre: 0, signes: 0, points: 0, pointsEnAttente: 0, payes: 0, montant: 0, montantActif: 0,
                           avecMontant: 0, moyenne: null, paiementDirect: 0,
                           fondsAttente: 0, fondsRecus: 0 };
     }
@@ -162,8 +174,14 @@
       // Un contrat perdu ne vaut ni points, ni commission, ni montant.
       if (CLOS.has(c.statut)) continue;
       if (SIGNES.has(c.statut)) p.signes += 1;
-      p.points += c.points ?? 0;
-      t.points += c.points ?? 0;
+      if (pointsAcquis(c)) {
+        p.points += c.points ?? 0;
+        t.points += c.points ?? 0;
+      } else {
+        p.pointsEnAttente += c.points ?? 0;
+        t.pointsEnAttente += c.points ?? 0;
+      }
+      if (c.type === 'everlife' && (c.clientPaye || c.paiementDirect)) p.payes += 1;
       p.montant += c.montant ?? 0;
       t.montantParType[c.type] += c.montant ?? 0;
       if (c.montant != null) { p.montantActif += c.montant; p.avecMontant += 1; }
@@ -206,6 +224,7 @@
     ['Montant CHF', (c) => (c.type === 'everlife' ? '' : c.montant ?? '')],
     ['Points', (c) => c.points ?? ''],
     ['Commission CHF', (c) => c.montantCommission ?? ''],
+    ['Points acquis', (c) => (pointsAcquis(c) ? 'oui' : 'non')],
     ['Statut', (c) => STATUTS[c.statut]],
     ['Date de signature', (c) => c.dateSignature],
     ['Mois', (c) => libelleMois(moisDe(c))],
@@ -214,6 +233,7 @@
     ['Commissionné', (c) => (c.commissionne ? 'oui' : 'non')],
     ['Date de commission', (c) => c.dateCommission],
     ['Date de réception des fonds', (c) => c.dateFondsRecus],
+    ['Client a payé', (c) => (c.type === 'everlife' ? (c.clientPaye ? 'oui' : 'non') : '')],
     ['Paiement direct', (c) => (c.type === 'everlife' ? (c.paiementDirect ? 'oui' : 'non') : '')],
     ['Note', (c) => c.note],
   ];
@@ -256,6 +276,6 @@
   }
 
   racine.SuiviModele = {
-    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
+    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
   };
 })(typeof window !== 'undefined' ? window : globalThis);

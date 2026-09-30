@@ -69,8 +69,8 @@
       ],
       everlife: [
         ['Contrats signés', Fmt.nombre(e.signes), `Sur ${e.nombre} saisi(s)`],
-        ['Paiement direct', Fmt.nombre(e.paiementDirect), 'Contrats cochés'],
-        ['Points', pts(e.points), 'Somme des points'],
+        ['Clients payés', Fmt.nombre(e.payes), `dont ${e.paiementDirect} en paiement direct`],
+        ['Points', pts(e.points), e.pointsEnAttente ? `${pts(e.pointsEnAttente)} pts en attente de paiement` : 'Clients payés uniquement'],
       ],
       lpp: [
         ['Montant transféré', 'CHF ' + chf(l.montantActif), 'Hors refusés et annulés'],
@@ -79,7 +79,7 @@
         ['En attente de réception', 'CHF ' + chf(l.fondsAttente), 'Pas encore sur le libre passage', l.fondsAttente > 0],
         ['Reçu sur le libre passage', 'CHF ' + chf(l.fondsRecus), 'Arrivé sur le compte'],
         ['Transferts', Fmt.nombre(l.nombre), `${l.signes} signé(s)`],
-        ['Points', pts(l.points), 'Somme des points'],
+        ['Points', pts(l.points), l.pointsEnAttente ? `${pts(l.pointsEnAttente)} pts en attente de l'argent` : 'Argent reçu uniquement'],
       ],
     };
     $('blocs-types').innerHTML = Object.entries(blocs)
@@ -96,7 +96,8 @@
     const general = M.totaux(M.filtrer(contrats, { type: filtre.type }));
     $('chiffres').innerHTML = [
       [tousMois ? 'Points' : 'Points du mois', pts(g.points),
-        filtre.type === 'tous' ? 'Tous types confondus' : M.TYPES[filtre.type].libelle],
+        g.pointsEnAttente ? `+ ${pts(g.pointsEnAttente)} pts en attente`
+          : filtre.type === 'tous' ? 'Tous types confondus' : M.TYPES[filtre.type].libelle],
       [tousMois ? 'Commissions générées' : 'Commission du mois', 'CHF ' + chf(g.commissions),
         `CHF ${chf(g.commissionsPercues)} perçus · CHF ${chf(g.commissionsAttendues)} à recevoir`],
       ['Commission générale', 'CHF ' + chf(general.commissions),
@@ -109,7 +110,11 @@
   function ligne(c) {
     const typ = M.TYPES[c.type];
     const nom = [c.nom, c.prenom].filter(Boolean).join(' ');
-    const sous = [c.compagnie, c.paiementDirect && 'paiement direct', c.dateSignature && 'signé le ' + dateCh(c.dateSignature)].filter(Boolean).join(' · ');
+    const paye = c.type !== 'everlife' || M.CLOS.has(c.statut) ? ''
+      : c.paiementDirect ? '<span class="paye oui">Paiement direct</span>'
+      : `<button type="button" class="paye ${c.clientPaye ? 'oui' : ''}" data-paye aria-pressed="${c.clientPaye}">${
+          c.clientPaye ? 'Client a payé' : 'Pas encore payé'}</button>`;
+    const sous = [c.compagnie, c.dateSignature && 'signé le ' + dateCh(c.dateSignature)].filter(Boolean).join(' · ');
     const interrupteur = (champ, actif, dateIso, libelle) =>
       `<button type="button" class="oui-non" data-bascule="${champ}" aria-pressed="${actif}"
          aria-label="${libelle} : ${actif ? 'oui' : 'non'}">${actif ? 'Oui' : 'Non'}${
@@ -117,9 +122,10 @@
     return `<tr data-id="${esc(c.id)}" class="${M.CLOS.has(c.statut) ? 'clos' : ''}">
       <td class="client"><div class="n">${esc(nom)}</div>${sous ? `<div class="c">${esc(sous)}</div>` : ''}${
         c.note ? `<div class="c">${esc(c.note)}</div>` : ''}</td>
-      <td data-l="Type"><span class="type ${c.type}">${typ.court}</span></td>
+      <td data-l="Type"><span class="type ${c.type}">${typ.court}</span>${paye}</td>
       <td class="num" data-l="Montant CHF">${c.type === 'everlife' ? '' : chf(c.montant)}</td>
-      <td class="num" data-l="Points">${pts(c.points)}</td>
+      <td class="num ${!M.CLOS.has(c.statut) && !M.pointsAcquis(c) && c.points ? 'en-attente' : ''}" data-l="Points"
+          title="${!M.CLOS.has(c.statut) && !M.pointsAcquis(c) ? (c.type === 'lpp' ? 'Compte à réception de l\'argent' : 'Compte une fois le client payé') : ''}">${pts(c.points)}</td>
       <td class="num" data-l="Commission CHF">${chf(c.montantCommission)}</td>
       <td data-l="Statut"><span class="statut ${c.statut}">${M.STATUTS[c.statut]}</span>${
         c.dateFondsRecus ? `<div class="c">le ${dateCh(c.dateFondsRecus)}</div>` : ''}</td>
@@ -257,6 +263,7 @@
     f.police.checked = !!src.police;
     f.commissionne.checked = !!src.commissionne;
     f.paiementDirect.checked = !!src.paiementDirect;
+    f.clientPaye.checked = !!src.clientPaye;
     f.dateFondsRecus.value = src.dateFondsRecus || '';
     $('dlg-titre').textContent = c ? 'Modifier le contrat' : 'Nouveau contrat';
     $('btn-supprimer').hidden = !c;
@@ -284,6 +291,7 @@
       dateCommission: f.commissionne.checked ? f.dateCommission.value : '',
       montantCommission: f.montantCommission.value,
       paiementDirect: f.paiementDirect.checked,
+      clientPaye: f.clientPaye.checked,
       dateFondsRecus: f.dateFondsRecus.value,
       note: f.note.value,
       cree: avant?.cree,
@@ -391,6 +399,12 @@
         const maj = { ...c, [champ]: actif, [champDate]: actif ? (c[champDate] || aujourdhui()) : '',
                       modifie: new Date().toISOString() };
         contrats = contrats.map((x) => (x.id === c.id ? maj : x));
+        enregistrer();
+        rendre();
+        return;
+      }
+      if (e.target.closest('[data-paye]')) {
+        contrats = contrats.map((x) => (x.id === c.id ? { ...c, clientPaye: !c.clientPaye, modifie: new Date().toISOString() } : x));
         enregistrer();
         rendre();
         return;
