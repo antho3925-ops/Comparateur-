@@ -300,6 +300,16 @@
     }
   }
 
+  // Sur ecran tactile, jamais de curseur place par programme : sur iPhone
+  // (surtout en application installee), le champ devient actif sans clavier,
+  // et le toucher ensuite ne fait plus apparaitre le clavier. On laisse la
+  // personne toucher le champ elle-meme.
+  const tactile = matchMedia('(pointer: coarse)').matches || navigator.maxTouchPoints > 0;
+  function placerCurseur(champ) {
+    if (tactile) champ.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    else champ.focus();
+  }
+
   function majFonds() {
     $('bloc-fonds').hidden = !(form.elements.type.value === 'lpp' && form.elements.statut.value === 'argent_recu');
   }
@@ -327,7 +337,7 @@
     f.statut.value = src.statut;
     majFonds();
     dlg.showModal();
-    f.nom.focus();
+    placerCurseur(f.nom);
   }
 
   function soumettre(e) {
@@ -358,7 +368,7 @@
     if (!c) {
       $('erreur-form').textContent = 'Indiquez au moins le nom ou le prénom du client.';
       $('erreur-form').hidden = false;
-      f.nom.focus();
+      placerCurseur(f.nom);
       return;
     }
     modifier((liste) => (liste.some((x) => x.id === c.id) ? liste.map((x) => (x.id === c.id ? c : x)) : [...liste, c]));

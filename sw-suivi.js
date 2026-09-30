@@ -4,7 +4,7 @@
 //
 // Strategie « reseau d'abord » : en ligne, la derniere version publiee est
 // chargee (les mises a jour arrivent seules) ; hors ligne, la copie en cache.
-const CACHE = 'suivi-stf-v2';
+const CACHE = 'suivi-stf-v3';
 const FICHIERS = [
   './suivi.html',
   './suivi.webmanifest',
