@@ -99,6 +99,11 @@ le suivi se diffuse donc par un lien, hébergé gratuitement par GitHub Pages.
   branch* → branche `claude/offline-health-insurance-app-h8xpdb`, dossier
   `/ (root)` → Save. `.nojekyll` sert les fichiers tels quels.
 - Icônes régénérées par `node tools/icones.mjs`.
+- **Clavier de secours** (`js/clavier.js`) : sur iPhone, iOS n'ouvre parfois
+  pas son clavier dans une application ajoutée à l'écran d'accueil (bug WebKit
+  279904). Si le clavier d'iOS n'apparaît pas 0,7 s après le toucher d'un champ,
+  l'application affiche le sien (AZERTY avec accents, pavé numérique pour les
+  montants, Suivant, OK). Sans effet dans Safari et sur ordinateur.
 
 ### Où vivent les données du suivi
 
@@ -158,6 +163,7 @@ hors ligne en ouvrant `index.html` directement.
 │   ├── app.js                     Interface, saisie, bouton Réinitialiser
 │   ├── suivi-modele.js            Suivi : types, statuts, filtres, totaux, CSV, import
 │   ├── suivi.js                   Suivi : interface et stockage local
+│   ├── clavier.js                 Suivi : clavier de secours (iPhone, application installée)
 │   ├── moteur-lamal.js            Franchise, quote-part, plafonds, forfait hospitalier
 │   ├── moteur-lca.js              Taux, plafonds, enveloppes partagées
 │   ├── comparateur.js             Boucle sur les assureurs et classement

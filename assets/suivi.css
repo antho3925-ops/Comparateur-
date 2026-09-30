@@ -273,3 +273,33 @@ button.paye:hover { box-shadow: 0 0 0 2px color-mix(in srgb, var(--or) 25%, tran
 
 /* Pas de surbrillance bleue au toucher sur les cases et boutons. */
 .bascule, .choix-type label, .oui-non, .paye, .btn, .btn-modifier { -webkit-tap-highlight-color: transparent; }
+
+/* Clavier de secours (js/clavier.js), quand celui de l'iPhone ne s'ouvre pas */
+.clavier {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 300;
+  padding: 6px 4px calc(8px + env(safe-area-inset-bottom));
+  background: var(--fond-2); border-top: 1px solid var(--bord-fort);
+  box-shadow: 0 -6px 24px rgba(6, 13, 24, .18);
+  -webkit-user-select: none; user-select: none;
+}
+.clavier[hidden] { display: none; }
+.clavier-titre { font-size: 10.5px; color: var(--texte-3); text-align: center; margin: 0 0 5px; letter-spacing: .04em; }
+.clavier-ligne { display: flex; gap: 5px; margin-bottom: 6px; max-width: 640px; margin-left: auto; margin-right: auto; }
+.clavier-ligne:last-child { margin-bottom: 0; }
+.clavier .k {
+  flex: 1; min-width: 0; height: 44px; padding: 0; border: 0; border-radius: 7px;
+  background: var(--surface); color: var(--texte); font: inherit; font-size: 19px;
+  box-shadow: 0 1px 0 rgba(6, 13, 24, .28); cursor: pointer;
+  touch-action: manipulation; -webkit-tap-highlight-color: transparent;
+}
+.clavier .k:active { background: var(--or-clair); }
+.clavier .k.fonction { background: var(--bord-fort); font-size: 14px; font-weight: 600; }
+.clavier .k.enfonce { background: var(--or-clair); }
+.clavier .k.ok { background: var(--marine-700); color: #fff; }
+.clavier.pave .k { height: 52px; font-size: 23px; }
+body.clavier-ouvert .dlg-fond { padding-bottom: calc(var(--hauteur-clavier, 300px) + 12px); }
+body.clavier-ouvert .page { padding-bottom: calc(var(--hauteur-clavier, 300px) + 24px); }
+/* Clavier ouvert : la barre Annuler / Enregistrer suit le formulaire au lieu
+   de rester collee en bas, ou elle masquerait le champ en cours de saisie. */
+body.clavier-ouvert .dlg footer { position: static; }
+.clavier.pave .k { flex: 1 !important; }

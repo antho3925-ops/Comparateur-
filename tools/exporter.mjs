@@ -66,7 +66,7 @@ writeFileSync('dist/comparateur.html',
 const suivi = lire('suivi.html');
 let corpsSuivi = suivi.slice(suivi.indexOf('<body>') + 6, suivi.lastIndexOf('</body>'));
 corpsSuivi = corpsSuivi.replace(/\s*<script src="[^"]*"><\/script>/g, '');
-const scriptsSuivi = ['js/format.js', 'js/suivi-modele.js', 'js/suivi.js']
+const scriptsSuivi = ['js/format.js', 'js/suivi-modele.js', 'js/suivi.js', 'js/clavier.js']
   .map((f) => `<script>\n${lire(f)}\n</script>`)
   .join('\n');
 writeFileSync('dist/suivi.html',
