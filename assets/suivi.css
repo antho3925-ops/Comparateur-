@@ -26,6 +26,15 @@
 /* Récapitulatif mensuel */
 .table-recap tbody tr[data-mois] { cursor: pointer; }
 .table-recap tbody tr.choisi td { background: color-mix(in srgb, var(--or) 11%, var(--surface)); }
+/* Sur telephone, chaque ligne devient une fiche : c'est la fiche entiere qui
+   est soulignee d'un filet dore, pas chacune de ses cases. */
+@media (max-width: 760px) {
+  .table-recap tbody tr.choisi td { background: transparent; }
+  .table-recap tbody tr.choisi {
+    border-color: var(--or);
+    box-shadow: 0 0 0 1px var(--or) inset, var(--ombre-1);
+  }
+}
 .table-recap td.attendu { color: var(--ambre); font-weight: 650; }
 
 /* Un bloc par type : maladie, Everlife, LPP */
