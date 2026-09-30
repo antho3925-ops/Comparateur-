@@ -243,7 +243,8 @@
     // Simple rappel des montants usuels, rien n'est calcule a partir de lui.
     $('aide-commission').textContent = type === 'everlife'
       ? 'Everlife : CHF 150.– à la signature, CHF 400.– une fois l\'apport payé.'
-      : type === 'lpp' ? 'Comptée une fois l\'argent reçu sur le libre passage.' : '';
+      : type === 'lpp' ? 'Calculée : 1.5 % du montant transféré, comptée une fois l\'argent reçu.' : '';
+    form.elements.montantCommission.readOnly = type === 'lpp';
     $('bloc-paiement-direct').hidden = type !== 'everlife';
     $('bloc-base').hidden = type !== 'maladie';
     // Maladie et LPP : points calcules, le champ n'est plus saisissable.
@@ -272,6 +273,7 @@
     if (type !== 'everlife') {
       const p = M.pointsCalcules(type, nb(f.montant.value), f.baseSignee.checked, null);
       f.points.value = p ?? '';
+      if (type === 'lpp') f.montantCommission.value = M.commissionLpp(nb(f.montant.value)) ?? '';
     } else {
       const com = M.commissionEverlifeAjustee(nb(f.montantCommission.value),
         { statut: f.statut.value, clientPaye: f.clientPaye.checked, paiementDirect: f.paiementDirect.checked });

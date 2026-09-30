@@ -56,6 +56,8 @@ la somme.
     commission sans points ;
   - LPP : 150 points par CHF 100'000 transférés, au prorata (50'000 → 75) ;
   - Everlife : points notés à la main.
+- **Commission LPP automatique** : 1.5 % du montant transféré (arrondie au
+  centime), comptée une fois l'argent reçu.
 - **Commission Everlife automatique** : CHF 150.– à la signature, CHF 400.–
   une fois le client payé ou en paiement direct ; un autre montant saisi à la
   main n'est jamais écrasé.
@@ -79,7 +81,7 @@ la somme.
   régulièrement.
 
 ```
-node tools/tests-suivi.mjs     # 132 tests du modele (filtres, totaux, CSV, import)
+node tools/tests-suivi.mjs     # 137 tests du modele (filtres, totaux, CSV, import)
 ```
 
 ## Fonctionnement

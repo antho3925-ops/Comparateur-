@@ -70,7 +70,7 @@ ok('moyenne sans aucun montant : null', M.totaux([c({ nom: 'Z', type: 'maladie' 
 ok('commissions : 750 (les 100 du contrat refusé ne comptent pas)', t.commissions === 750);
 ok('commissions perçues : 300', t.commissionsPercues === 300);
 ok('commissions à recevoir : 450 (le refusé ne compte pas)', t.commissionsAttendues === 450, JSON.stringify(t));
-ok('tri par commission : Martin en tête', M.trier(base, 'commission')[0].id === '2');
+ok('tri par commission : Rochat en tête (675 calculés sur 45\'000)', M.trier(base, 'commission')[0].id === '3');
 ok('commission notée sans être commissionné : conservée',
   c({ nom: 'A', montantCommission: '120', commissionne: false }).montantCommission === 120);
 
@@ -178,6 +178,13 @@ ok('LPP 45\'000 : 67.5 points', pl(45000) === 67.5);
 ok('LPP 12\'345 : 18.52 points (arrondi au centième)', pl(12345) === 18.52);
 ok('Everlife : points saisis conservés', c({ nom: 'D', type: 'everlife', points: 42 }).points === 42);
 
+const clp = (montant, montantCommission = 9999) => c({ nom: 'F', type: 'lpp', montant, montantCommission }).montantCommission;
+ok('commission LPP 100\'000 : 1500', clp(100000) === 1500);
+ok('commission LPP 45\'000 : 675', clp(45000) === 675);
+ok('commission LPP 12\'345 : 185.18 (arrondi au centime)', clp(12345) === 185.18);
+ok('commission LPP sans montant : aucune', clp(null) === null);
+ok('commission LPP : montant saisi à la main remplacé par le calcul', clp(20000, 50) === 300);
+
 console.log('\n\x1b[1mCommission Everlife automatique\x1b[0m');
 const ev = (x) => M.commissionEverlife(c({ nom: 'E', type: 'everlife', ...x }));
 ok('proposition : pas de commission', ev({ statut: 'proposition' }) === null);
@@ -193,10 +200,10 @@ ok('400 redescend à 150 si « payé » est décoché', aj(400, { statut: 'signe
 
 console.log('\n\x1b[1mCommission LPP\x1b[0m');
 const cl = M.totaux([
-  c({ nom: 'A', type: 'lpp', montantCommission: 1200, statut: 'transfert_attente' }),
-  c({ nom: 'B', type: 'lpp', montantCommission: 600, statut: 'argent_recu' }),
-  c({ nom: 'C', type: 'lpp', montantCommission: 900, statut: 'argent_recu', commissionne: true }),
-  c({ nom: 'D', type: 'lpp', montantCommission: 700, statut: 'annule' }),
+  c({ nom: 'A', type: 'lpp', montant: 80000, statut: 'transfert_attente' }),
+  c({ nom: 'B', type: 'lpp', montant: 40000, statut: 'argent_recu' }),
+  c({ nom: 'C', type: 'lpp', montant: 60000, statut: 'argent_recu', commissionne: true }),
+  c({ nom: 'D', type: 'lpp', montant: 50000, statut: 'annule' }),
 ]);
 ok('LPP : commission comptée seulement argent reçu (1500)', cl.commissions === 1500, JSON.stringify(cl));
 ok('LPP : 1200 en attente de l\'argent, hors total', cl.commissionsEnAttenteFonds === 1200);
@@ -211,7 +218,7 @@ console.log('\n\x1b[1mMois\x1b[0m');
 const mois = [
   c({ nom: 'A', type: 'maladie', montant: 100, baseSignee: true, dateSignature: '2026-08-14', montantCommission: 200, commissionne: true }),
   c({ nom: 'B', type: 'everlife', points: 20, statut: 'signe', clientPaye: true, dateSignature: '2026-09-02', montantCommission: 500 }),
-  c({ nom: 'C', type: 'lpp', montant: 30000, points: 5, statut: 'argent_recu', dateSignature: '2026-09-30', montantCommission: 700 }),
+  c({ nom: 'C', type: 'lpp', montant: 30000, points: 5, statut: 'argent_recu', dateSignature: '2026-09-30' }),
   c({ nom: 'D', type: 'maladie', points: 3 }),
 ];
 ok('mois de signature', M.moisDe(mois[0]) === '2026-08');
@@ -221,14 +228,14 @@ ok('décalage décembre → janvier', M.decalerMois('2026-12', 1) === '2027-01')
 ok('décalage janvier → décembre', M.decalerMois('2026-01', -1) === '2025-12');
 const sept = M.totaux(M.filtrer(mois, { mois: '2026-09' }));
 ok('septembre : 65 points (20 Everlife payé + 45 LPP reçu, août non repris)', sept.points === 65, JSON.stringify(sept));
-ok('septembre : commission du mois 1200', sept.commissions === 1200);
+ok('septembre : commission du mois 950 (500 Everlife + 450 LPP)', sept.commissions === 950);
 ok('septembre : 1 Everlife signé', sept.parType.everlife.signes === 1);
 ok('tous les mois : 165 points', M.totaux(M.filtrer(mois, { mois: 'tous' })).points === 165);
 const recap = M.recapMensuel(mois);
 ok('récap : 3 mois, le plus récent en tête', recap.length === 3 && recap[0].mois === '2026-09', recap.map((r) => r.mois).join());
 ok('récap août : 200 perçus, 0 à recevoir',
   recap[1].totaux.commissionsPercues === 200 && recap[1].totaux.commissionsAttendues === 0);
-ok('récap septembre : 1200 à recevoir', recap[0].totaux.commissionsAttendues === 1200);
+ok('récap septembre : 950 à recevoir', recap[0].totaux.commissionsAttendues === 950);
 
 console.log('\n\x1b[1mCSV\x1b[0m');
 const csv = M.versCsv([c({ nom: 'Dupont; "fils"', prenom: 'Jean', montant: 12.5, note: 'ligne1\nligne2' })]);

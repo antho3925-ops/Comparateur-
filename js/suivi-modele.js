@@ -49,6 +49,12 @@
     return pointsSaisis;
   }
 
+  // Commission LPP : 1.5 % du montant transfere, arrondie au centime.
+  const TAUX_COMMISSION_LPP = 0.015;
+  function commissionLpp(montant) {
+    return montant == null ? null : Math.round(montant * TAUX_COMMISSION_LPP * 100) / 100;
+  }
+
   // Commission Everlife : CHF 150 a la signature, CHF 400 une fois l'apport
   // paye (ou en paiement direct). Un montant saisi a la main autre que ces
   // valeurs usuelles n'est jamais ecrase.
@@ -138,6 +144,7 @@
     };
     if (c.statut !== 'argent_recu') c.dateFondsRecus = '';
     c.points = pointsCalcules(c.type, c.montant, c.baseSignee, nombre(brut.points));
+    if (c.type === 'lpp') c.montantCommission = commissionLpp(c.montant);
     if (!c.nom && !c.prenom) return null;
     return c;
   }
@@ -324,6 +331,6 @@
   }
 
   racine.SuiviModele = {
-    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, pointsMaladie, pointsLpp, pointsCalcules, commissionEverlife, commissionEverlifeAjustee, commissionAcquise, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
+    TYPES, STATUTS, STATUTS_PAR_TYPE, statutPour, pointsAcquis, pointsMaladie, pointsLpp, pointsCalcules, commissionEverlife, commissionEverlifeAjustee, commissionLpp, TAUX_COMMISSION_LPP, commissionAcquise, CLOS, SIGNES, normaliser, moisDe, libelleMois, decalerMois, recapMensuel, filtrer, trier, totaux, versCsv, lireSauvegarde, fusionner,
   };
 })(typeof window !== 'undefined' ? window : globalThis);
