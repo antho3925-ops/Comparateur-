@@ -60,7 +60,7 @@ def main() -> int:
     SORTIE.write_text(php, encoding='utf-8')
 
     print('%s  (%.1f Mo)' % (SORTIE, SORTIE.stat().st_size / 1048576))
-    print('Adresse a ouvrir :  https://mina-tantra.ch/installateur.php?cle=%s' % cle)
+    print('Adresse a ouvrir :  https://chez-eva.ch/installateur.php?cle=%s' % cle)
     return 0
 
 

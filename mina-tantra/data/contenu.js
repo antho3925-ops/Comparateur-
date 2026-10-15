@@ -18,15 +18,15 @@ const SALON = {
   nom: 'Chez Eva',
   slogan: 'Salon de massage érotique & tantrique',
   ville: 'La Chaux-de-Fonds',
-  site: 'https://mina-tantra.ch',
-  adresse: 'Rue des Ponts 34',
+  site: 'https://chez-eva.ch',
+  adresse: 'Rue du Pont 34',
   codePostal: '2300 La Chaux-de-Fonds',
-  telephone: '+41 77 276 13 70',   // <- votre numéro
-  whatsapp: '+41772761370',        // <- même numéro, sans espaces, pour le lien WhatsApp
+  telephone: '+41 79 153 27 78',   // <- votre numéro
+  whatsapp: '+41791532778',        // <- même numéro, sans espaces, pour le lien WhatsApp
   email: '',                       // <- une adresse ici fait apparaître le bouton e-mail
   parking: 'Entrée discrète, stationnement à proximité.',
   photoEntree: 'photos/salon/entree.jpg',   // la façade, pour trouver la porte sans hésiter
-  photoEntreeLegende: "L'entrée de l'immeuble, Rue des Ponts 34",
+  photoEntreeLegende: "L'entrée de l'immeuble, Rue du Pont 34",
 };
 
 /* Le texte d'accueil (le « mot du salon »).
@@ -62,11 +62,13 @@ const MASSEUSES = [
     specialites: ['Tantra', 'Tantra réciproque', 'Body body', 'Érotique'],
     presentation: "Française, Mina est spécialiste du tantra : un massage lent, enveloppant, affiné au fil des années. Douce, raffinée et attentionnée, elle prend le temps de vous accueillir et de comprendre ce que vous venez chercher avant que les mains ne parlent. Rien n'est pressé — chaque soin est pensé pour vous seul.",
     disponible: true,
+    debut: null,   // 'AAAA-MM-JJ' pour une présence limitée dans le temps
+    fin: null,
   },
 ];
 
 /* Le texte affiché sous le titre de la section. */
-const MASSEUSES_INTRO = "Aujourd'hui, c'est Mina qui vous reçoit. Rendez-vous à convenir par téléphone : elle vous dira sans détour ce qu'elle peut vous proposer et à quel moment.";
+const MASSEUSES_INTRO = "Rendez-vous à convenir par téléphone : nous vous dirons sans détour qui vous reçoit, ce qu'elle propose et à quel moment.";
 
 /* ---------------------------------- HORAIRES ------------------------------- */
 const HORAIRES = [

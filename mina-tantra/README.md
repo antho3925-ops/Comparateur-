@@ -38,7 +38,7 @@ fichier JSON.
 
 ## L'administration
 
-Adresse : `https://mina-tantra.ch/admin/`
+Adresse : `https://chez-eva.ch/admin/`
 
 À la **première visite**, elle demande de choisir un mot de passe (huit
 caractères minimum) ; il est conservé sous forme chiffrée dans
@@ -49,8 +49,13 @@ Une fois connecté :
 
 - **Ajouter une masseuse** : prénom, âge (facultatif), origine, langues,
   spécialités, présentation, et autant de photos que voulu.
-- **Modifier** une fiche, la **masquer** du site sans la supprimer
-  (décocher « Afficher sur le site »), ou la **supprimer** avec ses photos.
+- **Modifier** une fiche, la marquer absente sans la supprimer (décocher
+  « Disponible en ce moment »), ou la **supprimer** avec ses photos.
+- **Dates de présence** : pour une masseuse de passage, renseigner « présente
+  à partir du » et « jusqu'au ». Le site affiche alors « À partir du
+  3 novembre » puis « Présente du 3 au 12 novembre », « Jusqu'au 25 octobre »
+  pendant son séjour, et « Bientôt de retour » une fois la date passée.
+  Les deux champs se laissent vides pour une masseuse permanente.
 - **Les photos** : envoyées depuis le téléphone, elles sont automatiquement
   réduites à 1200 px et compressées. La première de la liste est la grande
   photo de la fiche ; « En principale » permet d'en promouvoir une autre.
@@ -101,7 +106,7 @@ site — et affiche l'adresse à ouvrir, avec sa clé. Marche à suivre :
 
 1. déposer `installateur.php` à la racine du site par le WebFTP ;
 2. ouvrir dans le navigateur l'adresse affichée par le script
-   (`https://mina-tantra.ch/installateur.php?cle=…`) ;
+   (`https://chez-eva.ch/installateur.php?cle=…`) ;
 3. il recrée les dossiers, écrit les fichiers, supprime l'ancienne page
    `index.html`, puis **s'efface lui-même**.
 
@@ -129,7 +134,7 @@ redéposer le tout.
 
 ## Référencement
 
-Le site est configuré pour l'adresse **https://mina-tantra.ch** : adresse
+Le site est configuré pour l'adresse **https://chez-eva.ch** : adresse
 canonique, aperçu de partage (`assets/partage.jpg`) et fiche d'établissement
 pour Google — nom, adresse, téléphone et horaires, générés automatiquement
 depuis `data/contenu.js`, donc toujours à jour.

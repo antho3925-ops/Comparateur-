@@ -51,6 +51,46 @@
     : MASSEUSES;
 
   var solo = fiches.length === 1;
+
+  /* Une masseuse peut n'etre la que sur une periode donnee. Les deux dates
+     sont facultatives : sans elles, elle est consideree comme permanente. */
+  function jour(iso) {
+    var p = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(iso || ''));
+    return p ? new Date(+p[1], +p[2] - 1, +p[3]) : null;
+  }
+
+  function enFrancais(d) {
+    var options = { day: 'numeric', month: 'long' };
+    if (d.getFullYear() !== new Date().getFullYear()) { options.year = 'numeric'; }
+    return d.toLocaleDateString('fr-CH', options);
+  }
+
+  function presence(m) {
+    var debut = jour(m.debut);
+    var fin = jour(m.fin);
+    var aujourdhui = new Date();
+    aujourdhui.setHours(0, 0, 0, 0);
+
+    if (m.disponible === false || (fin && aujourdhui > fin)) {
+      return { badge: 'Bientôt de retour', absente: true, ligne: null };
+    }
+    if (debut && aujourdhui < debut) {
+      var meme = fin && debut.getMonth() === fin.getMonth()
+                     && debut.getFullYear() === fin.getFullYear();
+      return {
+        badge: 'À partir du ' + enFrancais(debut),
+        absente: false,
+        ligne: fin
+          ? 'Présente du ' + (meme ? debut.getDate() : enFrancais(debut))
+            + ' au ' + enFrancais(fin)
+          : null
+      };
+    }
+    if (fin) {
+      return { badge: 'Disponible', absente: false, ligne: "Jusqu'au " + enFrancais(fin) };
+    }
+    return { badge: 'Disponible', absente: false, ligne: null };
+  }
   $('#masseuses-chapeau').textContent = solo ? 'Qui vous reçoit' : 'Notre équipe';
   $('#masseuses-titre').textContent   = solo ? 'La masseuse' : 'Les masseuses';
   $('#masseuses-intro').textContent   = typeof MASSEUSES_INTRO === 'string' ? MASSEUSES_INTRO : '';
@@ -67,9 +107,9 @@
         ' onerror="this.style.display=\'none\'">'
       : '';
 
-    var etat = m.disponible === false
-      ? '<span class="fiche-etat absente">Bientôt de retour</span>'
-      : '<span class="fiche-etat">Disponible</span>';
+    var ici = presence(m);
+    var etat = '<span class="fiche-etat' + (ici.absente ? ' absente' : '') + '">'
+             + esc(ici.badge) + '</span>';
 
     var tags = (m.specialites || []).map(function (s) {
       return '<span class="tag">' + esc(s) + '</span>';
@@ -92,6 +132,7 @@
         '<div class="fiche-corps">' +
           '<h3 class="fiche-nom">' + esc(m.prenom) + '</h3>' +
           (meta.length ? '<p class="fiche-meta">' + esc(meta.join(' · ')) + '</p>' : '') +
+          (ici.ligne ? '<p class="fiche-periode">' + esc(ici.ligne) + '</p>' : '') +
           '<p class="fiche-texte">' + esc(m.presentation) + '</p>' +
           (m.langues ? '<p class="fiche-langues">Langues : ' + esc(m.langues) + '</p>' : '') +
           '<div class="tags">' + tags + '</div>' +

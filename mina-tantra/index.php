@@ -14,6 +14,14 @@ if ($modele === false) {
     exit('Page indisponible.');
 }
 
+/* Le site repond sur chez-eva.ch comme sur l'ancien domaine : les balises
+   canoniques et de partage suivent l'adresse par laquelle on arrive. */
+$hote = (string) ($_SERVER['HTTP_HOST'] ?? '');
+if (preg_match('/^[A-Za-z0-9.-]+(:\d+)?$/', $hote)) {
+    $schema = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $modele = str_replace('https://chez-eva.ch', $schema . '://' . $hote, $modele);
+}
+
 $fiches = [];
 $json = __DIR__ . '/data/masseuses.json';
 if (is_readable($json)) {

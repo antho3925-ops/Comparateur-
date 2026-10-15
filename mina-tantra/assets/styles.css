@@ -156,7 +156,8 @@ a{ color:inherit; }
 .atout p{ margin:0; color:var(--texte-doux); font-size:.94rem; }
 
 /* ------------------------------ Masseuses -------------------------------- */
-.grille-masseuses{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:28px; }
+.grille-masseuses{ display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+                   gap:28px; align-items:start; }
 .fiche{
   border:1px solid var(--bord); border-radius:16px; overflow:hidden;
   background:var(--nuit-3); display:flex; flex-direction:column;
@@ -178,6 +179,10 @@ a{ color:inherit; }
 .fiche-corps{ padding:22px 22px 26px; flex:1; display:flex; flex-direction:column; }
 .fiche-nom{ font-family:var(--serif); font-weight:400; font-size:1.8rem; margin:0; }
 .fiche-meta{ font-size:.76rem; letter-spacing:.14em; text-transform:uppercase; color:var(--or); margin:4px 0 14px; }
+.fiche-periode{
+  margin:-8px 0 14px; font-size:.84rem; color:var(--or-clair);
+  letter-spacing:.04em;
+}
 .fiche-texte{ margin:0 0 18px; color:var(--texte-doux); font-size:.94rem; flex:1; }
 .fiche-langues{ font-size:.82rem; color:var(--texte-doux); margin:0 0 14px; }
 .tags{ display:flex; flex-wrap:wrap; gap:8px; }

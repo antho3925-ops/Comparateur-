@@ -1,4 +1,4 @@
-# Chez Eva — https://mina-tantra.ch
+# Chez Eva — https://chez-eva.ch
 # Le site est ouvert aux moteurs de recherche.
 # Pour le rendre invisible dans Google, remplacer "Allow: /" par "Disallow: /".
 
@@ -7,4 +7,4 @@ Allow: /
 Disallow: /admin/
 Disallow: /modele.html
 
-Sitemap: https://mina-tantra.ch/sitemap.xml
+Sitemap: https://chez-eva.ch/sitemap.xml

@@ -69,6 +69,17 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
 
             $age = trim((string) ($_POST['age'] ?? ''));
 
+            /* Les dates arrivent du navigateur au format AAAA-MM-JJ. */
+            $date = static function (string $champ): ?string {
+                $v = trim((string) ($_POST[$champ] ?? ''));
+                return preg_match('/^\d{4}-\d{2}-\d{2}$/', $v) ? $v : null;
+            };
+            $debut = $date('debut');
+            $fin   = $date('fin');
+            if ($debut !== null && $fin !== null && $fin < $debut) {
+                [$debut, $fin] = [$fin, $debut];
+            }
+
             $nouvelle = [
                 'prenom'       => $prenom,
                 'age'          => ctype_digit($age) ? (int) $age : null,
@@ -77,6 +88,8 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
                 'specialites'  => $specialites,
                 'presentation' => trim((string) ($_POST['presentation'] ?? '')),
                 'disponible'   => !empty($_POST['disponible']),
+                'debut'        => $debut,
+                'fin'          => $fin,
             ];
 
             if ($position === null) {
@@ -216,7 +229,7 @@ h2{ font-size:1.05rem; margin:30px 0 12px; font-weight:600; color:var(--or-clair
 p.aide{ color:var(--doux); font-size:.9rem; margin:0 0 22px; }
 label{ display:block; margin:16px 0 6px; font-size:.78rem; letter-spacing:.1em;
        text-transform:uppercase; color:var(--doux); }
-input[type=text], input[type=number], input[type=password], textarea{
+input[type=text], input[type=number], input[type=password], input[type=date], textarea{
   width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--bord);
   background:var(--nuit-3); color:var(--texte); font:inherit; }
 textarea{ min-height:140px; resize:vertical; }
@@ -239,6 +252,7 @@ input[type=file]{ width:100%; color:var(--doux); font-size:.9rem; padding:12px 0
 .carte h3{ margin:0 0 2px; font-size:1.15rem; font-weight:500; }
 .carte .etat{ font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--or); }
 .carte .etat.absente{ color:var(--doux); }
+.carte .periode{ font-size:.8rem; color:var(--doux); margin-top:2px; }
 .carte .liens{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
 .avis{ padding:12px 16px; border-radius:10px; margin-bottom:18px; font-size:.92rem; }
 .avis.ok{ background:rgba(126,192,140,.12); border:1px solid rgba(126,192,140,.4); color:var(--vert); }
@@ -347,6 +361,12 @@ if ($page === 'liste') {
             <?= empty($f['disponible']) ? 'Masquée du site' : 'Disponible' ?>
             · <?= count($f['photos'] ?? []) ?> photo<?= count($f['photos'] ?? []) > 1 ? 's' : '' ?>
           </div>
+          <?php if (!empty($f['debut']) || !empty($f['fin'])): ?>
+            <div class="periode">
+              <?= !empty($f['debut']) ? 'du ' . proteger(date('j/n/Y', strtotime((string) $f['debut']))) : '' ?>
+              <?= !empty($f['fin']) ? 'au ' . proteger(date('j/n/Y', strtotime((string) $f['fin']))) : '' ?>
+            </div>
+          <?php endif; ?>
           <div class="liens">
             <a class="btn vide mini" href="index.php?p=fiche&amp;id=<?= urlencode((string) $f['id']) ?>">Modifier</a>
             <?php foreach ([['haut', '↑', $i > 0], ['bas', '↓', $i < count($liste) - 1]] as [$sens, $signe, $possible]):
@@ -425,10 +445,18 @@ avis($message, $erreur);
   <label for="presentation">Présentation</label>
   <textarea id="presentation" name="presentation" placeholder="Deux ou trois phrases."><?= proteger((string) ($f['presentation'] ?? '')) ?></textarea>
 
+  <label for="debut">Présente à partir du</label>
+  <input type="date" id="debut" name="debut" value="<?= proteger((string) ($f['debut'] ?? '')) ?>">
+
+  <label for="fin">Jusqu'au</label>
+  <input type="date" id="fin" name="fin" value="<?= proteger((string) ($f['fin'] ?? '')) ?>">
+  <p class="aide">À laisser vides si elle est là en permanence. Avec une date
+     de fin passée, sa fiche reste visible mais affiche « Bientôt de retour ».</p>
+
   <div class="coche">
     <input type="checkbox" id="dispo" name="disponible" value="1"
            <?= ($nouvelle || !empty($f['disponible'])) ? 'checked' : '' ?>>
-    <label for="dispo">Afficher sur le site</label>
+    <label for="dispo">Disponible en ce moment</label>
   </div>
 
   <label for="photos">Ajouter des photos</label>
