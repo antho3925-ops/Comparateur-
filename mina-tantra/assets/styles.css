@@ -200,6 +200,13 @@ a{ color:inherit; }
 .solo .fiche-nom{ font-size:2.4rem; }
 .solo .fiche-texte{ flex:0 0 auto; font-size:1rem; }
 
+.fiche-tel{
+  display:inline-block; margin-top:4px; padding:10px 18px; border-radius:999px;
+  border:1px solid var(--or); color:var(--or-clair); text-decoration:none;
+  font-size:.78rem; letter-spacing:.08em; transition:.25s ease;
+}
+.fiche-tel:hover{ background:var(--or); color:#1a1208; }
+
 .fiche-vignettes{ display:flex; gap:10px; margin-top:20px; flex-wrap:wrap; }
 .vignette-mini{ width:74px; aspect-ratio:1/1; border-radius:9px; flex:0 0 auto; }
 .vignette-mini img{ transition:transform .4s ease, opacity .3s ease; opacity:.85; }

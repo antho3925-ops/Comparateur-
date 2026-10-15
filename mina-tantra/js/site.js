@@ -115,6 +115,14 @@
       return '<span class="tag">' + esc(s) + '</span>';
     }).join('');
 
+    /* Une masseuse peut donner son propre numero ; sinon le client appelle
+       celui du salon, indique plus bas dans la page. */
+    var sonNumero = (m.telephone || '').trim();
+    var appel = sonNumero
+      ? '<a class="fiche-tel" href="tel:' + esc(sonNumero.replace(/[^\d+]/g, '')) + '">'
+        + 'Appeler ' + esc(m.prenom) + ' &middot; ' + esc(sonNumero) + '</a>'
+      : '';
+
     var vignettes = (m.photos || []).map(function (src, i) {
       return '<button type="button" class="vignette vignette-mini"' +
                ' data-src="' + esc(src) + '" data-legende="' + esc(m.prenom) + '">' +
@@ -136,6 +144,7 @@
           '<p class="fiche-texte">' + esc(m.presentation) + '</p>' +
           (m.langues ? '<p class="fiche-langues">Langues : ' + esc(m.langues) + '</p>' : '') +
           '<div class="tags">' + tags + '</div>' +
+          appel +
           (vignettes ? '<div class="fiche-vignettes">' + vignettes + '</div>' : '') +
         '</div>' +
       '</article>';

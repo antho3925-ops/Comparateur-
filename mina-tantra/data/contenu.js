@@ -62,7 +62,8 @@ const MASSEUSES = [
     specialites: ['Tantra', 'Tantra réciproque', 'Body body', 'Érotique'],
     presentation: "Française, Mina est spécialiste du tantra : un massage lent, enveloppant, affiné au fil des années. Douce, raffinée et attentionnée, elle prend le temps de vous accueillir et de comprendre ce que vous venez chercher avant que les mains ne parlent. Rien n'est pressé — chaque soin est pensé pour vous seul.",
     disponible: true,
-    debut: null,   // 'AAAA-MM-JJ' pour une présence limitée dans le temps
+    telephone: '',  // son numéro à elle ; vide = on appelle celui du salon
+    debut: null,    // 'AAAA-MM-JJ' pour une présence limitée dans le temps
     fin: null,
   },
 ];

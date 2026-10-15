@@ -87,6 +87,7 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
                 'langues'      => trim((string) ($_POST['langues'] ?? '')),
                 'specialites'  => $specialites,
                 'presentation' => trim((string) ($_POST['presentation'] ?? '')),
+                'telephone'    => trim((string) ($_POST['telephone'] ?? '')),
                 'disponible'   => !empty($_POST['disponible']),
                 'debut'        => $debut,
                 'fin'          => $fin,
@@ -229,7 +230,8 @@ h2{ font-size:1.05rem; margin:30px 0 12px; font-weight:600; color:var(--or-clair
 p.aide{ color:var(--doux); font-size:.9rem; margin:0 0 22px; }
 label{ display:block; margin:16px 0 6px; font-size:.78rem; letter-spacing:.1em;
        text-transform:uppercase; color:var(--doux); }
-input[type=text], input[type=number], input[type=password], input[type=date], textarea{
+input[type=text], input[type=number], input[type=password], input[type=date],
+input[type=tel], textarea{
   width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--bord);
   background:var(--nuit-3); color:var(--texte); font:inherit; }
 textarea{ min-height:140px; resize:vertical; }
@@ -361,6 +363,9 @@ if ($page === 'liste') {
             <?= empty($f['disponible']) ? 'Masquée du site' : 'Disponible' ?>
             · <?= count($f['photos'] ?? []) ?> photo<?= count($f['photos'] ?? []) > 1 ? 's' : '' ?>
           </div>
+          <?php if (!empty($f['telephone'])): ?>
+            <div class="periode"><?= proteger((string) $f['telephone']) ?></div>
+          <?php endif; ?>
           <?php if (!empty($f['debut']) || !empty($f['fin'])): ?>
             <div class="periode">
               <?= !empty($f['debut']) ? 'du ' . proteger(date('j/n/Y', strtotime((string) $f['debut']))) : '' ?>
@@ -444,6 +449,12 @@ avis($message, $erreur);
 
   <label for="presentation">Présentation</label>
   <textarea id="presentation" name="presentation" placeholder="Deux ou trois phrases."><?= proteger((string) ($f['presentation'] ?? '')) ?></textarea>
+
+  <label for="telephone">Son numéro de téléphone</label>
+  <input type="tel" id="telephone" name="telephone" placeholder="+41 79 000 00 00"
+         value="<?= proteger((string) ($f['telephone'] ?? '')) ?>">
+  <p class="aide">À laisser vide pour que les clients appellent le numéro du salon.
+     Rempli, un bouton « Appeler » apparaît sur sa fiche.</p>
 
   <label for="debut">Présente à partir du</label>
   <input type="date" id="debut" name="debut" value="<?= proteger((string) ($f['debut'] ?? '')) ?>">

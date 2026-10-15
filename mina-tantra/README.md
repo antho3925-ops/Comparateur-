@@ -51,6 +51,9 @@ Une fois connecté :
   spécialités, présentation, et autant de photos que voulu.
 - **Modifier** une fiche, la marquer absente sans la supprimer (décocher
   « Disponible en ce moment »), ou la **supprimer** avec ses photos.
+- **Son propre numéro** : si une masseuse préfère être appelée directement,
+  renseigner son numéro ; un bouton « Appeler Prénom » apparaît sur sa fiche.
+  Laissé vide, les clients appellent le numéro du salon.
 - **Dates de présence** : pour une masseuse de passage, renseigner « présente
   à partir du » et « jusqu'au ». Le site affiche alors « À partir du
   3 novembre » puis « Présente du 3 au 12 novembre », « Jusqu'au 25 octobre »
