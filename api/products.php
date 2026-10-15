@@ -15,6 +15,7 @@ foreach (load_products() as $p) {
         'release_date' => $p['release_date'] ?? null,
         'image' => $p['image'] ?? 'assets/img/produit.svg',
         'description' => $p['description'] ?? '',
+        'featured' => !empty($p['featured']),
     ];
 }
 

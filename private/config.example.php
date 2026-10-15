@@ -4,13 +4,18 @@
 
 return [
     // Nom affiché sur le site
-    'shop_name' => 'Ma Boutique TCG',
+    'shop_name' => 'Pokestocks',
 
     // Adresse complète du site, sans "/" à la fin
     'site_url' => 'https://www.monsite.com',
 
     // E-mail qui reçoit une notification à chaque commande
     'owner_email' => 'contact@monsite.com',
+
+    // Mot de passe de la page d'administration (www.monsite.com/admin/).
+    // Au moins 12 caractères, et différent de tes autres mots de passe.
+    // Tant qu'il est vide, l'administration reste fermée.
+    'admin_password' => '',
 
     // Clés Stripe (tableau de bord Stripe > Développeurs > Clés API).
     // Laisse vide tant que ton compte Stripe n'est pas créé : le site

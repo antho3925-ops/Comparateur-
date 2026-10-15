@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  var state = { products: [], shipping: null, paymentsEnabled: false, filter: 'all', cart: loadCart(), checkoutError: '' };
+  var state = { products: [], shipping: null, paymentsEnabled: false, filter: 'all', search: '', cart: loadCart(), checkoutError: '' };
   var euro = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
 
   function $(id) { return document.getElementById(id); }
@@ -43,7 +43,16 @@
     }).join('');
   }
 
+  function normalize(s) {
+    return String(s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+  }
+
   function matchesFilter(p) {
+    if (state.search) {
+      var haystack = normalize(p.name + ' ' + p.category + ' ' + p.description);
+      var words = normalize(state.search).split(/\s+/).filter(Boolean);
+      if (!words.every(function (w) { return haystack.indexOf(w) !== -1; })) return false;
+    }
     if (state.filter === 'instock') return !p.preorder && p.stock > 0;
     if (state.filter === 'preorder') return p.preorder;
     if (state.filter.indexOf('cat:') === 0) return p.category === state.filter.slice(4);
@@ -51,32 +60,50 @@
   }
 
   function badge(p) {
-    if (p.stock <= 0) return '<span class="badge out">' + (p.preorder ? 'Précommandes complètes' : 'Rupture de stock') + '</span>';
-    if (p.preorder) return '<span class="badge preorder">Précommande · sortie le ' + dateFr(p.release_date) + '</span>';
-    if (p.stock <= 3) return '<span class="badge low">Plus que ' + p.stock + ' en stock</span>';
-    return '<span class="badge ok">En stock</span>';
+    if (p.stock <= 0) return '<span class="badge out">' + (p.preorder ? 'Complet' : 'Rupture') + '</span>';
+    if (p.preorder) return '<span class="badge preorder">Précommande</span>';
+    if (p.featured) return '<span class="badge gold">★ Top vente</span>';
+    return '';
+  }
+
+  function stockLine(p) {
+    if (p.preorder) return '<div class="stock-line preorder-text">Sortie le ' + dateFr(p.release_date) + '</div>';
+    if (p.stock <= 0) return '<div class="stock-line out-text">Victime de son succès</div>';
+    if (p.stock <= 3) return '<div class="stock-line low-text">Plus que ' + p.stock + ' en stock</div>';
+    return '<div class="stock-line ok-text">● En stock</div>';
+  }
+
+  function card(p) {
+    var inCart = state.cart[p.id] || 0;
+    var full = inCart >= maxQty(p);
+    var label = p.stock <= 0 ? 'Indisponible' : full ? 'Maximum atteint' : p.preorder ? 'Précommander' : 'Ajouter au panier';
+    return '<article class="card">' +
+      '<div class="card-media"><img src="' + escapeHtml(p.image) + '" alt="' + escapeHtml(p.name) + '" loading="lazy">' + badge(p) + '</div>' +
+      '<div class="card-body">' +
+      '<h3>' + escapeHtml(p.name) + '</h3>' +
+      (p.description ? '<p class="desc">' + escapeHtml(p.description) + '</p>' : '') +
+      stockLine(p) +
+      '<div class="price">' + money(p.price) + '</div>' +
+      '<button class="button' + (p.preorder ? ' preorder' : '') + '" data-add="' + escapeHtml(p.id) + '"' +
+      (p.stock <= 0 || full ? ' disabled' : '') + '>' + label + '</button>' +
+      '</div></article>';
+  }
+
+  function renderSection(sectionId, gridId, list) {
+    $(sectionId).hidden = !list.length || !!state.search;
+    $(gridId).innerHTML = list.map(card).join('');
   }
 
   function renderProducts() {
+    var available = function (p) { return p.stock > 0; };
+    renderSection('featured-section', 'featured', state.products.filter(function (p) { return p.featured && available(p); }).slice(0, 4));
+    renderSection('preorder-section', 'preorders', state.products.filter(function (p) { return p.preorder && available(p); }).slice(0, 4));
+
+    $('all-title').textContent = state.search ? 'Résultats pour « ' + state.search + ' »' : 'Tous les produits';
     var list = state.products.filter(matchesFilter);
-    if (!list.length) {
-      $('products').innerHTML = '<p class="muted">Aucun produit dans cette catégorie pour le moment.</p>';
-      return;
-    }
-    $('products').innerHTML = list.map(function (p) {
-      var inCart = state.cart[p.id] || 0;
-      var full = inCart >= maxQty(p);
-      var label = p.stock <= 0 ? 'Indisponible' : full ? 'Maximum atteint' : p.preorder ? 'Précommander' : 'Ajouter au panier';
-      return '<article class="card">' +
-        '<img src="' + escapeHtml(p.image) + '" alt="' + escapeHtml(p.name) + '" loading="lazy">' +
-        '<div class="card-body">' + badge(p) +
-        '<h3>' + escapeHtml(p.name) + '</h3>' +
-        '<p>' + escapeHtml(p.description) + '</p>' +
-        '<div class="price">' + money(p.price) + '</div>' +
-        '<button class="button' + (p.preorder ? ' preorder' : '') + '" data-add="' + escapeHtml(p.id) + '"' +
-        (p.stock <= 0 || full ? ' disabled' : '') + '>' + label + '</button>' +
-        '</div></article>';
-    }).join('');
+    $('products').innerHTML = list.length
+      ? list.map(card).join('')
+      : '<p class="empty">Aucun produit ne correspond' + (state.search ? ' à votre recherche' : ' pour le moment') + '.</p>';
   }
 
   // ---------- Panier ----------
@@ -91,6 +118,7 @@
     var lines = cartLines();
     var count = lines.reduce(function (n, l) { return n + l.qty; }, 0);
     $('cart-count').textContent = count;
+    $('cart-count').dataset.empty = String(count === 0);
 
     if (!lines.length) {
       $('cart-lines').innerHTML = '<p class="muted">Votre panier est vide.</p>';
@@ -101,6 +129,7 @@
     $('cart-lines').innerHTML = lines.map(function (l) {
       var p = l.product;
       return '<div class="line">' +
+        '<img src="' + escapeHtml(p.image) + '" alt="">' +
         '<div><div class="line-name">' + escapeHtml(p.name) + '</div>' +
         '<div class="muted small">' + money(p.price) + ' l’unité</div></div>' +
         '<div><strong>' + money(p.price * l.qty) + '</strong></div>' +
@@ -189,11 +218,27 @@
     else if (t.dataset.dec) changeQty(t.dataset.dec, -1);
     else if (t.dataset.remove) changeQty(t.dataset.remove, -Infinity);
     else if (t.id === 'open-cart') openCart();
+    else if (t.id === 'focus-search') { $('search').focus(); $('search').scrollIntoView({ block: 'center' }); }
     else if (t.id === 'close-cart') closeCart();
     else if (t.id === 'checkout') checkout();
     else if (t.id === 'cart' && e.target === t) closeCart();
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeCart(); });
+
+  // Lien « Tout voir » des précommandes : applique le filtre correspondant.
+  document.querySelectorAll('[data-show]').forEach(function (a) {
+    a.addEventListener('click', function () { state.filter = a.dataset.show; renderFilters(); renderProducts(); });
+  });
+
+  $('search').addEventListener('input', function () {
+    state.search = this.value.trim();
+    renderProducts();
+  });
+  $('search-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    $('search').blur();
+    $('boutique').scrollIntoView();
+  });
 
   // ---------- Chargement ----------
 
@@ -204,8 +249,6 @@
         state.products = data.products;
         state.shipping = data.shipping;
         state.paymentsEnabled = data.payments_enabled;
-        document.querySelectorAll('.shop-name').forEach(function (el) { el.textContent = data.shop_name; });
-        document.title = data.shop_name + ' – Cartes à collectionner';
         $('payments-notice').hidden = data.payments_enabled;
 
         // Ajuste le panier au stock réel (produit retiré, stock baissé…).

@@ -1,4 +1,4 @@
-# Boutique de cartes à collectionner
+# Pokestocks – boutique de cartes à collectionner
 
 Site de vente avec panier, produits en stock, **précommandes** et paiement par
 **carte bancaire, Apple Pay et Google Pay** via Stripe. L'argent est versé
@@ -11,12 +11,14 @@ données ni installation : il suffit d'envoyer les fichiers.
 
 | Fichier / dossier | Rôle |
 |---|---|
-| `index.html` | Le catalogue et le panier |
+| `index.html` | La boutique : meilleures ventes, précommandes, tous les produits, recherche, panier |
+| `admin/` | **Ta page d'administration** pour gérer les produits |
 | `succes.html` | Page affichée après un paiement réussi |
 | `cgv.html`, `mentions-legales.html`, `confidentialite.html` | Pages légales obligatoires, **à compléter** |
 | `assets/` | Style, script du panier, images |
 | `api/` | Petits scripts serveur : catalogue, création du paiement, réception des paiements |
-| `private/products.json` | **Tes produits** (nom, prix, stock, précommande…) |
+| `private/products.json` | La liste des produits (gérée depuis l'administration) |
+| `uploads/` | Les photos envoyées depuis l'administration |
 | `private/config.php` | **Tes réglages et clés Stripe** (à créer, voir plus bas) |
 | `private/orders/` | Une fiche par commande payée |
 
@@ -33,44 +35,32 @@ Le dossier `private/` est bloqué depuis internet par son fichier `.htaccess`.
    FileZilla. Pense aux fichiers cachés `.htaccess` (à la racine et dans
    `private/`).
 4. Dans `private/`, duplique `config.example.php` en **`config.php`** et remplis
-   le nom de la boutique, l'adresse du site et ton e-mail.
+   l'adresse du site, ton e-mail et le **mot de passe administrateur**
+   (`admin_password`, 12 caractères minimum).
 5. Ouvre ton site : le catalogue s'affiche avec un bandeau « paiement bientôt
    disponible ».
 
 ## 2. Gérer tes produits
 
-Modifie `private/products.json` (gestionnaire de fichiers Infomaniak > éditer).
-Chaque produit ressemble à ceci :
+Va sur **`https://www.tonsite.com/admin/`** et connecte-toi avec ton mot de passe.
 
-```json
-{
-  "id": "display-exemple",
-  "name": "Display 36 boosters – Extension exemple",
-  "category": "Displays",
-  "price": 21990,
-  "stock": 4,
-  "max_per_order": 2,
-  "preorder": false,
-  "release_date": "2026-12-12",
-  "image": "assets/img/produit.svg",
-  "description": "Display scellé de 36 boosters, version française."
-}
-```
+- **Ajouter un produit** : nom, photo (JPG, PNG ou WebP, 8 Mo maximum), prix
+  (par exemple `59,90`), stock, et la case **« C'est une précommande »** avec
+  la date de sortie.
+- Dans **Options** :
+  - catégorie (crée un filtre sur le site) ;
+  - limite par commande, utile contre les revendeurs ;
+  - description ;
+  - case « Afficher dans Meilleures ventes ».
+- **Modifier** : change ce que tu veux. Pour le stock, si des ventes ont lieu
+  pendant que le formulaire est ouvert, elles sont conservées : passer de 5 à 8
+  ajoute bien 3 exemplaires au stock réel.
+- **Supprimer** : retire le produit et sa photo.
+- Le stock **baisse tout seul** à chaque vente.
+- Quand une précommande sort, décoche la case pour la vendre en stock.
+- Pour une précommande, le stock est le nombre de places.
 
-| Champ | Signification |
-|---|---|
-| `id` | Identifiant unique, sans espace ni accent |
-| `category` | Crée automatiquement un filtre sur le site |
-| `price` | En **centimes** : `21990` = 219,90 € |
-| `stock` | Quantité vendable (pour une précommande : nombre de places) |
-| `max_per_order` | Limite par client et par commande, utile contre les revendeurs |
-| `preorder` / `release_date` | `true` pour une précommande, avec sa date de sortie (AAAA-MM-JJ) |
-
-- Mets tes photos dans `assets/img/` et indique leur chemin dans `image`.
-- Le stock **baisse tout seul** à chaque vente. Pour réapprovisionner, modifie
-  `stock` **directement sur le serveur** : si tu renvoies une ancienne copie du
-  fichier depuis ton ordinateur, tu effaceras les ventes déjà décomptées.
-- Quand une précommande est sortie, passe `"preorder": false` pour la vendre en stock.
+Après 5 mauvais mots de passe, la connexion est bloquée 15 minutes.
 
 ## 3. Activer le paiement avec Stripe
 
@@ -94,7 +84,7 @@ Chaque produit ressemble à ceci :
 6. Dans *Paramètres > E-mails clients*, active les **reçus de paiement**.
 7. Une fois ton compte validé, passe en **mode production** et refais les étapes 2
    et 3 avec la clé `sk_live_…` et un nouveau webhook. Remets bien le vrai
-   stock après tes tests.
+   stock après tes tests (depuis l'administration).
 
 ## 4. Au quotidien
 
@@ -108,7 +98,13 @@ Chaque produit ressemble à ceci :
 ## Avant d'ouvrir au public
 
 - [ ] Compléter les 3 pages légales (SIRET, adresse, médiateur de la consommation…)
+- [ ] Choisir un mot de passe administrateur solide
 - [ ] Remplacer les produits d'exemple par les tiens, avec tes photos
 - [ ] Faire au moins une commande test complète
 - [ ] Ne pas utiliser le logo Pokémon ni les illustrations officielles comme
       identité visuelle. Les photos de tes propres produits suffisent.
+
+## Crédits
+
+Police du logo : *Luckiest Guy* d'Astigmatic, licence Apache 2.0, hébergée
+dans `assets/fonts/`.

@@ -1,0 +1,5 @@
+# Photos des produits envoyées depuis l'administration : seules les images sont servies.
+<FilesMatch "\.(?i:(?!(jpe?g|png|webp|gif)$)[^.]+)$">
+  Require all denied
+</FilesMatch>
+Options -Indexes

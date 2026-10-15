@@ -2,3 +2,7 @@ private/config.php
 private/orders/*.json
 private/*.lock
 .DS_Store
+private/login_attempts.json
+uploads/*
+!uploads/.htaccess
+!uploads/.gitkeep
