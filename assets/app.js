@@ -121,7 +121,8 @@
     $('cart-count').dataset.empty = String(count === 0);
 
     if (!lines.length) {
-      $('cart-lines').innerHTML = '<p class="muted">Votre panier est vide.</p>';
+      $('cart-lines').innerHTML = '<div class="cart-empty"><img src="assets/img/deco/psykokwak.webp" alt="">' +
+        '<p>Votre panier est vide…</p><p class="muted small">Psykokwak ne comprend pas non plus.</p></div>';
       $('cart-summary').innerHTML = '';
       return;
     }

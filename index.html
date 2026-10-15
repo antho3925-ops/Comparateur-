@@ -36,6 +36,7 @@
   </div>
 
   <section class="hero">
+    <img class="hero-bg" src="assets/img/deco/hero-lugia-ho-oh.webp" alt="" aria-hidden="true">
     <div class="hero-inner">
       <div class="pill"><span class="stars">★★★★★</span> 100 % produits officiels scellés</div>
       <h1>La destination des <span class="gold-text">collectionneurs</span></h1>
@@ -48,27 +49,46 @@
     </div>
   </section>
 
+  <div class="stage">
+  <div class="floaters" aria-hidden="true">
+    <img src="assets/img/deco/pikachu.webp" alt=""><img src="assets/img/deco/ectoplasma.webp" alt="">
+    <img src="assets/img/deco/bulbizarre.webp" alt=""><img src="assets/img/deco/goupix.webp" alt="">
+    <img src="assets/img/deco/mew.webp" alt=""><img src="assets/img/deco/ronflex.webp" alt="">
+    <img src="assets/img/deco/carapuce.webp" alt=""><img src="assets/img/deco/voltali.webp" alt="">
+    <img src="assets/img/deco/rondoudou.webp" alt=""><img src="assets/img/deco/salameche.webp" alt="">
+  </div>
   <main>
     <div class="notice" id="payments-notice" hidden>
       Le paiement en ligne arrive très bientôt : vous pouvez déjà parcourir la boutique.
     </div>
 
     <section class="section" id="featured-section" hidden>
-      <div class="section-head"><h2>Meilleures ventes</h2><a href="#boutique">Tout voir ›</a></div>
+      <div class="section-head"><h2><img class="mascot" src="assets/img/deco/pikachu.webp" alt="">Meilleures ventes</h2><a href="#boutique">Tout voir ›</a></div>
       <div class="grid" id="featured"></div>
     </section>
 
     <section class="section" id="preorder-section" hidden>
-      <div class="section-head"><h2>Précommandes</h2><a href="#boutique" data-show="preorder">Tout voir ›</a></div>
+      <div class="section-head"><h2><img class="mascot" src="assets/img/deco/mew.webp" alt="">Précommandes</h2><a href="#boutique" data-show="preorder">Tout voir ›</a></div>
       <div class="grid" id="preorders"></div>
     </section>
 
+    <section class="promo" aria-label="Précommandes">
+      <img src="assets/img/deco/pikachu-eclair.webp" alt="">
+      <div class="promo-text">
+        <span class="badge preorder">Nouveautés</span>
+        <h2>Ne ratez plus <span class="gold-text">aucune sortie</span></h2>
+        <p>Réservez les prochaines extensions dès leur annonce : votre exemplaire est garanti et expédié le jour de la sortie.</p>
+        <a class="button" href="#boutique" data-show="preorder">Voir les précommandes</a>
+      </div>
+    </section>
+
     <section class="section" id="boutique">
-      <div class="section-head"><h2 id="all-title">Tous les produits</h2></div>
+      <div class="section-head"><h2><img class="mascot" src="assets/img/deco/pokeball.webp" alt=""><span id="all-title">Tous les produits</span></h2></div>
       <nav class="filters" id="filters" aria-label="Filtres"></nav>
       <div class="grid" id="products" aria-live="polite"><p class="empty">Chargement des produits…</p></div>
     </section>
   </main>
+</div>
 
   <aside class="drawer" id="cart" aria-label="Panier" hidden>
     <div class="drawer-panel">
@@ -82,6 +102,7 @@
   </aside>
 
   <footer class="footer">
+    <img class="footer-starters" src="assets/img/deco/starters.webp" alt="" aria-hidden="true">
     <div class="logo">POKESTOCKS</div>
     <p>
       <a href="cgv.html">Conditions générales de vente</a> ·

@@ -104,6 +104,19 @@ Après 5 mauvais mots de passe, la connexion est bloquée 15 minutes.
 - [ ] Ne pas utiliser le logo Pokémon ni les illustrations officielles comme
       identité visuelle. Les photos de tes propres produits suffisent.
 
+## Images de décor
+
+Les illustrations Pokémon du décor sont dans `assets/img/deco/` : le fond de
+l'accueil, le bandeau Pikachu, les starters du pied de page, les mascottes des
+titres et les Pokémon flottants. Pour en changer une, remplace le fichier en
+gardant **le même nom**. Le format WebP est conseillé, et une image plus grande
+rendra le fond de l'accueil plus net.
+
+Ces illustrations appartiennent à The Pokémon Company. Leur usage comme décor
+d'un site commercial n'est pas autorisé par défaut. Si tu reçois une demande
+de retrait, supprime simplement le dossier `assets/img/deco/` et les balises
+`<img>` qui y font référence dans `index.html` et `succes.html`.
+
 ## Crédits
 
 Police du logo : *Luckiest Guy* d'Astigmatic, licence Apache 2.0, hébergée
