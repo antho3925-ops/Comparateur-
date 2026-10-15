@@ -28,8 +28,8 @@ A_DEPLOYER = [
     'admin/index.php', 'admin/noyau.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
     'assets/favicon-180.png', 'assets/partage.jpg',
-    'js/site.js',
-    'data/contenu.js', 'data/masseuses.json', 'data/parametres.json',
+    'js/site.js', 'js/contenu.js',
+    'data/masseuses.json', 'data/parametres.json',
     'data/reservations.json', 'data/.htaccess',
 ]
 A_DEPLOYER += sorted(
@@ -47,13 +47,13 @@ JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'
 
 
 def ecrire_parametres() -> None:
-    """Extrait de data/contenu.js ce dont le serveur a besoin.
+    """Extrait de js/contenu.js ce dont le serveur a besoin.
 
     Le site garde ainsi un seul fichier de contenu : les horaires et les
     coordonnees saisis pour la page publique servent aussi au calcul des
     creneaux et au calendrier.
     """
-    contenu = (RACINE / 'data' / 'contenu.js').read_text(encoding='utf-8')
+    contenu = (RACINE / 'js' / 'contenu.js').read_text(encoding='utf-8')
 
     def champ(nom: str) -> str:
         m = re.search(r"\b%s:\s*'((?:[^'\\]|\\.)*)'" % nom, contenu)

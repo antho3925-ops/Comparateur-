@@ -1,6 +1,6 @@
 /* ============================================================================
    Chez Eva — logique du site
-   Tout le contenu vient de data/contenu.js : ce fichier ne fait que l'afficher.
+   Tout le contenu vient de js/contenu.js : ce fichier ne fait que l'afficher.
    ========================================================================== */
 (function () {
   'use strict';
