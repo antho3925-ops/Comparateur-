@@ -1,0 +1,485 @@
+<?php
+/* ---------------------------------------------------------------------------
+   Chez Eva — administration
+   ---------------------------------------------------------------------------
+   Une page unique, pensee pour le telephone : ajouter une masseuse, modifier
+   sa fiche, envoyer ou supprimer ses photos, la masquer ou la remettre.
+   Tout est enregistre dans data/masseuses.json, que la page publique relit.
+--------------------------------------------------------------------------- */
+declare(strict_types=1);
+require __DIR__ . '/noyau.php';
+
+$message = null;   // confirmation affichee en vert
+$erreur  = null;   // probleme affiche en rouge
+
+/* ============================== LES ACTIONS ============================== */
+
+$action = (string) ($_POST['action'] ?? '');
+
+if ($action === 'creer_motdepasse' && !mot_de_passe_defini()) {
+    $clair = (string) ($_POST['motdepasse'] ?? '');
+    if ($clair !== (string) ($_POST['confirmation'] ?? '')) {
+        $erreur = 'Les deux mots de passe ne sont pas identiques.';
+    } else {
+        $erreur = definir_mot_de_passe($clair);
+        if ($erreur === null) {
+            connexion($clair);
+            header('Location: index.php');
+            exit;
+        }
+    }
+}
+
+if ($action === 'connexion') {
+    $erreur = connexion((string) ($_POST['motdepasse'] ?? ''));
+    if ($erreur === null) {
+        header('Location: index.php');
+        exit;
+    }
+}
+
+if ($action === 'deconnexion') {
+    deconnexion();
+    header('Location: index.php?p=connexion');
+    exit;
+}
+
+if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deconnexion'], true)) {
+    exiger_connexion();
+    verifier_jeton();
+
+    $liste = fiches();
+    $id = (string) ($_POST['id'] ?? '');
+    $position = null;
+    foreach ($liste as $i => $f) {
+        if (($f['id'] ?? '') === $id) {
+            $position = $i;
+        }
+    }
+
+    if ($action === 'enregistrer') {
+        $prenom = trim((string) ($_POST['prenom'] ?? ''));
+        if ($prenom === '') {
+            $erreur = 'Le prénom est obligatoire.';
+        } else {
+            $specialites = array_values(array_filter(array_map(
+                'trim',
+                explode(',', (string) ($_POST['specialites'] ?? ''))
+            ), static fn ($s) => $s !== ''));
+
+            $age = trim((string) ($_POST['age'] ?? ''));
+
+            $nouvelle = [
+                'prenom'       => $prenom,
+                'age'          => ctype_digit($age) ? (int) $age : null,
+                'origine'      => trim((string) ($_POST['origine'] ?? '')),
+                'langues'      => trim((string) ($_POST['langues'] ?? '')),
+                'specialites'  => $specialites,
+                'presentation' => trim((string) ($_POST['presentation'] ?? '')),
+                'disponible'   => !empty($_POST['disponible']),
+            ];
+
+            if ($position === null) {
+                $pris = array_map(static fn ($f) => (string) ($f['id'] ?? ''), $liste);
+                $nouvelle['id'] = identifiant($prenom, $pris);
+                $nouvelle['photos'] = [];
+                $liste[] = $nouvelle;
+                $position = count($liste) - 1;
+                $id = $nouvelle['id'];
+            } else {
+                $liste[$position] = array_merge($liste[$position], $nouvelle);
+            }
+
+            /* Les photos envoyees avec le formulaire. */
+            $envois = $_FILES['photos'] ?? null;
+            if (is_array($envois) && is_array($envois['name'])) {
+                foreach (array_keys($envois['name']) as $k) {
+                    $resultat = enregistrer_photo([
+                        'name'     => $envois['name'][$k],
+                        'type'     => $envois['type'][$k],
+                        'tmp_name' => $envois['tmp_name'][$k],
+                        'error'    => $envois['error'][$k],
+                        'size'     => $envois['size'][$k],
+                    ], $id);
+                    if ($resultat['erreur'] !== null) {
+                        $erreur = $resultat['erreur'];
+                    } elseif ($resultat['chemin'] !== null) {
+                        $liste[$position]['photos'][] = $resultat['chemin'];
+                    }
+                }
+            }
+
+            if (ecrire_fiches($liste)) {
+                $message = 'Fiche enregistrée.';
+            } else {
+                $erreur = "Impossible d'écrire data/masseuses.json (droits du dossier).";
+            }
+            header('Location: index.php?p=fiche&id=' . urlencode($id)
+                . '&m=' . urlencode((string) ($erreur ?? $message)) . '&e=' . ($erreur ? 1 : 0));
+            exit;
+        }
+    }
+
+    if ($action === 'supprimer' && $position !== null) {
+        foreach ($liste[$position]['photos'] ?? [] as $photo) {
+            supprimer_photo((string) $photo);
+        }
+        array_splice($liste, $position, 1);
+        ecrire_fiches($liste);
+        header('Location: index.php?m=' . urlencode('Fiche supprimée.'));
+        exit;
+    }
+
+    if ($action === 'deplacer' && $position !== null) {
+        $cible = $position + ((string) ($_POST['sens'] ?? '') === 'haut' ? -1 : 1);
+        if ($cible >= 0 && $cible < count($liste)) {
+            [$liste[$position], $liste[$cible]] = [$liste[$cible], $liste[$position]];
+            ecrire_fiches($liste);
+        }
+        header('Location: index.php');
+        exit;
+    }
+
+    if (($action === 'photo_supprimer' || $action === 'photo_principale') && $position !== null) {
+        $chemin = (string) ($_POST['chemin'] ?? '');
+        $photos = array_values($liste[$position]['photos'] ?? []);
+        $index = array_search($chemin, $photos, true);
+        if ($index !== false) {
+            if ($action === 'photo_supprimer') {
+                supprimer_photo($chemin);
+                array_splice($photos, (int) $index, 1);
+            } else {
+                array_splice($photos, (int) $index, 1);
+                array_unshift($photos, $chemin);
+            }
+            $liste[$position]['photos'] = $photos;
+            ecrire_fiches($liste);
+        }
+        header('Location: index.php?p=fiche&id=' . urlencode($id));
+        exit;
+    }
+
+    if ($action === 'changer_motdepasse') {
+        $clair = (string) ($_POST['motdepasse'] ?? '');
+        if ($clair !== (string) ($_POST['confirmation'] ?? '')) {
+            $erreur = 'Les deux mots de passe ne sont pas identiques.';
+        } else {
+            $erreur = definir_mot_de_passe($clair);
+            $message = $erreur === null ? 'Mot de passe modifié.' : null;
+        }
+    }
+}
+
+/* Messages transmis apres une redirection. */
+if (isset($_GET['m']) && $_GET['m'] !== '') {
+    if (!empty($_GET['e'])) {
+        $erreur = (string) $_GET['m'];
+    } else {
+        $message = (string) $_GET['m'];
+    }
+}
+
+/* ============================== L'AFFICHAGE ============================== */
+
+$page = (string) ($_GET['p'] ?? 'liste');
+if (!est_connecte()) {
+    $page = 'connexion';
+}
+
+function entete(string $titre): void
+{
+    header('Content-Type: text/html; charset=utf-8');
+    header('X-Robots-Tag: noindex, nofollow');
+    ?><!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title><?= proteger($titre) ?> — Chez Eva</title>
+<link rel="icon" href="../assets/favicon.ico" sizes="any">
+<style>
+:root{ --nuit:#120b12; --nuit-2:#1b1018; --nuit-3:#241621; --or:#c9a227;
+       --or-clair:#e6c766; --texte:#efe6e2; --doux:#b9a9a6; --bord:rgba(201,162,39,.24);
+       --rouge:#e07a7a; --vert:#7ec08c; }
+*{ box-sizing:border-box; }
+body{ margin:0; background:var(--nuit); color:var(--texte); line-height:1.6;
+      font:16px/1.6 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; }
+a{ color:var(--or-clair); }
+.barre{ display:flex; align-items:center; justify-content:space-between; gap:12px;
+        padding:14px 18px; background:var(--nuit-2); border-bottom:1px solid var(--bord); }
+.barre b{ font-weight:600; letter-spacing:.14em; text-transform:uppercase; font-size:.76rem; color:var(--or); }
+.barre a, .barre button{ font-size:.78rem; }
+main{ max-width:720px; margin:0 auto; padding:22px 18px 70px; }
+h1{ font-size:1.5rem; margin:0 0 6px; font-weight:500; }
+h2{ font-size:1.05rem; margin:30px 0 12px; font-weight:600; color:var(--or-clair); }
+p.aide{ color:var(--doux); font-size:.9rem; margin:0 0 22px; }
+label{ display:block; margin:16px 0 6px; font-size:.78rem; letter-spacing:.1em;
+       text-transform:uppercase; color:var(--doux); }
+input[type=text], input[type=number], input[type=password], textarea{
+  width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--bord);
+  background:var(--nuit-3); color:var(--texte); font:inherit; }
+textarea{ min-height:140px; resize:vertical; }
+input[type=file]{ width:100%; color:var(--doux); font-size:.9rem; padding:12px 0; }
+.coche{ display:flex; align-items:center; gap:10px; margin-top:18px; }
+.coche label{ margin:0; text-transform:none; letter-spacing:0; font-size:.95rem; color:var(--texte); }
+.btn{ display:inline-block; padding:13px 22px; border-radius:999px; border:1px solid var(--or);
+      background:var(--or); color:#1a1208; font-weight:600; font-size:.85rem; cursor:pointer;
+      text-decoration:none; text-align:center; }
+.btn.vide{ background:transparent; color:var(--or-clair); font-weight:500; }
+.btn.danger{ background:transparent; border-color:rgba(224,122,122,.5); color:var(--rouge); }
+.btn.mini{ padding:7px 14px; font-size:.74rem; }
+.actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:26px; }
+.carte{ border:1px solid var(--bord); border-radius:14px; background:var(--nuit-2);
+        padding:16px; margin-bottom:14px; display:flex; gap:14px; align-items:flex-start; }
+.carte img{ width:68px; height:88px; object-fit:cover; border-radius:8px; flex:0 0 auto; }
+.carte .sans-photo{ width:68px; height:88px; border-radius:8px; flex:0 0 auto;
+              background:var(--nuit-3); display:flex; align-items:center; justify-content:center;
+              color:var(--or); font-size:1.6rem; }
+.carte h3{ margin:0 0 2px; font-size:1.15rem; font-weight:500; }
+.carte .etat{ font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--or); }
+.carte .etat.absente{ color:var(--doux); }
+.carte .liens{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
+.avis{ padding:12px 16px; border-radius:10px; margin-bottom:18px; font-size:.92rem; }
+.avis.ok{ background:rgba(126,192,140,.12); border:1px solid rgba(126,192,140,.4); color:var(--vert); }
+.avis.ko{ background:rgba(224,122,122,.12); border:1px solid rgba(224,122,122,.4); color:var(--rouge); }
+.photos{ display:grid; grid-template-columns:repeat(auto-fill,minmax(110px,1fr)); gap:12px; }
+.photo{ border:1px solid var(--bord); border-radius:10px; overflow:hidden; background:var(--nuit-3); }
+.photo img{ width:100%; aspect-ratio:3/4; object-fit:cover; display:block; }
+.photo .sous{ display:flex; gap:6px; padding:8px; justify-content:center; flex-wrap:wrap; }
+.photo .marque{ font-size:.66rem; letter-spacing:.1em; text-transform:uppercase; color:var(--or);
+                text-align:center; padding:6px 0 0; }
+.pied{ margin-top:40px; padding-top:20px; border-top:1px solid var(--bord);
+       color:var(--doux); font-size:.84rem; }
+form.ligne{ display:inline; }
+</style>
+</head>
+<body>
+<div class="barre">
+  <b>Chez Eva — administration</b>
+  <?php if (est_connecte()): ?>
+    <span>
+      <a href="../" target="_blank">Voir le site</a> &nbsp;
+      <form method="post" class="ligne">
+        <input type="hidden" name="action" value="deconnexion">
+        <button type="submit" class="btn vide mini">Quitter</button>
+      </form>
+    </span>
+  <?php endif; ?>
+</div>
+<main>
+<?php
+}
+
+function pied(): void
+{
+    echo '</main></body></html>';
+}
+
+function avis(?string $message, ?string $erreur): void
+{
+    if ($erreur) {
+        echo '<div class="avis ko">' . proteger($erreur) . '</div>';
+    } elseif ($message) {
+        echo '<div class="avis ok">' . proteger($message) . '</div>';
+    }
+}
+
+/* ------------------------------- Connexion -------------------------------- */
+
+if ($page === 'connexion') {
+    entete('Connexion');
+    avis($message, $erreur);
+    if (!mot_de_passe_defini()) { ?>
+        <h1>Première visite</h1>
+        <p class="aide">Choisissez le mot de passe qui protégera cette page.
+           Huit caractères au minimum. Notez-le quelque part : il n'y a pas
+           de « mot de passe oublié ».</p>
+        <form method="post">
+          <input type="hidden" name="action" value="creer_motdepasse">
+          <label for="mdp">Mot de passe</label>
+          <input type="password" id="mdp" name="motdepasse" required autocomplete="new-password">
+          <label for="conf">Confirmation</label>
+          <input type="password" id="conf" name="confirmation" required autocomplete="new-password">
+          <div class="actions"><button class="btn" type="submit">Enregistrer</button></div>
+        </form>
+    <?php } else { ?>
+        <h1>Connexion</h1>
+        <p class="aide">Cette page permet de gérer les masseuses affichées sur le site.</p>
+        <form method="post">
+          <input type="hidden" name="action" value="connexion">
+          <label for="mdp">Mot de passe</label>
+          <input type="password" id="mdp" name="motdepasse" required autocomplete="current-password">
+          <div class="actions"><button class="btn" type="submit">Entrer</button></div>
+        </form>
+    <?php }
+    pied();
+    exit;
+}
+
+/* --------------------------------- Liste ---------------------------------- */
+
+exiger_connexion();
+
+if ($page === 'liste') {
+    entete('Les masseuses');
+    avis($message, $erreur);
+    $liste = fiches();
+    ?>
+    <h1>Les masseuses</h1>
+    <p class="aide">Ce qui est ici s'affiche sur le site, dans cet ordre.</p>
+
+    <?php if (!$liste): ?>
+      <p class="aide">Aucune fiche pour l'instant.</p>
+    <?php endif; ?>
+
+    <?php foreach ($liste as $i => $f):
+        $photo = $f['photos'][0] ?? null; ?>
+      <div class="carte">
+        <?php if ($photo): ?>
+          <img src="../<?= proteger((string) $photo) ?>" alt="">
+        <?php else: ?>
+          <div class="sans-photo"><?= proteger(mb_substr((string) ($f['prenom'] ?? '?'), 0, 1)) ?></div>
+        <?php endif; ?>
+        <div style="flex:1">
+          <h3><?= proteger((string) ($f['prenom'] ?? '')) ?></h3>
+          <div class="etat <?= empty($f['disponible']) ? 'absente' : '' ?>">
+            <?= empty($f['disponible']) ? 'Masquée du site' : 'Disponible' ?>
+            · <?= count($f['photos'] ?? []) ?> photo<?= count($f['photos'] ?? []) > 1 ? 's' : '' ?>
+          </div>
+          <div class="liens">
+            <a class="btn vide mini" href="index.php?p=fiche&amp;id=<?= urlencode((string) $f['id']) ?>">Modifier</a>
+            <?php foreach ([['haut', '↑', $i > 0], ['bas', '↓', $i < count($liste) - 1]] as [$sens, $signe, $possible]):
+                if ($possible): ?>
+              <form method="post" class="ligne">
+                <input type="hidden" name="jeton" value="<?= jeton() ?>">
+                <input type="hidden" name="action" value="deplacer">
+                <input type="hidden" name="id" value="<?= proteger((string) $f['id']) ?>">
+                <input type="hidden" name="sens" value="<?= $sens ?>">
+                <button class="btn vide mini" type="submit"><?= $signe ?></button>
+              </form>
+            <?php endif; endforeach; ?>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+
+    <div class="actions">
+      <a class="btn" href="index.php?p=fiche">Ajouter une masseuse</a>
+    </div>
+
+    <div class="pied">
+      <p>Place occupée par le site : <strong><?= number_format(espace_utilise() / 1048576, 1, ',', ' ') ?> Mo</strong>
+         (l'hébergement Starter en autorise 10).</p>
+      <h2>Changer le mot de passe</h2>
+      <form method="post">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="changer_motdepasse">
+        <label for="n1">Nouveau mot de passe</label>
+        <input type="password" id="n1" name="motdepasse" autocomplete="new-password">
+        <label for="n2">Confirmation</label>
+        <input type="password" id="n2" name="confirmation" autocomplete="new-password">
+        <div class="actions"><button class="btn vide" type="submit">Modifier</button></div>
+      </form>
+    </div>
+    <?php
+    pied();
+    exit;
+}
+
+/* ------------------------------- Une fiche -------------------------------- */
+
+$id = (string) ($_GET['id'] ?? '');
+$f = $id !== '' ? fiche($id) : null;
+$nouvelle = $f === null;
+
+entete($nouvelle ? 'Nouvelle fiche' : 'Fiche de ' . (string) $f['prenom']);
+avis($message, $erreur);
+?>
+<h1><?= $nouvelle ? 'Nouvelle masseuse' : proteger((string) $f['prenom']) ?></h1>
+<p class="aide"><a href="index.php">← Retour à la liste</a></p>
+
+<form method="post" enctype="multipart/form-data">
+  <input type="hidden" name="jeton" value="<?= jeton() ?>">
+  <input type="hidden" name="action" value="enregistrer">
+  <input type="hidden" name="id" value="<?= proteger((string) ($f['id'] ?? '')) ?>">
+
+  <label for="prenom">Prénom</label>
+  <input type="text" id="prenom" name="prenom" required value="<?= proteger((string) ($f['prenom'] ?? '')) ?>">
+
+  <label for="age">Âge (laisser vide pour ne pas l'afficher)</label>
+  <input type="number" id="age" name="age" min="18" max="99" value="<?= proteger((string) ($f['age'] ?? '')) ?>">
+
+  <label for="origine">Origine</label>
+  <input type="text" id="origine" name="origine" placeholder="Française, Brésil…"
+         value="<?= proteger((string) ($f['origine'] ?? '')) ?>">
+
+  <label for="langues">Langues parlées</label>
+  <input type="text" id="langues" name="langues" placeholder="Français, anglais, espagnol"
+         value="<?= proteger((string) ($f['langues'] ?? '')) ?>">
+
+  <label for="specialites">Spécialités, séparées par des virgules</label>
+  <input type="text" id="specialites" name="specialites" placeholder="Tantra, Body body, Érotique"
+         value="<?= proteger(implode(', ', $f['specialites'] ?? [])) ?>">
+
+  <label for="presentation">Présentation</label>
+  <textarea id="presentation" name="presentation" placeholder="Deux ou trois phrases."><?= proteger((string) ($f['presentation'] ?? '')) ?></textarea>
+
+  <div class="coche">
+    <input type="checkbox" id="dispo" name="disponible" value="1"
+           <?= ($nouvelle || !empty($f['disponible'])) ? 'checked' : '' ?>>
+    <label for="dispo">Afficher sur le site</label>
+  </div>
+
+  <label for="photos">Ajouter des photos</label>
+  <input type="file" id="photos" name="photos[]" accept="image/*" multiple>
+  <p class="aide">Elles sont automatiquement réduites et allégées. La première
+     de la liste ci-dessous est la grande photo de la fiche.</p>
+
+  <div class="actions">
+    <button class="btn" type="submit">Enregistrer</button>
+    <a class="btn vide" href="index.php">Annuler</a>
+  </div>
+</form>
+
+<?php if (!$nouvelle && !empty($f['photos'])): ?>
+  <h2>Ses photos</h2>
+  <div class="photos">
+    <?php foreach ($f['photos'] as $k => $photo): ?>
+      <div class="photo">
+        <img src="../<?= proteger((string) $photo) ?>" alt="">
+        <?php if ($k === 0): ?><div class="marque">Photo principale</div><?php endif; ?>
+        <div class="sous">
+          <?php if ($k > 0): ?>
+            <form method="post" class="ligne">
+              <input type="hidden" name="jeton" value="<?= jeton() ?>">
+              <input type="hidden" name="action" value="photo_principale">
+              <input type="hidden" name="id" value="<?= proteger((string) $f['id']) ?>">
+              <input type="hidden" name="chemin" value="<?= proteger((string) $photo) ?>">
+              <button class="btn vide mini" type="submit">En principale</button>
+            </form>
+          <?php endif; ?>
+          <form method="post" class="ligne" onsubmit="return confirm('Supprimer cette photo ?');">
+            <input type="hidden" name="jeton" value="<?= jeton() ?>">
+            <input type="hidden" name="action" value="photo_supprimer">
+            <input type="hidden" name="id" value="<?= proteger((string) $f['id']) ?>">
+            <input type="hidden" name="chemin" value="<?= proteger((string) $photo) ?>">
+            <button class="btn danger mini" type="submit">Supprimer</button>
+          </form>
+        </div>
+      </div>
+    <?php endforeach; ?>
+  </div>
+<?php endif; ?>
+
+<?php if (!$nouvelle): ?>
+  <div class="pied">
+    <form method="post" onsubmit="return confirm('Supprimer définitivement cette fiche et ses photos ?');">
+      <input type="hidden" name="jeton" value="<?= jeton() ?>">
+      <input type="hidden" name="action" value="supprimer">
+      <input type="hidden" name="id" value="<?= proteger((string) $f['id']) ?>">
+      <button class="btn danger" type="submit">Supprimer cette fiche</button>
+    </form>
+  </div>
+<?php endif; ?>
+<?php pied(); ?>

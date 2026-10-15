@@ -1,0 +1,9 @@
+# Les donnees ne doivent jamais etre lues directement par un visiteur :
+# index.php et l'administration y accedent depuis le serveur, c'est tout.
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

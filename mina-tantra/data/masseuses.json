@@ -1,0 +1,23 @@
+[
+  {
+    "id": "mina",
+    "prenom": "Mina",
+    "age": null,
+    "origine": "Française",
+    "langues": "Français, anglais, espagnol",
+    "specialites": [
+      "Tantra",
+      "Tantra réciproque",
+      "Body body",
+      "Érotique"
+    ],
+    "presentation": "Française, Mina est spécialiste du tantra : un massage lent, enveloppant, affiné au fil des années. Douce, raffinée et attentionnée, elle prend le temps de vous accueillir et de comprendre ce que vous venez chercher avant que les mains ne parlent. Rien n'est pressé — chaque soin est pensé pour vous seul.",
+    "disponible": true,
+    "photos": [
+      "photos/masseuses/mina-1.jpg",
+      "photos/masseuses/mina-2.jpg",
+      "photos/masseuses/mina-3.jpg",
+      "photos/masseuses/mina-4.jpg"
+    ]
+  }
+]

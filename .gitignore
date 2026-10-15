@@ -16,3 +16,6 @@ _x*.png
 _lg-*.png
 _cumul.png
 _tab.png
+
+# Mot de passe de l administration, propre au serveur
+mina-tantra/data/config.json

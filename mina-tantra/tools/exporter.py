@@ -5,7 +5,11 @@ Le CSS, le JavaScript, les photos et l'icone sont incorpores directement dans
 la page (en base64). Le fichier obtenu, dist/index.html, se depose seul sur
 n'importe quel hebergement : ni dossier a creer, ni archive a decompresser.
 
-Usage :  python3 tools/exporter.py     (depuis le dossier mina-tantra/)
+C'est la solution de repli : elle fonctionne meme sur un hebergement sans PHP,
+mais le site n'a alors pas d'administration et les fiches sont figees dans le
+fichier. L'installation normale passe par tools/paquet.py.
+
+Usage :  python3 tools/exporter.py     (depuis le dossier du site)
 """
 import base64, mimetypes, pathlib, re, sys
 
@@ -24,7 +28,7 @@ def lire(rel: str) -> str:
 
 
 def main() -> int:
-    html = lire('index.html')
+    html = lire('modele.html')
     css = lire('assets/styles.css')
     js = lire('data/contenu.js') + '\n' + lire('js/site.js')
 

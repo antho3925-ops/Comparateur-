@@ -44,19 +44,26 @@
   }).join('');
 
   /* ------------------------------- Masseuses ----------------------------- */
-  var solo = MASSEUSES.length === 1;
+  /* Sur le serveur, les fiches viennent de l'administration (data/masseuses.json),
+     injectees par index.php. Hors serveur, on retombe sur celles de contenu.js. */
+  var fiches = (window.MASSEUSES_SERVEUR && window.MASSEUSES_SERVEUR.length)
+    ? window.MASSEUSES_SERVEUR
+    : MASSEUSES;
+
+  var solo = fiches.length === 1;
   $('#masseuses-chapeau').textContent = solo ? 'Qui vous reçoit' : 'Notre équipe';
   $('#masseuses-titre').textContent   = solo ? 'La masseuse' : 'Les masseuses';
   $('#masseuses-intro').textContent   = typeof MASSEUSES_INTRO === 'string' ? MASSEUSES_INTRO : '';
   $('#grille-masseuses').classList.toggle('solo', solo);
 
-  $('#grille-masseuses').innerHTML = MASSEUSES.map(function (m) {
+  $('#grille-masseuses').innerHTML = fiches.map(function (m) {
     var meta = [];
     if (m.age)     meta.push(m.age + ' ans');
     if (m.origine) meta.push(m.origine);
 
-    var photo = m.photo
-      ? '<img src="' + esc(m.photo) + '" alt="' + esc(m.prenom) + '" loading="lazy"' +
+    var principale = m.photo || (m.photos && m.photos[0]);
+    var photo = principale
+      ? '<img src="' + esc(principale) + '" alt="' + esc(m.prenom) + '" loading="lazy"' +
         ' onerror="this.style.display=\'none\'">'
       : '';
 

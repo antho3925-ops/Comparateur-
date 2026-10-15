@@ -1,159 +1,142 @@
-# Chez Eva — site de présentation
+# Chez Eva — site du salon
 
-Site vitrine du salon **Chez Eva**, La Chaux-de-Fonds.
-Page unique, en HTML/CSS/JavaScript, sans serveur ni base de données :
-il suffit d'ouvrir `index.html` dans un navigateur, ou de déposer le dossier
-chez n'importe quel hébergeur.
+Site vitrine du salon **Chez Eva**, Rue des Ponts 34, La Chaux-de-Fonds.
+
+Une page unique en HTML, CSS et JavaScript, plus une **administration en PHP**
+qui permet d'ajouter des masseuses et leurs photos depuis un téléphone, sans
+toucher au code. Aucune base de données : les fiches sont rangées dans un
+fichier JSON.
 
 ## Structure
 
 ```
-mina-tantra/
-├── index.html              La page (structure et textes fixes)
-├── data/contenu.js         >>> LE FICHIER À MODIFIER <<<
-│                           masseuses, horaires, tarifs, galerie, coordonnées
-├── assets/styles.css       Le graphisme (couleurs, polices, mise en page)
-├── assets/favicon*         L'icône affichée dans l'onglet du navigateur
-├── assets/partage.jpg      L'aperçu affiché quand le lien est partagé (WhatsApp…)
-├── robots.txt              Autorise ou interdit les moteurs de recherche
-├── sitemap.xml             La liste des pages, pour Google
+.
+├── index.php               La page publique : prend modele.html et y injecte
+│                           les fiches enregistrées depuis l'administration
+├── modele.html             La page elle-même (structure et textes fixes)
+├── admin/
+│   ├── index.php           L'administration : fiches, photos, mot de passe
+│   └── noyau.php           Session, sécurité, lecture/écriture, images
+├── data/
+│   ├── contenu.js          Textes, horaires, tarifs, galerie, coordonnées
+│   ├── masseuses.json      Les fiches — écrit par l'administration
+│   ├── config.json         Le mot de passe (créé au serveur, jamais versionné)
+│   └── .htaccess           Interdit la lecture directe de ce dossier
+├── assets/
+│   ├── styles.css          Le graphisme du site
+│   ├── favicon*            L'icône de l'onglet
+│   └── partage.jpg         L'aperçu affiché quand le lien est partagé
 ├── js/site.js              Affiche le contenu, menu, galerie, contrôle 18+
-├── tools/exporter.py       Replie tout le site dans un seul fichier HTML
-└── photos/
-    ├── masseuses/          Les photos des masseuses
-    └── salon/              Les photos du salon + hero.jpg (image de fond)
+├── photos/
+│   ├── masseuses/          Photos des masseuses (l'administration écrit ici)
+│   └── salon/              Photos du salon + hero.jpg (image de fond)
+├── robots.txt, sitemap.xml Pour les moteurs de recherche
+└── tools/
+    ├── paquet.py           Fabrique l'installateur (voir plus bas)
+    └── exporter.py         Replie le site en un fichier unique (solution de repli)
 ```
 
-## Ajouter une masseuse
+## L'administration
 
-1. Déposer sa photo dans `photos/masseuses/` — par exemple `luna.jpg`.
-   Format conseillé : portrait (3/4), 900 × 1200 px, moins de 500 Ko.
-2. Ouvrir `data/contenu.js`, copier un bloc existant dans la liste `MASSEUSES`
-   et le coller à la suite :
+Adresse : `https://mina-tantra.ch/admin/`
 
-```js
-  {
-    prenom: 'Luna',
-    photo: 'photos/masseuses/luna-1.jpg',      // la grande photo de la fiche
-    photos: [                                  // les vignettes sous la fiche
-      'photos/masseuses/luna-1.jpg',
-      'photos/masseuses/luna-2.jpg',
-    ],
-    age: 27,                                   // facultatif
-    origine: 'Italie',
-    langues: 'Français, italien',
-    specialites: ['Tantra', 'Body body'],
-    presentation: "Deux phrases pour la présenter.",
-    disponible: true,          // false = « Bientôt de retour »
-  },
+À la **première visite**, elle demande de choisir un mot de passe (huit
+caractères minimum) ; il est conservé sous forme chiffrée dans
+`data/config.json`. Il n'y a pas de « mot de passe oublié » : pour le
+réinitialiser, il faut supprimer ce fichier par FTP.
+
+Une fois connecté :
+
+- **Ajouter une masseuse** : prénom, âge (facultatif), origine, langues,
+  spécialités, présentation, et autant de photos que voulu.
+- **Modifier** une fiche, la **masquer** du site sans la supprimer
+  (décocher « Afficher sur le site »), ou la **supprimer** avec ses photos.
+- **Les photos** : envoyées depuis le téléphone, elles sont automatiquement
+  réduites à 1200 px et compressées. La première de la liste est la grande
+  photo de la fiche ; « En principale » permet d'en promouvoir une autre.
+- **Réordonner** les masseuses avec les flèches ↑ ↓.
+- **Changer le mot de passe** en bas de la liste.
+
+La place occupée est affichée en bas de page : l'hébergement Starter
+d'Infomaniak est limité à 10 Mo.
+
+Tant qu'il n'y a **qu'une seule masseuse**, le site intitule la section « La
+masseuse » et affiche sa fiche en grand, photo à gauche. Dès la deuxième, le
+titre passe à « Les masseuses » et les fiches se rangent en colonnes.
+
+### Sécurité
+
+Mot de passe chiffré (`password_hash`), session avec cookie `HttpOnly`,
+jeton anti-falsification sur chaque formulaire, blocage d'une minute après
+cinq essais ratés. Les photos envoyées sont vérifiées puis réencodées en
+JPEG, le nom du fichier est généré par le serveur, et le dossier `data/`
+est interdit d'accès direct par `.htaccess`.
+
+## Ce qui se modifie encore dans le code
+
+Tout ce qui ne change pas tous les jours vit dans `data/contenu.js` :
+
+- `SALON` — nom, adresse, téléphone, WhatsApp, site, photo de l'entrée ;
+- `PRESENTATION` et `ATOUTS` — le mot du salon ;
+- `HORAIRES` et `HORAIRES_NOTE` ;
+- `TARIFS`, `SUPPLEMENTS` et `TARIFS_NOTE` ;
+- `GALERIE` — les photos du salon ;
+- `REGLES` — le cadre affiché dans la section contact.
+
+Le nom du salon n'est écrit qu'à un seul endroit (`SALON.nom`) : il
+s'affiche dans l'en-tête, le bandeau d'accueil, la porte 18+ et le pied de
+page.
+
+## Installation et mises à jour
+
+Le gestionnaire de fichiers d'Infomaniak ne décompresse pas les archives et
+créer une arborescence depuis un téléphone est pénible. D'où l'installateur :
+
+```
+python3 tools/paquet.py
 ```
 
-Les vignettes s'ouvrent en plein écran quand on clique dessus. Le champ
-`photos` est facultatif : sans lui, seule la grande photo s'affiche.
+Il fabrique `dist/installateur.php` — un fichier unique contenant tout le
+site — et affiche l'adresse à ouvrir, avec sa clé. Marche à suivre :
 
-Tant qu'il n'y a **qu'une seule masseuse**, la section s'intitule « La
-masseuse » et sa fiche s'affiche en grand, photo à gauche. Dès qu'une
-deuxième est ajoutée, le titre passe à « Les masseuses » et les fiches se
-rangent en colonnes — il n'y a rien à changer pour cela. La phrase
-d'introduction de la section se modifie dans `MASSEUSES_INTRO`.
+1. déposer `installateur.php` à la racine du site par le WebFTP ;
+2. ouvrir dans le navigateur l'adresse affichée par le script
+   (`https://mina-tantra.ch/installateur.php?cle=…`) ;
+3. il recrée les dossiers, écrit les fichiers, supprime l'ancienne page
+   `index.html`, puis **s'efface lui-même**.
 
-3. Enregistrer, puis rafraîchir la page (F5).
+Sans la clé, il répond « accès refusé ».
 
-Une masseuse sans photo s'affiche quand même : son initiale apparaît à la place.
+Pour une **mise à jour**, c'est la même manœuvre : il conserve les fiches
+(`data/masseuses.json`), le mot de passe et les photos ajoutées depuis
+l'administration.
 
-## Ajouter des photos du salon
+L'hébergement doit fournir **PHP 8**. Si la page affiche du code au lieu du
+site, c'est que PHP n'est pas actif : il reste alors la solution de repli
+ci-dessous.
 
-Déposer les images dans `photos/salon/`, puis ajouter une ligne dans `GALERIE` :
-
-```js
-  { src: 'photos/salon/salon-5.jpg', legende: 'Le coin détente' },
-```
-
-L'image de fond de la page d'accueil est `photos/salon/hero.jpg`
-(format paysage, 1920 × 1080 px environ). Tant qu'elle n'existe pas,
-un dégradé s'affiche à la place — rien ne casse.
-
-## Modifier les horaires, les tarifs, le téléphone
-
-Tout est dans `data/contenu.js`, dans les listes `HORAIRES`, `TARIFS`,
-`REGLES` et l'objet `SALON` (téléphone, WhatsApp, e-mail, adresse).
-Le jour en cours est mis en évidence automatiquement dans le tableau
-des horaires.
-
-Le numéro du salon (`+41 77 276 13 70`) est déjà renseigné, et sert aussi
-au bouton WhatsApp. L'adresse (`Rue des Ponts 34, 2300 La Chaux-de-Fonds`)
-alimente le bloc contact, le lien « Voir sur la carte » et le pied de page.
-Le bouton e-mail n'apparaît que si `email` contient une adresse.
-
-## Mise en ligne (Infomaniak)
-
-Le site est entièrement statique : ni PHP, ni base de données, ni
-installation. Il suffit de copier le **contenu** du dossier `mina-tantra/`
-à la racine web de l'hébergement, en gardant l'arborescence.
-
-1. Chez Infomaniak, prendre un **hébergement Web** et un **nom de domaine**
-   (par exemple `minatantra.ch`). Compter quelques francs par mois pour
-   l'hébergement et une dizaine de francs par an pour le domaine `.ch` —
-   les tarifs exacts sont à vérifier sur leur site, ils changent.
-2. Dans le Manager Infomaniak, créer le site et récupérer les accès **FTP**
-   (serveur, utilisateur, mot de passe).
-3. Avec FileZilla (gratuit), se connecter et déposer dans le dossier web
-   (`/web` ou `/sites/minatantra.ch/` selon la configuration) :
-
-   ```
-   index.html
-   robots.txt
-   sitemap.xml
-   assets/
-   data/
-   js/
-   photos/
-   ```
-
-   `index.html` doit se trouver **à la racine**, pas dans un sous-dossier.
-4. Activer le **certificat SSL Let's Encrypt** (gratuit, en un clic dans le
-   Manager) pour que le site soit en `https://`.
-
-Pour modifier le site ensuite, on change le fichier concerné et on le
-redépose au même endroit par FTP — inutile de tout renvoyer.
-
-### Variante : le site en un seul fichier
-
-Le gestionnaire de fichiers d'Infomaniak (WebFTP) ne sait pas décompresser
-une archive, et créer les dossiers à la main depuis un téléphone est
-fastidieux. D'où cette commande :
+### Solution de repli : le site en un seul fichier
 
 ```
 python3 tools/exporter.py
 ```
 
-Elle fabrique `dist/index.html` : la page entière, avec le style, le script
-et **toutes les photos** incorporés dedans (environ 2 Mo). Il n'y a plus
-qu'un fichier à déposer à la racine du site, sans aucun dossier à créer.
-
-À déposer à côté, à la racine également : `partage.jpg` (l'aperçu des liens
-partagés), `robots.txt` et `sitemap.xml`.
-
-Après chaque modification de `data/contenu.js`, relancer la commande et
-redéposer `dist/index.html`. L'inconvénient de cette variante : le visiteur
-télécharge les 2 Mo à chaque première visite, et la moindre correction
-demande de renvoyer tout le fichier. Dès que possible, mieux vaut revenir
-au dépôt normal, en dossiers, depuis un ordinateur.
-
-Le site fonctionne aussi sans hébergement : il suffit d'ouvrir `index.html`
-depuis le disque pour le montrer sur un ordinateur ou une tablette.
+Fabrique `dist/index.html` : la page entière, photos incorporées (environ
+2 Mo), à déposer seule à la racine. Fonctionne sur n'importe quel
+hébergement, même sans PHP — mais sans administration : les fiches sont
+alors figées dans le fichier, et chaque modification demande de régénérer et
+redéposer le tout.
 
 ## Référencement
 
 Le site est configuré pour l'adresse **https://mina-tantra.ch** : adresse
-canonique, aperçu de partage (`assets/partage.jpg`, ce qui s'affiche quand on
-envoie le lien par WhatsApp) et fiche d'établissement pour Google — nom,
-adresse, téléphone et horaires, générés automatiquement depuis
-`data/contenu.js`, donc toujours à jour.
+canonique, aperçu de partage (`assets/partage.jpg`) et fiche d'établissement
+pour Google — nom, adresse, téléphone et horaires, générés automatiquement
+depuis `data/contenu.js`, donc toujours à jour.
 
 Pour **rester invisible dans Google**, ouvrir `robots.txt` et remplacer
-`Allow: /` par `Disallow: /`. Les moteurs cessent alors de référencer le site ;
-le lien continue de fonctionner pour qui le connaît.
+`Allow: /` par `Disallow: /`. Le lien continue de fonctionner pour qui le
+connaît. L'administration, elle, n'est jamais indexée.
 
 Si au contraire vous voulez apparaître dans les recherches locales, créez
 une fiche Google Business Profile avec exactement les mêmes nom, adresse et
