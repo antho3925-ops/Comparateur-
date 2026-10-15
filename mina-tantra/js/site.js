@@ -1,5 +1,5 @@
 /* ============================================================================
-   Mina Tantra — logique du site
+   Chez Eva — logique du site
    Tout le contenu vient de data/contenu.js : ce fichier ne fait que l'afficher.
    ========================================================================== */
 (function () {
@@ -13,7 +13,7 @@
   };
 
   /* ------------------------------ Porte 18+ ------------------------------ */
-  var CLE = 'mina-tantra-majeur';
+  var CLE = 'chez-eva-majeur';
   var porte = $('#porte');
   var dejaEntre = false;
   try { dejaEntre = localStorage.getItem(CLE) === 'oui'; } catch (e) {}
@@ -27,6 +27,13 @@
     porte.hidden = true;
     document.body.classList.remove('bloque');
   });
+
+  /* ------------------- Le nom du salon, en un seul endroit --------------- */
+  ['#porte-marque', '#marque-nom', '#hero-titre', '#pied-marque', '#pied-nom']
+    .forEach(function (id) {
+      var el = $(id);
+      if (el) el.textContent = SALON.nom;
+    });
 
   /* ------------------------------ Présentation --------------------------- */
   $('#presentation-texte').innerHTML =

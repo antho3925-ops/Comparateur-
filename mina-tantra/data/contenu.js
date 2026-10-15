@@ -1,5 +1,5 @@
 /* ---------------------------------------------------------------------------
-   Mina Tantra — contenu du site
+   Chez Eva — contenu du site
    ---------------------------------------------------------------------------
    C'est LE SEUL fichier à modifier au quotidien.
    Tout ce qui est écrit ici s'affiche automatiquement sur le site :
@@ -15,7 +15,7 @@
 --------------------------------------------------------------------------- */
 
 const SALON = {
-  nom: 'Mina Tantra',
+  nom: 'Chez Eva',
   slogan: 'Salon de massage érotique & tantrique',
   ville: 'La Chaux-de-Fonds',
   site: 'https://mina-tantra.ch',
@@ -32,8 +32,8 @@ const SALON = {
 /* Le texte d'accueil (le « mot du salon »).
    Chaque paragraphe est une ligne entre guillemets, séparée par une virgule. */
 const PRESENTATION = [
-  "Cela fait des années que Mina Tantra accompagne une clientèle fidèle, discrète et exigeante. Des années à affiner un savoir-faire, à former nos masseuses et à cultiver une seule idée : le massage érotique est un art du soin avant d'être autre chose.",
-  "Aujourd'hui, nous ouvrons un nouveau chapitre : Mina Tantra s'installe à La Chaux-de-Fonds. Un écrin chaleureux, pensé pour la détente, la lumière douce et le silence, à deux pas du centre — avec la même exigence de qualité et la même discrétion absolue.",
+  "Cela fait des années que nous accompagnons une clientèle fidèle, discrète et exigeante. Des années à affiner un savoir-faire, à former nos masseuses et à cultiver une seule idée : le massage érotique est un art du soin avant d'être autre chose.",
+  "Aujourd'hui, nous ouvrons un nouveau chapitre : Chez Eva s'installe à La Chaux-de-Fonds. Un écrin chaleureux, pensé pour la détente, la lumière douce et le silence, à deux pas du centre — avec la même exigence de qualité et la même discrétion absolue.",
   "Vous serez reçu sans précipitation, dans un cadre propre et raffiné, par une masseuse attentive qui prend le temps de comprendre ce que vous venez chercher. Rien n'est imposé, tout est proposé. Ici, on respire.",
 ];
 

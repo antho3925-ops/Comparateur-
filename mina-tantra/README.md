@@ -1,6 +1,6 @@
-# Mina Tantra — site de présentation
+# Chez Eva — site de présentation
 
-Site vitrine du salon **Mina Tantra**, La Chaux-de-Fonds.
+Site vitrine du salon **Chez Eva**, La Chaux-de-Fonds.
 Page unique, en HTML/CSS/JavaScript, sans serveur ni base de données :
 il suffit d'ouvrir `index.html` dans un navigateur, ou de déposer le dossier
 chez n'importe quel hébergeur.
