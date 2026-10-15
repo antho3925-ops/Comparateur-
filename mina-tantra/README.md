@@ -89,6 +89,7 @@ Ce que le serveur vérifie lui-même, quoi que le navigateur envoie :
 - le créneau tombe dans les heures d'ouverture du jour (`data/parametres.json`) ;
 - la masseuse est disponible et présente à cette date ;
 - rien ne chevauche un rendez-vous déjà pris pour elle ;
+- les deux cabines ne sont pas déjà occupées à cette heure-là ;
 - le rendez-vous est au moins **2 heures** après l'instant présent, et à
   **30 jours** au plus ;
 - le numéro compte au moins neuf chiffres, le prénom deux lettres.
@@ -101,9 +102,10 @@ Ces réglages sont des constantes en tête de la partie « rendez-vous » de
 `admin/noyau.php` : `PAS_MINUTES` (30 minutes entre deux débuts possibles),
 `DELAI_MINIMUM_HEURES`, `JOURS_RESERVABLES`, `RETENTION_JOURS`.
 
-Chaque masseuse a son propre planning : deux masseuses peuvent recevoir à la
-même heure. Si le salon ne peut accueillir qu'un client à la fois, il faut
-retirer le filtre par masseuse dans `creneaux_libres()`.
+Le salon a **deux cabines** : deux rendez-vous peuvent se chevaucher, à
+condition qu'ils concernent deux masseuses différentes. Un troisième client
+à la même heure se voit refuser le créneau, même s'il choisit une masseuse
+libre. La constante `CABINES` dans `admin/noyau.php` fixe ce nombre.
 
 ### L'agenda du téléphone
 

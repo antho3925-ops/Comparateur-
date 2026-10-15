@@ -310,6 +310,7 @@ const DELAI_MINIMUM_HEURES = 2;    // on ne reserve pas pour dans dix minutes
 const JOURS_RESERVABLES    = 30;   // on ne reserve pas pour dans six mois
 const DUREES_ADMISES       = [30, 40, 45, 60, 90, 120];
 const RETENTION_JOURS      = 30;   // au-dela, les coordonnees du client sont effacees
+const CABINES              = 2;    // le salon ne peut recevoir que deux clients a la fois
 
 function fuseau(): void
 {
@@ -432,17 +433,33 @@ function creneaux_libres(string $masseuse, string $date, int $duree): array
     $fermeture = (int) strtotime($date . ' ' . $plage[1]);
     $plancher  = time() + DELAI_MINIMUM_HEURES * 3600;
 
-    /* Les rendez-vous deja pris pour cette masseuse, ce jour-la. */
-    $occupes = [];
+    /* Les rendez-vous du jour : ceux de cette masseuse, qu'elle ne peut pas
+       cumuler, et tous les autres, qui occupent une cabine. */
+    $siens = [];
+    $toutes = [];
     foreach (reservations() as $r) {
-        if (($r['masseuse'] ?? '') !== $masseuse || ($r['etat'] ?? '') === 'annule') {
+        if (($r['etat'] ?? '') === 'annule') {
             continue;
         }
         if (substr((string) ($r['debut'] ?? ''), 0, 10) !== $date) {
             continue;
         }
-        $occupes[] = [(int) strtotime((string) $r['debut']), (int) strtotime((string) $r['fin'])];
+        $creneau = [(int) strtotime((string) $r['debut']), (int) strtotime((string) $r['fin'])];
+        $toutes[] = $creneau;
+        if (($r['masseuse'] ?? '') === $masseuse) {
+            $siens[] = $creneau;
+        }
     }
+
+    $chevauche = static function (int $debut, int $fin, array $creneaux): int {
+        $n = 0;
+        foreach ($creneaux as [$d, $f]) {
+            if ($debut < $f && $fin > $d) {
+                $n++;
+            }
+        }
+        return $n;
+    };
 
     $libres = [];
     for ($t = $ouverture; $t + $duree * 60 <= $fermeture; $t += PAS_MINUTES * 60) {
@@ -450,16 +467,16 @@ function creneaux_libres(string $masseuse, string $date, int $duree): array
             continue;
         }
         $fin = $t + $duree * 60;
-        $libre = true;
-        foreach ($occupes as [$d, $f]) {
-            if ($t < $f && $fin > $d) {
-                $libre = false;
-                break;
-            }
+
+        /* Elle ne peut pas etre a deux endroits, et le salon n'a que
+           CABINES cabines : au-dela, le creneau n'est plus proposable. */
+        if ($chevauche($t, $fin, $siens) > 0) {
+            continue;
         }
-        if ($libre) {
-            $libres[] = date('H:i', $t);
+        if ($chevauche($t, $fin, $toutes) >= CABINES) {
+            continue;
         }
+        $libres[] = date('H:i', $t);
     }
     return $libres;
 }
