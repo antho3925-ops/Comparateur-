@@ -1,0 +1,10 @@
+# Force le HTTPS (obligatoire pour Apple Pay)
+RewriteEngine On
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Bloque l'accès aux fichiers cachés (.git, .env…) et aux notes du projet
+RedirectMatch 404 /\.(?!well-known)
+<FilesMatch "^(README\.md|\.gitignore)$">
+  Require all denied
+</FilesMatch>

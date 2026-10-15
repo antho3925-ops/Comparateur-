@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Boutique – Cartes à collectionner</title>
+  <meta name="description" content="Displays, coffrets et boosters de cartes à collectionner, en stock et en précommande.">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html" class="brand shop-name">Ma Boutique TCG</a>
+    <button class="cart-button" id="open-cart" aria-label="Ouvrir le panier">
+      Panier <span class="cart-count" id="cart-count">0</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Displays, coffrets et boosters</h1>
+      <p>Produits scellés en version française. Précommandez les prochaines sorties pour être sûr de les avoir.</p>
+    </section>
+
+    <div class="notice" id="payments-notice" hidden>
+      Le paiement en ligne arrive très bientôt : vous pouvez déjà parcourir la boutique.
+    </div>
+
+    <nav class="filters" id="filters" aria-label="Filtres"></nav>
+    <section class="grid" id="products" aria-live="polite">
+      <p class="muted">Chargement des produits…</p>
+    </section>
+  </main>
+
+  <aside class="drawer" id="cart" aria-label="Panier" hidden>
+    <div class="drawer-panel">
+      <div class="drawer-head">
+        <h2>Votre panier</h2>
+        <button class="icon-button" id="close-cart" aria-label="Fermer le panier">✕</button>
+      </div>
+      <div id="cart-lines"></div>
+      <div id="cart-summary"></div>
+    </div>
+  </aside>
+
+  <footer class="footer">
+    <p>
+      <a href="cgv.html">Conditions générales de vente</a> ·
+      <a href="mentions-legales.html">Mentions légales</a> ·
+      <a href="confidentialite.html">Confidentialité</a>
+    </p>
+    <p class="muted small">Paiement sécurisé par carte bancaire, Apple Pay et Google Pay. Boutique indépendante, non affiliée à The Pokémon Company.</p>
+  </footer>
+
+  <script src="assets/app.js"></script>
+</body>
+</html>

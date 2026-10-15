@@ -1,0 +1,4 @@
+private/config.php
+private/orders/*.json
+private/*.lock
+.DS_Store

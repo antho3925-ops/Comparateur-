@@ -1,0 +1,59 @@
+[
+  {
+    "id": "display-exemple",
+    "name": "Display 36 boosters – Extension exemple",
+    "category": "Displays",
+    "price": 21990,
+    "stock": 4,
+    "max_per_order": 2,
+    "preorder": false,
+    "image": "assets/img/produit.svg",
+    "description": "Display scellé de 36 boosters, version française."
+  },
+  {
+    "id": "etb-exemple",
+    "name": "Coffret Dresseur d'Élite – Extension exemple",
+    "category": "Coffrets",
+    "price": 5990,
+    "stock": 10,
+    "max_per_order": 3,
+    "preorder": false,
+    "image": "assets/img/produit.svg",
+    "description": "9 boosters, sleeves, dés et accessoires. Version française."
+  },
+  {
+    "id": "booster-exemple",
+    "name": "Booster à l'unité – Extension exemple",
+    "category": "Boosters",
+    "price": 590,
+    "stock": 50,
+    "max_per_order": 10,
+    "preorder": false,
+    "image": "assets/img/produit.svg",
+    "description": "Un booster de 10 cartes, version française."
+  },
+  {
+    "id": "precommande-display",
+    "name": "Display 36 boosters – Prochaine extension",
+    "category": "Displays",
+    "price": 22990,
+    "stock": 6,
+    "max_per_order": 1,
+    "preorder": true,
+    "release_date": "2026-12-12",
+    "image": "assets/img/produit.svg",
+    "description": "Précommande : expédié le jour de la sortie officielle."
+  },
+  {
+    "id": "precommande-etb",
+    "name": "Coffret Dresseur d'Élite – Prochaine extension",
+    "category": "Coffrets",
+    "price": 6290,
+    "stock": 0,
+    "max_per_order": 2,
+    "preorder": true,
+    "release_date": "2026-12-12",
+    "image": "assets/img/produit.svg",
+    "description": "Précommande : expédié le jour de la sortie officielle."
+  }
+]
