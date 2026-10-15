@@ -88,9 +88,14 @@ def ecrire_parametres() -> None:
         vide.write_text('[]\n', encoding='utf-8')
 
 
+# La redirection vers le domaine principal n'est utile qu'une fois son
+# certificat SSL emis : activee trop tot, elle enverrait les visiteurs sur
+# une adresse en https sans certificat. On la met en service ensuite.
+REDIRIGER_VERS_DOMAINE = False
+
 HTACCESS = """# Chez Eva — configuration du serveur web
 #
-# Deux redirections, et rien d'autre. En cas de probleme, supprimer ce
+# Des redirections, et rien d'autre. En cas de probleme, supprimer ce
 # fichier par FTP suffit a revenir a l'etat precedent : le site fonctionne
 # tres bien sans.
 
@@ -106,11 +111,14 @@ Options -Indexes
     RewriteCond %%{HTTP:X-Forwarded-Proto} !=https
     RewriteRule ^ https://%%{HTTP_HOST}%%{REQUEST_URI} [R=301,L]
 
+%(redirection)s</IfModule>
+"""
+
+REDIRECTION = """
     # 2. Un seul nom de domaine fait foi : %(hote)s.
     #    Les autres (ancien domaine, prefixe www) y renvoient.
     RewriteCond %%{HTTP_HOST} !^%(hote_regex)s$ [NC]
     RewriteRule ^ https://%(hote)s%%{REQUEST_URI} [R=301,L]
-</IfModule>
 """
 
 
@@ -118,9 +126,11 @@ def ecrire_htaccess() -> None:
     """Fabrique le .htaccess a partir du domaine declare dans contenu.js."""
     parametres = json.loads((RACINE / 'data' / 'parametres.json').read_text(encoding='utf-8'))
     hote = re.sub(r'^https?://', '', parametres.get('site', 'chez-eva.ch')).rstrip('/')
-    (RACINE / '.htaccess').write_text(
-        HTACCESS % {'hote': hote, 'hote_regex': hote.replace('.', r'\.')},
-        encoding='utf-8')
+    valeurs = {'hote': hote, 'hote_regex': hote.replace('.', r'\.')}
+    valeurs['redirection'] = (REDIRECTION % valeurs) if REDIRIGER_VERS_DOMAINE else ''
+    (RACINE / '.htaccess').write_text(HTACCESS % valeurs, encoding='utf-8')
+    if not REDIRIGER_VERS_DOMAINE:
+        print('Redirection vers %s desactivee pour l\'instant.' % hote)
 
 
 def main() -> int:

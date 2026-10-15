@@ -1,6 +1,6 @@
 # Chez Eva — configuration du serveur web
 #
-# Deux redirections, et rien d'autre. En cas de probleme, supprimer ce
+# Des redirections, et rien d'autre. En cas de probleme, supprimer ce
 # fichier par FTP suffit a revenir a l'etat precedent : le site fonctionne
 # tres bien sans.
 
@@ -16,8 +16,4 @@ Options -Indexes
     RewriteCond %{HTTP:X-Forwarded-Proto} !=https
     RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-    # 2. Un seul nom de domaine fait foi : chez-eva.ch.
-    #    Les autres (ancien domaine, prefixe www) y renvoient.
-    RewriteCond %{HTTP_HOST} !^chez-eva\.ch$ [NC]
-    RewriteRule ^ https://chez-eva.ch%{REQUEST_URI} [R=301,L]
 </IfModule>
