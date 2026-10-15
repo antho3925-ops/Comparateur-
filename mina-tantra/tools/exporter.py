@@ -50,9 +50,9 @@ def main() -> int:
     ):
         html = html.replace(balise, balise.replace(fichier, donnees(RACINE / fichier)))
 
-    # 3. L'apercu de partage est depose a la racine, a cote du fichier unique.
-    html = html.replace('https://mina-tantra.ch/assets/partage.jpg',
-                        'https://mina-tantra.ch/partage.jpg')
+    # 3. L'apercu de partage est depose a la racine, a cote du fichier unique :
+    #    en version autonome, il n'y a pas de dossier assets/ sur le serveur.
+    html = re.sub(r'(https://[^"\']+)/assets/partage\.jpg', r'\1/partage.jpg', html)
 
     # 4. Toutes les photos, ou qu'elles soient citees (CSS, donnees, HTML).
     photos = sorted((RACINE / 'photos').rglob('*.jpg')) + sorted((RACINE / 'photos').rglob('*.png'))
