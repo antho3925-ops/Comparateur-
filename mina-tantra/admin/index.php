@@ -57,6 +57,35 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         }
     }
 
+    if ($action === 'reservation_etat' || $action === 'reservation_supprimer') {
+        $rid = (string) ($_POST['rid'] ?? '');
+        $resas = reservations();
+        foreach ($resas as $k => $r) {
+            if (($r['id'] ?? '') !== $rid) {
+                continue;
+            }
+            if ($action === 'reservation_supprimer') {
+                array_splice($resas, $k, 1);
+            } else {
+                $etat = (string) ($_POST['etat'] ?? '');
+                if (in_array($etat, ['attente', 'confirme', 'annule'], true)) {
+                    $resas[$k]['etat'] = $etat;
+                }
+            }
+            break;
+        }
+        ecrire_reservations($resas);
+        header('Location: index.php?p=reservations');
+        exit;
+    }
+
+    if ($action === 'cle_agenda') {
+        renouveler_cle_agenda();
+        header('Location: index.php?p=reservations&m='
+            . urlencode('Nouvelle adresse de calendrier. Pensez à réabonner votre téléphone.'));
+        exit;
+    }
+
     if ($action === 'enregistrer') {
         $prenom = trim((string) ($_POST['prenom'] ?? ''));
         if ($prenom === '') {
@@ -224,6 +253,8 @@ a{ color:var(--or-clair); }
         padding:14px 18px; background:var(--nuit-2); border-bottom:1px solid var(--bord); }
 .barre b{ font-weight:600; letter-spacing:.14em; text-transform:uppercase; font-size:.76rem; color:var(--or); }
 .barre a, .barre button{ font-size:.78rem; }
+.pastille{ display:inline-block; min-width:18px; padding:1px 6px; border-radius:999px;
+           background:var(--or); color:#1a1208; font-weight:700; font-size:.7rem; text-align:center; }
 main{ max-width:720px; margin:0 auto; padding:22px 18px 70px; }
 h1{ font-size:1.5rem; margin:0 0 6px; font-weight:500; }
 h2{ font-size:1.05rem; margin:30px 0 12px; font-weight:600; color:var(--or-clair); }
@@ -255,6 +286,11 @@ input[type=file]{ width:100%; color:var(--doux); font-size:.9rem; padding:12px 0
 .carte .etat{ font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--or); }
 .carte .etat.absente{ color:var(--doux); }
 .carte .periode{ font-size:.8rem; color:var(--doux); margin-top:2px; }
+.carte .detail{ margin:8px 0 0; font-size:.92rem; }
+.carte.rdv{ display:block; }
+.carte.rdv.attente{ border-color:var(--or); }
+.carte.rdv.annule h3, .carte.rdv.passe h3{ color:var(--doux); }
+.carte.rdv h3{ font-size:1rem; }
 .carte .liens{ display:flex; gap:8px; flex-wrap:wrap; margin-top:10px; }
 .avis{ padding:12px 16px; border-radius:10px; margin-bottom:18px; font-size:.92rem; }
 .avis.ok{ background:rgba(126,192,140,.12); border:1px solid rgba(126,192,140,.4); color:var(--vert); }
@@ -272,10 +308,14 @@ form.ligne{ display:inline; }
 </head>
 <body>
 <div class="barre">
-  <b>Chez Eva — administration</b>
+  <b>Chez Eva</b>
   <?php if (est_connecte()): ?>
     <span>
-      <a href="../" target="_blank">Voir le site</a> &nbsp;
+      <a href="index.php">Masseuses</a> &nbsp;
+      <a href="index.php?p=reservations">Rendez-vous<?php
+          $attente = demandes_en_attente();
+          echo $attente ? ' <span class="pastille">' . $attente . '</span>' : ''; ?></a> &nbsp;
+      <a href="../" target="_blank">Le site</a> &nbsp;
       <form method="post" class="ligne">
         <input type="hidden" name="action" value="deconnexion">
         <button type="submit" class="btn vide mini">Quitter</button>
@@ -405,6 +445,122 @@ if ($page === 'liste') {
         <label for="n2">Confirmation</label>
         <input type="password" id="n2" name="confirmation" autocomplete="new-password">
         <div class="actions"><button class="btn vide" type="submit">Modifier</button></div>
+      </form>
+    </div>
+    <?php
+    pied();
+    exit;
+}
+
+/* ----------------------------- Les rendez-vous ---------------------------- */
+
+function en_francais(string $local): string
+{
+    $jours = ['', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+    $mois = ['', 'janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet',
+             'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    $t = (int) strtotime($local);
+    return $jours[(int) date('N', $t)] . ' ' . date('j', $t) . ' ' . $mois[(int) date('n', $t)];
+}
+
+if ($page === 'reservations') {
+    fuseau();
+    entete('Rendez-vous');
+    avis($message, $erreur);
+
+    $toutes = reservations_triees();
+    $maintenant = date('Y-m-d H:i');
+    $avenir = array_filter($toutes, static fn (array $r): bool => (string) ($r['debut'] ?? '') >= $maintenant);
+    $passes = array_reverse(array_filter($toutes, static fn (array $r): bool => (string) ($r['debut'] ?? '') < $maintenant));
+    $etats = ['attente' => 'À confirmer', 'confirme' => 'Confirmé', 'annule' => 'Annulé'];
+    ?>
+    <h1>Rendez-vous</h1>
+    <p class="aide">Les demandes prises sur le site. Rappelez le client, puis
+       confirmez ou annulez : votre agenda suit.</p>
+
+    <?php if (!$avenir): ?>
+      <p class="aide">Aucun rendez-vous à venir.</p>
+    <?php endif; ?>
+
+    <?php foreach ($avenir as $r):
+        $etat = (string) ($r['etat'] ?? 'attente'); ?>
+      <div class="carte rdv <?= proteger($etat) ?>">
+        <div style="flex:1">
+          <h3><?= proteger(en_francais((string) $r['debut'])) ?> ·
+              <?= proteger(date('H\hi', (int) strtotime((string) $r['debut']))) ?>
+              – <?= proteger(date('H\hi', (int) strtotime((string) $r['fin']))) ?></h3>
+          <div class="etat <?= $etat === 'attente' ? '' : 'absente' ?>">
+            <?= proteger($etats[$etat] ?? $etat) ?> ·
+            <?= proteger((string) ($r['masseuse_nom'] ?? '')) ?>
+          </div>
+          <p class="detail">
+            <strong><?= proteger((string) ($r['prenom'] ?? '')) ?></strong> —
+            <a href="tel:<?= proteger(preg_replace('/[^\d+]/', '', (string) ($r['telephone'] ?? '')) ?? '') ?>">
+              <?= proteger((string) ($r['telephone'] ?? '')) ?></a><br>
+            <?= proteger((string) ($r['prestation'] ?? '')) ?>
+            <?= !empty($r['prix']) ? ' — ' . proteger((string) $r['prix']) : '' ?>
+          </p>
+          <div class="liens">
+            <?php foreach ([['confirme', 'Confirmer'], ['annule', 'Annuler']] as [$cible, $libelle]):
+                if ($etat !== $cible): ?>
+              <form method="post" class="ligne">
+                <input type="hidden" name="jeton" value="<?= jeton() ?>">
+                <input type="hidden" name="action" value="reservation_etat">
+                <input type="hidden" name="rid" value="<?= proteger((string) $r['id']) ?>">
+                <input type="hidden" name="etat" value="<?= $cible ?>">
+                <button class="btn <?= $cible === 'annule' ? 'danger' : 'vide' ?> mini" type="submit">
+                  <?= $libelle ?></button>
+              </form>
+            <?php endif; endforeach; ?>
+          </div>
+        </div>
+      </div>
+    <?php endforeach; ?>
+
+    <?php if ($passes): ?>
+      <h2>Passés</h2>
+      <?php foreach (array_slice($passes, 0, 20) as $r): ?>
+        <div class="carte rdv passe">
+          <div style="flex:1">
+            <h3><?= proteger(en_francais((string) $r['debut'])) ?> ·
+                <?= proteger(date('H\hi', (int) strtotime((string) $r['debut']))) ?></h3>
+            <div class="etat absente">
+              <?= proteger($etats[(string) ($r['etat'] ?? '')] ?? '') ?> ·
+              <?= proteger((string) ($r['masseuse_nom'] ?? '')) ?> ·
+              <?= proteger((string) ($r['prenom'] ?? '')) ?>
+            </div>
+            <div class="liens">
+              <form method="post" class="ligne" onsubmit="return confirm('Supprimer ce rendez-vous ?');">
+                <input type="hidden" name="jeton" value="<?= jeton() ?>">
+                <input type="hidden" name="action" value="reservation_supprimer">
+                <input type="hidden" name="rid" value="<?= proteger((string) $r['id']) ?>">
+                <button class="btn danger mini" type="submit">Supprimer</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      <?php endforeach; ?>
+      <p class="aide">Les rendez-vous de plus de trente jours s'effacent tout seuls,
+         coordonnées du client comprises.</p>
+    <?php endif; ?>
+
+    <div class="pied">
+      <h2>Votre agenda</h2>
+      <p class="aide">Abonnez votre téléphone une seule fois à cette adresse :
+         les rendez-vous s'y ajouteront ensuite tout seuls.</p>
+      <?php $lien = adresse_site() . '/agenda.php?cle=' . cle_agenda(); ?>
+      <p><a class="btn" href="<?= proteger(str_replace(['https://', 'http://'], 'webcal://', $lien)) ?>">
+         Ajouter à l'agenda de ce téléphone</a></p>
+      <p class="aide">Si le bouton ne fait rien : copiez l'adresse ci-dessous, puis
+         sur iPhone, Réglages → Applications → Calendrier → Comptes → Ajouter un compte
+         → Autre → Ajouter un abonnement à un calendrier.</p>
+      <input type="text" readonly onclick="this.select()" value="<?= proteger($lien) ?>">
+      <p class="aide">Cette adresse est secrète : qui l'a voit tous vos rendez-vous.
+         En cas de doute, renouvelez-la — il faudra alors se réabonner.</p>
+      <form method="post" onsubmit="return confirm('Renouveler l\'adresse du calendrier ?');">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="cle_agenda">
+        <button class="btn vide mini" type="submit">Renouveler l'adresse</button>
       </form>
     </div>
     <?php

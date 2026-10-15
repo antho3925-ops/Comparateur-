@@ -258,6 +258,51 @@ a{ color:inherit; }
 }
 .supp-prix{ font-family:var(--serif); font-size:1.1rem; color:var(--or-clair); white-space:nowrap; order:2; }
 
+/* ------------------------------ Réservation ------------------------------ */
+.section-reserver{
+  background:
+    radial-gradient(90% 70% at 50% 0%, rgba(201,162,39,.08), transparent 60%),
+    var(--nuit-2);
+  border-block:1px solid var(--bord);
+}
+.reservation{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(min(240px,100%),1fr));
+  gap:18px 22px; margin-top:10px;
+}
+.champ-large{ grid-column:1 / -1; }
+.reservation label{
+  display:block; margin-bottom:8px; font-size:.72rem; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--texte-doux);
+}
+.reservation select,
+.reservation input[type=text],
+.reservation input[type=tel],
+.reservation input[type=date]{
+  width:100%; padding:14px 16px; border-radius:12px; border:1px solid var(--bord);
+  background:var(--nuit-3); color:var(--texte); font:inherit; font-size:.98rem;
+}
+.reservation select{ appearance:none; background-image:none; }
+.reservation select:focus,
+.reservation input:focus{ outline:1px solid var(--or); border-color:var(--or); }
+
+.creneaux{ display:flex; flex-wrap:wrap; gap:10px; min-height:46px; align-items:flex-start; }
+.creneaux .note{ margin:0; }
+.creneau{
+  padding:11px 18px; border-radius:999px; border:1px solid var(--bord);
+  background:transparent; color:var(--texte); font:inherit; font-size:.9rem;
+  cursor:pointer; transition:.2s ease;
+}
+.creneau:hover{ border-color:var(--or); color:var(--or-clair); }
+.creneau.choisi{ background:var(--or); border-color:var(--or); color:#1a1208; font-weight:600; }
+
+.piege{ position:absolute; left:-9999px; width:1px; height:1px; opacity:0; }
+
+.reponse{ margin:14px 0 0; font-size:.92rem; min-height:1.2em; color:var(--texte-doux); }
+.reponse.ok{ color:#8fcf9d; }
+.reponse.ko{ color:var(--rose); }
+
+#r-envoyer[disabled]{ opacity:.6; cursor:default; }
+
 /* -------------------------------- Galerie -------------------------------- */
 .galerie{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr)); gap:16px; }
 .vignette{

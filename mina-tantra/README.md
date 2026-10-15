@@ -13,6 +13,8 @@ fichier JSON.
 .
 ├── index.php               La page publique : prend modele.html et y injecte
 │                           les fiches enregistrées depuis l'administration
+├── reserver.php            Les créneaux libres, et l'enregistrement d'une demande
+├── agenda.php              Le calendrier des rendez-vous, au format iCalendar
 ├── modele.html             La page elle-même (structure et textes fixes)
 ├── admin/
 │   ├── index.php           L'administration : fiches, photos, mot de passe
@@ -20,6 +22,9 @@ fichier JSON.
 ├── data/
 │   ├── contenu.js          Textes, horaires, tarifs, galerie, coordonnées
 │   ├── masseuses.json      Les fiches — écrit par l'administration
+│   ├── reservations.json   Les rendez-vous — écrit par le site et l'administration
+│   ├── parametres.json     Horaires et coordonnées, extraits de contenu.js
+│   │                       au moment de fabriquer le paquet
 │   ├── config.json         Le mot de passe (créé au serveur, jamais versionné)
 │   └── .htaccess           Interdit la lecture directe de ce dossier
 ├── assets/
@@ -71,6 +76,52 @@ d'Infomaniak est limité à 10 Mo.
 Tant qu'il n'y a **qu'une seule masseuse**, le site intitule la section « La
 masseuse » et affiche sa fiche en grand, photo à gauche. Dès la deuxième, le
 titre passe à « Les masseuses » et les fiches se rangent en colonnes.
+
+## Les rendez-vous
+
+Le client choisit sur le site une masseuse, une prestation, un jour et une
+heure libre, puis laisse son prénom et son numéro. La demande arrive **en
+attente** : le salon rappelle, puis confirme ou annule depuis
+l'administration.
+
+Ce que le serveur vérifie lui-même, quoi que le navigateur envoie :
+
+- le créneau tombe dans les heures d'ouverture du jour (`data/parametres.json`) ;
+- la masseuse est disponible et présente à cette date ;
+- rien ne chevauche un rendez-vous déjà pris pour elle ;
+- le rendez-vous est au moins **2 heures** après l'instant présent, et à
+  **30 jours** au plus ;
+- le numéro compte au moins neuf chiffres, le prénom deux lettres.
+
+Contre les demandes fantaisistes : un champ invisible que seuls les robots
+remplissent, huit demandes par appareil et par jour au maximum, et trois
+demandes en attente par numéro.
+
+Ces réglages sont des constantes en tête de la partie « rendez-vous » de
+`admin/noyau.php` : `PAS_MINUTES` (30 minutes entre deux débuts possibles),
+`DELAI_MINIMUM_HEURES`, `JOURS_RESERVABLES`, `RETENTION_JOURS`.
+
+Chaque masseuse a son propre planning : deux masseuses peuvent recevoir à la
+même heure. Si le salon ne peut accueillir qu'un client à la fois, il faut
+retirer le filtre par masseuse dans `creneaux_libres()`.
+
+### L'agenda du téléphone
+
+La page « Rendez-vous » de l'administration affiche un bouton **Ajouter à
+l'agenda de ce téléphone** et l'adresse correspondante. On s'y abonne une
+seule fois ; ensuite les rendez-vous apparaissent seuls dans l'agenda, et se
+mettent à jour à chaque rafraîchissement (quinze minutes à une heure selon le
+téléphone). Un rendez-vous en attente s'affiche « (à confirmer) » et passe en
+confirmé après validation ; annulé, il disparaît.
+
+L'adresse contient une clé secrète : qui l'a voit tous les rendez-vous. Le
+bouton « Renouveler l'adresse » la change, ce qui oblige à se réabonner.
+
+### Données des clients
+
+Prénom et numéro uniquement, jamais publiés, jamais transmis. Le dossier
+`data/` est interdit d'accès direct, et tout rendez-vous de plus de
+**30 jours** est effacé automatiquement, coordonnées comprises.
 
 ### Sécurité
 

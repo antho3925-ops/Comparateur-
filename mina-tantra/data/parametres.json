@@ -1,0 +1,36 @@
+{
+  "nom": "Chez Eva",
+  "adresse": "Rue du Pont 34",
+  "codePostal": "2300 La Chaux-de-Fonds",
+  "telephone": "+41 79 153 27 78",
+  "horaires": {
+    "lundi": [
+      "09:00",
+      "21:00"
+    ],
+    "mardi": [
+      "09:00",
+      "21:00"
+    ],
+    "mercredi": [
+      "09:00",
+      "21:00"
+    ],
+    "jeudi": [
+      "09:00",
+      "21:00"
+    ],
+    "vendredi": [
+      "09:00",
+      "21:00"
+    ],
+    "samedi": [
+      "09:00",
+      "21:00"
+    ],
+    "dimanche": [
+      "09:00",
+      "21:00"
+    ]
+  }
+}

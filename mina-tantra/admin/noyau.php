@@ -294,3 +294,213 @@ function proteger(string $texte): string
 {
     return htmlspecialchars($texte, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
 }
+
+/* ===========================================================================
+   LES RENDEZ-VOUS
+   ===========================================================================
+   Pas de base de donnees : les demandes vivent dans data/reservations.json,
+   que seul le serveur lit. Chaque rendez-vous occupe un creneau pour une
+   masseuse donnee, et attend d'etre confirme par le salon.
+========================================================================== */
+
+const FICHIER_RESERVATIONS = RACINE . '/data/reservations.json';
+const FICHIER_PARAMETRES   = RACINE . '/data/parametres.json';
+const PAS_MINUTES          = 30;   // les rendez-vous commencent a l'heure ou a la demie
+const DELAI_MINIMUM_HEURES = 2;    // on ne reserve pas pour dans dix minutes
+const JOURS_RESERVABLES    = 30;   // on ne reserve pas pour dans six mois
+const DUREES_ADMISES       = [30, 40, 45, 60, 90, 120];
+const RETENTION_JOURS      = 30;   // au-dela, les coordonnees du client sont effacees
+
+function fuseau(): void
+{
+    date_default_timezone_set('Europe/Zurich');
+}
+
+function reservations(): array
+{
+    if (!is_readable(FICHIER_RESERVATIONS)) {
+        return [];
+    }
+    $lu = json_decode((string) file_get_contents(FICHIER_RESERVATIONS), true);
+    return is_array($lu) ? array_values(array_filter($lu, 'is_array')) : [];
+}
+
+/**
+ * Enregistre la liste, en oubliant au passage les rendez-vous trop anciens :
+ * garder le numero de telephone d'un client des mois durant n'a aucun interet.
+ */
+function ecrire_reservations(array $liste): bool
+{
+    fuseau();
+    $limite = date('Y-m-d', strtotime('-' . RETENTION_JOURS . ' days'));
+    $gardees = array_values(array_filter($liste, static function (array $r) use ($limite): bool {
+        return substr((string) ($r['debut'] ?? ''), 0, 10) >= $limite;
+    }));
+
+    return (bool) @file_put_contents(
+        FICHIER_RESERVATIONS,
+        json_encode($gardees, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT) . "\n",
+        LOCK_EX
+    );
+}
+
+/**
+ * Les reglages tires de data/contenu.js au moment de fabriquer le paquet :
+ * nom et adresse du salon, heures d'ouverture. Le site reste ainsi pilote
+ * par un seul fichier, meme pour la partie serveur.
+ */
+function parametres(): array
+{
+    static $cache = null;
+    if ($cache !== null) {
+        return $cache;
+    }
+    $cache = [];
+    if (is_readable(FICHIER_PARAMETRES)) {
+        $lu = json_decode((string) file_get_contents(FICHIER_PARAMETRES), true);
+        if (is_array($lu)) {
+            $cache = $lu;
+        }
+    }
+    return $cache;
+}
+
+/** Les heures d'ouverture du jour demande, ou null si le salon est ferme. */
+function horaires_du_jour(string $date): ?array
+{
+    $defaut = ['09:00', '21:00'];
+    $table = parametres()['horaires'] ?? [];
+    if (!is_array($table) || !$table) {
+        return $defaut;
+    }
+
+    $jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
+    $nom = $jours[(int) date('N', (int) strtotime($date)) - 1];
+    if (!array_key_exists($nom, $table)) {
+        return $defaut;
+    }
+    $plage = $table[$nom];
+    return (is_array($plage) && count($plage) === 2) ? $plage : null;
+}
+
+/** Vrai si la masseuse travaille ce jour-la, d'apres sa fiche. */
+function masseuse_presente(array $f, string $date): bool
+{
+    if (empty($f['disponible'])) {
+        return false;
+    }
+    if (!empty($f['debut']) && $date < (string) $f['debut']) {
+        return false;
+    }
+    if (!empty($f['fin']) && $date > (string) $f['fin']) {
+        return false;
+    }
+    return true;
+}
+
+/**
+ * Les debuts de rendez-vous encore libres, pour une masseuse, un jour et une
+ * duree. Tient compte des heures d'ouverture, des rendez-vous deja pris et du
+ * delai minimum avant le premier creneau.
+ */
+function creneaux_libres(string $masseuse, string $date, int $duree): array
+{
+    fuseau();
+
+    if (!in_array($duree, DUREES_ADMISES, true)) {
+        return [];
+    }
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+        return [];
+    }
+    $aujourdhui = date('Y-m-d');
+    if ($date < $aujourdhui || $date > date('Y-m-d', strtotime('+' . JOURS_RESERVABLES . ' days'))) {
+        return [];
+    }
+
+    $fiche = fiche($masseuse);
+    if ($fiche === null || !masseuse_presente($fiche, $date)) {
+        return [];
+    }
+
+    $plage = horaires_du_jour($date);
+    if ($plage === null) {
+        return [];
+    }
+
+    $ouverture = (int) strtotime($date . ' ' . $plage[0]);
+    $fermeture = (int) strtotime($date . ' ' . $plage[1]);
+    $plancher  = time() + DELAI_MINIMUM_HEURES * 3600;
+
+    /* Les rendez-vous deja pris pour cette masseuse, ce jour-la. */
+    $occupes = [];
+    foreach (reservations() as $r) {
+        if (($r['masseuse'] ?? '') !== $masseuse || ($r['etat'] ?? '') === 'annule') {
+            continue;
+        }
+        if (substr((string) ($r['debut'] ?? ''), 0, 10) !== $date) {
+            continue;
+        }
+        $occupes[] = [(int) strtotime((string) $r['debut']), (int) strtotime((string) $r['fin'])];
+    }
+
+    $libres = [];
+    for ($t = $ouverture; $t + $duree * 60 <= $fermeture; $t += PAS_MINUTES * 60) {
+        if ($t < $plancher) {
+            continue;
+        }
+        $fin = $t + $duree * 60;
+        $libre = true;
+        foreach ($occupes as [$d, $f]) {
+            if ($t < $f && $fin > $d) {
+                $libre = false;
+                break;
+            }
+        }
+        if ($libre) {
+            $libres[] = date('H:i', $t);
+        }
+    }
+    return $libres;
+}
+
+/** La cle secrete du calendrier, creee au premier besoin. */
+function cle_agenda(): string
+{
+    $c = config();
+    if (empty($c['cle_agenda'])) {
+        $c['cle_agenda'] = bin2hex(random_bytes(16));
+        ecrire_config($c);
+    }
+    return (string) $c['cle_agenda'];
+}
+
+function renouveler_cle_agenda(): string
+{
+    $c = config();
+    $c['cle_agenda'] = bin2hex(random_bytes(16));
+    ecrire_config($c);
+    return (string) $c['cle_agenda'];
+}
+
+/** L'adresse du site, telle que le navigateur y accede. */
+function adresse_site(): string
+{
+    $hote = (string) ($_SERVER['HTTP_HOST'] ?? 'chez-eva.ch');
+    $schema = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    return $schema . '://' . $hote;
+}
+
+/** Combien de demandes attendent une reponse. */
+function demandes_en_attente(): int
+{
+    return count(array_filter(reservations(), static fn (array $r): bool => ($r['etat'] ?? '') === 'attente'));
+}
+
+/** Les rendez-vous tries par date, les plus proches d'abord. */
+function reservations_triees(): array
+{
+    $liste = reservations();
+    usort($liste, static fn (array $a, array $b): int => strcmp((string) ($a['debut'] ?? ''), (string) ($b['debut'] ?? '')));
+    return $liste;
+}

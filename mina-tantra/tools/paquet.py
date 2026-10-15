@@ -13,7 +13,9 @@ le mot de passe (data/config.json) et les photos deja envoyees.
 Usage :  python3 tools/paquet.py     (depuis le dossier du site)
 """
 import base64
+import json
 import pathlib
+import re
 import secrets
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
@@ -22,11 +24,13 @@ SORTIE = RACINE / 'dist' / 'installateur.php'
 # Ce qui part sur le serveur. Le reste (tools, dist, README) n'y a rien a faire.
 A_DEPLOYER = [
     'index.php', 'modele.html', 'robots.txt', 'sitemap.xml',
+    'reserver.php', 'agenda.php',
     'admin/index.php', 'admin/noyau.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
     'assets/favicon-180.png', 'assets/partage.jpg',
     'js/site.js',
-    'data/contenu.js', 'data/masseuses.json', 'data/.htaccess',
+    'data/contenu.js', 'data/masseuses.json', 'data/parametres.json',
+    'data/reservations.json', 'data/.htaccess',
 ]
 A_DEPLOYER += sorted(
     p.relative_to(RACINE).as_posix()
@@ -36,10 +40,55 @@ A_DEPLOYER += sorted(
 
 # Ces fichiers ne sont ecrits que s'ils n'existent pas deja sur le serveur :
 # ils appartiennent a l'administration, pas au paquet.
-PRESERVES = ['data/masseuses.json']
+PRESERVES = ['data/masseuses.json', 'data/reservations.json']
+
+
+JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
+
+
+def ecrire_parametres() -> None:
+    """Extrait de data/contenu.js ce dont le serveur a besoin.
+
+    Le site garde ainsi un seul fichier de contenu : les horaires et les
+    coordonnees saisis pour la page publique servent aussi au calcul des
+    creneaux et au calendrier.
+    """
+    contenu = (RACINE / 'data' / 'contenu.js').read_text(encoding='utf-8')
+
+    def champ(nom: str) -> str:
+        m = re.search(r"\b%s:\s*'((?:[^'\\]|\\.)*)'" % nom, contenu)
+        return m.group(1).replace("\\'", "'") if m else ''
+
+    horaires: dict[str, list[str] | None] = {}
+    bloc = re.search(r'const HORAIRES\s*=\s*\[(.*?)\];', contenu, re.S)
+    if bloc:
+        for jour, heures in re.findall(r"jour:\s*'([^']+)'\s*,\s*heures:\s*'([^']+)'", bloc.group(1)):
+            plage = re.search(r'(\d{1,2})h(\d{2}).*?(\d{1,2})h(\d{2})', heures)
+            horaires[jour.lower()] = (
+                ['%02d:%s' % (int(plage.group(1)), plage.group(2)),
+                 '%02d:%s' % (int(plage.group(3)), plage.group(4))]
+                if plage else None
+            )
+    for jour in JOURS:
+        horaires.setdefault(jour, ['09:00', '21:00'])
+
+    parametres = {
+        'nom': champ('nom'),
+        'adresse': champ('adresse'),
+        'codePostal': champ('codePostal'),
+        'telephone': champ('telephone'),
+        'horaires': horaires,
+    }
+    (RACINE / 'data' / 'parametres.json').write_text(
+        json.dumps(parametres, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+    vide = RACINE / 'data' / 'reservations.json'
+    if not vide.is_file():
+        vide.write_text('[]\n', encoding='utf-8')
 
 
 def main() -> int:
+    ecrire_parametres()
     cle = secrets.token_urlsafe(12)
 
     morceaux = []

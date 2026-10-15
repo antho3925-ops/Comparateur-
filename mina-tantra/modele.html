@@ -131,6 +131,57 @@
   </div>
 </section>
 
+<!-- ------------------------------ Réservation ---------------------------- -->
+<section class="section section-reserver" id="reserver" hidden>
+  <div class="conteneur conteneur-etroit">
+    <p class="chapeau">En deux minutes</p>
+    <h2 class="titre">Réserver en ligne</h2>
+    <p class="intro">
+      Choisissez votre masseuse, le soin et l'heure qui vous arrange.
+      Nous vous rappelons pour confirmer le rendez-vous.
+    </p>
+
+    <form class="reservation" id="reservation" novalidate>
+      <div class="champ">
+        <label for="r-masseuse">Masseuse</label>
+        <select id="r-masseuse" required></select>
+      </div>
+      <div class="champ">
+        <label for="r-prestation">Prestation</label>
+        <select id="r-prestation" required></select>
+      </div>
+      <div class="champ">
+        <label for="r-date">Jour</label>
+        <input type="date" id="r-date" required>
+      </div>
+      <div class="champ champ-large">
+        <label>Heure</label>
+        <div class="creneaux" id="r-creneaux"><p class="note">Choisissez d'abord un jour.</p></div>
+      </div>
+      <div class="champ">
+        <label for="r-prenom">Votre prénom</label>
+        <input type="text" id="r-prenom" maxlength="40" autocomplete="given-name" required>
+      </div>
+      <div class="champ">
+        <label for="r-tel">Votre téléphone</label>
+        <input type="tel" id="r-tel" maxlength="25" autocomplete="tel" placeholder="+41 …" required>
+      </div>
+
+      <input type="text" id="r-site" name="site" class="piege" tabindex="-1" aria-hidden="true" autocomplete="off">
+
+      <div class="champ champ-large">
+        <button type="submit" class="btn btn-plein" id="r-envoyer">Demander ce rendez-vous</button>
+        <p class="reponse" id="r-reponse"></p>
+      </div>
+    </form>
+
+    <p class="note">
+      Nous ne conservons que votre prénom et votre numéro, le temps du rendez-vous,
+      et uniquement pour vous rappeler. Rien n'est publié, rien n'est transmis à personne.
+    </p>
+  </div>
+</section>
+
 <!-- ------------------------------- Galerie ------------------------------- -->
 <section class="section" id="galerie">
   <div class="conteneur">

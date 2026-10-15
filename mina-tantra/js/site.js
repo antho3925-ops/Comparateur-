@@ -311,6 +311,179 @@
     openingHoursSpecification: ouvertures
   });
 
+  /* ----------------------- Prise de rendez-vous -------------------------- */
+  /* Ne fonctionne que servie par le serveur : hors ligne, la section reste
+     masquee et le client appelle le salon, comme avant. */
+  if (typeof window.MASSEUSES_SERVEUR !== 'undefined') {
+    installerReservation();
+  }
+
+  function installerReservation() {
+    var section = $('#reserver');
+    var form = $('#reservation');
+    if (!section || !form) { return; }
+    section.hidden = false;
+
+    /* Les boutons « rendez-vous » menent desormais au formulaire. */
+    Array.prototype.forEach.call(
+      document.querySelectorAll('a[href="#contact"]'),
+      function (a) { a.setAttribute('href', '#reserver'); }
+    );
+
+    var champMasseuse   = $('#r-masseuse');
+    var champPrestation = $('#r-prestation');
+    var champDate       = $('#r-date');
+    var zoneCreneaux    = $('#r-creneaux');
+    var reponse         = $('#r-reponse');
+    var bouton          = $('#r-envoyer');
+    var heureChoisie    = null;
+
+    /* --- Les masseuses encore d'actualite --- */
+    var aujourdhui = new Date();
+    aujourdhui.setHours(0, 0, 0, 0);
+    var proposables = fiches.filter(function (m) {
+      if (m.disponible === false) { return false; }
+      var f = jour(m.fin);
+      return !f || f >= aujourdhui;
+    });
+
+    if (!proposables.length) { section.hidden = true; return; }
+
+    champMasseuse.innerHTML = proposables.map(function (m) {
+      return '<option value="' + esc(m.id || m.prenom) + '">' + esc(m.prenom) + '</option>';
+    }).join('');
+
+    /* --- Les prestations, tirees de la grille tarifaire --- */
+    function minutes(duree) {
+      var h = /(\d+)\s*(?:h|heures?)\s*(\d+)?/i.exec(duree);
+      if (h) { return parseInt(h[1], 10) * 60 + (h[2] ? parseInt(h[2], 10) : 0); }
+      var m = /(\d+)\s*min/i.exec(duree);
+      return m ? parseInt(m[1], 10) : 0;
+    }
+
+    champPrestation.innerHTML = TARIFS.map(function (t) {
+      /* Le nom complet figure dans l'intitule : replie, un menu deroulant
+         n'affiche que l'option choisie, pas le groupe auquel elle appartient. */
+      var court = t.nom.replace(/^Massage\s+/i, '');
+      court = court.charAt(0).toUpperCase() + court.slice(1);
+
+      var options = (t.lignes || []).map(function (l) {
+        var n = minutes(l.duree);
+        if (!n) { return ''; }
+        return '<option value="' + n + '" data-nom="' + esc(t.nom + ' — ' + l.duree) + '"'
+             + ' data-prix="' + esc(l.prix) + '">'
+             + esc(court + ' · ' + l.duree + ' — ' + l.prix) + '</option>';
+      }).join('');
+      return options ? '<optgroup label="' + esc(t.nom) + '">' + options + '</optgroup>' : '';
+    }).join('');
+
+    /* --- Le jour --- */
+    function iso(d) {
+      return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    }
+    var limite = new Date(aujourdhui.getTime() + 30 * 86400000);
+    champDate.min = iso(aujourdhui);
+    champDate.max = iso(limite);
+
+    /* --- Les creneaux libres, demandes au serveur --- */
+    function message(texte, classe) {
+      reponse.textContent = texte;
+      reponse.className = 'reponse' + (classe ? ' ' + classe : '');
+    }
+
+    function chargerCreneaux() {
+      heureChoisie = null;
+      var date = champDate.value;
+      if (!date) {
+        zoneCreneaux.innerHTML = '<p class="note">Choisissez d\'abord un jour.</p>';
+        return;
+      }
+      zoneCreneaux.innerHTML = '<p class="note">Recherche des disponibilités…</p>';
+
+      var adresse = 'reserver.php?action=creneaux'
+        + '&masseuse=' + encodeURIComponent(champMasseuse.value)
+        + '&date=' + encodeURIComponent(date)
+        + '&duree=' + encodeURIComponent(champPrestation.value);
+
+      fetch(adresse, { headers: { 'Accept': 'application/json' } })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          var libres = (d && d.creneaux) || [];
+          if (!libres.length) {
+            zoneCreneaux.innerHTML = '<p class="note">Aucune disponibilité ce jour-là. '
+              + 'Essayez un autre jour, ou appelez-nous.</p>';
+            return;
+          }
+          zoneCreneaux.innerHTML = libres.map(function (h) {
+            return '<button type="button" class="creneau" data-heure="' + esc(h) + '">'
+                 + esc(h.replace(':', 'h')) + '</button>';
+          }).join('');
+        })
+        .catch(function () {
+          zoneCreneaux.innerHTML = '<p class="note">Disponibilités indisponibles. Appelez-nous.</p>';
+        });
+    }
+
+    zoneCreneaux.addEventListener('click', function (ev) {
+      var b = ev.target.closest('.creneau');
+      if (!b) { return; }
+      Array.prototype.forEach.call(zoneCreneaux.querySelectorAll('.creneau'), function (x) {
+        x.classList.remove('choisi');
+      });
+      b.classList.add('choisi');
+      heureChoisie = b.dataset.heure;
+      message('');
+    });
+
+    [champMasseuse, champPrestation, champDate].forEach(function (c) {
+      c.addEventListener('change', chargerCreneaux);
+    });
+
+    /* --- L'envoi --- */
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+
+      if (!heureChoisie) { message('Choisissez une heure.', 'ko'); return; }
+      if ($('#r-prenom').value.trim().length < 2) { message('Indiquez votre prénom.', 'ko'); return; }
+      if ($('#r-tel').value.replace(/\D/g, '').length < 9) { message('Indiquez un numéro de téléphone valable.', 'ko'); return; }
+
+      var choix = champPrestation.options[champPrestation.selectedIndex];
+      var donnees = new FormData();
+      donnees.append('action', 'reserver');
+      donnees.append('masseuse', champMasseuse.value);
+      donnees.append('date', champDate.value);
+      donnees.append('heure', heureChoisie);
+      donnees.append('duree', champPrestation.value);
+      donnees.append('prestation', choix ? choix.dataset.nom : '');
+      donnees.append('prix', choix ? choix.dataset.prix : '');
+      donnees.append('prenom', $('#r-prenom').value.trim());
+      donnees.append('telephone', $('#r-tel').value.trim());
+      donnees.append('site', $('#r-site').value);
+
+      bouton.disabled = true;
+      message('Envoi…');
+
+      fetch('reserver.php', { method: 'POST', body: donnees })
+        .then(function (r) { return r.json(); })
+        .then(function (d) {
+          bouton.disabled = false;
+          if (d && d.ok) {
+            form.reset();
+            heureChoisie = null;
+            zoneCreneaux.innerHTML = '<p class="note">Choisissez d\'abord un jour.</p>';
+            message(d.message || 'Demande enregistrée.', 'ok');
+          } else {
+            message((d && d.erreur) || 'Envoi impossible. Appelez-nous.', 'ko');
+            chargerCreneaux();
+          }
+        })
+        .catch(function () {
+          bouton.disabled = false;
+          message('Envoi impossible. Appelez-nous.', 'ko');
+        });
+    });
+  }
+
   /* --------------------------- Menu & navigation ------------------------- */
   var entete = $('#entete');
   var menu   = $('#menu');
