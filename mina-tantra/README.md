@@ -35,6 +35,8 @@ fichier JSON.
 ├── photos/
 │   ├── masseuses/          Photos des masseuses (l'administration écrit ici)
 │   └── salon/              Photos du salon + hero.jpg (image de fond)
+├── .htaccess               Force https et renvoie tout vers le domaine
+│                           principal — fabriqué par tools/paquet.py
 ├── robots.txt, sitemap.xml Pour les moteurs de recherche
 └── tools/
     ├── paquet.py           Fabrique l'installateur (voir plus bas)
@@ -196,6 +198,22 @@ Fabrique `dist/index.html` : la page entière, photos incorporées (environ
 hébergement, même sans PHP — mais sans administration : les fiches sont
 alors figées dans le fichier, et chaque modification demande de régénérer et
 redéposer le tout.
+
+## Le nom de domaine
+
+Le domaine fait foi en un seul endroit : `SALON.site` dans `data/contenu.js`.
+`tools/paquet.py` en tire `data/parametres.json` et le `.htaccess`, qui
+renvoie vers ce domaine tout visiteur arrivant par un autre nom (ancien
+domaine, préfixe `www`) et force le `https`.
+
+Changer de domaine revient donc à modifier cette ligne et à refaire le
+paquet. Côté balises, `index.php` s'adapte de lui-même à l'adresse par
+laquelle on arrive, de sorte que rien n'est casse pendant la transition.
+
+**Avant d'installer un paquet qui redirige vers un nouveau domaine**,
+s'assurer que le certificat SSL couvre déjà ce domaine : sinon les
+visiteurs tomberaient sur un avertissement de sécurité. En cas de
+problème, supprimer `.htaccess` par FTP rétablit l'état précédent.
 
 ## Référencement
 

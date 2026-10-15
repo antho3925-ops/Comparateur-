@@ -23,7 +23,7 @@ SORTIE = RACINE / 'dist' / 'installateur.php'
 
 # Ce qui part sur le serveur. Le reste (tools, dist, README) n'y a rien a faire.
 A_DEPLOYER = [
-    'index.php', 'modele.html', 'robots.txt', 'sitemap.xml',
+    'index.php', 'modele.html', 'robots.txt', 'sitemap.xml', '.htaccess',
     'reserver.php', 'agenda.php',
     'admin/index.php', 'admin/noyau.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
@@ -74,6 +74,7 @@ def ecrire_parametres() -> None:
 
     parametres = {
         'nom': champ('nom'),
+        'site': champ('site'),
         'adresse': champ('adresse'),
         'codePostal': champ('codePostal'),
         'telephone': champ('telephone'),
@@ -87,8 +88,44 @@ def ecrire_parametres() -> None:
         vide.write_text('[]\n', encoding='utf-8')
 
 
+HTACCESS = """# Chez Eva — configuration du serveur web
+#
+# Deux redirections, et rien d'autre. En cas de probleme, supprimer ce
+# fichier par FTP suffit a revenir a l'etat precedent : le site fonctionne
+# tres bien sans.
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 1. Toujours passer par https.
+    #    La double condition evite une boucle sur les hebergements ou le
+    #    certificat est gere par un serveur place devant celui-ci.
+    RewriteCond %%{HTTPS} !=on
+    RewriteCond %%{HTTP:X-Forwarded-Proto} !=https
+    RewriteRule ^ https://%%{HTTP_HOST}%%{REQUEST_URI} [R=301,L]
+
+    # 2. Un seul nom de domaine fait foi : %(hote)s.
+    #    Les autres (ancien domaine, prefixe www) y renvoient.
+    RewriteCond %%{HTTP_HOST} !^%(hote_regex)s$ [NC]
+    RewriteRule ^ https://%(hote)s%%{REQUEST_URI} [R=301,L]
+</IfModule>
+"""
+
+
+def ecrire_htaccess() -> None:
+    """Fabrique le .htaccess a partir du domaine declare dans contenu.js."""
+    parametres = json.loads((RACINE / 'data' / 'parametres.json').read_text(encoding='utf-8'))
+    hote = re.sub(r'^https?://', '', parametres.get('site', 'chez-eva.ch')).rstrip('/')
+    (RACINE / '.htaccess').write_text(
+        HTACCESS % {'hote': hote, 'hote_regex': hote.replace('.', r'\.')},
+        encoding='utf-8')
+
+
 def main() -> int:
     ecrire_parametres()
+    ecrire_htaccess()
 
     # Les identifiants de l'administration voyagent avec le paquet, pour que
     # la page soit protegee des la premiere seconde. Le fichier ne contient
