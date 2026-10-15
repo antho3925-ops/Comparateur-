@@ -91,7 +91,7 @@ def ecrire_parametres() -> None:
 # La redirection vers le domaine principal n'est utile qu'une fois son
 # certificat SSL emis : activee trop tot, elle enverrait les visiteurs sur
 # une adresse en https sans certificat. On la met en service ensuite.
-REDIRIGER_VERS_DOMAINE = False
+REDIRIGER_VERS_DOMAINE = True
 
 HTACCESS = """# Chez Eva — configuration du serveur web
 #
