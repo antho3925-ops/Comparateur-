@@ -18,12 +18,13 @@ $action = (string) ($_POST['action'] ?? '');
 
 if ($action === 'creer_motdepasse' && !mot_de_passe_defini()) {
     $clair = (string) ($_POST['motdepasse'] ?? '');
+    $nom = (string) ($_POST['utilisateur'] ?? '');
     if ($clair !== (string) ($_POST['confirmation'] ?? '')) {
         $erreur = 'Les deux mots de passe ne sont pas identiques.';
     } else {
-        $erreur = definir_mot_de_passe($clair);
+        $erreur = definir_utilisateur($nom) ?? definir_mot_de_passe($clair);
         if ($erreur === null) {
-            connexion($clair);
+            connexion($nom, $clair);
             header('Location: index.php');
             exit;
         }
@@ -31,7 +32,7 @@ if ($action === 'creer_motdepasse' && !mot_de_passe_defini()) {
 }
 
 if ($action === 'connexion') {
-    $erreur = connexion((string) ($_POST['motdepasse'] ?? ''));
+    $erreur = connexion((string) ($_POST['utilisateur'] ?? ''), (string) ($_POST['motdepasse'] ?? ''));
     if ($erreur === null) {
         header('Location: index.php');
         exit;
@@ -204,11 +205,19 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
 
     if ($action === 'changer_motdepasse') {
         $clair = (string) ($_POST['motdepasse'] ?? '');
-        if ($clair !== (string) ($_POST['confirmation'] ?? '')) {
-            $erreur = 'Les deux mots de passe ne sont pas identiques.';
-        } else {
-            $erreur = definir_mot_de_passe($clair);
-            $message = $erreur === null ? 'Mot de passe modifié.' : null;
+        $nom = trim((string) ($_POST['utilisateur'] ?? ''));
+
+        if ($nom !== '' && $nom !== utilisateur()) {
+            $erreur = definir_utilisateur($nom);
+            $message = $erreur === null ? "Nom d'utilisateur modifié." : null;
+        }
+        if ($erreur === null && $clair !== '') {
+            if ($clair !== (string) ($_POST['confirmation'] ?? '')) {
+                $erreur = 'Les deux mots de passe ne sont pas identiques.';
+            } else {
+                $erreur = definir_mot_de_passe($clair);
+                $message = $erreur === null ? 'Identifiants modifiés.' : null;
+            }
         }
     }
 }
@@ -353,6 +362,8 @@ if ($page === 'connexion') {
            de « mot de passe oublié ».</p>
         <form method="post">
           <input type="hidden" name="action" value="creer_motdepasse">
+          <label for="util">Nom d'utilisateur</label>
+          <input type="text" id="util" name="utilisateur" required autocomplete="username">
           <label for="mdp">Mot de passe</label>
           <input type="password" id="mdp" name="motdepasse" required autocomplete="new-password">
           <label for="conf">Confirmation</label>
@@ -364,6 +375,8 @@ if ($page === 'connexion') {
         <p class="aide">Cette page permet de gérer les masseuses affichées sur le site.</p>
         <form method="post">
           <input type="hidden" name="action" value="connexion">
+          <label for="util">Nom d'utilisateur</label>
+          <input type="text" id="util" name="utilisateur" required autocomplete="username">
           <label for="mdp">Mot de passe</label>
           <input type="password" id="mdp" name="motdepasse" required autocomplete="current-password">
           <div class="actions"><button class="btn" type="submit">Entrer</button></div>
@@ -436,11 +449,13 @@ if ($page === 'liste') {
     <div class="pied">
       <p>Place occupée par le site : <strong><?= number_format(espace_utilise() / 1048576, 1, ',', ' ') ?> Mo</strong>
          (l'hébergement Starter en autorise 10).</p>
-      <h2>Changer le mot de passe</h2>
+      <h2>Vos identifiants</h2>
       <form method="post">
         <input type="hidden" name="jeton" value="<?= jeton() ?>">
         <input type="hidden" name="action" value="changer_motdepasse">
-        <label for="n1">Nouveau mot de passe</label>
+        <label for="nu">Nom d'utilisateur</label>
+        <input type="text" id="nu" name="utilisateur" value="<?= proteger(utilisateur()) ?>" autocomplete="username">
+        <label for="n1">Nouveau mot de passe <span style="text-transform:none;letter-spacing:0">(laisser vide pour le garder)</span></label>
         <input type="password" id="n1" name="motdepasse" autocomplete="new-password">
         <label for="n2">Confirmation</label>
         <input type="password" id="n2" name="confirmation" autocomplete="new-password">

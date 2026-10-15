@@ -50,6 +50,24 @@ function ecrire_config(array $config): bool
     );
 }
 
+/** Le nom d'utilisateur attendu a la connexion. */
+function utilisateur(): string
+{
+    $u = trim((string) (config()['utilisateur'] ?? ''));
+    return $u !== '' ? $u : 'eva';
+}
+
+function definir_utilisateur(string $nom): ?string
+{
+    $nom = trim($nom);
+    if ($nom === '' || mb_strlen($nom) < 2) {
+        return "Le nom d'utilisateur doit faire au moins 2 caractères.";
+    }
+    $c = config();
+    $c['utilisateur'] = $nom;
+    return ecrire_config($c) ? null : "Impossible d'écrire data/config.json (droits du dossier).";
+}
+
 function mot_de_passe_defini(): bool
 {
     $c = config();
@@ -95,17 +113,18 @@ function attente_restante(): int
     return max(0, 60 - (time() - $dernier));
 }
 
-function connexion(string $clair): ?string
+function connexion(string $nom, string $clair): ?string
 {
     if (($reste = attente_restante()) > 0) {
         return "Trop d'essais. Réessayez dans $reste secondes.";
     }
     $c = config();
-    if (!password_verify($clair, (string) ($c['motdepasse'] ?? ''))) {
+    $bonNom = hash_equals(mb_strtolower(utilisateur()), mb_strtolower(trim($nom)));
+    if (!$bonNom || !password_verify($clair, (string) ($c['motdepasse'] ?? ''))) {
         $c['echecs'] = (int) ($c['echecs'] ?? 0) + 1;
         $c['dernier_echec'] = time();
         ecrire_config($c);
-        return 'Mot de passe incorrect.';
+        return 'Identifiants incorrects.';
     }
     $c['echecs'] = 0;
     ecrire_config($c);

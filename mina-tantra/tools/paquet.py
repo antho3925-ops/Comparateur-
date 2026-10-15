@@ -40,7 +40,7 @@ A_DEPLOYER += sorted(
 
 # Ces fichiers ne sont ecrits que s'ils n'existent pas deja sur le serveur :
 # ils appartiennent a l'administration, pas au paquet.
-PRESERVES = ['data/masseuses.json', 'data/reservations.json']
+PRESERVES = ['data/masseuses.json', 'data/reservations.json', 'data/config.json']
 
 
 JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
@@ -89,10 +89,22 @@ def ecrire_parametres() -> None:
 
 def main() -> int:
     ecrire_parametres()
+
+    # Les identifiants de l'administration voyagent avec le paquet, pour que
+    # la page soit protegee des la premiere seconde. Le fichier ne contient
+    # que l'empreinte du mot de passe, jamais le mot de passe lui-meme, et il
+    # n'est jamais ecrase sur un serveur qui en a deja un.
+    fichiers = list(A_DEPLOYER)
+    if (RACINE / 'data' / 'config.json').is_file():
+        fichiers.insert(0, 'data/config.json')
+    else:
+        print("Pas de data/config.json : l'administration demandera de creer "
+              'un mot de passe a la premiere visite.')
+
     cle = secrets.token_urlsafe(12)
 
     morceaux = []
-    for rel in A_DEPLOYER:
+    for rel in fichiers:
         chemin = RACINE / rel
         if not chemin.is_file():
             print('Fichier manquant : %s' % rel)

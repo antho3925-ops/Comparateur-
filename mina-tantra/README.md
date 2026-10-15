@@ -45,10 +45,19 @@ fichier JSON.
 
 Adresse : `https://chez-eva.ch/admin/`
 
-À la **première visite**, elle demande de choisir un mot de passe (huit
-caractères minimum) ; il est conservé sous forme chiffrée dans
-`data/config.json`. Il n'y a pas de « mot de passe oublié » : pour le
-réinitialiser, il faut supprimer ce fichier par FTP.
+Les identifiants sont **livrés avec le paquet** : la page est protégée dès
+l'installation, sans fenêtre pendant laquelle un inconnu pourrait choisir le
+mot de passe. Ils vivent dans `data/config.json`, qui ne contient que
+l'empreinte chiffrée du mot de passe — jamais le mot de passe lui-même — et
+qui n'est **jamais versionné ni écrasé** lors d'une mise à jour.
+
+Nom d'utilisateur et mot de passe se changent depuis la section « Vos
+identifiants », en bas de la liste des masseuses. Il n'y a pas de « mot de
+passe oublié » : pour repartir de zéro, supprimer `data/config.json` par FTP
+— l'administration redemandera alors d'en choisir de nouveaux à la première
+visite.
+
+Après cinq essais ratés, la connexion est bloquée une minute.
 
 Une fois connecté :
 
