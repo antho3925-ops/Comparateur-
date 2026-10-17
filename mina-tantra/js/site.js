@@ -639,34 +639,85 @@
               + 'Essayez un autre jour, ou appelez-nous.</p>';
             return;
           }
-          /* Les quarts d'heure font une longue liste : on la coupe en trois
-             moments de la journee pour qu'elle reste lisible au telephone. */
-          var moments = [
-            { titre: 'Matin',       jusqua: 12 },
-            { titre: 'Après-midi',  jusqua: 18 },
-            { titre: 'Soirée',      jusqua: 24 },
-          ];
+          /* Les quarts d'heure font une longue liste. On la range en trois
+             moments de la journee, et le visiteur n'en voit qu'un a la fois :
+             il appuie sur « Matin », « Après-midi » ou « Soirée ». */
           var debut = 0;
-          zoneCreneaux.innerHTML = moments.map(function (moment) {
+          var groupes = MOMENTS.map(function (moment) {
             var heures = libres.filter(function (h) {
               var n = parseInt(h, 10);
               return n >= debut && n < moment.jusqua;
             });
             debut = moment.jusqua;
-            if (!heures.length) { return ''; }
-            return '<p class="creneaux-moment">' + esc(moment.titre) + '</p>'
-                 + heures.map(function (h) {
-                     return '<button type="button" class="creneau" data-heure="' + esc(h) + '">'
-                          + esc(h.replace(':', 'h')) + '</button>';
-                   }).join('');
-          }).join('');
+            return { titre: moment.titre, vide: moment.vide, heures: heures };
+          });
+
+          /* On ouvre sur le premier moment qui a encore de la place. */
+          var ouvert = 0;
+          groupes.some(function (g, i) {
+            if (g.heures.length) { ouvert = i; return true; }
+            return false;
+          });
+
+          zoneCreneaux.innerHTML =
+            '<div class="moments">'
+            + groupes.map(function (g, i) {
+                return '<button type="button" class="moment' + (g.heures.length ? '' : ' vide')
+                     + '" data-moment="' + i + '"'
+                     + (i === ouvert ? ' aria-current="true"' : '') + '>'
+                     + esc(g.titre) + '</button>';
+              }).join('')
+            + '</div>'
+            + groupes.map(function (g, i) {
+                return '<div class="creneaux-liste" data-moment="' + i + '"'
+                     + (i === ouvert ? '' : ' hidden') + '>'
+                     + (g.heures.length
+                        ? g.heures.map(function (h) {
+                            return '<button type="button" class="creneau" data-heure="' + esc(h) + '">'
+                                 + esc(h.replace(':', 'h')) + '</button>';
+                          }).join('')
+                        : '<p class="note">' + esc(g.vide) + '</p>')
+                     + '</div>';
+              }).join('')
+            + '<p class="creneaux-choix" hidden></p>';
         })
         .catch(function () {
           zoneCreneaux.innerHTML = '<p class="note">Disponibilités indisponibles. Appelez-nous.</p>';
         });
     }
 
+    /* Les trois moments de la journee, et ce qu'on dit quand l'un d'eux
+       n'a plus rien a offrir. */
+    var MOMENTS = [
+      { titre: 'Matin',      jusqua: 12, vide: 'Plus de place le matin. Essayez l’après-midi ou la soirée.' },
+      { titre: 'Après-midi', jusqua: 18, vide: 'Plus de place l’après-midi. Essayez le matin ou la soirée.' },
+      { titre: 'Soirée',     jusqua: 24, vide: 'Plus de place en soirée. Essayez le matin ou l’après-midi.' },
+    ];
+
+    /* Rappelle l'heure retenue : elle peut appartenir a un moment de la
+       journee que le visiteur ne regarde plus. */
+    function rappelerChoix() {
+      var rappel = zoneCreneaux.querySelector('.creneaux-choix');
+      if (!rappel) { return; }
+      rappel.hidden = !heureChoisie;
+      rappel.textContent = heureChoisie
+        ? 'Heure retenue : ' + heureChoisie.replace(':', 'h')
+        : '';
+    }
+
     zoneCreneaux.addEventListener('click', function (ev) {
+      var onglet = ev.target.closest('.moment');
+      if (onglet) {
+        Array.prototype.forEach.call(zoneCreneaux.querySelectorAll('.moment'), function (x) {
+          x.removeAttribute('aria-current');
+        });
+        onglet.setAttribute('aria-current', 'true');
+        Array.prototype.forEach.call(zoneCreneaux.querySelectorAll('.creneaux-liste'), function (liste) {
+          liste.hidden = liste.dataset.moment !== onglet.dataset.moment;
+        });
+        return;
+      }
+
       var b = ev.target.closest('.creneau');
       if (!b) { return; }
       Array.prototype.forEach.call(zoneCreneaux.querySelectorAll('.creneau'), function (x) {
@@ -674,6 +725,7 @@
       });
       b.classList.add('choisi');
       heureChoisie = b.dataset.heure;
+      rappelerChoix();
       message('');
     });
 

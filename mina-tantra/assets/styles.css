@@ -425,13 +425,26 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
 .reservation select:focus,
 .reservation input:focus{ outline:1px solid var(--or); border-color:var(--or); }
 
-.creneaux{ display:flex; flex-wrap:wrap; gap:10px; min-height:46px; align-items:flex-start; }
+.creneaux{ min-height:46px; }
 .creneaux .note{ margin:0; }
-.creneaux-moment{
-  flex-basis:100%; margin:6px 0 0; font-size:.68rem; letter-spacing:.22em;
-  text-transform:uppercase; color:var(--or);
+
+/* Les trois moments de la journee, en guise de menu. */
+.moments{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 14px; }
+.moment{
+  padding:9px 16px; border-radius:999px; border:1px solid var(--bord);
+  background:transparent; color:var(--texte-doux); font-family:var(--sans);
+  font-size:.7rem; letter-spacing:.18em; text-transform:uppercase;
+  cursor:pointer; transition:.2s ease;
 }
-.creneaux-moment:first-child{ margin-top:0; }
+.moment:hover{ border-color:var(--or); color:var(--or-clair); }
+.moment[aria-current="true"]{
+  background:var(--or); border-color:var(--or); color:#1a1208; font-weight:600;
+}
+.moment.vide{ opacity:.45; }
+
+.creneaux-liste{ display:flex; flex-wrap:wrap; gap:10px; align-items:flex-start; }
+.creneaux-liste[hidden]{ display:none; }
+.creneaux-choix{ margin:14px 0 0; font-size:.86rem; color:var(--or-clair); }
 .creneau{
   padding:11px 18px; border-radius:999px; border:1px solid var(--bord);
   background:transparent; color:var(--texte); font:inherit; font-size:.9rem;
