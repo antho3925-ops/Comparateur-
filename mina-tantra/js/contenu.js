@@ -44,6 +44,30 @@ const ATOUTS = [
   { titre: 'Un cadre soigné',         texte: "Cabines chauffées, linge frais à chaque soin, douche à disposition, huiles de qualité." },
 ];
 
+/* Les façons de prendre rendez-vous, affichées sous le mot du salon.
+   `bouton` vaut 'telephone', 'whatsapp' ou 'formulaire' ; le site compose
+   le lien correspondant tout seul. La carte « formulaire » disparaît
+   automatiquement si la prise de rendez-vous en ligne n'est pas active. */
+const PRISE_DE_RDV = [
+  {
+    titre: 'Par téléphone',
+    texte: "Le plus direct. Nous vérifions la disponibilité avec vous, nous répondons à vos questions, et le rendez-vous est fixé dans la minute.",
+    bouton: 'telephone',
+  },
+  {
+    titre: 'Par WhatsApp',
+    texte: "Si vous préférez écrire, ou appeler depuis l'étranger. Même numéro, même discrétion.",
+    bouton: 'whatsapp',
+  },
+  {
+    titre: 'En ligne, à toute heure',
+    texte: "Choisissez la masseuse, le soin et l'heure qui vous arrange. Nous vous rappelons pour confirmer. Une masseuse annoncée peut même être réservée avant son arrivée.",
+    bouton: 'formulaire',
+  },
+];
+
+const PRISE_DE_RDV_TITRE = 'Trois façons de prendre rendez-vous';
+
 /* --------------------------------- MASSEUSES ------------------------------- */
 /* `photo`  = la grande photo de la fiche.
    `photos` = les petites vignettes sous la fiche (cliquables en plein écran).  */

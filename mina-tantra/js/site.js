@@ -43,6 +43,34 @@
     return '<article class="atout"><h3>' + esc(a.titre) + '</h3><p>' + esc(a.texte) + '</p></article>';
   }).join('');
 
+  /* ------------------- Les façons de prendre rendez-vous ----------------- */
+  if (typeof PRISE_DE_RDV !== 'undefined' && $('#prise-rdv')) {
+    if (typeof PRISE_DE_RDV_TITRE === 'string') {
+      $('#prise-rdv-titre').textContent = PRISE_DE_RDV_TITRE;
+    }
+
+    var numeroSalon = (SALON.telephone || '').replace(/[^\d+]/g, '');
+    var waSalon = (SALON.whatsapp || '').replace(/\D/g, '');
+
+    $('#prise-rdv').innerHTML = PRISE_DE_RDV.map(function (f) {
+      var lien = '';
+      if (f.bouton === 'telephone' && numeroSalon) {
+        lien = '<a class="btn btn-plein" href="tel:' + esc(numeroSalon) + '">'
+             + esc(SALON.telephone) + '</a>';
+      } else if (f.bouton === 'whatsapp' && waSalon) {
+        lien = '<a class="btn btn-vide" href="https://wa.me/' + esc(waSalon)
+             + '" target="_blank" rel="noopener">Écrire sur WhatsApp</a>';
+      } else if (f.bouton === 'formulaire') {
+        lien = '<a class="btn btn-vide" href="#reserver">Réserver en ligne</a>';
+      }
+      return '<article class="rdv-carte' + (f.bouton === 'formulaire' ? ' rdv-en-ligne' : '') + '">'
+           + '<h4>' + esc(f.titre) + '</h4>'
+           + '<p>' + esc(f.texte) + '</p>'
+           + lien
+           + '</article>';
+    }).join('');
+  }
+
   /* ------------------------------- Masseuses ----------------------------- */
   /* Sur le serveur, les fiches viennent de l'administration (data/masseuses.json),
      injectees par index.php. Hors serveur, on retombe sur celles de contenu.js. */
