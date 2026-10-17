@@ -24,7 +24,7 @@ SORTIE = RACINE / 'dist' / 'installateur.php'
 # Ce qui part sur le serveur. Le reste (tools, dist, README) n'y a rien a faire.
 A_DEPLOYER = [
     'index.php', 'modele.html', 'robots.txt', 'sitemap.xml', '.htaccess',
-    'reserver.php', 'agenda.php',
+    'reserver.php', 'agenda.php', 'etat.php',
     'admin/index.php', 'admin/noyau.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
     'assets/favicon-180.png', 'assets/partage.jpg',
@@ -277,7 +277,8 @@ foreach (['data', 'photos', 'photos/masseuses', 'photos/salon'] as $d) {
 $ancienne = $racine . '/index.html';
 $ancienneSupprimee = is_file($ancienne) ? @unlink($ancienne) : null;
 
-echo '<p class="ok">' . $ecrits . ' fichiers installes.</p>';
+echo '<p class="ok">' . $ecrits . ' fichiers installes dans le dossier <code>'
+   . htmlspecialchars(basename($racine), ENT_QUOTES) . '</code>.</p>';
 if ($gardes) {
     echo '<p>' . $gardes . ' fichier(s) de donnees deja present(s) : conserve(s) tel(s) quel(s).</p>';
 }
@@ -289,7 +290,8 @@ if ($rates) {
     echo '<p>Verifie les droits d\'ecriture du dossier, puis recharge cette page.</p>';
 } else {
     echo '<p>Tout est en place.</p>';
-    echo '<p><a href="./">Voir le site</a> &nbsp;·&nbsp; <a href="admin/">Ouvrir l\'administration</a></p>';
+    echo '<p><a href="./">Voir le site</a> &nbsp;·&nbsp; <a href="admin/">Ouvrir l\'administration</a>'
+       . ' &nbsp;·&nbsp; <a href="etat.php">Verifier l\'installation</a></p>';
     if (@unlink(__FILE__)) {
         echo '<p class="ok">Installateur supprime du serveur.</p>';
     } else {
