@@ -214,14 +214,24 @@ a{ color:inherit; }
 
 /* Les masseuses annoncees mais pas encore la : meme presentation, un cran
    en retrait, et aucun bouton d'appel. */
-.bientot{ margin-top:64px; padding-top:40px; border-top:1px solid var(--bord); }
-.bientot-titre{
+.groupe{ margin-top:64px; padding-top:40px; border-top:1px solid var(--bord); }
+.groupe-titre{
   font-family:var(--serif); font-weight:400; font-size:1.7rem; margin:0 0 8px;
   color:var(--texte);
 }
-.bientot-intro{ color:var(--texte-doux); font-size:.94rem; margin:0 0 28px; max-width:560px; }
+.groupe-intro{ color:var(--texte-doux); font-size:.94rem; margin:0 0 28px; max-width:600px; }
 .fiche-attente{ opacity:.78; }
 .fiche-attente:hover{ opacity:1; }
+
+/* Le bouton de reservation anticipee n'a de sens que si la prise de
+   rendez-vous fonctionne, donc uniquement servi par le serveur. */
+.fiche-reserver{ display:none; }
+body.avec-reservation .fiche-reserver{
+  display:inline-block; margin-top:4px; padding:10px 18px; border-radius:999px;
+  border:1px solid var(--or); background:var(--or); color:#1a1208; cursor:pointer;
+  font:inherit; font-size:.78rem; font-weight:600; letter-spacing:.08em; transition:.25s ease;
+}
+body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-color:var(--or-clair); }
 
 /* ------------------------------- Horaires -------------------------------- */
 .horaires{ width:100%; border-collapse:collapse; }
