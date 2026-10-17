@@ -44,6 +44,15 @@ const ATOUTS = [
   { titre: 'Un cadre soigné',         texte: "Cabines chauffées, linge frais à chaque soin, douche à disposition, huiles de qualité." },
 ];
 
+/* Les langues proposées à la sélection dans l'administration, et affichées
+   avec leur drapeau sur les fiches. */
+const LANGUES = [
+  { nom: 'Français',  drapeau: '🇫🇷' },
+  { nom: 'Anglais',   drapeau: '🇬🇧' },
+  { nom: 'Espagnol',  drapeau: '🇪🇸' },
+  { nom: 'Portugais', drapeau: '🇵🇹' },
+];
+
 /* Les façons de prendre rendez-vous, affichées sous le mot du salon.
    `bouton` vaut 'telephone', 'whatsapp' ou 'formulaire' ; le site compose
    le lien correspondant tout seul. La carte « formulaire » disparaît

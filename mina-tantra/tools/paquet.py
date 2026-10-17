@@ -97,8 +97,16 @@ def ecrire_parametres() -> None:
         if nom:
             ajouter(nom.group(1))
 
+    langues = []
+    bloc_langues = re.search(r'const LANGUES\s*=\s*\[(.*?)\n\];', contenu, re.S)
+    if bloc_langues:
+        for nom, drapeau in re.findall(
+                r"nom:\s*'([^']*)'\s*,\s*drapeau:\s*'([^']*)'", bloc_langues.group(1)):
+            langues.append({'nom': nom, 'drapeau': drapeau})
+
     parametres = {
         'nom': champ('nom'),
+        'langues': langues,
         'prestations': prestations,
         'site': champ('site'),
         'adresse': champ('adresse'),

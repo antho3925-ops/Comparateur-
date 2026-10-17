@@ -1,5 +1,23 @@
 {
   "nom": "Chez Eva",
+  "langues": [
+    {
+      "nom": "Français",
+      "drapeau": "🇫🇷"
+    },
+    {
+      "nom": "Anglais",
+      "drapeau": "🇬🇧"
+    },
+    {
+      "nom": "Espagnol",
+      "drapeau": "🇪🇸"
+    },
+    {
+      "nom": "Portugais",
+      "drapeau": "🇵🇹"
+    }
+  ],
   "prestations": [
     "Érotique",
     "Body body",

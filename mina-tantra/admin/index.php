@@ -94,6 +94,18 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         } else {
             /* Les prestations viennent des cases cochees, plus d'eventuels
                ajouts libres saisis a cote. */
+            /* Les langues : celles cochees, plus d'eventuels ajouts libres. */
+            $langues = [];
+            foreach (array_merge(
+                array_map('strval', (array) ($_POST['langues'] ?? [])),
+                explode(',', (string) ($_POST['langues_autres'] ?? ''))
+            ) as $l) {
+                $l = mb_substr(trim($l), 0, 30);
+                if ($l !== '' && !in_array($l, $langues, true)) {
+                    $langues[] = $l;
+                }
+            }
+
             $cochees = array_map('strval', (array) ($_POST['specialites'] ?? []));
             $libres = explode(',', (string) ($_POST['specialites_autres'] ?? ''));
             $specialites = [];
@@ -121,7 +133,7 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
                 'prenom'       => $prenom,
                 'age'          => ctype_digit($age) ? (int) $age : null,
                 'origine'      => trim((string) ($_POST['origine'] ?? '')),
-                'langues'      => trim((string) ($_POST['langues'] ?? '')),
+                'langues'      => $langues,
                 'specialites'  => $specialites,
                 'presentation' => trim((string) ($_POST['presentation'] ?? '')),
                 'telephone'    => trim((string) ($_POST['telephone'] ?? '')),
@@ -291,6 +303,7 @@ input[type=file]{ width:100%; color:var(--doux); font-size:.9rem; padding:12px 0
 .choix-ligne{ display:flex; align-items:center; gap:12px; padding:9px 0;
               margin:0; text-transform:none; letter-spacing:0; font-size:.98rem; color:var(--texte); }
 .choix-ligne input{ width:20px; height:20px; accent-color:var(--or); flex:0 0 auto; }
+.choix-ligne .drapeau{ font-size:1.25rem; line-height:1; }
 .coche label{ margin:0; text-transform:none; letter-spacing:0; font-size:.95rem; color:var(--texte); }
 .btn{ display:inline-block; padding:13px 22px; border-radius:999px; border:1px solid var(--or);
       background:var(--or); color:#1a1208; font-weight:600; font-size:.85rem; cursor:pointer;
@@ -624,9 +637,51 @@ avis($message, $erreur);
   <input type="text" id="origine" name="origine" placeholder="Française, Brésil…"
          value="<?= proteger((string) ($f['origine'] ?? '')) ?>">
 
-  <label for="langues">Langues parlées</label>
-  <input type="text" id="langues" name="langues" placeholder="Français, anglais, espagnol"
-         value="<?= proteger((string) ($f['langues'] ?? '')) ?>">
+  <?php
+    $catalogueLangues = parametres()['langues'] ?? [];
+    $siennesLangues = is_array($f['langues'] ?? null)
+      ? array_values(array_filter($f['langues'], 'is_string'))
+      : array_values(array_filter(array_map('trim', explode(',', (string) ($f['langues'] ?? '')))));
+    /* Les anciennes saisies libres sont rapprochees du catalogue, sans tenir
+       compte des majuscules : « anglais » coche bien « Anglais ». */
+    $nomsLangues = array_column($catalogueLangues, 'nom');
+    $cocheesLangues = [];
+    $horsLangues = [];
+    foreach ($siennesLangues as $l) {
+      $trouve = null;
+      foreach ($nomsLangues as $n) {
+        if (mb_strtolower($n) === mb_strtolower($l)) { $trouve = $n; }
+      }
+      if ($trouve !== null) { $cocheesLangues[] = $trouve; } elseif ($l !== '') { $horsLangues[] = $l; }
+    }
+  ?>
+  <label>Langues parlées</label>
+  <?php if ($catalogueLangues): ?>
+    <details class="choix"<?= $cocheesLangues ? '' : ' open' ?>>
+      <summary><?php
+        if ($cocheesLangues) {
+          $resume = [];
+          foreach ($catalogueLangues as $l) {
+            if (in_array($l['nom'], $cocheesLangues, true)) { $resume[] = $l['drapeau'] . ' ' . $l['nom']; }
+          }
+          echo proteger(implode('   ', $resume));
+        } else { echo 'Choisir les langues'; }
+      ?></summary>
+      <div class="choix-liste">
+        <?php foreach ($catalogueLangues as $l): ?>
+          <label class="choix-ligne">
+            <input type="checkbox" name="langues[]" value="<?= proteger($l['nom']) ?>"
+                   <?= in_array($l['nom'], $cocheesLangues, true) ? 'checked' : '' ?>>
+            <span class="drapeau"><?= proteger($l['drapeau']) ?></span>
+            <span><?= proteger($l['nom']) ?></span>
+          </label>
+        <?php endforeach; ?>
+      </div>
+    </details>
+  <?php endif; ?>
+  <input type="text" id="langues_autres" name="langues_autres"
+         placeholder="<?= $catalogueLangues ? 'Autre langue (séparées par des virgules)' : 'Français, anglais' ?>"
+         value="<?= proteger(implode(', ', $catalogueLangues ? $horsLangues : $siennesLangues)) ?>">
 
   <?php
     $catalogue = parametres()['prestations'] ?? [];

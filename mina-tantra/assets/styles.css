@@ -284,7 +284,9 @@ body.avec-reservation .rdv-en-ligne{ display:flex; }
   letter-spacing:.04em;
 }
 .fiche-texte{ margin:0 0 18px; color:var(--texte-doux); font-size:.94rem; flex:1; }
-.fiche-langues{ font-size:.82rem; color:var(--texte-doux); margin:0 0 14px; }
+.fiche-langues{ font-size:.86rem; color:var(--texte-doux); margin:0 0 14px;
+                display:flex; flex-wrap:wrap; gap:4px 14px; }
+.fiche-langues .langue{ white-space:nowrap; }
 .tags{ display:flex; flex-wrap:wrap; gap:8px; }
 .tag{
   font-size:.68rem; letter-spacing:.12em; text-transform:uppercase;

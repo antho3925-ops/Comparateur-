@@ -139,6 +139,27 @@
     return { etat: 'ici', badge: 'Disponible', ligne: null };
   }
 
+  /* Les langues, avec leur drapeau quand elles figurent au catalogue.
+     Accepte aussi bien une liste qu'une ancienne saisie en texte libre. */
+  function languesAffichees(valeur) {
+    var liste = Array.isArray(valeur)
+      ? valeur
+      : String(valeur || '').split(',');
+    liste = liste.map(function (l) { return String(l).trim(); }).filter(Boolean);
+    if (!liste.length) { return ''; }
+
+    var connues = (typeof LANGUES !== 'undefined') ? LANGUES : [];
+    return liste.map(function (l) {
+      var trouvee = null;
+      connues.forEach(function (c) {
+        if (c.nom.toLowerCase() === l.toLowerCase()) { trouvee = c; }
+      });
+      return '<span class="langue">'
+           + (trouvee ? esc(trouvee.drapeau) + ' ' + esc(trouvee.nom) : esc(l))
+           + '</span>';
+    }).join('');
+  }
+
   /* Construit une fiche. Le bouton d'appel n'apparait que pour les masseuses
      presentes — proposer d'appeler quelqu'un qui n'est pas la ne sert qu'a
      decevoir — et celles qui arrivent a une date connue recoivent a la place
@@ -158,6 +179,8 @@
     var ici = presence(m);
     var etat = '<span class="fiche-etat' + (ici.etat === 'ici' ? '' : ' absente') + '">'
              + esc(ici.badge) + '</span>';
+
+    var langues = languesAffichees(m.langues);
 
     var tags = (m.specialites || []).map(function (s) {
       return '<span class="tag">' + esc(s) + '</span>';
@@ -192,7 +215,7 @@
           (meta.length ? '<p class="fiche-meta">' + esc(meta.join(' · ')) + '</p>' : '') +
           (ici.ligne ? '<p class="fiche-periode">' + esc(ici.ligne) + '</p>' : '') +
           '<p class="fiche-texte">' + esc(m.presentation) + '</p>' +
-          (m.langues ? '<p class="fiche-langues">Langues : ' + esc(m.langues) + '</p>' : '') +
+          (langues ? '<p class="fiche-langues">' + langues + '</p>' : '') +
           '<div class="tags">' + tags + '</div>' +
           bouton +
           (vignettes ? '<div class="fiche-vignettes">' + vignettes + '</div>' : '') +
