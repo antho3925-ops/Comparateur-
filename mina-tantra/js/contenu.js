@@ -106,13 +106,13 @@ const MASSEUSES_INTRO = "Rendez-vous à convenir par téléphone : nous vous dir
 
 /* ---------------------------------- HORAIRES ------------------------------- */
 const HORAIRES = [
-  { jour: 'Lundi',    heures: '09h00 – 21h00' },
-  { jour: 'Mardi',    heures: '09h00 – 21h00' },
-  { jour: 'Mercredi', heures: '09h00 – 21h00' },
-  { jour: 'Jeudi',    heures: '09h00 – 21h00' },
-  { jour: 'Vendredi', heures: '09h00 – 21h00' },
-  { jour: 'Samedi',   heures: '09h00 – 21h00' },
-  { jour: 'Dimanche', heures: '09h00 – 21h00' },
+  { jour: 'Lundi',    heures: '09h00 – 22h00' },
+  { jour: 'Mardi',    heures: '09h00 – 22h00' },
+  { jour: 'Mercredi', heures: '09h00 – 22h00' },
+  { jour: 'Jeudi',    heures: '09h00 – 22h00' },
+  { jour: 'Vendredi', heures: '09h00 – 22h00' },
+  { jour: 'Samedi',   heures: '09h00 – 22h00' },
+  { jour: 'Dimanche', heures: '09h00 – 22h00' },
 ];
 
 const HORAIRES_NOTE = "Ouvert sept jours sur sept, dimanche compris. Sur rendez-vous, de préférence une à deux heures à l'avance ; les demandes en dehors de ces horaires sont étudiées au cas par cas.";
@@ -158,6 +158,14 @@ const TARIFS = [
       { duree: '1 heure',    prix: 'CHF 350.–' },
     ],
   },
+  {
+    nom: 'Massage prostatique',
+    resume: "Un soin interne mené tout en douceur, à votre rythme : gant, gel et hygiène irréprochables, et rien n'est entrepris sans votre accord.",
+    lignes: [
+      { duree: '40 minutes', prix: 'CHF 250.–' },
+      { duree: '1 heure',    prix: 'CHF 350.–' },
+    ],
+  },
 ];
 
 /* Le quatre mains n'a pas de tarif propre : il double celui du soin choisi.
@@ -171,7 +179,6 @@ const QUATRE_MAINS = {
 
 /* Les suppléments, affichés sous les tarifs. */
 const SUPPLEMENTS = [
-  { nom: 'Supplément prostatique',    prix: 'CHF 50.–' },
   { nom: 'Deuxième éjaculation',      prix: 'CHF 50.–' },
 ];
 

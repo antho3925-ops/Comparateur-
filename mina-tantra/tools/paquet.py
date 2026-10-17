@@ -72,7 +72,7 @@ def ecrire_parametres() -> None:
                 if plage else None
             )
     for jour in JOURS:
-        horaires.setdefault(jour, ['09:00', '21:00'])
+        horaires.setdefault(jour, ['09:00', '22:00'])
 
     # La liste des prestations proposees par le salon, telle que
     # l'administration la propose a cocher pour chaque masseuse.

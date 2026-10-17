@@ -388,7 +388,7 @@ function parametres(): array
 /** Les heures d'ouverture du jour demande, ou null si le salon est ferme. */
 function horaires_du_jour(string $date): ?array
 {
-    $defaut = ['09:00', '21:00'];
+    $defaut = ['09:00', '22:00'];
     $table = parametres()['horaires'] ?? [];
     if (!is_array($table) || !$table) {
         return $defaut;
