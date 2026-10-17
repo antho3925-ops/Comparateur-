@@ -3,6 +3,21 @@
    Palette : nuit prune, or chaud, chair claire.
    ========================================================================== */
 
+/* Les polices sont deposees avec le site : rien n'est demande a un tiers,
+   donc rien a charger de l'exterieur et rien a declarer sur la vie privee. */
+@font-face{
+  font-family:'Italiana'; src:url('polices/italiana.woff2') format('woff2');
+  font-weight:400; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'Cormorant Garamond'; src:url('polices/cormorant-300.woff2') format('woff2');
+  font-weight:300; font-style:normal; font-display:swap;
+}
+@font-face{
+  font-family:'Cormorant Garamond'; src:url('polices/cormorant-300-italique.woff2') format('woff2');
+  font-weight:300; font-style:italic; font-display:swap;
+}
+
 :root{
   --nuit:      #120b12;
   --nuit-2:    #1b1018;
@@ -14,6 +29,7 @@
   --texte-doux:#b9a9a6;
   --bord:      rgba(201,162,39,.22);
   --serif: 'Cormorant Garamond', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+  --nom: 'Italiana', 'Cormorant Garamond', Georgia, serif;
   --sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
   --max: 1120px;
 }
@@ -54,19 +70,24 @@ a{ color:inherit; }
 }
 
 /* Les elements apparaissent quand ils entrent dans l'ecran. */
-.apparait{ opacity:0; transform:translateY(24px); }
+.apparait{ opacity:0; transform:translateY(38px) scale(.985); }
 .apparait.vu{
   opacity:1; transform:none;
-  transition:opacity .75s cubic-bezier(.2,.7,.3,1), transform .75s cubic-bezier(.2,.7,.3,1);
+  transition:opacity .85s cubic-bezier(.16,.8,.3,1), transform .9s cubic-bezier(.16,.8,.3,1);
 }
 
 /* L'arrivee sur le site : le bandeau se pose, ligne apres ligne. */
-.hero-eyebrow{ animation:monte .9s .15s both cubic-bezier(.2,.7,.3,1); }
-.hero-titre  { animation:monte 1.1s .25s both cubic-bezier(.2,.7,.3,1); }
-.hero-slogan { animation:monte 1s .45s both cubic-bezier(.2,.7,.3,1); }
-.hero-actions{ animation:monte 1s .6s both cubic-bezier(.2,.7,.3,1); }
-.hero-puces  { animation:monte 1s .75s both cubic-bezier(.2,.7,.3,1); }
-.hero-fleche { animation:fondu 1.2s 1.1s both, flotte 2.4s 1.1s ease-in-out infinite; }
+.hero-eyebrow{ animation:monte 1s .1s both cubic-bezier(.16,.8,.3,1); }
+@keyframes poseLettre {
+  from { opacity:0; transform:translateY(46px) rotate(2deg); filter:blur(10px); }
+  to   { opacity:1; transform:none; filter:blur(0); }
+}
+.hero-titre .lettre{ display:inline-block; animation:poseLettre 1.1s both cubic-bezier(.16,.8,.3,1); }
+.hero-titre .espace{ display:inline-block; width:.26em; }
+.hero-slogan { animation:monte 1.1s 1.1s both cubic-bezier(.16,.8,.3,1); }
+.hero-actions{ animation:monte 1.1s 1.35s both cubic-bezier(.16,.8,.3,1); }
+.hero-puces  { animation:monte 1.1s 1.55s both cubic-bezier(.16,.8,.3,1); }
+.hero-fleche { animation:fondu 1.2s 1.9s both, flotte 2.4s 1.9s ease-in-out infinite; }
 .entete      { animation:fondu .8s both; }
 
 .porte-carte{ animation:ouverture .5s both cubic-bezier(.2,.7,.3,1); }
@@ -78,7 +99,7 @@ a{ color:inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   .apparait, .apparait.vu{ opacity:1; transform:none; transition:none; }
-  .hero-eyebrow, .hero-titre, .hero-slogan, .hero-actions, .hero-puces,
+  .hero-eyebrow, .hero-titre .lettre, .hero-slogan, .hero-actions, .hero-puces,
   .hero-fleche, .entete, .porte-carte, .lightbox:not([hidden]), .lightbox img{
     animation:none;
   }
@@ -107,7 +128,7 @@ a{ color:inherit; }
 .entete-in{ display:flex; align-items:center; justify-content:space-between; height:76px; }
 
 .marque{ text-decoration:none; line-height:1.1; }
-.marque-nom{ display:block; font-family:var(--serif); font-size:1.6rem; letter-spacing:.06em; color:var(--texte); }
+.marque-nom{ display:block; font-family:var(--nom); font-size:1.55rem; letter-spacing:.14em; color:var(--texte); }
 .marque-sous{ display:block; font-size:.62rem; letter-spacing:.34em; text-transform:uppercase; color:var(--or); }
 
 .menu{ display:flex; align-items:center; gap:30px; }
@@ -149,8 +170,8 @@ a{ color:inherit; }
   margin:0 0 18px; font-size:.7rem; letter-spacing:.34em; text-transform:uppercase; color:var(--or);
 }
 .hero-titre{
-  font-family:var(--serif); font-weight:400; margin:0;
-  font-size:clamp(3.2rem, 11vw, 6.4rem); line-height:1; letter-spacing:.02em;
+  font-family:var(--nom); font-weight:400; margin:0;
+  font-size:clamp(3.1rem, 10.5vw, 6.2rem); line-height:1.05; letter-spacing:.09em;
   text-shadow:0 4px 34px rgba(10,6,10,.85);
 }
 .hero-slogan{
@@ -461,7 +482,7 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
 
 /* --------------------------------- Pied ---------------------------------- */
 .pied{ background:var(--nuit); border-top:1px solid var(--bord); padding-block:52px; text-align:center; }
-.pied-marque{ font-family:var(--serif); font-size:1.7rem; margin:0 0 10px; color:var(--or-clair); }
+.pied-marque{ font-family:var(--nom); letter-spacing:.14em; font-size:1.6rem; margin:0 0 10px; color:var(--or-clair); }
 .pied-texte{ margin:0 auto 14px; max-width:560px; color:var(--texte-doux); font-size:.92rem; }
 .pied-mini{ margin:6px auto; max-width:600px; font-size:.76rem; color:rgba(185,169,166,.7); }
 
@@ -474,7 +495,7 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
   max-width:520px; width:100%; text-align:center; border:1px solid var(--bord);
   border-radius:18px; padding:44px 30px; background:var(--nuit-2);
 }
-.porte-marque{ font-family:var(--serif); font-size:2rem; margin:0 0 6px; color:var(--or-clair); }
+.porte-marque{ font-family:var(--nom); letter-spacing:.16em; font-size:1.9rem; margin:0 0 6px; color:var(--or-clair); }
 .porte-carte h1{ font-family:var(--serif); font-weight:400; font-size:1.5rem; margin:0 0 16px; }
 .porte-texte{ color:var(--texte-doux); font-size:.94rem; margin:0 0 28px; }
 .porte-actions{ display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }

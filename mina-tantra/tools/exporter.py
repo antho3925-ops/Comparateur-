@@ -50,11 +50,17 @@ def main() -> int:
     ):
         html = html.replace(balise, balise.replace(fichier, donnees(RACINE / fichier)))
 
-    # 3. L'apercu de partage est depose a la racine, a cote du fichier unique :
+    # 3. Les polices, incorporees elles aussi : le fichier unique doit
+    #    s'afficher correctement meme ouvert depuis une cle USB.
+    for police in sorted((RACINE / 'assets' / 'polices').glob('*.woff2')):
+        html = html.replace("url('polices/%s')" % police.name,
+                            "url('%s')" % donnees(police))
+
+    # 4. L'apercu de partage est depose a la racine, a cote du fichier unique :
     #    en version autonome, il n'y a pas de dossier assets/ sur le serveur.
     html = re.sub(r'(https://[^"\']+)/assets/partage\.jpg', r'\1/partage.jpg', html)
 
-    # 4. Toutes les photos, ou qu'elles soient citees (CSS, donnees, HTML).
+    # 5. Toutes les photos, ou qu'elles soient citees (CSS, donnees, HTML).
     photos = sorted((RACINE / 'photos').rglob('*.jpg')) + sorted((RACINE / 'photos').rglob('*.png'))
     for photo in photos:
         rel = photo.relative_to(RACINE).as_posix()

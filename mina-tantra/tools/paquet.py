@@ -28,6 +28,8 @@ A_DEPLOYER = [
     'admin/index.php', 'admin/noyau.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
     'assets/favicon-180.png', 'assets/partage.jpg',
+    'assets/polices/italiana.woff2', 'assets/polices/cormorant-300.woff2',
+    'assets/polices/cormorant-300-italique.woff2',
     'js/site.js', 'js/contenu.js',
     'data/masseuses.json', 'data/parametres.json',
     'data/reservations.json', 'data/.htaccess',

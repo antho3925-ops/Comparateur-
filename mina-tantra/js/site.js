@@ -32,8 +32,24 @@
   ['#porte-marque', '#marque-nom', '#hero-titre', '#pied-marque', '#pied-nom']
     .forEach(function (id) {
       var el = $(id);
-      if (el) el.textContent = SALON.nom;
+      if (el) { el.textContent = SALON.nom; }
     });
+
+  /* A l'arrivee, le nom se compose lettre apres lettre. */
+  (function composerLeNom() {
+    var titre = $('#hero-titre');
+    if (!titre || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+
+    var texte = titre.textContent;
+    titre.textContent = '';
+    texte.split('').forEach(function (lettre, i) {
+      var morceau = document.createElement('span');
+      morceau.className = lettre === ' ' ? 'espace' : 'lettre';
+      morceau.textContent = lettre === ' ' ? '\u00A0' : lettre;
+      morceau.style.animationDelay = (0.3 + i * 0.075) + 's';
+      titre.appendChild(morceau);
+    });
+  }());
 
   /* ------------------------------ Présentation --------------------------- */
   $('#presentation-texte').innerHTML =
