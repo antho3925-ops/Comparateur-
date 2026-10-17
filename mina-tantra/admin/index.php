@@ -92,10 +92,17 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         if ($prenom === '') {
             $erreur = 'Le prénom est obligatoire.';
         } else {
-            $specialites = array_values(array_filter(array_map(
-                'trim',
-                explode(',', (string) ($_POST['specialites'] ?? ''))
-            ), static fn ($s) => $s !== ''));
+            /* Les prestations viennent des cases cochees, plus d'eventuels
+               ajouts libres saisis a cote. */
+            $cochees = array_map('strval', (array) ($_POST['specialites'] ?? []));
+            $libres = explode(',', (string) ($_POST['specialites_autres'] ?? ''));
+            $specialites = [];
+            foreach (array_merge($cochees, $libres) as $p) {
+                $p = mb_substr(trim($p), 0, 40);
+                if ($p !== '' && !in_array($p, $specialites, true)) {
+                    $specialites[] = $p;
+                }
+            }
 
             $age = trim((string) ($_POST['age'] ?? ''));
 
@@ -277,6 +284,13 @@ input[type=tel], textarea{
 textarea{ min-height:140px; resize:vertical; }
 input[type=file]{ width:100%; color:var(--doux); font-size:.9rem; padding:12px 0; }
 .coche{ display:flex; align-items:center; gap:10px; margin-top:18px; }
+.choix{ border:1px solid var(--bord); border-radius:10px; background:var(--nuit-3); margin-bottom:10px; }
+.choix summary{ padding:13px 16px; cursor:pointer; color:var(--texte); font-size:.95rem; }
+.choix summary::marker{ color:var(--or); }
+.choix-liste{ padding:4px 16px 14px; display:grid; gap:2px; }
+.choix-ligne{ display:flex; align-items:center; gap:12px; padding:9px 0;
+              margin:0; text-transform:none; letter-spacing:0; font-size:.98rem; color:var(--texte); }
+.choix-ligne input{ width:20px; height:20px; accent-color:var(--or); flex:0 0 auto; }
 .coche label{ margin:0; text-transform:none; letter-spacing:0; font-size:.95rem; color:var(--texte); }
 .btn{ display:inline-block; padding:13px 22px; border-radius:999px; border:1px solid var(--or);
       background:var(--or); color:#1a1208; font-weight:600; font-size:.85rem; cursor:pointer;
@@ -614,9 +628,30 @@ avis($message, $erreur);
   <input type="text" id="langues" name="langues" placeholder="Français, anglais, espagnol"
          value="<?= proteger((string) ($f['langues'] ?? '')) ?>">
 
-  <label for="specialites">Spécialités, séparées par des virgules</label>
-  <input type="text" id="specialites" name="specialites" placeholder="Tantra, Body body, Érotique"
-         value="<?= proteger(implode(', ', $f['specialites'] ?? [])) ?>">
+  <?php
+    $catalogue = parametres()['prestations'] ?? [];
+    $siennes = array_values(array_filter((array) ($f['specialites'] ?? []), 'is_string'));
+    $hors = array_values(array_diff($siennes, $catalogue));
+  ?>
+  <label>Prestations proposées</label>
+  <?php if ($catalogue): ?>
+    <details class="choix"<?= $siennes ? '' : ' open' ?>>
+      <summary><?= $siennes ? proteger(implode(' · ', $siennes)) : 'Choisir les prestations' ?></summary>
+      <div class="choix-liste">
+        <?php foreach ($catalogue as $p): ?>
+          <label class="choix-ligne">
+            <input type="checkbox" name="specialites[]" value="<?= proteger($p) ?>"
+                   <?= in_array($p, $siennes, true) ? 'checked' : '' ?>>
+            <span><?= proteger($p) ?></span>
+          </label>
+        <?php endforeach; ?>
+      </div>
+    </details>
+  <?php endif; ?>
+  <input type="text" id="specialites_autres" name="specialites_autres"
+         placeholder="<?= $catalogue ? 'Autre prestation (séparées par des virgules)' : 'Tantra, Body body, Érotique' ?>"
+         value="<?= proteger(implode(', ', $catalogue ? $hors : $siennes)) ?>">
+  <p class="aide">Ce qui est coché s'affiche en pastilles sur sa fiche.</p>
 
   <label for="presentation">Présentation</label>
   <textarea id="presentation" name="presentation" placeholder="Deux ou trois phrases."><?= proteger((string) ($f['presentation'] ?? '')) ?></textarea>

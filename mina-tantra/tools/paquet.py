@@ -72,8 +72,26 @@ def ecrire_parametres() -> None:
     for jour in JOURS:
         horaires.setdefault(jour, ['09:00', '21:00'])
 
+    # La liste des prestations proposees par le salon, telle que
+    # l'administration la propose a cocher pour chaque masseuse.
+    prestations: list[str] = []
+
+    def ajouter(nom: str) -> None:
+        nom = re.sub(r'^(Massage|Supplement|Supplément)\s+', '', nom).strip()
+        if nom:
+            nom = nom[0].upper() + nom[1:]
+            if nom not in prestations:
+                prestations.append(nom)
+
+    for bloc_nom in ('TARIFS', 'SUPPLEMENTS'):
+        bloc_liste = re.search(r'const %s\s*=\s*\[(.*?)\n\];' % bloc_nom, contenu, re.S)
+        if bloc_liste:
+            for nom in re.findall(r"nom:\s*'((?:[^'\\]|\\.)*)'", bloc_liste.group(1)):
+                ajouter(nom.replace("\\'", "'"))
+
     parametres = {
         'nom': champ('nom'),
+        'prestations': prestations,
         'site': champ('site'),
         'adresse': champ('adresse'),
         'codePostal': champ('codePostal'),
