@@ -314,6 +314,9 @@
     if (!serie.length) { return; }
     rang = (n + serie.length) % serie.length;          // on boucle
     var photo = serie[rang];
+    lbImg.classList.remove('change');
+    void lbImg.offsetWidth;            // relance l'animation
+    lbImg.classList.add('change');
     lbImg.src = photo.src;
     lbImg.alt = photo.legende || '';
     lbLeg.textContent = photo.legende || '';
@@ -677,6 +680,40 @@
         });
     });
   }
+
+  /* --------------------------- Apparitions ------------------------------- */
+  /* Les blocs se revelent quand ils entrent dans l'ecran, une seule fois.
+     Les cartes d'une meme rangee se decalent legerement les unes des autres. */
+  function animerApparitions() {
+    if (!('IntersectionObserver' in window)) { return; }
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+
+    var aAnimer = document.querySelectorAll(
+      '.section .chapeau, .section .titre, .section .intro, .presentation p,'
+      + ' .atout, .rdv-carte, .fiche, .carte-tarif, .quatre-mains, .supplements,'
+      + ' .horaires, .galerie .vignette, .contact-bloc, .groupe-titre, .groupe-intro,'
+      + ' .reservation'
+    );
+
+    var observateur = new IntersectionObserver(function (entrees) {
+      entrees.forEach(function (e) {
+        if (!e.isIntersecting) { return; }
+        var rangDansLaRangee = Array.prototype.indexOf.call(
+          e.target.parentElement.children, e.target
+        );
+        e.target.style.transitionDelay = Math.min(rangDansLaRangee, 5) * 70 + 'ms';
+        e.target.classList.add('vu');
+        observateur.unobserve(e.target);
+      });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+
+    Array.prototype.forEach.call(aAnimer, function (el) {
+      el.classList.add('apparait');
+      observateur.observe(el);
+    });
+  }
+
+  animerApparitions();
 
   /* --------------------------- Menu & navigation ------------------------- */
   var entete = $('#entete');
