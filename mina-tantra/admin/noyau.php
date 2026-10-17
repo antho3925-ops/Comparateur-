@@ -480,8 +480,10 @@ function creneaux_libres(string $masseuse, string $date, int $duree): array
         return $n;
     };
 
+    /* Un rendez-vous peut commencer jusqu'a l'heure de fermeture : le dernier
+       de la journee se termine donc apres, comme au salon. */
     $libres = [];
-    for ($t = $ouverture; $t + $duree * 60 <= $fermeture; $t += PAS_MINUTES * 60) {
+    for ($t = $ouverture; $t <= $fermeture; $t += PAS_MINUTES * 60) {
         if ($t < $plancher) {
             continue;
         }
