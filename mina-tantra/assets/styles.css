@@ -212,6 +212,17 @@ a{ color:inherit; }
 .vignette-mini img{ transition:transform .4s ease, opacity .3s ease; opacity:.85; }
 .vignette-mini:hover img{ opacity:1; }
 
+/* Les masseuses annoncees mais pas encore la : meme presentation, un cran
+   en retrait, et aucun bouton d'appel. */
+.bientot{ margin-top:64px; padding-top:40px; border-top:1px solid var(--bord); }
+.bientot-titre{
+  font-family:var(--serif); font-weight:400; font-size:1.7rem; margin:0 0 8px;
+  color:var(--texte);
+}
+.bientot-intro{ color:var(--texte-doux); font-size:.94rem; margin:0 0 28px; max-width:560px; }
+.fiche-attente{ opacity:.78; }
+.fiche-attente:hover{ opacity:1; }
+
 /* ------------------------------- Horaires -------------------------------- */
 .horaires{ width:100%; border-collapse:collapse; }
 .horaires td{ padding:15px 4px; border-bottom:1px solid var(--bord); }

@@ -50,8 +50,6 @@
     ? window.MASSEUSES_SERVEUR
     : MASSEUSES;
 
-  var solo = fiches.length === 1;
-
   /* Une masseuse peut n'etre la que sur une periode donnee. Les deux dates
      sont facultatives : sans elles, elle est consideree comme permanente. */
   function jour(iso) {
@@ -65,6 +63,10 @@
     return d.toLocaleDateString('fr-CH', options);
   }
 
+  /* Trois situations, et une seule compte vraiment pour le client :
+     'ici'     — elle recoit en ce moment ;
+     'avenir'  — elle arrive a une date connue ;
+     'absente' — elle n'est pas la, sans date de retour. */
   function presence(m) {
     var debut = jour(m.debut);
     var fin = jour(m.fin);
@@ -72,14 +74,14 @@
     aujourdhui.setHours(0, 0, 0, 0);
 
     if (m.disponible === false || (fin && aujourdhui > fin)) {
-      return { badge: 'Bientôt de retour', absente: true, ligne: null };
+      return { etat: 'absente', badge: 'Bientôt de retour', ligne: null };
     }
     if (debut && aujourdhui < debut) {
       var meme = fin && debut.getMonth() === fin.getMonth()
                      && debut.getFullYear() === fin.getFullYear();
       return {
+        etat: 'avenir',
         badge: 'À partir du ' + enFrancais(debut),
-        absente: false,
         ligne: fin
           ? 'Présente du ' + (meme ? debut.getDate() : enFrancais(debut))
             + ' au ' + enFrancais(fin)
@@ -87,19 +89,18 @@
       };
     }
     if (fin) {
-      return { badge: 'Disponible', absente: false, ligne: "Jusqu'au " + enFrancais(fin) };
+      return { etat: 'ici', badge: 'Disponible', ligne: "Jusqu'au " + enFrancais(fin) };
     }
-    return { badge: 'Disponible', absente: false, ligne: null };
+    return { etat: 'ici', badge: 'Disponible', ligne: null };
   }
-  $('#masseuses-chapeau').textContent = solo ? 'Qui vous reçoit' : 'Notre équipe';
-  $('#masseuses-titre').textContent   = solo ? 'La masseuse' : 'Les masseuses';
-  $('#masseuses-intro').textContent   = typeof MASSEUSES_INTRO === 'string' ? MASSEUSES_INTRO : '';
-  $('#grille-masseuses').classList.toggle('solo', solo);
 
-  $('#grille-masseuses').innerHTML = fiches.map(function (m) {
+  /* Construit une fiche. Le bouton d'appel n'apparait que pour les masseuses
+     presentes : proposer d'appeler quelqu'un qui n'est pas la ne sert
+     qu'a decevoir. */
+  function carteMasseuse(m, avecAppel) {
     var meta = [];
-    if (m.age)     meta.push(m.age + ' ans');
-    if (m.origine) meta.push(m.origine);
+    if (m.age)     { meta.push(m.age + ' ans'); }
+    if (m.origine) { meta.push(m.origine); }
 
     var principale = m.photo || (m.photos && m.photos[0]);
     var photo = principale
@@ -108,22 +109,20 @@
       : '';
 
     var ici = presence(m);
-    var etat = '<span class="fiche-etat' + (ici.absente ? ' absente' : '') + '">'
+    var etat = '<span class="fiche-etat' + (ici.etat === 'ici' ? '' : ' absente') + '">'
              + esc(ici.badge) + '</span>';
 
     var tags = (m.specialites || []).map(function (s) {
       return '<span class="tag">' + esc(s) + '</span>';
     }).join('');
 
-    /* Une masseuse peut donner son propre numero ; sinon le client appelle
-       celui du salon, indique plus bas dans la page. */
     var sonNumero = (m.telephone || '').trim();
-    var appel = sonNumero
+    var appel = (avecAppel && sonNumero)
       ? '<a class="fiche-tel" href="tel:' + esc(sonNumero.replace(/[^\d+]/g, '')) + '">'
         + 'Appeler ' + esc(m.prenom) + ' &middot; ' + esc(sonNumero) + '</a>'
       : '';
 
-    var vignettes = (m.photos || []).map(function (src, i) {
+    var vignettes = (m.photos || []).map(function (src) {
       return '<button type="button" class="vignette vignette-mini"' +
                ' data-src="' + esc(src) + '" data-legende="' + esc(m.prenom) + '">' +
                '<img src="' + esc(src) + '" alt="' + esc(m.prenom) + '" loading="lazy"' +
@@ -132,7 +131,7 @@
     }).join('');
 
     return '' +
-      '<article class="fiche">' +
+      '<article class="fiche' + (avecAppel ? '' : ' fiche-attente') + '">' +
         '<div class="fiche-photo">' +
           '<span class="fiche-initiale">' + esc((m.prenom || '?').charAt(0)) + '</span>' +
           photo + etat +
@@ -148,7 +147,39 @@
           (vignettes ? '<div class="fiche-vignettes">' + vignettes + '</div>' : '') +
         '</div>' +
       '</article>';
-  }).join('');
+  }
+
+  /* Deux groupes nettement separes : celles qui recoivent aujourd'hui,
+     et celles qu'on annonce. */
+  var presentes = [];
+  var bientot = [];
+  fiches.forEach(function (m) {
+    (presence(m).etat === 'ici' ? presentes : bientot).push(m);
+  });
+
+  var solo = presentes.length === 1;
+  $('#masseuses-chapeau').textContent = solo ? 'Qui vous reçoit' : 'Notre équipe';
+  $('#masseuses-titre').textContent   = solo ? 'La masseuse' : 'Les masseuses';
+  $('#masseuses-intro').textContent   = typeof MASSEUSES_INTRO === 'string' ? MASSEUSES_INTRO : '';
+
+  var grille = $('#grille-masseuses');
+  grille.classList.toggle('solo', solo);
+  grille.innerHTML = presentes.map(function (m) { return carteMasseuse(m, true); }).join('');
+
+  if (!presentes.length) {
+    grille.innerHTML = '<p class="intro">Aucune masseuse au salon en ce moment. '
+      + 'Appelez-nous, nous vous dirons qui revient et quand.</p>';
+  }
+
+  var bloc = $('#bloc-bientot');
+  if (bloc) {
+    bloc.hidden = bientot.length === 0;
+    $('#bientot-intro').textContent = bientot.length > 1
+      ? 'Elles ne reçoivent pas aujourd\'hui. Appelez le salon pour savoir quand elles reviennent.'
+      : 'Elle ne reçoit pas aujourd\'hui. Appelez le salon pour savoir quand elle revient.';
+    $('#grille-bientot').innerHTML =
+      bientot.map(function (m) { return carteMasseuse(m, false); }).join('');
+  }
 
   /* -------------------------------- Horaires ----------------------------- */
   var jourJs = new Date().getDay();                       // 0 = dimanche
