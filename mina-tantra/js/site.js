@@ -261,6 +261,13 @@
            '</article>';
   }).join('');
 
+  if (typeof QUATRE_MAINS !== 'undefined' && $('#quatre-mains')) {
+    $('#quatre-mains').hidden = false;
+    $('#quatre-mains-titre').textContent = QUATRE_MAINS.titre || '';
+    $('#quatre-mains-texte').textContent = QUATRE_MAINS.texte || '';
+    $('#quatre-mains-note').textContent = QUATRE_MAINS.note || '';
+  }
+
   $('#supplements').innerHTML = SUPPLEMENTS.map(function (s) {
     return '<li><span class="supp-nom">' + esc(s.nom) + '</span>' +
            '<span class="supp-prix">' + esc(s.prix) + '</span></li>';
@@ -413,6 +420,12 @@
       document.querySelectorAll('a[href="#contact"]'),
       function (a) { a.setAttribute('href', '#reserver'); }
     );
+
+    if ($('#reserver-note-duo') && typeof QUATRE_MAINS !== 'undefined') {
+      $('#reserver-note-duo').textContent =
+        'Le formulaire réserve une masseuse. Pour un massage à quatre mains, '
+        + 'appelez-nous : nous composons le duo avec vous.';
+    }
 
     var champMasseuse   = $('#r-masseuse');
     var champPrestation = $('#r-prestation');

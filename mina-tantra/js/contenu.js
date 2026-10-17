@@ -125,6 +125,14 @@ const TARIFS = [
     ],
   },
   {
+    nom: 'Massage nuru',
+    resume: "Le corps à corps venu du Japon : un gel épais et tiède, aucune friction, un glissé continu de la nuque aux pieds.",
+    lignes: [
+      { duree: '40 minutes', prix: 'CHF 250.–' },
+      { duree: '1 heure',    prix: 'CHF 350.–' },
+    ],
+  },
+  {
     nom: 'Massage tantra',
     resume: "Le soin signature de la maison : respiration guidée, lenteur et travail sur tout le corps.",
     lignes: [
@@ -142,6 +150,15 @@ const TARIFS = [
     ],
   },
 ];
+
+/* Le quatre mains n'a pas de tarif propre : il double celui du soin choisi.
+   Il s'affiche donc dans son propre encadré, sous la grille. */
+const QUATRE_MAINS = {
+  nom: 'Quatre mains',
+  titre: 'À quatre mains',
+  texte: "Deux masseuses pour vous seul : deux fois plus de mains, deux fois plus de sensations. Le principe s'applique à n'importe quelle prestation de la grille.",
+  note: "Tarif : le double du soin choisi. À convenir par téléphone, selon les masseuses présentes.",
+};
 
 /* Les suppléments, affichés sous les tarifs. */
 const SUPPLEMENTS = [

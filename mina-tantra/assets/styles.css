@@ -282,6 +282,20 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
 .lignes .duree{ font-size:.84rem; letter-spacing:.1em; text-transform:uppercase; color:var(--texte-doux); }
 .lignes .prix{ font-family:var(--serif); font-size:1.2rem; color:var(--or-clair); white-space:nowrap; }
 
+/* Le quatre mains : un encadre a part, puisque son prix depend du soin. */
+.quatre-mains{
+  margin-top:26px; border:1px solid var(--or); border-radius:16px;
+  padding:28px 26px; background:rgba(201,162,39,.06);
+}
+.quatre-mains h3{
+  font-family:var(--serif); font-weight:400; font-size:1.7rem; margin:0 0 10px;
+}
+.quatre-mains p{ margin:0; color:var(--texte-doux); font-size:.96rem; max-width:620px; }
+.quatre-mains-note{
+  margin-top:14px !important; color:var(--or-clair) !important;
+  font-size:.9rem !important; letter-spacing:.03em;
+}
+
 .supplements{
   margin-top:26px; border:1px dashed var(--bord); border-radius:16px;
   padding:24px 26px; background:rgba(255,255,255,.015);

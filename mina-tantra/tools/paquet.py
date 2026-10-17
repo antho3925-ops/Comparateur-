@@ -89,6 +89,12 @@ def ecrire_parametres() -> None:
             for nom in re.findall(r"nom:\s*'((?:[^'\\]|\\.)*)'", bloc_liste.group(1)):
                 ajouter(nom.replace("\\'", "'"))
 
+    quatre = re.search(r"const QUATRE_MAINS\s*=\s*\{(.*?)\n\};", contenu, re.S)
+    if quatre:
+        nom = re.search(r"nom:\s*'((?:[^'\\]|\\.)*)'", quatre.group(1))
+        if nom:
+            ajouter(nom.group(1))
+
     parametres = {
         'nom': champ('nom'),
         'prestations': prestations,
