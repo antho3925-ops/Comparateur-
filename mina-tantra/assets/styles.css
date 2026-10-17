@@ -83,6 +83,20 @@ a{ color:inherit; }
   to   { opacity:1; transform:none; filter:blur(0); }
 }
 .hero-titre .lettre{ display:inline-block; animation:poseLettre 1.1s both cubic-bezier(.16,.8,.3,1); }
+
+/* Le C tient lieu d'emblème : agrandi partout, et habité dans le grand titre. */
+.marque-nom::first-letter,
+.pied-marque::first-letter,
+.porte-marque::first-letter{ font-size:1.5em; line-height:0; }
+
+.hero-titre .grand-c{
+  position:relative; font-size:1.72em; line-height:.7; vertical-align:-.118em;
+}
+.hero-titre .grand-c .figure{
+  position:absolute; left:17%; top:55%; width:102%;
+  transform:rotate(-9deg); color:var(--or); pointer-events:none;
+}
+.hero-titre .grand-c .figure svg{ width:100%; height:auto; display:block; }
 .hero-titre .espace{ display:inline-block; width:.26em; }
 .hero-slogan { animation:monte 1.1s 1.1s both cubic-bezier(.16,.8,.3,1); }
 .hero-actions{ animation:monte 1.1s 1.35s both cubic-bezier(.16,.8,.3,1); }
