@@ -289,22 +289,95 @@
   var lightbox = $('#lightbox');
   var lbImg = $('#lightbox-img');
   var lbLeg = $('#lightbox-legende');
+  var lbCompteur = $('#lightbox-compteur');
+
+  /* La visionneuse travaille sur une serie : les vignettes d'une meme fiche,
+     ou les photos du salon. On y circule avec les fleches, le clavier ou le
+     doigt, sans avoir a ressortir. */
+  var serie = [];
+  var rang = 0;
+
+  function vignettesVoisines(bouton) {
+    var groupe = bouton.closest('.fiche-vignettes')
+              || bouton.closest('#grille-galerie')
+              || bouton.parentElement;
+    return Array.prototype.filter.call(
+      groupe.querySelectorAll('.vignette'),
+      function (v) {
+        var img = v.querySelector('img');
+        return img && img.style.display !== 'none';
+      }
+    );
+  }
+
+  function afficherPhoto(n) {
+    if (!serie.length) { return; }
+    rang = (n + serie.length) % serie.length;          // on boucle
+    var photo = serie[rang];
+    lbImg.src = photo.src;
+    lbImg.alt = photo.legende || '';
+    lbLeg.textContent = photo.legende || '';
+    lbCompteur.textContent = serie.length > 1
+      ? (rang + 1) + ' / ' + serie.length : '';
+    lightbox.classList.toggle('seule', serie.length < 2);
+  }
+
+  function ouvrirLightbox(boutons, depart) {
+    serie = boutons.map(function (v) {
+      return { src: v.dataset.src, legende: v.dataset.legende || '' };
+    });
+    afficherPhoto(depart);
+    lightbox.hidden = false;
+    document.body.classList.add('bloque');
+  }
 
   document.addEventListener('click', function (ev) {
     var bouton = ev.target.closest('.vignette');
-    if (!bouton) return;
-    var img = bouton.querySelector('img');
-    if (!img || img.style.display === 'none') return;      // pas de photo déposée
-    lbImg.src = bouton.dataset.src;
-    lbImg.alt = bouton.dataset.legende || '';
-    lbLeg.textContent = bouton.dataset.legende || '';
-    lightbox.hidden = false;
-    document.body.classList.add('bloque');
+    if (bouton) {
+      var img = bouton.querySelector('img');
+      if (!img || img.style.display === 'none') { return; }   // pas de photo déposée
+      var voisines = vignettesVoisines(bouton);
+      ouvrirLightbox(voisines, voisines.indexOf(bouton));
+      return;
+    }
+
+    /* La grande photo d'une fiche ouvre la meme serie, des la premiere. */
+    var cadre = ev.target.closest('.fiche-photo');
+    if (cadre) {
+      var fiche = cadre.closest('.fiche');
+      var galerie = fiche && fiche.querySelector('.fiche-vignettes');
+      if (galerie) {
+        var toutes = vignettesVoisines(galerie.querySelector('.vignette'));
+        if (toutes.length) { ouvrirLightbox(toutes, 0); }
+      }
+    }
   });
+
+  $('#lightbox-precedent').addEventListener('click', function (ev) {
+    ev.stopPropagation();
+    afficherPhoto(rang - 1);
+  });
+  $('#lightbox-suivant').addEventListener('click', function (ev) {
+    ev.stopPropagation();
+    afficherPhoto(rang + 1);
+  });
+
+  /* Le glissement du doigt, comme dans une galerie de telephone. */
+  var departX = null;
+  lightbox.addEventListener('touchstart', function (ev) {
+    departX = ev.changedTouches[0].clientX;
+  }, { passive: true });
+  lightbox.addEventListener('touchend', function (ev) {
+    if (departX === null) { return; }
+    var ecart = ev.changedTouches[0].clientX - departX;
+    departX = null;
+    if (Math.abs(ecart) > 50) { afficherPhoto(rang + (ecart < 0 ? 1 : -1)); }
+  }, { passive: true });
 
   function fermerLightbox() {
     lightbox.hidden = true;
     lbImg.src = '';
+    serie = [];
     document.body.classList.remove('bloque');
   }
   $('#lightbox-fermer').addEventListener('click', fermerLightbox);
@@ -312,7 +385,10 @@
     if (ev.target === lightbox) fermerLightbox();
   });
   document.addEventListener('keydown', function (ev) {
-    if (ev.key === 'Escape' && !lightbox.hidden) fermerLightbox();
+    if (lightbox.hidden) { return; }
+    if (ev.key === 'Escape')     { fermerLightbox(); }
+    if (ev.key === 'ArrowLeft')  { afficherPhoto(rang - 1); }
+    if (ev.key === 'ArrowRight') { afficherPhoto(rang + 1); }
   });
 
   /* -------------------------------- Contact ------------------------------ */
