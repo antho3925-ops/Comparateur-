@@ -324,7 +324,7 @@ function proteger(string $texte): string
 
 const FICHIER_RESERVATIONS = RACINE . '/data/reservations.json';
 const FICHIER_PARAMETRES   = RACINE . '/data/parametres.json';
-const PAS_MINUTES          = 30;   // les rendez-vous commencent a l'heure ou a la demie
+const PAS_MINUTES          = 15;   // les rendez-vous commencent tous les quarts d'heure
 const DELAI_MINIMUM_HEURES = 2;    // on ne reserve pas pour dans dix minutes
 const JOURS_RESERVABLES    = 30;   // on ne reserve pas pour dans six mois
 const DUREES_ADMISES       = [30, 40, 45, 60, 90, 120];

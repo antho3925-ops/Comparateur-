@@ -639,9 +639,26 @@
               + 'Essayez un autre jour, ou appelez-nous.</p>';
             return;
           }
-          zoneCreneaux.innerHTML = libres.map(function (h) {
-            return '<button type="button" class="creneau" data-heure="' + esc(h) + '">'
-                 + esc(h.replace(':', 'h')) + '</button>';
+          /* Les quarts d'heure font une longue liste : on la coupe en trois
+             moments de la journee pour qu'elle reste lisible au telephone. */
+          var moments = [
+            { titre: 'Matin',       jusqua: 12 },
+            { titre: 'Après-midi',  jusqua: 18 },
+            { titre: 'Soirée',      jusqua: 24 },
+          ];
+          var debut = 0;
+          zoneCreneaux.innerHTML = moments.map(function (moment) {
+            var heures = libres.filter(function (h) {
+              var n = parseInt(h, 10);
+              return n >= debut && n < moment.jusqua;
+            });
+            debut = moment.jusqua;
+            if (!heures.length) { return ''; }
+            return '<p class="creneaux-moment">' + esc(moment.titre) + '</p>'
+                 + heures.map(function (h) {
+                     return '<button type="button" class="creneau" data-heure="' + esc(h) + '">'
+                          + esc(h.replace(':', 'h')) + '</button>';
+                   }).join('');
           }).join('');
         })
         .catch(function () {

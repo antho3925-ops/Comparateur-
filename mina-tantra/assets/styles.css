@@ -427,6 +427,11 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
 
 .creneaux{ display:flex; flex-wrap:wrap; gap:10px; min-height:46px; align-items:flex-start; }
 .creneaux .note{ margin:0; }
+.creneaux-moment{
+  flex-basis:100%; margin:6px 0 0; font-size:.68rem; letter-spacing:.22em;
+  text-transform:uppercase; color:var(--or);
+}
+.creneaux-moment:first-child{ margin-top:0; }
 .creneau{
   padding:11px 18px; border-radius:999px; border:1px solid var(--bord);
   background:transparent; color:var(--texte); font:inherit; font-size:.9rem;
