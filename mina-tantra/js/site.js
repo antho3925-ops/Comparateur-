@@ -35,24 +35,6 @@
       if (el) { el.textContent = SALON.nom; }
     });
 
-  /* La silhouette allongee dans la courbure du C, dessinee au trait plein.
-     Elle n'apparait que dans le grand titre d'accueil : plus bas, a la
-     taille du menu, elle ne serait qu'une tache. */
-  var SILHOUETTE =
-    '<span class="figure" aria-hidden="true"><svg viewBox="0 0 200 110">'
-    + '<g fill="currentColor">'
-    + '<path d="M34 34 C 22 32, 14 40, 16 50 C 18 58, 26 62, 32 58 C 26 52, 26 42, 36 38 Z"/>'
-    + '<circle cx="42" cy="42" r="8.5"/>'
-    + '<path d="M56 54 C 52 44, 44 36, 34 34 C 30 33, 29 37, 33 39 C 41 42, 47 49, 51 58 Z"/>'
-    + '<path d="M50 58 C 56 48, 66 46, 74 52 C 84 60, 90 66, 98 66 C 108 66, 114 50, 126 42'
-    + ' C 138 34, 150 44, 152 58 C 153 64, 150 70, 144 74 C 132 80, 112 80, 96 78'
-    + ' C 78 76, 60 72, 52 66 Z"/>'
-    + '<path d="M148 56 C 158 64, 168 72, 180 78 C 186 81, 192 82, 195 84 L 193 90'
-    + ' C 184 90, 172 86, 160 80 C 150 75, 142 68, 140 62 Z"/>'
-    + '<path d="M142 70 C 152 78, 164 84, 176 88 L 174 93 C 160 92, 146 88, 136 82'
-    + ' C 132 79, 132 73, 136 70 Z"/>'
-    + '</g></svg></span>';
-
   /* A l'arrivee, le nom se compose lettre apres lettre. */
   (function composerLeNom() {
     var titre = $('#hero-titre');
@@ -65,10 +47,7 @@
       morceau.className = lettre === ' ' ? 'espace' : 'lettre';
       morceau.textContent = lettre === ' ' ? '\u00A0' : lettre;
       morceau.style.animationDelay = (0.3 + i * 0.075) + 's';
-      if (i === 0) {
-        morceau.classList.add('grand-c');
-        morceau.insertAdjacentHTML('beforeend', SILHOUETTE);
-      }
+      if (i === 0) { morceau.classList.add('grand-c'); }
       titre.appendChild(morceau);
     });
   }());
