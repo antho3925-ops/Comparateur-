@@ -37,10 +37,27 @@ $injection = '<script>window.MASSEUSES_SERVEUR = '
         | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
     . ';</script>';
 
-header('Content-Type: text/html; charset=utf-8');
-header('X-Content-Type-Options: nosniff');
-echo str_replace(
+$modele = str_replace(
     '<script src="js/site.js"></script>',
     $injection . "\n" . '<script src="js/site.js"></script>',
     $modele
 );
+
+/* Les navigateurs gardent longtemps les feuilles de style et les scripts en
+   memoire. On accroche a leur adresse la date du fichier : apres chaque mise
+   a jour l'adresse change, le navigateur telecharge la nouvelle version, et
+   le visiteur n'a rien a faire. */
+foreach (['assets/styles.css', 'js/contenu.js', 'js/site.js'] as $ressource) {
+    $date = @filemtime(__DIR__ . '/' . $ressource);
+    if ($date) {
+        $modele = str_replace(
+            '"' . $ressource . '"',
+            '"' . $ressource . '?v=' . $date . '"',
+            $modele
+        );
+    }
+}
+
+header('Content-Type: text/html; charset=utf-8');
+header('X-Content-Type-Options: nosniff');
+echo $modele;

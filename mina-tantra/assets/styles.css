@@ -89,6 +89,9 @@ a{ color:inherit; }
 .pied-marque::first-letter,
 .porte-marque::first-letter{ font-size:1.5em; line-height:0; }
 
+/* Sans JavaScript le nom n'est pas decoupe : le C grandit tout de meme. */
+.hero-titre:not(.compose)::first-letter{ font-size:1.72em; line-height:.7; }
+
 .hero-titre .grand-c{
   display:inline-block; font-size:1.72em; line-height:.7; vertical-align:-.118em;
 }

@@ -38,18 +38,23 @@
   /* A l'arrivee, le nom se compose lettre apres lettre. */
   (function composerLeNom() {
     var titre = $('#hero-titre');
-    if (!titre || window.matchMedia('(prefers-reduced-motion: reduce)').matches) { return; }
+    if (!titre) { return; }
 
+    /* Le nom est toujours decoupe lettre par lettre : c'est ainsi que le C
+       recoit sa taille d'embleme. Seule la mise en place animee est laissee
+       de cote quand le visiteur demande moins de mouvement. */
+    var anime = !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var texte = titre.textContent;
     titre.textContent = '';
     texte.split('').forEach(function (lettre, i) {
       var morceau = document.createElement('span');
       morceau.className = lettre === ' ' ? 'espace' : 'lettre';
       morceau.textContent = lettre === ' ' ? '\u00A0' : lettre;
-      morceau.style.animationDelay = (0.3 + i * 0.075) + 's';
+      if (anime) { morceau.style.animationDelay = (0.3 + i * 0.075) + 's'; }
       if (i === 0) { morceau.classList.add('grand-c'); }
       titre.appendChild(morceau);
     });
+    titre.classList.add('compose');
   }());
 
   /* ------------------------------ Présentation --------------------------- */
