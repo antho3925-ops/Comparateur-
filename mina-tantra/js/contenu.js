@@ -225,7 +225,10 @@ const GALERIE = [
 /* ----------------------------------- REGLES -------------------------------- */
 const REGLES = [
   'Salon réservé aux personnes majeures (18 ans révolus).',
-  "Hygiène irréprochable exigée — une douche est à votre disposition à l'arrivée.",
+  "Hygiène irréprochable exigée : la douche se prend à l'arrivée, et le linge est frais à chaque soin.",
+  "Les prestations sont celles de la grille des tarifs. Rien ne se négocie sur place, ni le prix ni le reste.",
+  "Merci d'arriver à l'heure : au-delà d'un quart d'heure de retard, le rendez-vous peut être écourté ou annulé.",
+  "Un rendez-vous manqué sans prévenir, deux fois, et nous ne prenons plus de réservation.",
   "La masseuse est libre d'accepter ou de refuser une demande, sans discussion.",
   'Aucune photo, aucune vidéo, aucun enregistrement dans le salon.',
   "Toute personne en état d'ébriété ou irrespectueuse sera raccompagnée.",

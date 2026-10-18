@@ -319,12 +319,25 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
     }
 
     if ($action === 'supprimer' && $position !== null) {
-        foreach ($liste[$position]['photos'] ?? [] as $photo) {
-            supprimer_photo((string) $photo);
-        }
+        $partie = (string) ($liste[$position]['prenom'] ?? '');
+        $reste = effacer_masseuse((string) ($liste[$position]['id'] ?? ''));
         array_splice($liste, $position, 1);
         ecrire_fiches($liste);
-        header('Location: index.php?m=' . urlencode('Fiche supprimée.'));
+
+        $avis = 'Fiche de ' . $partie . ' supprimée, '
+            . ($reste['photos'] ? $reste['photos'] . ' photo'
+                . ($reste['photos'] > 1 ? 's' : '') . ' effacée'
+                . ($reste['photos'] > 1 ? 's' : '') . ' du serveur'
+               : 'aucune photo à effacer')
+            . '. Ses rendez-vous passés restent pour le décompte.';
+        if ($reste['a_venir']) {
+            $avis .= $reste['a_venir'] > 1
+                ? ' Attention : ' . $reste['a_venir'] . ' rendez-vous à venir étaient prévus '
+                  . 'avec elle — pensez à appeler ces clients.'
+                : ' Attention : un rendez-vous à venir était prévu avec elle — '
+                  . 'pensez à appeler ce client.';
+        }
+        header('Location: index.php?' . ($reste['a_venir'] ? 'e=1&' : '') . 'm=' . urlencode($avis));
         exit;
     }
 
@@ -373,6 +386,18 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
                 $message = $erreur === null ? 'Identifiants modifiés.' : null;
             }
         }
+    }
+}
+
+/* Les photos deja en ligne recoivent leur filigrane a la premiere visite
+   de l'administration, quelques-unes par page pour ne pas faire attendre. */
+if (est_connecte()) {
+    $marquees = marquer_photos();
+    if ($marquees > 0) {
+        $reste = count(photos_sans_filigrane());
+        $message = $marquees . ' photo' . ($marquees > 1 ? 's' : '') . ' marquée'
+            . ($marquees > 1 ? 's' : '') . ' au nom du salon'
+            . ($reste ? ' — ' . $reste . ' encore à faire, rechargez la page.' : '.');
     }
 }
 
@@ -1476,7 +1501,10 @@ avis($message, $erreur);
 
 <?php if (!$nouvelle): ?>
   <div class="pied">
-    <form method="post" onsubmit="return confirm('Supprimer définitivement cette fiche et ses photos ?');">
+    <p class="aide">Supprimer sa fiche efface aussi toutes ses photos du serveur,
+       définitivement, et retire son lien de planning. Ses rendez-vous passés
+       restent dans le décompte, à son prénom.</p>
+    <form method="post" onsubmit="return confirm('Supprimer définitivement cette fiche et effacer toutes ses photos du serveur ?');">
       <input type="hidden" name="jeton" value="<?= jeton() ?>">
       <input type="hidden" name="action" value="supprimer">
       <input type="hidden" name="id" value="<?= proteger((string) $f['id']) ?>">

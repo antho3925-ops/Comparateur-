@@ -264,6 +264,7 @@ function enregistrer_photo(array $envoi, string $id): array
         $reduite = imagecreatetruecolor($nl, $nh);
         imagefill($reduite, 0, 0, imagecolorallocate($reduite, 255, 255, 255));
         imagecopyresampled($reduite, $source, 0, 0, 0, 0, $nl, $nh, $l, $h);
+        poser_filigrane($reduite);
         $ok = imagejpeg($reduite, $destination, 85);
         imagedestroy($source);
         imagedestroy($reduite);
@@ -278,7 +279,46 @@ function enregistrer_photo(array $envoi, string $id): array
     }
 
     @chmod($destination, 0664);
+    /* Elle porte deja sa marque : la passe sur les anciennes photos doit
+       la laisser tranquille. */
+    noter_photo_marquee('photos/masseuses/' . $nom);
     return ['erreur' => null, 'chemin' => 'photos/masseuses/' . $nom];
+}
+
+/**
+ * Efface tout ce qui reste d'une masseuse sur le serveur : ses photos, y
+ * compris celles qui ne figurent plus dans sa fiche, et la cle de son
+ * planning. Les rendez-vous, eux, restent : ils tiennent la comptabilite
+ * du salon, et ne portent que son prenom.
+ *
+ * Rend ce qui a ete fait, pour pouvoir le dire.
+ */
+function effacer_masseuse(string $id): array
+{
+    $photos = 0;
+    foreach (glob(DOSSIER_PHOTOS . '/' . $id . '-*') ?: [] as $fichier) {
+        if (is_file($fichier) && @unlink($fichier)) {
+            $photos++;
+        }
+    }
+
+    $c = config();
+    if (isset($c['cles_planning'][$id])) {
+        unset($c['cles_planning'][$id]);
+        ecrire_config($c);
+    }
+
+    $aVenir = 0;
+    $maintenant = date('Y-m-d H:i');
+    foreach (reservations() as $r) {
+        if (($r['masseuse'] ?? '') === $id
+            && (string) ($r['debut'] ?? '') >= $maintenant
+            && (string) ($r['etat'] ?? '') !== 'annule') {
+            $aVenir++;
+        }
+    }
+
+    return ['photos' => $photos, 'a_venir' => $aVenir];
 }
 
 /** Supprime une photo du disque, en refusant tout chemin sortant du dossier. */
@@ -655,3 +695,6 @@ require __DIR__ . '/attente.php';
 
 /* La caisse et le decompte de fin de semaine. */
 require __DIR__ . '/comptes.php';
+
+/* Le filigrane pose sur les photos. */
+require __DIR__ . '/filigrane.php';

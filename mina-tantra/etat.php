@@ -48,6 +48,7 @@ $temoins = [
     'L’annulation par le client' => is_file($racine . '/annuler.php'),
     'La caisse et le décompte' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/comptes.php'"),
     'Le planning des masseuses' => is_file($racine . '/planning.php'),
+    'Le filigrane des photos' => is_file($racine . '/assets/polices/italiana.ttf'),
 ];
 
 $ancienne = is_file($racine . '/index.html');
