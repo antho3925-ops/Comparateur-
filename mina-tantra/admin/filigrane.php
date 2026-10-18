@@ -102,6 +102,12 @@ function poser_filigrane($image): bool
    repasser : le journal porte donc le nom de la marque en cours. */
 const FORME_FILIGRANE = 'ruban-rouge-1';
 
+/**
+ * Le journal retient, pour chaque photo marquee, la date du fichier a ce
+ * moment-la. Une photo remplacee depuis -- par une mise a jour, par FTP,
+ * par une restauration -- a une autre date : elle repasse donc sous la
+ * banniere au lieu de rester oubliee.
+ */
 function journal_filigrane(): array
 {
     if (!is_readable(JOURNAL_FILIGRANE)) {
@@ -111,14 +117,24 @@ function journal_filigrane(): array
     if (!is_array($lu) || ($lu['forme'] ?? '') !== FORME_FILIGRANE) {
         return [];          /* une autre marque : tout est a refaire */
     }
-    return is_array($lu['faites'] ?? null) ? $lu['faites'] : [];
+    $faites = $lu['faites'] ?? [];
+    if (!is_array($faites)) {
+        return [];
+    }
+    /* Ancien journal, simple liste de noms : on repart de zero, c'est plus
+       sur que de deviner. (array_is_list demanderait PHP 8.1 ; une cle
+       entiere suffit a reconnaitre une liste.) */
+    if ($faites && is_int(array_key_first($faites))) {
+        return [];
+    }
+    return $faites;
 }
 
-function ecrire_journal_filigrane(array $faits): bool
+function ecrire_journal_filigrane(array $faites): bool
 {
     return (bool) @file_put_contents(
         JOURNAL_FILIGRANE,
-        json_encode(['forme' => FORME_FILIGRANE, 'faites' => array_values(array_unique($faits))],
+        json_encode(['forme' => FORME_FILIGRANE, 'faites' => $faites],
             JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT),
         LOCK_EX
     );
@@ -137,11 +153,18 @@ function toutes_les_photos(): array
     return $liste;
 }
 
-/** Celles qui n'ont pas encore recu la marque. */
+/** Celles qui n'ont pas la marque, ou qui ont change depuis. */
 function photos_sans_filigrane(): array
 {
     $faites = journal_filigrane();
-    return array_values(array_diff(toutes_les_photos(), $faites));
+    $restent = [];
+    foreach (toutes_les_photos() as $rel) {
+        $date = (int) @filemtime(RACINE . '/' . $rel);
+        if ((int) ($faites[$rel] ?? 0) !== $date) {
+            $restent[] = $rel;
+        }
+    }
+    return $restent;
 }
 
 /* Le temps qu'on s'autorise a marquer des photos dans une page de
@@ -171,7 +194,7 @@ function marquer_photos(int $combien = 200): int
         $chemin = RACINE . '/' . $rel;
         $image = @imagecreatefromstring((string) @file_get_contents($chemin));
         if ($image === false) {
-            $faites[] = $rel;       /* illisible : inutile d'y revenir */
+            $faites[$rel] = (int) @filemtime($chemin);   /* illisible : on n'y revient pas */
             continue;
         }
         if (poser_filigrane($image)) {
@@ -179,7 +202,8 @@ function marquer_photos(int $combien = 200): int
             $faits++;
         }
         imagedestroy($image);
-        $faites[] = $rel;
+        clearstatcache(true, $chemin);
+        $faites[$rel] = (int) @filemtime($chemin);
     }
 
     ecrire_journal_filigrane($faites);
@@ -190,6 +214,7 @@ function marquer_photos(int $combien = 200): int
 function noter_photo_marquee(string $rel): void
 {
     $faites = journal_filigrane();
-    $faites[] = $rel;
+    clearstatcache(true, RACINE . '/' . $rel);
+    $faites[$rel] = (int) @filemtime(RACINE . '/' . $rel);
     ecrire_journal_filigrane($faites);
 }

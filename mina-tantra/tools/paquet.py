@@ -45,9 +45,15 @@ A_DEPLOYER += sorted(
 
 # Ces fichiers ne sont ecrits que s'ils n'existent pas deja sur le serveur :
 # ils appartiennent a l'administration, pas au paquet.
+#
+# Les photos en font partie. Le paquet les porte pour qu'une premiere
+# installation ait de quoi s'afficher, mais une mise a jour doit les laisser
+# tranquilles : sur le serveur elles portent le filigrane, et les remplacer
+# par les originales le ferait disparaitre.
 PRESERVES = ['data/masseuses.json', 'data/reservations.json', 'data/config.json',
              'data/fermetures.json', 'data/attente.json',
              'data/liste-noire.json', 'data/actualites.json']
+PRESERVES += [p for p in A_DEPLOYER if p.startswith('photos/')]
 
 
 # L'adresse qui recoit les alertes du site. Elle n'apparait nulle part sur la
