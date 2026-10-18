@@ -70,6 +70,11 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || ($_POST['action'] ?? '') !=
     repondre(['ok' => false, 'erreur' => 'Requete inattendue.'], 400);
 }
 
+if (reservation_suspendue()) {
+    repondre(['ok' => false,
+        'erreur' => 'La réservation en ligne est momentanément fermée. Appelez-nous.'], 503);
+}
+
 /* Champ invisible rempli uniquement par les robots. */
 if (trim((string) ($_POST['site'] ?? '')) !== '') {
     repondre(['ok' => true, 'message' => 'Demande enregistrée.']);
@@ -97,6 +102,12 @@ if (!preg_match('/^\d{2}:\d{2}$/', $heure)) {
 $fiche = fiche($masseuse);
 if ($fiche === null) {
     repondre(['ok' => false, 'erreur' => 'Cette masseuse n’est pas disponible.'], 422);
+}
+
+/* Un jour ferme merite sa propre explication : « ce creneau vient d'etre
+   pris » laisserait croire a une course perdue de peu. */
+if (horaires_du_jour($date) === null) {
+    repondre(['ok' => false, 'erreur' => 'Le salon est fermé ce jour-là. Choisissez un autre jour.'], 422);
 }
 
 /* Le creneau demande doit figurer parmi ceux que le serveur juge libres :

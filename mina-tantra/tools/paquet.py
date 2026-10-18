@@ -26,13 +26,14 @@ A_DEPLOYER = [
     'index.php', 'modele.html', 'robots.txt', 'sitemap.xml', '.htaccess',
     'reserver.php', 'agenda.php', 'etat.php', 'taches.php',
     'admin/index.php', 'admin/noyau.php', 'admin/alertes.php',
+    'admin/fermetures.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
     'assets/favicon-180.png', 'assets/partage.jpg',
     'assets/polices/italiana.woff2', 'assets/polices/cormorant-300.woff2',
     'assets/polices/cormorant-300-italique.woff2',
     'js/site.js', 'js/contenu.js',
     'data/masseuses.json', 'data/parametres.json',
-    'data/reservations.json', 'data/.htaccess',
+    'data/reservations.json', 'data/fermetures.json', 'data/.htaccess',
 ]
 A_DEPLOYER += sorted(
     p.relative_to(RACINE).as_posix()
@@ -42,7 +43,8 @@ A_DEPLOYER += sorted(
 
 # Ces fichiers ne sont ecrits que s'ils n'existent pas deja sur le serveur :
 # ils appartiennent a l'administration, pas au paquet.
-PRESERVES = ['data/masseuses.json', 'data/reservations.json', 'data/config.json']
+PRESERVES = ['data/masseuses.json', 'data/reservations.json', 'data/config.json',
+             'data/fermetures.json']
 
 
 # L'adresse qui recoit les alertes du site. Elle n'apparait nulle part sur la

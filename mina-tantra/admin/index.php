@@ -80,6 +80,39 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         exit;
     }
 
+    if ($action === 'fermer') {
+        $date = (string) ($_POST['date'] ?? '');
+        $moment = (string) ($_POST['moment'] ?? 'journee');
+        if (!fermer_jour($date, $moment)) {
+            header('Location: index.php?p=reservations&e=1&m='
+                . urlencode('Date invalide.'));
+            exit;
+        }
+        $pris = count(rendez_vous_du_jour($date));
+        header('Location: index.php?p=reservations' . ($pris ? '&e=1' : '') . '&m=' . urlencode(
+            $pris
+                ? 'Jour fermé. Attention : ' . $pris . ' rendez-vous déjà pris ce jour-là, '
+                  . 'ils sont conservés — prévenez les clients.'
+                : 'Jour fermé.'
+        ));
+        exit;
+    }
+
+    if ($action === 'rouvrir') {
+        rouvrir_jour((string) ($_POST['date'] ?? ''));
+        header('Location: index.php?p=reservations&m=' . urlencode('Jour rouvert.'));
+        exit;
+    }
+
+    if ($action === 'suspendre') {
+        $suspendue = !reservation_suspendue();
+        suspendre_reservation($suspendue);
+        header('Location: index.php?p=reservations&m=' . urlencode($suspendue
+            ? 'Réservation en ligne suspendue. Le site invite à vous appeler.'
+            : 'Réservation en ligne rouverte.'));
+        exit;
+    }
+
     if ($action === 'alertes') {
         $adresse = trim((string) ($_POST['adresse'] ?? ''));
         if ($adresse !== '' && !filter_var($adresse, FILTER_VALIDATE_EMAIL)) {
@@ -354,6 +387,11 @@ input[type=file]{ width:100%; color:var(--doux); font-size:.9rem; padding:12px 0
 .carte .periode{ font-size:.8rem; color:var(--doux); margin-top:2px; }
 .carte .detail{ margin:8px 0 0; font-size:.92rem; }
 .carte.rdv{ display:block; }
+.carte.rdv.attention{ border-color:var(--rouge); }
+.ligne-fermeture{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px; }
+.ligne-fermeture input[type=date]{ flex:1 1 150px; margin:0; }
+.ligne-fermeture select{ flex:1 1 170px; margin:0; }
+.ligne-fermeture button{ flex:0 0 auto; }
 .carte.rdv.attente{ border-color:var(--or); }
 .carte.rdv.annule h3, .carte.rdv.passe h3{ color:var(--doux); }
 .carte.rdv h3{ font-size:1rem; }
@@ -635,6 +673,74 @@ if ($page === 'reservations') {
         <button class="btn vide mini" type="submit">Renouveler l'adresse</button>
       </form>
     </div>
+    <div class="pied">
+      <h2>Fermetures</h2>
+      <?php $f = fermetures(); ?>
+
+      <p class="aide">Un jour fermé ne propose plus aucune heure, et le site
+         l'annonce dans ses horaires.</p>
+      <form method="post" class="ligne-fermeture">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="fermer">
+        <input type="date" name="date" required min="<?= date('Y-m-d') ?>">
+        <select name="moment">
+          <option value="journee">Toute la journée</option>
+          <option value="matin">Le matin seulement</option>
+          <option value="apresmidi">L'après-midi seulement</option>
+        </select>
+        <button class="btn mini" type="submit">Fermer</button>
+      </form>
+
+      <?php
+      $aVenir = array_filter($f['jours'], static fn ($m, $d): bool => $d >= date('Y-m-d'),
+                             ARRAY_FILTER_USE_BOTH);
+      if ($aVenir):
+      ?>
+        <?php foreach ($aVenir as $date => $moment):
+          $pris = rendez_vous_du_jour((string) $date); ?>
+          <div class="carte rdv<?= $pris ? ' attention' : '' ?>">
+            <h3><?= proteger(date_francaise((string) $date, false)) ?><?=
+                proteger(MOMENTS_DITS[$moment] ?? '') ?></h3>
+            <?php if ($pris): ?>
+              <div class="etat">⚠ <?= count($pris) ?> rendez-vous déjà pris</div>
+              <p class="detail">
+                <?php foreach ($pris as $r): ?>
+                  <?= proteger(date('H\hi', (int) strtotime((string) $r['debut']))) ?> —
+                  <?= proteger((string) ($r['prenom'] ?? '')) ?>
+                  <a href="tel:<?= proteger(preg_replace('/[^\d+]/', '', (string) ($r['telephone'] ?? '')) ?? '') ?>"><?=
+                     proteger((string) ($r['telephone'] ?? '')) ?></a><br>
+                <?php endforeach; ?>
+              </p>
+            <?php endif; ?>
+            <div class="liens">
+              <form method="post" class="ligne">
+                <input type="hidden" name="jeton" value="<?= jeton() ?>">
+                <input type="hidden" name="action" value="rouvrir">
+                <input type="hidden" name="date" value="<?= proteger((string) $date) ?>">
+                <button class="btn vide mini" type="submit">Rouvrir ce jour</button>
+              </form>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p class="aide">Aucune fermeture prévue.</p>
+      <?php endif; ?>
+
+      <h2>Réservation en ligne</h2>
+      <p class="aide">
+        <?= $f['suspendue']
+            ? 'Suspendue : le site invite les clients à vous appeler.'
+            : 'Ouverte : les clients peuvent réserver eux-mêmes.' ?>
+      </p>
+      <form method="post">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="suspendre">
+        <button class="btn<?= $f['suspendue'] ? '' : ' vide' ?> mini" type="submit">
+          <?= $f['suspendue'] ? 'Rouvrir la réservation en ligne' : 'Suspendre la réservation en ligne' ?>
+        </button>
+      </form>
+    </div>
+
     <div class="pied">
       <h2>Alertes par e-mail</h2>
       <p class="aide">Un agenda par abonnement ne se rafraîchit qu'une fois par heure.

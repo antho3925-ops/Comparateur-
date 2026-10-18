@@ -43,11 +43,21 @@ if (is_readable($json)) {
     }
 }
 
+/* L'etat du salon : ce qui est ferme dans les trois mois, et si la
+   reservation en ligne est suspendue. */
+$etatSalon = ['suspendue' => false, 'fermetures' => []];
+if (function_exists('fermetures_annoncees')) {
+    $etatSalon = [
+        'suspendue'  => reservation_suspendue(),
+        'fermetures' => fermetures_annoncees(),
+    ];
+}
+
 /* Les drapeaux HEX empechent qu'un texte de fiche puisse refermer la balise. */
-$injection = '<script>window.MASSEUSES_SERVEUR = '
-    . json_encode($fiches, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-        | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT)
-    . ';</script>';
+$codage = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+        | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
+$injection = '<script>window.MASSEUSES_SERVEUR = ' . json_encode($fiches, $codage) . ';'
+    . 'window.SALON_ETAT = ' . json_encode($etatSalon, $codage) . ';</script>';
 
 $modele = str_replace(
     '<script src="js/site.js"></script>',

@@ -293,6 +293,18 @@
 
   $('#horaires-note').textContent = HORAIRES_NOTE;
 
+  /* Les jours ou le salon n'ouvre pas, annonces avant que le client n'essaie. */
+  (function annoncerFermetures() {
+    var etat = window.SALON_ETAT || {};
+    var dits = etat.fermetures || [];
+    if (!dits.length) { return; }
+    var note = $('#horaires-note');
+    var bloc = document.createElement('p');
+    bloc.className = 'note note-fermeture';
+    bloc.innerHTML = dits.map(function (d) { return esc(d); }).join('<br>');
+    note.parentNode.insertBefore(bloc, note);
+  }());
+
   /* --------------------------------- Tarifs ------------------------------ */
   $('#grille-tarifs').innerHTML = TARIFS.map(function (t) {
     var lignes = (t.lignes || []).map(function (l) {
@@ -538,6 +550,31 @@
     var form = $('#reservation');
     if (!section || !form) { return; }
     section.hidden = false;
+
+    /* Quand le salon suspend la reservation en ligne, la section reste la :
+       elle invite simplement a telephoner, pour ne perdre personne. */
+    if ((window.SALON_ETAT || {}).suspendue) {
+      var intro = section.querySelector('.intro');
+      if (intro) {
+        intro.textContent = 'La réservation en ligne est momentanément fermée. '
+          + 'Appelez-nous, nous fixons le rendez-vous avec vous.';
+      }
+      form.innerHTML =
+        '<div class="champ champ-large suspendu">'
+        + '<a class="btn btn-plein" href="tel:' + esc(SALON.telephone.replace(/\s/g, '')) + '">'
+        + esc(SALON.telephone) + '</a>'
+        + (SALON.whatsapp
+           ? '<a class="btn" href="https://wa.me/' + esc(SALON.whatsapp.replace(/\D/g, '')) + '">'
+             + 'Écrire sur WhatsApp</a>'
+           : '')
+        + '</div>';
+
+      /* Sans formulaire, la mention sur les donnees du client n'a plus d'objet. */
+      Array.prototype.forEach.call(section.querySelectorAll('.note'), function (n) {
+        n.hidden = true;
+      });
+      return;
+    }
 
     /* Les boutons « rendez-vous » menent desormais au formulaire. */
     Array.prototype.forEach.call(

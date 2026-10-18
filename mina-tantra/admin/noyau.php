@@ -391,16 +391,19 @@ function horaires_du_jour(string $date): ?array
     $defaut = ['09:00', '22:00'];
     $table = parametres()['horaires'] ?? [];
     if (!is_array($table) || !$table) {
-        return $defaut;
+        return appliquer_fermeture($defaut, $date);
     }
 
     $jours = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'];
     $nom = $jours[(int) date('N', (int) strtotime($date)) - 1];
     if (!array_key_exists($nom, $table)) {
-        return $defaut;
+        return appliquer_fermeture($defaut, $date);
     }
     $plage = $table[$nom];
-    return (is_array($plage) && count($plage) === 2) ? $plage : null;
+    $plage = (is_array($plage) && count($plage) === 2) ? $plage : null;
+
+    /* Une date fermee, en entier ou pour une demi-journee, retaille la plage. */
+    return appliquer_fermeture($plage, $date);
 }
 
 /** Vrai si la masseuse travaille ce jour-la, d'apres sa fiche. */
@@ -427,6 +430,9 @@ function creneaux_libres(string $masseuse, string $date, int $duree): array
 {
     fuseau();
 
+    if (reservation_suspendue()) {
+        return [];
+    }
     if (!in_array($duree, DUREES_ADMISES, true)) {
         return [];
     }
@@ -546,3 +552,7 @@ function reservations_triees(): array
 /* Les alertes par courriel vivent dans leur propre fichier : elles se
    servent de tout ce qui precede. */
 require __DIR__ . '/alertes.php';
+
+/* Les jours de fermeture : ils se servent des dates mises en francais
+   par le module precedent. */
+require __DIR__ . '/fermetures.php';

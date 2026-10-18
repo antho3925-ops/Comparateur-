@@ -445,6 +445,10 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
 .creneaux-liste{ display:flex; flex-wrap:wrap; gap:10px; align-items:flex-start; }
 .creneaux-liste[hidden]{ display:none; }
 .creneaux-choix{ margin:14px 0 0; font-size:.86rem; color:var(--or-clair); }
+
+/* Les jours ou le salon n'ouvre pas, et la reservation mise en sommeil. */
+.note-fermeture{ color:var(--or-clair); margin:0 0 10px; }
+.suspendu{ display:flex; flex-wrap:wrap; gap:12px; }
 .creneau{
   padding:11px 18px; border-radius:999px; border:1px solid var(--bord);
   background:transparent; color:var(--texte); font:inherit; font-size:.9rem;

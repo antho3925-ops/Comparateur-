@@ -41,6 +41,7 @@ $temoins = [
     'Les flèches dans les photos' => contient($racine, 'modele.html', 'lightbox-suivant'),
     'Le rechargement automatique' => contient($racine, 'index.php', 'filemtime'),
     'Les alertes par e-mail' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/alertes.php'"),
+    'Les jours de fermeture' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/fermetures.php'"),
 ];
 
 $ancienne = is_file($racine . '/index.html');
