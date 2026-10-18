@@ -10,7 +10,14 @@ fichiers, puis s'efface.
 Il preserve ce que l'administration a produit : les fiches (data/masseuses.json),
 le mot de passe (data/config.json) et les photos deja envoyees.
 
-Usage :  python3 tools/paquet.py     (depuis le dossier du site)
+Usage :  python3 tools/paquet.py            (paquet complet, premiere pose)
+         python3 tools/paquet.py --leger    (mise a jour, sans les photos)
+
+Le mode leger produit dist/maj.php : le meme installateur, mais sans les
+photos embarquees. Elles sont deja sur le serveur, et l'installateur n'y
+touche plus de toute facon. Le fichier passe ainsi de pres de 3 Mo a moins
+d'un seul : un envoi par le gestionnaire de fichiers d'un telephone aboutit
+la ou le gros fichier echouait.
 """
 import base64
 import json
@@ -20,6 +27,7 @@ import secrets
 
 RACINE = pathlib.Path(__file__).resolve().parent.parent
 SORTIE = RACINE / 'dist' / 'installateur.php'
+SORTIE_LEGERE = RACINE / 'dist' / 'maj.php'
 
 # Ce qui part sur le serveur. Le reste (tools, dist, README) n'y a rien a faire.
 A_DEPLOYER = [
@@ -194,7 +202,7 @@ def ecrire_htaccess() -> None:
         print('Redirection vers %s desactivee pour l\'instant.' % hote)
 
 
-def main() -> int:
+def main(leger: bool = False) -> int:
     ecrire_parametres()
     ecrire_htaccess()
 
@@ -203,6 +211,10 @@ def main() -> int:
     # que l'empreinte du mot de passe, jamais le mot de passe lui-meme, et il
     # n'est jamais ecrase sur un serveur qui en a deja un.
     fichiers = list(A_DEPLOYER)
+    if leger:
+        # Les photos restent au chaud sur le serveur : l'installateur ne les
+        # remplace plus, les porter ne sert donc qu'a alourdir l'envoi.
+        fichiers = [f for f in fichiers if not f.startswith('photos/')]
     if (RACINE / 'data' / 'config.json').is_file():
         fichiers.insert(0, 'data/config.json')
     else:
@@ -224,15 +236,18 @@ def main() -> int:
         morceaux.append("  '%s' => '%s'," % (rel, contenu))
 
     php = PHP_INSTALLATEUR % {
+        'titre': 'Mise a jour du site' if leger else 'Installation du site',
         'cle': cle,
         'fichiers': '\n'.join(morceaux),
         'preserves': ', '.join("'%s'" % p for p in PRESERVES),
     }
-    SORTIE.parent.mkdir(exist_ok=True)
-    SORTIE.write_text(php, encoding='utf-8')
+    sortie = SORTIE_LEGERE if leger else SORTIE
+    sortie.parent.mkdir(exist_ok=True)
+    sortie.write_text(php, encoding='utf-8')
 
-    print('%s  (%.1f Mo)' % (SORTIE, SORTIE.stat().st_size / 1048576))
-    print('Adresse a ouvrir :  https://chez-eva.ch/installateur.php?cle=%s' % cle)
+    print('%s  (%.1f Mo, %d fichiers)'
+          % (sortie, sortie.stat().st_size / 1048576, len(fichiers)))
+    print('Adresse a ouvrir :  https://chez-eva.ch/%s?cle=%s' % (sortie.name, cle))
     return 0
 
 
@@ -267,7 +282,7 @@ echo '<!DOCTYPE html><meta charset="utf-8"><title>Installation</title>';
 echo '<style>body{font:16px/1.6 system-ui,sans-serif;background:#120b12;color:#efe6e2;'
    . 'margin:0;padding:28px}h1{font-weight:500}code{color:#e6c766}'
    . '.ok{color:#7ec08c}.ko{color:#e07a7a}a{color:#e6c766}</style>';
-echo '<h1>Installation du site</h1>';
+echo '<h1>%(titre)s</h1>';
 
 $ecrits = 0;
 $gardes = 0;
@@ -325,10 +340,12 @@ if ($rates) {
     if (@unlink(__FILE__)) {
         echo '<p class="ok">Installateur supprime du serveur.</p>';
     } else {
-        echo '<p class="ko">Pense a supprimer <code>installateur.php</code> a la main.</p>';
+        echo '<p class="ko">Pense a supprimer <code>'
+           . htmlspecialchars(basename(__FILE__), ENT_QUOTES) . '</code> a la main.</p>';
     }
 }
 '''
 
 if __name__ == '__main__':
-    raise SystemExit(main())
+    import sys
+    raise SystemExit(main('--leger' in sys.argv))
