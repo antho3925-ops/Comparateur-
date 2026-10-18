@@ -239,20 +239,33 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
             'annulation'    => isset($_POST['annulation']),
             'recapitulatif' => isset($_POST['recapitulatif']),
             'relance'       => isset($_POST['relance']),
+            'envoi' => [
+                'serveur'     => (string) ($_POST['envoi_serveur'] ?? ''),
+                'port'        => (string) ($_POST['envoi_port'] ?? '587'),
+                'securite'    => (string) ($_POST['envoi_securite'] ?? 'starttls'),
+                'utilisateur' => (string) ($_POST['envoi_utilisateur'] ?? ''),
+                'motdepasse'  => (string) ($_POST['envoi_motdepasse'] ?? ''),
+            ],
         ]);
         header('Location: index.php?p=reservations&m=' . urlencode('Alertes enregistrées.'));
         exit;
     }
 
     if ($action === 'alertes_essai') {
-        $envoye = envoyer_courriel(
-            (string) (parametres()['nom'] ?? 'Chez Eva') . ' — essai d’alerte',
-            "Si vous lisez ce message, les alertes du site fonctionnent.\n"
-            . "Vous serez prévenu à chaque nouvelle demande." . pied_courriel()
-        );
+        try {
+            $envoye = envoyer_courriel(
+                (string) (parametres()['nom'] ?? 'Chez Eva') . ' — essai d’alerte',
+                "Si vous lisez ce message, les alertes du site fonctionnent.\n"
+                . "Vous serez prévenu à chaque nouvelle demande." . pied_courriel()
+            );
+            $souci = journal_alertes()['dernier_souci'] ?? null;
+        } catch (Throwable $e) {
+            $envoye = false;
+            $souci = 'Erreur du serveur : ' . $e->getMessage();
+        }
         header('Location: index.php?p=reservations' . ($envoye ? '' : '&e=1') . '&m=' . urlencode($envoye
             ? 'Essai envoyé. Regardez votre boîte, et le dossier indésirables.'
-            : 'Le serveur a refusé l’envoi. Vérifiez l’adresse.'));
+            : ($souci ?: 'Le serveur a refusé l’envoi.')));
         exit;
     }
 
@@ -1485,6 +1498,47 @@ if ($page === 'reservations') {
             </label>
           <?php endforeach; ?>
         </div>
+        <details class="choix"<?= ($al['envoi']['serveur'] ?? '') === '' ? ' open' : '' ?>>
+          <summary>Le serveur d'envoi</summary>
+          <div class="choix-liste">
+            <p class="aide">Cet hébergement n'envoie pas de courrier tout seul :
+               il faut lui donner une boîte mail, comme on le ferait dans un
+               logiciel de messagerie. Chez Infomaniak, créez une adresse sur
+               votre domaine puis reportez-la ici.</p>
+
+            <label for="e-serveur">Serveur</label>
+            <input type="text" id="e-serveur" name="envoi_serveur"
+                   placeholder="mail.infomaniak.com"
+                   value="<?= proteger((string) ($al['envoi']['serveur'] ?? '')) ?>">
+
+            <label for="e-port">Port</label>
+            <input type="number" id="e-port" name="envoi_port" min="1" max="65535"
+                   value="<?= (int) ($al['envoi']['port'] ?? 587) ?>">
+
+            <label for="e-securite">Sécurité</label>
+            <select id="e-securite" name="envoi_securite">
+              <?php foreach (['starttls' => 'STARTTLS (port 587)', 'ssl' => 'SSL (port 465)',
+                              '' => 'Aucune'] as $cle => $nom): ?>
+                <option value="<?= proteger($cle) ?>"<?=
+                  (string) ($al['envoi']['securite'] ?? 'starttls') === $cle ? ' selected' : '' ?>>
+                  <?= proteger($nom) ?></option>
+              <?php endforeach; ?>
+            </select>
+
+            <label for="e-utilisateur">Adresse de la boîte</label>
+            <input type="email" id="e-utilisateur" name="envoi_utilisateur"
+                   placeholder="contact@chez-eva.ch" autocomplete="off"
+                   value="<?= proteger((string) ($al['envoi']['utilisateur'] ?? '')) ?>">
+
+            <label for="e-motdepasse">Son mot de passe</label>
+            <input type="password" id="e-motdepasse" name="envoi_motdepasse" autocomplete="new-password"
+                   placeholder="<?= ($al['envoi']['motdepasse'] ?? '') !== ''
+                       ? 'enregistré — laissez vide pour le garder' : '' ?>">
+            <p class="aide">Il reste sur le serveur, dans un dossier que le web ne
+               sert pas. Les messages partiront de cette adresse.</p>
+          </div>
+        </details>
+
         <button class="btn" type="submit">Enregistrer les alertes</button>
       </form>
 
@@ -1493,6 +1547,10 @@ if ($page === 'reservations') {
         <input type="hidden" name="action" value="alertes_essai">
         <button class="btn vide mini" type="submit">Envoyer un essai</button>
       </form>
+
+      <?php $soucis = journal_alertes()['dernier_souci'] ?? null; if ($soucis): ?>
+        <p class="aide" style="color:var(--rouge)">Dernier échec : <?= proteger((string) $soucis) ?></p>
+      <?php endif; ?>
 
       <?php
       $envois = array_slice(journal_alertes()['envois'], -3);

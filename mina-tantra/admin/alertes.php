@@ -18,6 +18,8 @@
 --------------------------------------------------------------------------- */
 declare(strict_types=1);
 
+require_once __DIR__ . '/smtp.php';
+
 const FICHIER_JOURNAL_ALERTES = RACINE . '/data/alertes.json';
 const RELANCE_HEURES          = 2;       // au-dela, la demande est relancee
 const HEURE_RECAPITULATIF     = '21:00'; // le programme du lendemain part le soir
@@ -40,12 +42,22 @@ function alertes(): array
         return (bool) ($a ?? $b ?? true);
     };
 
+    $envoi = is_array($saisis['envoi'] ?? null) ? $saisis['envoi'] : [];
+
     return [
         'adresse'       => trim((string) ($saisis['adresse'] ?? $livres['adresse'] ?? '')),
         'nouvelle'      => $vrai($saisis['nouvelle'] ?? null, $livres['nouvelle'] ?? null),
         'annulation'    => $vrai($saisis['annulation'] ?? null, $livres['annulation'] ?? null),
         'recapitulatif' => $vrai($saisis['recapitulatif'] ?? null, $livres['recapitulatif'] ?? null),
         'relance'       => $vrai($saisis['relance'] ?? null, $livres['relance'] ?? null),
+        /* Le serveur d'envoi : beaucoup d'hebergeurs n'ont pas de mail(). */
+        'envoi' => [
+            'serveur'     => trim((string) ($envoi['serveur'] ?? '')),
+            'port'        => (int) ($envoi['port'] ?? 587),
+            'securite'    => (string) ($envoi['securite'] ?? 'starttls'),
+            'utilisateur' => trim((string) ($envoi['utilisateur'] ?? '')),
+            'motdepasse'  => (string) ($envoi['motdepasse'] ?? ''),
+        ],
     ];
 }
 
@@ -53,12 +65,30 @@ function alertes(): array
 function ecrire_alertes(array $reglages): bool
 {
     $c = config();
+    $ancien = is_array($c['alertes']['envoi'] ?? null) ? $c['alertes']['envoi'] : [];
+    $envoi = is_array($reglages['envoi'] ?? null) ? $reglages['envoi'] : [];
+
+    /* Un mot de passe laisse vide veut dire « garde celui d'avant » : on ne
+       fait pas retaper un mot de passe de messagerie a chaque reglage. */
+    $motdepasse = (string) ($envoi['motdepasse'] ?? '');
+    if ($motdepasse === '') {
+        $motdepasse = (string) ($ancien['motdepasse'] ?? '');
+    }
+
     $c['alertes'] = [
         'adresse'       => trim((string) ($reglages['adresse'] ?? '')),
         'nouvelle'      => !empty($reglages['nouvelle']),
         'annulation'    => !empty($reglages['annulation']),
         'recapitulatif' => !empty($reglages['recapitulatif']),
         'relance'       => !empty($reglages['relance']),
+        'envoi' => [
+            'serveur'     => trim((string) ($envoi['serveur'] ?? '')),
+            'port'        => max(1, (int) ($envoi['port'] ?? 587)),
+            'securite'    => in_array((string) ($envoi['securite'] ?? ''), ['starttls', 'ssl', ''], true)
+                                ? (string) $envoi['securite'] : 'starttls',
+            'utilisateur' => trim((string) ($envoi['utilisateur'] ?? '')),
+            'motdepasse'  => $motdepasse,
+        ],
     ];
     return ecrire_config($c);
 }
@@ -94,9 +124,18 @@ function ecrire_journal_alertes(array $journal): bool
 
 /* ----------------------------- L'envoi lui-meme -------------------------- */
 
-/** L'adresse d'expedition : toujours au domaine du site, sinon Gmail se mefie. */
+/**
+ * L'adresse d'expedition. Quand le courrier part par un serveur d'envoi,
+ * celui-ci n'accepte en general que l'adresse de la boite qui s'est
+ * identifiee : c'est donc elle qui sert d'expediteur.
+ */
 function expediteur(): string
 {
+    $boite = trim((string) (alertes()['envoi']['utilisateur'] ?? ''));
+    if ($boite !== '' && filter_var($boite, FILTER_VALIDATE_EMAIL)) {
+        return $boite;
+    }
+
     $site = (string) (parametres()['site'] ?? 'https://chez-eva.ch');
     $hote = preg_replace('#^https?://#', '', $site);
     $hote = trim((string) $hote, '/');
@@ -133,19 +172,34 @@ function envoyer_courriel(string $objet, string $corps): bool
     $sujet = encoder_entete($objet);
     $corps = str_replace("\r\n", "\n", $corps);
 
+    $souci = null;
     $fichier = getenv('CHEZEVA_COURRIEL');
+    $reglages = alertes()['envoi'] ?? [];
+
     if (is_string($fichier) && $fichier !== '') {
+        /* En developpement, le message est ecrit dans un fichier. */
         $envoye = (bool) @file_put_contents(
             $fichier,
             "=== $a | $objet ===\n$corps\n\n",
             FILE_APPEND | LOCK_EX
         );
-    } else {
+    } elseif (($reglages['serveur'] ?? '') !== '') {
+        $souci = envoyer_par_smtp($reglages, expediteur(), $salon, $a, $objet, $corps);
+        $envoye = $souci === null;
+    } elseif (function_exists('mail')) {
         $envoye = @mail($a, $sujet, $corps, $entetes, '-f' . expediteur());
+        $souci = $envoye ? null : 'Le serveur a refusé l’envoi direct.';
+    } else {
+        /* Beaucoup d'hebergeurs, Infomaniak compris, desactivent mail(). */
+        $envoye = false;
+        $souci = 'Cet hébergement n’envoie pas de courrier directement : '
+               . 'réglez le serveur d’envoi plus bas.';
     }
 
     $journal = journal_alertes();
-    $journal['envois'][] = ['date' => date('c'), 'objet' => $objet, 'ok' => $envoye];
+    $journal['envois'][] = ['date' => date('c'), 'objet' => $objet, 'ok' => $envoye,
+                            'souci' => $souci];
+    $journal['dernier_souci'] = $souci;
     ecrire_journal_alertes($journal);
 
     return $envoye;
