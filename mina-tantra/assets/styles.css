@@ -219,6 +219,15 @@ body.bloque .sortie{ display:none; }
 .langue .drapeau{ font-size:1.05rem; line-height:1; }
 .langue:hover{ color:var(--or-clair); }
 .langue.active{ border-color:var(--bord); background:rgba(201,162,39,.12); color:var(--or-clair); }
+
+/* Entre le telephone et le grand ecran, la ligne se resserre : les lettres
+   des langues s'effacent avant que le menu ne deborde. */
+@media (max-width:1400px){
+  .langue-code{ display:none; }
+  .langue{ padding:5px 6px; }
+  .menu{ gap:18px; }
+  .langues{ margin-left:14px; }
+}
 .langue:not(.active) .drapeau{ filter:saturate(.55) opacity(.75); }
 
 .burger{ display:none; background:none; border:0; padding:10px; cursor:pointer; }
@@ -510,6 +519,30 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
 .creneaux-liste{ display:flex; flex-wrap:wrap; gap:10px; align-items:flex-start; }
 .creneaux-liste[hidden]{ display:none; }
 .creneaux-choix{ margin:14px 0 0; font-size:.86rem; color:var(--or-clair); }
+
+/* ------------------------- Votre première visite ------------------------- */
+.etapes{ list-style:none; counter-reset:etape; margin:34px 0 0; padding:0; }
+.etapes li{
+  counter-increment:etape; position:relative; padding:0 0 26px 54px;
+  border-left:1px solid var(--bord); margin-left:14px;
+}
+.etapes li:last-child{ border-left-color:transparent; padding-bottom:0; }
+.etapes li::before{
+  content:counter(etape); position:absolute; left:-17px; top:-2px;
+  width:34px; height:34px; border-radius:50%;
+  background:var(--nuit); border:1px solid var(--or);
+  color:var(--or-clair); font-family:var(--sans); font-size:.78rem;
+  display:flex; align-items:center; justify-content:center;
+}
+.etapes h3{ margin:4px 0 6px; font-size:1.05rem; font-weight:500; color:var(--texte); }
+.etapes p{ margin:0; color:var(--texte-doux); font-size:.95rem; }
+
+.contact-sous-titre{
+  margin:18px 0 6px; font-size:.64rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--or);
+}
+.acces{ list-style:none; margin:0; padding:0; }
+.acces li{ margin:0 0 6px; font-size:.95rem; color:var(--texte-doux); }
 
 /* La liste d'attente, et le lien qui annule un rendez-vous. */
 .attente{ display:flex; flex-direction:column; gap:10px; margin-top:12px; }

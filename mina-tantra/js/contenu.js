@@ -24,10 +24,40 @@ const SALON = {
   telephone: '+41 79 153 27 78',   // <- votre numéro
   whatsapp: '+41791532778',        // <- même numéro, sans espaces, pour le lien WhatsApp
   email: '',                       // <- une adresse ici fait apparaître le bouton e-mail
-  parking: 'Entrée discrète, stationnement à proximité.',
+  parking: 'Cinq places gratuites en haut de la rue, juste après les poubelles. Quatre autres en bas de la rue, en face du parc.',
   photoEntree: 'photos/salon/entree.jpg',   // la façade, pour trouver la porte sans hésiter
   photoEntreeLegende: "L'entrée de l'immeuble, Rue du Pont 34",
 };
+
+/* Comment on entre dans l'immeuble : deux lignes, pas plus. Personne ne
+   doit tourner autour de l'adresse en se demandant quoi faire. */
+const ACCES = [
+  "Appelez-nous en arrivant en bas de l'immeuble — ou poussez simplement la porte, elle est ouverte.",
+  'Montez au dernier étage, puis sonnez. Nous vous attendons.',
+];
+
+/* Ce qui se passe une fois la porte franchie. Pour celui qui n'est jamais
+   venu, c'est souvent la seule chose qui manque pour oser. */
+const PREMIERE_VISITE_INTRO = "Rien n'est compliqué et rien n'est imposé. Voici comment les choses se passent, pour que vous sachiez à quoi vous attendre avant même de pousser la porte.";
+
+const PREMIERE_VISITE = [
+  {
+    titre: 'On commence par parler',
+    texte: "Vous êtes reçu sans précipitation. Vous choisissez le massage avec la masseuse, vous précisez ce que vous aimez et ce dont vous n'avez pas envie. Rien ne commence avant que ce soit clair.",
+  },
+  {
+    titre: 'Un verre, le temps de se poser',
+    texte: 'On vous sert à boire. Quelques minutes pour souffler, se défaire de la journée, et laisser le silence s\'installer.',
+  },
+  {
+    titre: 'La douche, avant ou après',
+    texte: "Elle est à votre disposition, comme vous préférez. Linge frais à chaque soin, toujours.",
+  },
+  {
+    titre: 'Le massage, sur la durée choisie',
+    texte: "Puis le soin commence, pour le temps que vous avez choisi. Vous repartez quand il se termine, sans que personne ne vous bouscule.",
+  },
+];
 
 /* Le texte d'accueil (le « mot du salon »).
    Chaque paragraphe est une ligne entre guillemets, séparée par une virgule. */

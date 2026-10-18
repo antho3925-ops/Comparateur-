@@ -473,6 +473,19 @@
 
   $('#tarifs-note').textContent = C('tarifsNote', TARIFS_NOTE);
 
+  /* ---------------------------- Première visite -------------------------- */
+  (function premiereVisite() {
+    var section = $('#premiere-visite');
+    var etapes = C('premiereVisite', typeof PREMIERE_VISITE !== 'undefined' ? PREMIERE_VISITE : []);
+    if (!section || !etapes.length) { return; }
+    section.hidden = false;
+    $('#premiere-intro').textContent = C('premiereVisiteIntro',
+      typeof PREMIERE_VISITE_INTRO === 'string' ? PREMIERE_VISITE_INTRO : '');
+    $('#premiere-etapes').innerHTML = etapes.map(function (e) {
+      return '<li><h3>' + esc(e.titre) + '</h3><p>' + esc(e.texte) + '</p></li>';
+    }).join('');
+  }());
+
   /* -------------------------------- Galerie ------------------------------ */
   $('#grille-galerie').innerHTML = GALERIE.map(function (gf, i) {
     var dites = C('galerie', null);
@@ -685,6 +698,13 @@
     ' href="https://www.google.com/maps/search/?api=1&query=' +
     encodeURIComponent(adresseComplete) + '">' + esc(T('contact_carte')) + ' &rarr;</a>';
   $('#contact-parking').textContent = (TRAD.salon || {}).parking || SALON.parking || '';
+
+  var acces = C('acces', typeof ACCES !== 'undefined' ? ACCES : []);
+  if ($('#contact-acces')) {
+    $('#contact-acces').innerHTML = acces.map(function (a) {
+      return '<li>' + esc(a) + '</li>';
+    }).join('');
+  }
 
   if (SALON.photoEntree) {
     var legendeEntree = (TRAD.salon || {}).photoEntreeLegende
