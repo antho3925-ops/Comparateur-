@@ -652,3 +652,6 @@ require __DIR__ . '/sauvegarde.php';
 
 /* La liste d'attente : ceux qui veulent etre rappeles si une place se libere. */
 require __DIR__ . '/attente.php';
+
+/* La caisse et le decompte de fin de semaine. */
+require __DIR__ . '/comptes.php';

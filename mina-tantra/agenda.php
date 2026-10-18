@@ -12,7 +12,18 @@ declare(strict_types=1);
 require __DIR__ . '/admin/noyau.php';
 fuseau();
 
-if (!isset($_GET['cle']) || !hash_equals(cle_agenda(), (string) $_GET['cle'])) {
+/* Deux abonnements possibles : celui du salon, qui voit tout, et celui
+   d'une masseuse, qui ne voit que ses heures et rien du client. */
+$masseuse = (string) ($_GET['m'] ?? '');
+$cle = (string) ($_GET['cle'] ?? '');
+
+if ($masseuse !== '') {
+    if (!cle_planning_valide($masseuse, $cle) || fiche($masseuse) === null) {
+        http_response_code(403);
+        header('Content-Type: text/plain; charset=utf-8');
+        exit('Accès refusé.');
+    }
+} elseif ($cle === '' || !hash_equals(cle_agenda(), $cle)) {
     http_response_code(403);
     header('Content-Type: text/plain; charset=utf-8');
     exit('Accès refusé.');
@@ -43,7 +54,9 @@ $lignes = [
     'PRODID:-//' . texte_ics($nom) . '//Rendez-vous//FR',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
-    'X-WR-CALNAME:' . texte_ics($nom . ' — rendez-vous'),
+    'X-WR-CALNAME:' . texte_ics($masseuse !== ''
+        ? $nom . ' — ' . (string) (fiche($masseuse)['prenom'] ?? '')
+        : $nom . ' — rendez-vous'),
     'X-WR-TIMEZONE:Europe/Zurich',
     'REFRESH-INTERVAL;VALUE=DURATION:PT15M',
     'X-PUBLISHED-TTL:PT15M',
@@ -53,16 +66,24 @@ foreach (reservations() as $r) {
     if (($r['etat'] ?? '') === 'annule') {
         continue;   // disparait de l'agenda au prochain rafraichissement
     }
+    if ($masseuse !== '' && ($r['masseuse'] ?? '') !== $masseuse) {
+        continue;   // l'agenda d'une masseuse ne montre que ses heures
+    }
     $attente = ($r['etat'] ?? '') === 'attente';
 
-    $titre = ($r['masseuse_nom'] ?? '') . ' · ' . ($r['prenom'] ?? '')
-           . ($attente ? ' (à confirmer)' : '');
+    /* Une masseuse voit sa prestation, jamais le client. */
+    $titre = $masseuse !== ''
+        ? (($r['prestation'] ?? '') !== '' ? (string) $r['prestation'] : 'Rendez-vous')
+          . ($attente ? ' (à confirmer)' : '')
+        : ($r['masseuse_nom'] ?? '') . ' · ' . ($r['prenom'] ?? '')
+          . ($attente ? ' (à confirmer)' : '');
 
     $details = [];
     if (!empty($r['prestation'])) {
-        $details[] = $r['prestation'] . (!empty($r['prix']) ? ' — ' . $r['prix'] : '');
+        $details[] = $r['prestation']
+            . (($masseuse === '' && !empty($r['prix'])) ? ' — ' . $r['prix'] : '');
     }
-    if (!empty($r['telephone'])) {
+    if ($masseuse === '' && !empty($r['telephone'])) {
         $details[] = 'Téléphone : ' . $r['telephone'];
     }
     $details[] = $attente ? 'À confirmer avec le client.' : 'Rendez-vous confirmé.';

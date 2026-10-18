@@ -24,9 +24,9 @@ SORTIE = RACINE / 'dist' / 'installateur.php'
 # Ce qui part sur le serveur. Le reste (tools, dist, README) n'y a rien a faire.
 A_DEPLOYER = [
     'index.php', 'modele.html', 'robots.txt', 'sitemap.xml', '.htaccess',
-    'reserver.php', 'agenda.php', 'etat.php', 'taches.php', 'annuler.php',
+    'reserver.php', 'agenda.php', 'etat.php', 'taches.php', 'annuler.php', 'planning.php',
     'admin/index.php', 'admin/noyau.php', 'admin/alertes.php',
-    'admin/fermetures.php', 'admin/sauvegarde.php', 'admin/attente.php',
+    'admin/fermetures.php', 'admin/sauvegarde.php', 'admin/attente.php', 'admin/comptes.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
     'assets/favicon-180.png', 'assets/partage.jpg',
     'assets/polices/italiana.woff2', 'assets/polices/cormorant-300.woff2',

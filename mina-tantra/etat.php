@@ -46,6 +46,8 @@ $temoins = [
     'Les quatre langues' => contient($racine, 'js/traductions.js', 'LANGUES_SITE'),
     'La liste d’attente' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/attente.php'"),
     'L’annulation par le client' => is_file($racine . '/annuler.php'),
+    'La caisse et le décompte' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/comptes.php'"),
+    'Le planning des masseuses' => is_file($racine . '/planning.php'),
 ];
 
 $ancienne = is_file($racine . '/index.html');

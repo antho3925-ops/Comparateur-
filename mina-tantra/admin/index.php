@@ -80,6 +80,22 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         exit;
     }
 
+    if ($action === 'encaisser' || $action === 'encaissement_annuler') {
+        $rid = (string) ($_POST['rid'] ?? '');
+        if ($action === 'encaissement_annuler') {
+            annuler_encaissement($rid);
+            $avis = 'Encaissement effacé.';
+            $souci = null;
+        } else {
+            $souci = encaisser($rid, (string) ($_POST['montant'] ?? ''),
+                               (string) ($_POST['moyen'] ?? 'especes'));
+            $avis = $souci ?? 'Encaissement noté.';
+        }
+        header('Location: index.php?p=reservations' . ($souci ? '&e=1' : '')
+            . '&m=' . urlencode($avis) . '#passes');
+        exit;
+    }
+
     if ($action === 'attente_retirer') {
         retirer_de_lattente((string) ($_POST['aid'] ?? ''));
         header('Location: index.php?p=reservations&m=' . urlencode('Retiré de la liste d’attente.'));
@@ -255,6 +271,7 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
                 'presentation_en' => trim((string) ($_POST['presentation_en'] ?? '')),
                 'presentation_es' => trim((string) ($_POST['presentation_es'] ?? '')),
                 'telephone'    => trim((string) ($_POST['telephone'] ?? '')),
+                'part'         => max(0, min(100, (int) ($_POST['part'] ?? PART_PAR_DEFAUT))),
                 'disponible'   => !empty($_POST['disponible']),
                 'debut'        => $debut,
                 'fin'          => $fin,
@@ -461,6 +478,21 @@ input[type=file]{ width:100%; color:var(--doux); font-size:.9rem; padding:12px 0
 .carte .detail{ margin:8px 0 0; font-size:.92rem; }
 .carte.rdv{ display:block; }
 
+/* ------------------------------ Le décompte ------------------------------ */
+.compte{ width:100%; border-collapse:collapse; margin-top:10px; font-size:.92rem; }
+.compte td{ padding:6px 0; border-bottom:1px solid var(--bord); color:var(--doux); }
+.compte td:last-child{ text-align:right; white-space:nowrap; color:var(--texte); }
+.compte tr.fort td{ color:var(--texte); font-weight:600; }
+.compte tr.fort td:last-child{ color:var(--or-clair); }
+.carte.total{ border-color:var(--or); }
+
+/* ------------------------------- La caisse ------------------------------- */
+.caisse{ display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:10px 0 0; }
+.caisse input[type=text]{ flex:1 1 90px; margin:0; }
+.caisse select{ flex:1 1 110px; margin:0; }
+.caisse button{ flex:0 0 auto; }
+.detail.encaisse{ color:var(--vert); }
+
 /* ----------------------------- La journée ------------------------------- */
 .jour-barre{ display:flex; align-items:center; justify-content:space-between;
              gap:12px; margin:0 0 6px; }
@@ -524,6 +556,7 @@ form.ligne{ display:inline; }
     <span>
       <a href="index.php">Masseuses</a> &nbsp;
       <a href="index.php?p=planning">Journée</a> &nbsp;
+      <a href="index.php?p=decompte">Décompte</a> &nbsp;
       <a href="index.php?p=reservations">Rendez-vous<?php
           $attente = demandes_en_attente();
           echo $attente ? ' <span class="pastille">' . $attente . '</span>' : ''; ?></a> &nbsp;
@@ -679,6 +712,84 @@ function en_francais(string $local): string
              'août', 'septembre', 'octobre', 'novembre', 'décembre'];
     $t = (int) strtotime($local);
     return $jours[(int) date('N', $t)] . ' ' . date('j', $t) . ' ' . $mois[(int) date('n', $t)];
+}
+
+if ($page === 'decompte') {
+    fuseau();
+
+    $semaine = (string) ($_GET['semaine'] ?? '');
+    $morceaux = explode('-', $semaine);
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $semaine)
+        || !checkdate((int) $morceaux[1], (int) $morceaux[2], (int) $morceaux[0])) {
+        $semaine = date('Y-m-d');
+    }
+    $du = lundi_de($semaine);
+    $au = date('Y-m-d', strtotime($du . ' +6 days'));
+    $precedente = date('Y-m-d', strtotime($du . ' -7 days'));
+    $suivante   = date('Y-m-d', strtotime($du . ' +7 days'));
+
+    $lignes = decompte($du, $au);
+    $total = ['rdv' => 0, 'prevu' => 0.0, 'encaisse' => 0.0, 'especes' => 0.0,
+              'twint' => 0.0, 'pour_elle' => 0.0, 'pour_le_salon' => 0.0, 'sans_saisie' => 0];
+    foreach ($lignes as $l) {
+        foreach (array_keys($total) as $cle) {
+            $total[$cle] += $l[$cle];
+        }
+    }
+
+    entete('Le décompte');
+    avis($message, $erreur);
+    ?>
+    <h1>Le décompte</h1>
+
+    <div class="jour-barre">
+      <a class="btn vide mini" href="index.php?p=decompte&amp;semaine=<?= $precedente ?>">←</a>
+      <strong>Du <?= proteger(date_francaise($du, false)) ?><br>au <?= proteger(date_francaise($au, false)) ?></strong>
+      <a class="btn vide mini" href="index.php?p=decompte&amp;semaine=<?= $suivante ?>">→</a>
+    </div>
+    <p class="aide"><a href="index.php?p=decompte">Cette semaine</a>
+       · seuls les rendez-vous confirmés sont comptés</p>
+
+    <?php if (!$lignes): ?>
+      <p class="aide">Aucun rendez-vous confirmé cette semaine-là.</p>
+    <?php else: ?>
+      <?php foreach ($lignes as $l): ?>
+        <div class="carte rdv">
+          <h3><?= proteger($l['prenom']) ?></h3>
+          <div class="etat"><?= $l['rdv'] ?> rendez-vous · sa part : <?= $l['part'] ?> %</div>
+          <table class="compte">
+            <tr><td>Prévu d'après les tarifs</td><td><?= proteger(francs($l['prevu'])) ?></td></tr>
+            <tr class="fort"><td>Encaissé</td><td><?= proteger(francs($l['encaisse'])) ?></td></tr>
+            <tr><td>dont espèces</td><td><?= proteger(francs($l['especes'])) ?></td></tr>
+            <tr><td>dont Twint</td><td><?= proteger(francs($l['twint'])) ?></td></tr>
+            <tr class="fort"><td>Pour elle</td><td><?= proteger(francs($l['pour_elle'])) ?></td></tr>
+            <tr><td>Pour le salon</td><td><?= proteger(francs($l['pour_le_salon'])) ?></td></tr>
+          </table>
+          <?php if ($l['sans_saisie']): ?>
+            <p class="detail"><?= $l['sans_saisie'] ?> rendez-vous sans montant saisi :
+               ils comptent dans « prévu », pas dans « encaissé ».</p>
+          <?php endif; ?>
+        </div>
+      <?php endforeach; ?>
+
+      <div class="carte rdv total">
+        <h3>Toute la semaine</h3>
+        <div class="etat"><?= $total['rdv'] ?> rendez-vous</div>
+        <table class="compte">
+          <tr><td>Prévu</td><td><?= proteger(francs($total['prevu'])) ?></td></tr>
+          <tr class="fort"><td>Encaissé</td><td><?= proteger(francs($total['encaisse'])) ?></td></tr>
+          <tr><td>dont espèces</td><td><?= proteger(francs($total['especes'])) ?></td></tr>
+          <tr><td>dont Twint</td><td><?= proteger(francs($total['twint'])) ?></td></tr>
+          <tr><td>Part des masseuses</td><td><?= proteger(francs($total['pour_elle'])) ?></td></tr>
+          <tr class="fort"><td>Reste au salon</td><td><?= proteger(francs($total['pour_le_salon'])) ?></td></tr>
+        </table>
+      </div>
+    <?php endif; ?>
+
+    <p class="aide"><a href="index.php?p=reservations#passes">← Noter un encaissement</a></p>
+    <?php
+    pied();
+    exit;
 }
 
 if ($page === 'planning') {
@@ -851,7 +962,9 @@ if ($page === 'reservations') {
     <?php endforeach; ?>
 
     <?php if ($passes): ?>
-      <h2>Passés</h2>
+      <h2 id="passes">Passés</h2>
+      <p class="aide">Notez ce qui est entré en caisse : le décompte de la semaine
+         s'en sert, et vous n'avez plus rien à recalculer le dimanche soir.</p>
       <?php foreach (array_slice($passes, 0, 20) as $r): ?>
         <div class="carte rdv passe">
           <div style="flex:1">
@@ -862,7 +975,37 @@ if ($page === 'reservations') {
               <?= proteger((string) ($r['masseuse_nom'] ?? '')) ?> ·
               <?= proteger((string) ($r['prenom'] ?? '')) ?>
             </div>
+            <?php if (isset($r['encaisse']['montant'])): ?>
+              <p class="detail encaisse">Encaissé :
+                <strong><?= proteger(francs((float) $r['encaisse']['montant'])) ?></strong>
+                · <?= proteger(MOYENS[(string) ($r['encaisse']['moyen'] ?? 'autre')] ?? '') ?></p>
+            <?php elseif ((string) ($r['etat'] ?? '') !== 'annule'): ?>
+              <form method="post" class="caisse">
+                <input type="hidden" name="jeton" value="<?= jeton() ?>">
+                <input type="hidden" name="action" value="encaisser">
+                <input type="hidden" name="rid" value="<?= proteger((string) $r['id']) ?>">
+                <input type="text" name="montant" inputmode="decimal"
+                       value="<?= proteger(montant_prix((string) ($r['prix'] ?? '')) > 0
+                                 ? (string) montant_prix((string) $r['prix']) : '') ?>"
+                       placeholder="Montant" aria-label="Montant encaissé">
+                <select name="moyen" aria-label="Moyen de paiement">
+                  <?php foreach (MOYENS as $cle => $nom): ?>
+                    <option value="<?= $cle ?>"><?= proteger($nom) ?></option>
+                  <?php endforeach; ?>
+                </select>
+                <button class="btn mini" type="submit">Encaisser</button>
+              </form>
+            <?php endif; ?>
+
             <div class="liens">
+              <?php if (isset($r['encaisse']['montant'])): ?>
+                <form method="post" class="ligne">
+                  <input type="hidden" name="jeton" value="<?= jeton() ?>">
+                  <input type="hidden" name="action" value="encaissement_annuler">
+                  <input type="hidden" name="rid" value="<?= proteger((string) $r['id']) ?>">
+                  <button class="btn vide mini" type="submit">Corriger</button>
+                </form>
+              <?php endif; ?>
               <form method="post" class="ligne" onsubmit="return confirm('Supprimer ce rendez-vous ?');">
                 <input type="hidden" name="jeton" value="<?= jeton() ?>">
                 <input type="hidden" name="action" value="reservation_supprimer">
@@ -1251,6 +1394,30 @@ avis($message, $erreur);
          value="<?= proteger((string) ($f['telephone'] ?? '')) ?>">
   <p class="aide">À laisser vide pour que les clients appellent le numéro du salon.
      Rempli, un bouton « Appeler » apparaît sur sa fiche.</p>
+
+  <?php if (!$nouvelle): ?>
+    <details class="choix">
+      <summary>Son planning à elle</summary>
+      <div class="choix-liste">
+        <p class="aide">Une adresse personnelle qui n'affiche que ses heures :
+           ni prénom de client, ni numéro. À lui envoyer une fois.</p>
+        <?php $lienP = adresse_site() . '/planning.php?m=' . urlencode((string) $f['id'])
+                     . '&cle=' . cle_planning((string) $f['id']); ?>
+        <input type="text" readonly onclick="this.select()" value="<?= proteger($lienP) ?>">
+        <p class="aide">Et pour que ses rendez-vous arrivent dans son agenda :</p>
+        <?php $lienA = adresse_site() . '/agenda.php?m=' . urlencode((string) $f['id'])
+                     . '&cle=' . cle_planning((string) $f['id']); ?>
+        <input type="text" readonly onclick="this.select()"
+               value="<?= proteger(str_replace(['https://', 'http://'], 'webcal://', $lienA)) ?>">
+      </div>
+    </details>
+  <?php endif; ?>
+
+  <label for="part">Sa part sur chaque massage</label>
+  <input type="number" id="part" name="part" min="0" max="100" step="5"
+         value="<?= (int) ($f['part'] ?? PART_PAR_DEFAUT) ?>">
+  <p class="aide">En pourcentage. Le reste revient au salon. C'est ce chiffre
+     qui sert au décompte de fin de semaine.</p>
 
   <label for="debut">Présente à partir du</label>
   <input type="date" id="debut" name="debut" value="<?= proteger((string) ($f['debut'] ?? '')) ?>">
