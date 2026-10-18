@@ -300,6 +300,13 @@
              + esc(m.prenom) + '</button>';
     }
 
+    /* Chaque masseuse a son adresse : on y mene depuis sa fiche, et Google
+       la reference toute seule. */
+    var sienne = m.id
+      ? '<a class="fiche-page" href="m/' + esc(m.id) + '?lang=' + esc(LANGUE) + '">'
+        + esc(T('fiche_page')) + '</a>'
+      : '';
+
     var vignettes = (m.photos || []).map(function (src) {
       return '<button type="button" class="vignette vignette-mini"' +
                ' data-src="' + esc(src) + '" data-legende="' + esc(m.prenom) + '">' +
@@ -322,6 +329,7 @@
           (langues ? '<p class="fiche-langues">' + langues + '</p>' : '') +
           '<div class="tags">' + tags + '</div>' +
           bouton +
+          sienne +
           (vignettes ? '<div class="fiche-vignettes">' + vignettes + '</div>' : '') +
         '</div>' +
       '</article>';

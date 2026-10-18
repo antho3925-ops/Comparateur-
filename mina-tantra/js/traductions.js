@@ -52,6 +52,7 @@ fr: {
     bientot_intro_plusieurs: 'Elles ne sont pas au salon en ce moment et leur retour n’a pas encore de date. Appelez-nous pour en savoir plus.',
     bientot_note: 'Appelez-nous, nous vous dirons qui revient et quand.',
 
+    fiche_page: 'Sa page',
     badge_disponible: 'Disponible', badge_bientot: 'Bientôt de retour',
     badge_a_partir: 'À partir du', ligne_presente_du: 'Présente du', ligne_au: 'au',
     ligne_jusquau: 'Jusqu’au', fiche_appeler: 'Appeler', fiche_reserver: 'Réserver avec',
@@ -174,6 +175,7 @@ de: {
     bientot_intro_plusieurs: 'Sie sind zurzeit nicht im Salon, und ihre Rückkehr hat noch kein Datum. Rufen Sie uns an, wir sagen Ihnen mehr.',
     bientot_note: 'Rufen Sie uns an — wir sagen Ihnen, wer wann zurückkommt.',
 
+    fiche_page: 'Ihre Seite',
     badge_disponible: 'Verfügbar', badge_bientot: 'Bald zurück',
     badge_a_partir: 'Ab dem', ligne_presente_du: 'Da vom', ligne_au: 'bis',
     ligne_jusquau: 'Bis zum', fiche_appeler: 'Anrufen:', fiche_reserver: 'Termin bei',
@@ -366,6 +368,7 @@ en: {
     bientot_intro_plusieurs: 'They are away at the moment and their return has no date yet. Call us and we will tell you more.',
     bientot_note: 'Call us — we will tell you who is coming back, and when.',
 
+    fiche_page: 'Her page',
     badge_disponible: 'Available', badge_bientot: 'Back before long',
     badge_a_partir: 'From', ligne_presente_du: 'Here from', ligne_au: 'to',
     ligne_jusquau: 'Until', fiche_appeler: 'Call', fiche_reserver: 'Book with',
@@ -558,6 +561,7 @@ es: {
     bientot_intro_plusieurs: 'Ahora mismo no están en el salón y su regreso aún no tiene fecha. Llámenos y le contamos más.',
     bientot_note: 'Llámenos: le diremos quién vuelve y cuándo.',
 
+    fiche_page: 'Su página',
     badge_disponible: 'Disponible', badge_bientot: 'Pronto de vuelta',
     badge_a_partir: 'A partir del', ligne_presente_du: 'Presente del', ligne_au: 'al',
     ligne_jusquau: 'Hasta el', fiche_appeler: 'Llamar a', fiche_reserver: 'Reservar con',

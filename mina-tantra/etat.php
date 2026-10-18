@@ -50,6 +50,9 @@ $temoins = [
     'Le planning des masseuses' => is_file($racine . '/planning.php'),
     'Le filigrane des photos' => is_file($racine . '/assets/polices/italiana.ttf'),
     'La liste noire' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/liste-noire.php'"),
+    'L’administration en application' => is_file($racine . '/admin/manifeste.json'),
+    'Le battement de cœur' => is_file($racine . '/ping.php'),
+    'Une page par masseuse' => is_file($racine . '/masseuse.php'),
 ];
 
 $ancienne = is_file($racine . '/index.html');

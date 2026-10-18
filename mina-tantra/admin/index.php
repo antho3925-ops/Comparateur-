@@ -452,6 +452,15 @@ function entete(string $titre): void
 <meta name="robots" content="noindex, nofollow">
 <title><?= proteger($titre) ?> — Chez Eva</title>
 <link rel="icon" href="../assets/favicon.ico" sizes="any">
+<!-- Posee sur l'ecran d'accueil du telephone, l'administration s'ouvre en
+     plein ecran, comme une application. -->
+<link rel="manifest" href="manifeste.json">
+<link rel="apple-touch-icon" href="../assets/favicon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Chez Eva">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#120b12">
+<meta name="referrer" content="no-referrer">
 <style>
 :root{ --nuit:#120b12; --nuit-2:#1b1018; --nuit-3:#241621; --or:#c9a227;
        --or-clair:#e6c766; --texte:#efe6e2; --doux:#b9a9a6; --bord:rgba(201,162,39,.24);
@@ -733,6 +742,23 @@ if ($page === 'liste') {
     <div class="pied">
       <p>Place occupée par le site : <strong><?= number_format(espace_utilise() / 1048576, 1, ',', ' ') ?> Mo</strong>
          (l'hébergement Starter en autorise 10).</p>
+      <h2>Cette page sur votre écran d'accueil</h2>
+      <p class="aide">Sur iPhone : touchez le bouton de partage en bas de Safari,
+         puis « Sur l'écran d'accueil ». Sur Android : menu ⋮ puis « Installer
+         l'application ». Elle s'ouvrira en plein écran, avec son icône, comme
+         une vraie application — et vous resterez connecté.</p>
+
+      <h2>Être prévenu si le site tombe</h2>
+      <p class="aide">Un site ne peut pas prévenir lui-même qu'il est tombé : il
+         faut un surveillant qui vive ailleurs. Donnez cette adresse à un
+         service de surveillance gratuit (UptimeRobot, par exemple) : il
+         l'interroge toutes les cinq minutes et vous écrit si elle ne répond
+         plus.</p>
+      <input type="text" readonly onclick="this.select()"
+             value="<?= proteger(adresse_site() . '/ping.php') ?>">
+      <p class="aide">Elle répond « OK » quand tout va bien, et « PANNE » avec la
+         raison si quelque chose cloche côté serveur.</p>
+
       <h2>Vos identifiants</h2>
       <form method="post">
         <input type="hidden" name="jeton" value="<?= jeton() ?>">

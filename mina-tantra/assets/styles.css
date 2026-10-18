@@ -520,6 +520,13 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
 .creneaux-liste[hidden]{ display:none; }
 .creneaux-choix{ margin:14px 0 0; font-size:.86rem; color:var(--or-clair); }
 
+.fiche-page{
+  display:inline-block; margin-top:10px; font-size:.72rem; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--or); text-decoration:none;
+  border-bottom:1px solid var(--bord); padding-bottom:3px;
+}
+.fiche-page:hover{ color:var(--or-clair); border-color:var(--or); }
+
 /* ------------------------- Votre première visite ------------------------- */
 .etapes{ list-style:none; counter-reset:etape; margin:34px 0 0; padding:0; }
 .etapes li{

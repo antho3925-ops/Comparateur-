@@ -21,4 +21,7 @@ Options -Indexes
     #    Les autres (ancien domaine, prefixe www) y renvoient.
     RewriteCond %{HTTP_HOST} !^chez-eva\.ch$ [NC]
     RewriteRule ^ https://chez-eva.ch%{REQUEST_URI} [R=301,L]
+
+    # 3. Une adresse par masseuse : /m/mina ouvre sa page.
+    RewriteRule ^m/([A-Za-z0-9_-]+)/?$ masseuse.php?m=$1 [L,QSA]
 </IfModule>

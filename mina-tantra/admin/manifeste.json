@@ -1,0 +1,16 @@
+{
+  "name": "Chez Eva — administration",
+  "short_name": "Chez Eva",
+  "description": "Les fiches, les rendez-vous et le décompte du salon.",
+  "start_url": "index.php",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#120b12",
+  "theme_color": "#120b12",
+  "lang": "fr",
+  "icons": [
+    { "src": "../assets/favicon-180.png", "sizes": "180x180", "type": "image/png" },
+    { "src": "../assets/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" }
+  ]
+}

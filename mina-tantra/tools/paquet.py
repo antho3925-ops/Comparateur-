@@ -24,11 +24,11 @@ SORTIE = RACINE / 'dist' / 'installateur.php'
 # Ce qui part sur le serveur. Le reste (tools, dist, README) n'y a rien a faire.
 A_DEPLOYER = [
     'index.php', 'modele.html', 'robots.txt', 'sitemap.xml', '.htaccess',
-    'reserver.php', 'agenda.php', 'etat.php', 'taches.php', 'annuler.php', 'planning.php',
-    'admin/index.php', 'admin/noyau.php', 'admin/alertes.php',
+    'reserver.php', 'agenda.php', 'etat.php', 'taches.php', 'annuler.php', 'planning.php', 'ping.php', 'masseuse.php',
+    'admin/index.php', 'admin/manifeste.json', 'admin/noyau.php', 'admin/alertes.php',
     'admin/fermetures.php', 'admin/sauvegarde.php', 'admin/attente.php', 'admin/comptes.php', 'admin/filigrane.php', 'admin/liste-noire.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
-    'assets/favicon-180.png', 'assets/partage.jpg',
+    'assets/favicon-180.png', 'assets/icone-512.png', 'assets/partage.jpg',
     'assets/polices/italiana.woff2', 'assets/polices/cormorant-300.woff2',
     'assets/polices/cormorant-300-italique.woff2',
     'assets/polices/italiana.ttf',
@@ -163,7 +163,10 @@ Options -Indexes
     RewriteCond %%{HTTP:X-Forwarded-Proto} !=https
     RewriteRule ^ https://%%{HTTP_HOST}%%{REQUEST_URI} [R=301,L]
 
-%(redirection)s</IfModule>
+%(redirection)s
+    # 3. Une adresse par masseuse : /m/mina ouvre sa page.
+    RewriteRule ^m/([A-Za-z0-9_-]+)/?$ masseuse.php?m=$1 [L,QSA]
+</IfModule>
 """
 
 REDIRECTION = """

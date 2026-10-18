@@ -13,6 +13,7 @@ const FICHIER_CONFIG = RACINE . '/data/config.json';
 const DOSSIER_PHOTOS = RACINE . '/photos/masseuses';
 const LARGEUR_MAX    = 1200;          // les photos sont reduites a cette taille
 const POIDS_MAX      = 12582912;      // 12 Mo acceptes en entree, avant reduction
+const DUREE_SESSION  = 2592000;       // un mois : l'application reste ouverte
 
 /* ------------------------------- Session --------------------------------- */
 
@@ -21,7 +22,12 @@ function demarrer_session(): void
     if (session_status() === PHP_SESSION_ACTIVE) {
         return;
     }
+    /* Posee sur l'ecran d'accueil du telephone, l'administration doit se
+       rouvrir sans redemander le mot de passe a chaque fois : la session
+       tient un mois. */
+    @ini_set('session.gc_maxlifetime', (string) DUREE_SESSION);
     session_set_cookie_params([
+        'lifetime' => DUREE_SESSION,
         'httponly' => true,
         'samesite' => 'Lax',
         'secure'   => !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
