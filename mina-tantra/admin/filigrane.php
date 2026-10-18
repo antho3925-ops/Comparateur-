@@ -144,19 +144,30 @@ function photos_sans_filigrane(): array
     return array_values(array_diff(toutes_les_photos(), $faites));
 }
 
+/* Le temps qu'on s'autorise a marquer des photos dans une page de
+   l'administration : au-dela, on s'arrete et on reprendra au chargement
+   suivant. Un salon de quatre-vingts photos en vient ainsi a bout en deux
+   ou trois pages, sans jamais faire attendre plus de quelques secondes. */
+const SECONDES_FILIGRANE = 6;
+
 /**
- * Marque les photos qui ne le sont pas encore, quelques-unes a la fois pour
- * ne pas faire attendre la page. Rend le nombre de photos traitees.
+ * Marque les photos qui ne le sont pas encore, en s'arretant au bout de
+ * quelques secondes pour ne pas faire attendre la page. Rend le nombre de
+ * photos traitees.
  */
-function marquer_photos(int $combien = 8): int
+function marquer_photos(int $combien = 200): int
 {
     if (!function_exists('imagecreatefromstring') || !is_readable(POLICE_FILIGRANE)) {
         return 0;
     }
     $faites = journal_filigrane();
     $faits = 0;
+    $debut = microtime(true);
 
     foreach (array_slice(photos_sans_filigrane(), 0, $combien) as $rel) {
+        if (microtime(true) - $debut > SECONDES_FILIGRANE) {
+            break;
+        }
         $chemin = RACINE . '/' . $rel;
         $image = @imagecreatefromstring((string) @file_get_contents($chemin));
         if ($image === false) {
