@@ -138,6 +138,10 @@ if ($fiche === null) {
     repondre(['ok' => false, 'erreur' => 'Cette masseuse n’est pas disponible.'], 422);
 }
 
+/* A partir d'ici, un seul client a la fois : le verrou empeche deux
+   demandes simultanees de se voir attribuer la meme heure. */
+$verrou = verrou_reservations();
+
 /* Un jour ferme merite sa propre explication : « ce creneau vient d'etre
    pris » laisserait croire a une course perdue de peu. */
 if (horaires_du_jour($date) === null) {

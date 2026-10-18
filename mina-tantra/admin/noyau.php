@@ -7,6 +7,14 @@
 --------------------------------------------------------------------------- */
 declare(strict_types=1);
 
+/* Le site demande PHP 7.4 au minimum. Sur plus ancien, mieux vaut une
+   phrase lisible qu'une page blanche. */
+if (PHP_VERSION_ID < 70400) {
+    header('Content-Type: text/plain; charset=utf-8');
+    exit("Ce site demande PHP 7.4 ou plus récent. Votre hébergement est en "
+        . PHP_VERSION . " : changez la version de PHP dans son panneau de configuration.");
+}
+
 const RACINE        = __DIR__ . '/..';
 const FICHIER_FICHES = RACINE . '/data/masseuses.json';
 const FICHIER_CONFIG = RACINE . '/data/config.json';
@@ -330,12 +338,14 @@ function effacer_masseuse(string $id): array
 /** Supprime une photo du disque, en refusant tout chemin sortant du dossier. */
 function supprimer_photo(string $chemin): void
 {
-    if (!str_starts_with($chemin, 'photos/masseuses/') || str_contains($chemin, '..')) {
+    /* strpos plutot que str_starts_with : le site tourne ainsi sur un
+       hebergement reste en PHP 7, sans rien perdre en surete. */
+    if (strpos($chemin, 'photos/masseuses/') !== 0 || strpos($chemin, '..') !== false) {
         return;
     }
     $absolu = realpath(RACINE . '/' . $chemin);
     $dossier = realpath(DOSSIER_PHOTOS);
-    if ($absolu && $dossier && str_starts_with($absolu, $dossier)) {
+    if ($absolu && $dossier && strpos($absolu, $dossier) === 0) {
         @unlink($absolu);
     }
 }
@@ -621,6 +631,8 @@ function poser_rendez_vous(array $saisie): array
     $debut = (int) strtotime($date . ' ' . $heure);
     $fin   = $debut + $duree * 60;
 
+    $verrou = verrou_reservations();
+
     /* Ce qui occupe deja ce moment-la : elle d'abord, les cabines ensuite. */
     $elle = 0;
     $cabines = 0;
@@ -675,6 +687,26 @@ function poser_rendez_vous(array $saisie): array
     return ['avertissement' => $avertissements
         ? 'Rendez-vous posé, mais attention : ' . implode(', ', $avertissements) . '.'
         : null];
+}
+
+/**
+ * Prend le verrou des rendez-vous. Deux clients qui valident la meme
+ * seconde liraient sinon le meme planning, verraient tous deux le creneau
+ * libre, et l'ecriraient l'un apres l'autre : deux personnes sur la meme
+ * heure. Le second attend desormais que le premier ait fini, et se voit
+ * refuser le creneau devenu pris.
+ *
+ * PHP relache le verrou tout seul a la fin de la page, meme en cas
+ * d'arret brutal : rien ne peut rester bloque.
+ */
+function verrou_reservations()
+{
+    $fichier = @fopen(RACINE . '/data/verrou-reservations', 'c');
+    if ($fichier === false) {
+        return null;        /* sans verrou, le site marche quand meme */
+    }
+    @flock($fichier, LOCK_EX);
+    return $fichier;
 }
 
 /** Les rendez-vous tries par date, les plus proches d'abord. */
