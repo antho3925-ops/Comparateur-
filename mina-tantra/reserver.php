@@ -66,6 +66,27 @@ if (($_GET['action'] ?? '') === 'creneaux') {
 
 /* ------------------------------ La demande -------------------------------- */
 
+/* ------------------------- La liste d'attente ---------------------------- */
+if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['action'] ?? '') === 'attente') {
+    if (trim((string) ($_POST['site'] ?? '')) !== '') {
+        repondre(['ok' => true]);           /* un robot : on acquiesce et on oublie */
+    }
+    if (trop_de_demandes()) {
+        repondre(['ok' => false, 'code' => 'trop',
+            'erreur' => 'Trop de demandes depuis cet appareil. Appelez-nous.'], 429);
+    }
+    $souci = inscrire_en_attente([
+        'prenom'    => (string) ($_POST['prenom'] ?? ''),
+        'telephone' => (string) ($_POST['telephone'] ?? ''),
+        'masseuse'  => (string) ($_POST['masseuse'] ?? ''),
+        'date'      => (string) ($_POST['date'] ?? ''),
+    ]);
+    if ($souci === null) {
+        repondre(['ok' => true]);
+    }
+    repondre(['ok' => false, 'code' => $souci, 'erreur' => 'Demande incomplète.'], 422);
+}
+
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || ($_POST['action'] ?? '') !== 'reserver') {
     repondre(['ok' => false, 'erreur' => 'Requete inattendue.'], 400);
 }
@@ -138,8 +159,10 @@ if (trop_de_demandes()) {
 }
 
 $debut = (int) strtotime($date . ' ' . $heure);
+$cleAnnulation = bin2hex(random_bytes(8));
 $demande = [
     'id'           => 'r' . bin2hex(random_bytes(6)),
+    'cle'          => $cleAnnulation,
     'cree'         => date('c'),
     'masseuse'     => $masseuse,
     'masseuse_nom' => (string) ($fiche['prenom'] ?? ''),
@@ -170,4 +193,7 @@ try {
 repondre([
     'ok' => true,
     'message' => 'Demande enregistrée. Nous vous rappelons rapidement pour confirmer.',
+    /* Le client garde ce lien s'il doit annuler : nous n'avons que son
+       numero, nous ne pouvons rien lui envoyer. */
+    'annulation' => adresse_site() . '/annuler.php?r=' . $demande['id'] . '&cle=' . $cleAnnulation,
 ]);

@@ -649,3 +649,6 @@ require __DIR__ . '/fermetures.php';
 
 /* La sauvegarde : elle met data/ et photos/ dans une archive. */
 require __DIR__ . '/sauvegarde.php';
+
+/* La liste d'attente : ceux qui veulent etre rappeles si une place se libere. */
+require __DIR__ . '/attente.php';

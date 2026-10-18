@@ -80,6 +80,12 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         exit;
     }
 
+    if ($action === 'attente_retirer') {
+        retirer_de_lattente((string) ($_POST['aid'] ?? ''));
+        header('Location: index.php?p=reservations&m=' . urlencode('Retiré de la liste d’attente.'));
+        exit;
+    }
+
     if ($action === 'poser_rdv') {
         $resultat = poser_rendez_vous([
             'masseuse'   => (string) ($_POST['masseuse'] ?? ''),
@@ -708,6 +714,38 @@ if ($page === 'reservations') {
       <?php endforeach; ?>
       <p class="aide">Les rendez-vous de plus de trente jours s'effacent tout seuls,
          coordonnées du client comprises.</p>
+    <?php endif; ?>
+
+    <?php $enAttente = attente(); if ($enAttente): ?>
+    <div class="pied">
+      <h2>Liste d'attente</h2>
+      <p class="aide">Ils attendent qu'une place se libère. Un appel, et vous retirez
+         la ligne.</p>
+      <?php foreach (array_reverse($enAttente) as $a): ?>
+        <div class="carte rdv">
+          <h3><?= proteger((string) ($a['prenom'] ?? '')) ?>
+            <?php if (!empty($a['telephone'])): ?>
+              — <a href="tel:<?= proteger(preg_replace('/[^\d+]/', '', (string) $a['telephone']) ?? '') ?>"><?=
+                   proteger((string) $a['telephone']) ?></a>
+            <?php endif; ?>
+          </h3>
+          <div class="etat">
+            <?= !empty($a['date'])
+                  ? proteger(date_francaise((string) $a['date'], false))
+                  : 'n’importe quand' ?>
+            <?= !empty($a['masseuse_nom']) ? ' · ' . proteger((string) $a['masseuse_nom']) : '' ?>
+          </div>
+          <div class="liens">
+            <form method="post" class="ligne">
+              <input type="hidden" name="jeton" value="<?= jeton() ?>">
+              <input type="hidden" name="action" value="attente_retirer">
+              <input type="hidden" name="aid" value="<?= proteger((string) ($a['id'] ?? '')) ?>">
+              <button class="btn vide mini" type="submit">Retirer</button>
+            </form>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    </div>
     <?php endif; ?>
 
     <div class="pied">

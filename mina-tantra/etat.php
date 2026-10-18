@@ -44,6 +44,8 @@ $temoins = [
     'Les jours de fermeture' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/fermetures.php'"),
     'La sauvegarde' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/sauvegarde.php'"),
     'Les quatre langues' => contient($racine, 'js/traductions.js', 'LANGUES_SITE'),
+    'La liste d’attente' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/attente.php'"),
+    'L’annulation par le client' => is_file($racine . '/annuler.php'),
 ];
 
 $ancienne = is_file($racine . '/index.html');

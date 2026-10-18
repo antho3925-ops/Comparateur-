@@ -849,6 +849,76 @@
       return options ? '<optgroup label="' + esc(nomDit) + '">' + options + '</optgroup>' : '';
     }).join('');
 
+    /* Quand un jour est complet, on ne laisse pas le client dans le vide :
+       il peut demander a etre rappele si une place se libere. */
+    function installerAttente() {
+      var ouvrir = $('#r-attente');
+      var bloc = $('#r-attente-form');
+      if (!ouvrir || !bloc) { return; }
+
+      ouvrir.addEventListener('click', function () {
+        bloc.hidden = false;
+        ouvrir.hidden = true;
+        /* Ce que le client a deja tape plus haut lui evite de le retaper. */
+        $('#r-attente-prenom').value = $('#r-prenom').value;
+        $('#r-attente-tel').value = $('#r-tel').value;
+        $('#r-attente-prenom').focus();
+      });
+
+      $('#r-attente-envoyer').addEventListener('click', function () {
+        var prenom = $('#r-attente-prenom').value.trim();
+        var tel = $('#r-attente-tel').value.trim();
+        if (prenom.length < 2) { message(T('msg_prenom'), 'ko'); return; }
+        if (tel.replace(/\D/g, '').length < 9) { message(T('msg_tel'), 'ko'); return; }
+
+        var donnees = new FormData();
+        donnees.append('action', 'attente');
+        donnees.append('prenom', prenom);
+        donnees.append('telephone', tel);
+        donnees.append('masseuse', champMasseuse.value);
+        donnees.append('date', champDate.value);
+        donnees.append('site', $('#r-site').value);
+
+        message(T('msg_envoi'));
+        fetch('reserver.php', { method: 'POST', body: donnees })
+          .then(function (r) { return r.json(); })
+          .then(function (d) {
+            if (d && d.ok) {
+              bloc.hidden = true;
+              message(T('attente_ok'), 'ok');
+            } else {
+              message(messageServeur(d), 'ko');
+            }
+          })
+          .catch(function () { message(T('msg_ko'), 'ko'); });
+      });
+    }
+
+    /* Nous n'avons que le numero du client : le lien qui annule son
+       rendez-vous ne peut que s'afficher ici, a lui de le garder. */
+    function montrerAnnulation(lien) {
+      var zone = $('#r-annulation');
+      if (!zone || !lien) { return; }
+      zone.hidden = false;
+      zone.innerHTML =
+        '<h4>' + esc(T('annulation_titre')) + '</h4>'
+        + '<p class="note">' + esc(T('annulation_texte')) + '</p>'
+        + '<input type="text" readonly value="' + esc(lien) + '" onclick="this.select()">'
+        + '<button type="button" class="btn vide mini" id="r-copier">'
+        + esc(T('annulation_copier')) + '</button>';
+
+      $('#r-copier').addEventListener('click', function () {
+        var champ = zone.querySelector('input');
+        champ.select();
+        var copie = function () { $('#r-copier').textContent = T('annulation_copie'); };
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(lien).then(copie, function () {});
+        } else {
+          try { document.execCommand('copy'); copie(); } catch (e) {}
+        }
+      });
+    }
+
     /* Le serveur repond en francais, mais joint un code : on prefere la
        phrase traduite quand on la connait. */
     function messageServeur(d) {
@@ -894,7 +964,19 @@
         .then(function (d) {
           var libres = (d && d.creneaux) || [];
           if (!libres.length) {
-            zoneCreneaux.innerHTML = '<p class="note">' + esc(T('creneaux_aucun')) + '</p>';
+            zoneCreneaux.innerHTML = '<p class="note">' + esc(T('creneaux_aucun')) + '</p>'
+              + '<button type="button" class="btn vide mini" id="r-attente">'
+              + esc(T('attente_proposer')) + '</button>'
+              + '<div class="attente" id="r-attente-form" hidden>'
+              +   '<p class="note">' + esc(T('attente_intro')) + '</p>'
+              +   '<input type="text" id="r-attente-prenom" maxlength="40" placeholder="'
+              +     esc(T('champ_prenom')) + '">'
+              +   '<input type="tel" id="r-attente-tel" maxlength="25" placeholder="'
+              +     esc(T('champ_tel')) + '">'
+              +   '<button type="button" class="btn mini" id="r-attente-envoyer">'
+              +     esc(T('attente_envoyer')) + '</button>'
+              + '</div>';
+            installerAttente();
             return;
           }
           /* Les quarts d'heure font une longue liste. On la range en trois
@@ -1041,6 +1123,7 @@
             heureChoisie = null;
             zoneCreneaux.innerHTML = '<p class="note">Choisissez d\'abord un jour.</p>';
             message(T('msg_ok'), 'ok');
+            montrerAnnulation(d && d.annulation);
           } else {
             message(messageServeur(d), 'ko');
             chargerCreneaux();

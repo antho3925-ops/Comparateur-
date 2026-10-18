@@ -511,6 +511,26 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
 .creneaux-liste[hidden]{ display:none; }
 .creneaux-choix{ margin:14px 0 0; font-size:.86rem; color:var(--or-clair); }
 
+/* La liste d'attente, et le lien qui annule un rendez-vous. */
+.attente{ display:flex; flex-direction:column; gap:10px; margin-top:12px; }
+.attente input{
+  padding:13px 15px; border-radius:12px; border:1px solid var(--bord);
+  background:rgba(255,255,255,.03); color:var(--texte); font:inherit;
+}
+.attente .btn{ align-self:flex-start; }
+#r-attente{ margin-top:12px; }
+
+.annulation{
+  margin-top:18px; padding:16px 18px; border-radius:14px;
+  border:1px solid var(--bord); background:rgba(255,255,255,.03);
+}
+.annulation h4{ margin:0 0 6px; font-size:.95rem; font-weight:500; color:var(--or-clair); }
+.annulation input{
+  width:100%; margin:10px 0; padding:11px 13px; border-radius:10px;
+  border:1px solid var(--bord); background:rgba(0,0,0,.25);
+  color:var(--texte-doux); font:inherit; font-size:.82rem;
+}
+
 /* Les jours ou le salon n'ouvre pas, et la reservation mise en sommeil. */
 .note-fermeture{ color:var(--or-clair); margin:0 0 10px; }
 .suspendu{ display:flex; flex-wrap:wrap; gap:12px; }
