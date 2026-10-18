@@ -158,6 +158,54 @@ a{ color:inherit; }
 }
 .menu .menu-cta:hover{ background:var(--or); color:#1a1208; border-bottom-color:var(--or); }
 
+/* --------------------------- La sortie rapide ---------------------------- */
+/* Toujours a portee de pouce, mais assez sobre pour qu'on l'oublie. */
+.sortie{
+  position:fixed; right:16px; bottom:16px; z-index:60;
+  display:flex; align-items:center; gap:8px;
+  padding:10px 16px; border-radius:999px; cursor:pointer;
+  background:rgba(18,11,18,.86); border:1px solid var(--bord);
+  color:var(--texte-doux); font-family:var(--sans);
+  font-size:.66rem; letter-spacing:.16em; text-transform:uppercase;
+  backdrop-filter:blur(6px); transition:.2s ease;
+}
+.sortie[hidden]{ display:none; }
+.sortie:hover{ color:var(--or-clair); border-color:var(--or); }
+.sortie-croix{ font-size:1.05rem; line-height:1; }
+body.bloque .sortie{ display:none; }
+
+/* ------------------------------ Vos données ------------------------------ */
+.panneau{
+  position:fixed; inset:0; z-index:70; display:flex; align-items:center;
+  justify-content:center; padding:20px; background:rgba(8,5,8,.9);
+  backdrop-filter:blur(4px); overflow-y:auto;
+}
+.panneau[hidden]{ display:none; }
+.panneau-carte{
+  position:relative; max-width:620px; width:100%; margin:auto;
+  background:var(--nuit-2); border:1px solid var(--bord); border-radius:18px;
+  padding:34px 28px 30px;
+}
+.panneau-carte h2{
+  font-family:var(--nom); font-weight:400; font-size:1.8rem;
+  margin:0 0 18px; color:var(--texte);
+}
+.panneau-texte h3{
+  margin:18px 0 4px; font-size:.68rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--or);
+}
+.panneau-texte p{ margin:0; font-size:.94rem; color:var(--texte-doux); }
+.panneau-fermer{
+  position:absolute; top:10px; right:14px; background:none; border:0;
+  color:var(--texte-doux); font-size:1.9rem; line-height:1; cursor:pointer;
+}
+.panneau-fermer:hover{ color:var(--or-clair); }
+
+.pied-lien{
+  background:none; border:0; padding:0; cursor:pointer; font:inherit;
+  color:var(--or-clair); text-decoration:underline; text-underline-offset:3px;
+}
+
 /* ------------------------- Le choix de la langue ------------------------- */
 /* Sur grand ecran les drapeaux ferment la ligne, apres le menu ; au
    telephone ils se glissent entre le nom et le bouton du menu. */

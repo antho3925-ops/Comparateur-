@@ -594,6 +594,70 @@
     if (ev.key === 'ArrowRight') { afficherPhoto(rang + 1); }
   });
 
+  /* ----------------------------- Sortie rapide --------------------------- */
+  /* Un bouton discret, toujours a portee de pouce : la page est remplacee
+     par un site neutre, et l'adresse du salon ne reste pas dans le bouton
+     « precedent ». Deux echappements de suite font la meme chose au clavier. */
+  var SORTIE_VERS = 'https://www.google.ch/';
+
+  function sortirVite() {
+    /* Ce que le navigateur garde de nous reste chez le visiteur : on
+       l'efface avant de partir. */
+    try {
+      localStorage.removeItem(CLE);
+      localStorage.removeItem(CLE_LANGUE);
+    } catch (e) {}
+    window.location.replace(SORTIE_VERS);
+  }
+
+  var sortie = $('#sortie');
+  if (sortie) {
+    sortie.hidden = false;
+    sortie.addEventListener('click', sortirVite);
+  }
+
+  var dernierEchap = 0;
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key !== 'Escape') { return; }
+    /* Echap ferme d'abord ce qui est ouvert : la visionneuse, le panneau.
+       Le raccourci ne part que depuis la page nue. */
+    var quelqueChoseOuvert = ($('#lightbox') && !$('#lightbox').hidden)
+                          || ($('#panneau-donnees') && !$('#panneau-donnees').hidden);
+    if (quelqueChoseOuvert) { dernierEchap = 0; return; }
+    var maintenant = Date.now();
+    if (maintenant - dernierEchap < 700) { sortirVite(); }
+    dernierEchap = maintenant;
+  });
+
+  /* ------------------------------ Vos données ---------------------------- */
+  var panneau = $('#panneau-donnees');
+  if (panneau) {
+    var paragraphes = C('donnees', []);
+    $('#panneau-donnees-texte').innerHTML = paragraphes.map(function (d) {
+      return '<h3>' + esc(d.titre) + '</h3><p>' + esc(d.texte) + '</p>';
+    }).join('');
+
+    var ouvrirDonnees = function (ev) {
+      if (ev) { ev.preventDefault(); }
+      panneau.hidden = false;
+      document.body.classList.add('bloque');
+      $('#panneau-fermer').focus();
+    };
+    var fermerDonnees = function () {
+      panneau.hidden = true;
+      document.body.classList.remove('bloque');
+    };
+
+    $('#lien-donnees').addEventListener('click', ouvrirDonnees);
+    $('#panneau-fermer').addEventListener('click', fermerDonnees);
+    panneau.addEventListener('click', function (ev) {
+      if (ev.target === panneau) { fermerDonnees(); }
+    });
+    document.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape' && !panneau.hidden) { fermerDonnees(); }
+    });
+  }
+
   /* -------------------------------- Contact ------------------------------ */
   var telBrut = (SALON.telephone || '').replace(/[^\d+]/g, '');
   $('#contact-tel').innerHTML = '<a href="tel:' + esc(telBrut) + '">' + esc(SALON.telephone) + '</a>';

@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Aucun site visite depuis ces pages n'apprend d'ou vient le visiteur. -->
+<meta name="referrer" content="no-referrer">
 <title>Chez Eva — Massage érotique et tantrique à La Chaux-de-Fonds</title>
 <meta name="description" content="Chez Eva, salon de massage érotique et tantrique, Rue du Pont 34 à La Chaux-de-Fonds. Après des années d'expérience, nous vous accueillons sur rendez-vous : masseuses, horaires et tarifs.">
 <meta name="robots" content="index, follow">
@@ -258,9 +260,28 @@
       Les massages proposés sont des prestations de bien-être entre adultes
       consentants. Aucune donnée personnelle n'est collectée sur ce site.
     </p>
-    <p class="pied-mini">&copy; <span id="annee"></span> <span id="pied-nom"></span></p>
+    <p class="pied-mini">&copy; <span id="annee"></span> <span id="pied-nom"></span>
+      &nbsp;·&nbsp;
+      <button type="button" class="pied-lien" id="lien-donnees" data-t="donnees_lien">Vos données</button>
+    </p>
   </div>
 </footer>
+
+<!-- --------------------------- Sortie rapide ----------------------------- -->
+<button type="button" class="sortie" id="sortie" data-t-aria="sortie_aide" hidden>
+  <span class="sortie-croix">&times;</span>
+  <span class="sortie-mot" data-t="sortie_rapide">Sortie rapide</span>
+</button>
+
+<!-- ----------------------------- Vos données ----------------------------- -->
+<div class="panneau" id="panneau-donnees" hidden>
+  <div class="panneau-carte" role="dialog" aria-modal="true" aria-labelledby="panneau-titre">
+    <button type="button" class="panneau-fermer" id="panneau-fermer"
+            data-t-aria="donnees_fermer">&times;</button>
+    <h2 id="panneau-titre" data-t="donnees_titre">Vos données</h2>
+    <div class="panneau-texte" id="panneau-donnees-texte"></div>
+  </div>
+</div>
 
 <!-- ------------------------------- Lightbox ------------------------------ -->
 <div class="lightbox" id="lightbox" hidden>
