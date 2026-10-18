@@ -226,6 +226,11 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
                 'langues'      => $langues,
                 'specialites'  => $specialites,
                 'presentation' => trim((string) ($_POST['presentation'] ?? '')),
+                /* La presentation dans les autres langues du site. Un champ
+                   laisse vide fait simplement retomber la fiche sur le francais. */
+                'presentation_de' => trim((string) ($_POST['presentation_de'] ?? '')),
+                'presentation_en' => trim((string) ($_POST['presentation_en'] ?? '')),
+                'presentation_es' => trim((string) ($_POST['presentation_es'] ?? '')),
                 'telephone'    => trim((string) ($_POST['telephone'] ?? '')),
                 'disponible'   => !empty($_POST['disponible']),
                 'debut'        => $debut,
@@ -954,6 +959,19 @@ avis($message, $erreur);
 
   <label for="presentation">Présentation</label>
   <textarea id="presentation" name="presentation" placeholder="Deux ou trois phrases."><?= proteger((string) ($f['presentation'] ?? '')) ?></textarea>
+
+  <details class="choix">
+    <summary>Présentation dans les autres langues (facultatif)</summary>
+    <div class="choix-liste">
+      <p class="aide">Laissez vide et c'est le texte français qui s'affichera.</p>
+      <?php foreach (['de' => '🇩🇪 Allemand', 'en' => '🇬🇧 Anglais', 'es' => '🇪🇸 Espagnol'] as $code => $libelle): ?>
+        <label for="presentation_<?= $code ?>"><?= proteger($libelle) ?></label>
+        <textarea id="presentation_<?= $code ?>" name="presentation_<?= $code ?>"
+                  placeholder="Même texte, dans cette langue."><?=
+          proteger((string) ($f['presentation_' . $code] ?? '')) ?></textarea>
+      <?php endforeach; ?>
+    </div>
+  </details>
 
   <label for="telephone">Son numéro de téléphone</label>
   <input type="tel" id="telephone" name="telephone" placeholder="+41 79 000 00 00"

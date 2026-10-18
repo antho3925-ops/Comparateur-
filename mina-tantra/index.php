@@ -28,6 +28,20 @@ if ($modele === false) {
 
 /* Le site repond sur chez-eva.ch comme sur l'ancien domaine : les balises
    canoniques et de partage suivent l'adresse par laquelle on arrive. */
+/* La langue demandee par l'adresse, sinon celle du navigateur : le site
+   s'ouvre dans la langue du visiteur sans qu'il ait rien a faire. */
+$languesConnues = ['fr', 'de', 'en', 'es'];
+$langue = 'fr';
+if (preg_match('/^[a-z]{2}$/', (string) ($_GET['lang'] ?? ''))
+    && in_array($_GET['lang'], $languesConnues, true)) {
+    $langue = (string) $_GET['lang'];
+} elseif (preg_match_all('/([a-z]{2})(?:-[A-Za-z]{2})?\s*(?:;\s*q=([0-9.]+))?/',
+        strtolower((string) ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '')), $trouves, PREG_SET_ORDER)) {
+    foreach ($trouves as $t) {
+        if (in_array($t[1], $languesConnues, true)) { $langue = $t[1]; break; }
+    }
+}
+
 $hote = (string) ($_SERVER['HTTP_HOST'] ?? '');
 if (preg_match('/^[A-Za-z0-9.-]+(:\d+)?$/', $hote)) {
     $schema = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
@@ -47,9 +61,16 @@ if (is_readable($json)) {
    reservation en ligne est suspendue. */
 $etatSalon = ['suspendue' => false, 'fermetures' => []];
 if (function_exists('fermetures_annoncees')) {
+    $jours = [];
+    foreach (fermetures()['jours'] as $date => $moment) {
+        if ($date >= date('Y-m-d')) {
+            $jours[] = ['date' => (string) $date, 'moment' => (string) $moment];
+        }
+    }
     $etatSalon = [
-        'suspendue'  => reservation_suspendue(),
-        'fermetures' => fermetures_annoncees(),
+        'suspendue'        => reservation_suspendue(),
+        'fermetures'       => fermetures_annoncees(),   /* en francais, pour le repli */
+        'fermetures_jours' => $jours,                   /* bruts : le site les met en phrases */
     ];
 }
 
@@ -57,7 +78,10 @@ if (function_exists('fermetures_annoncees')) {
 $codage = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 $injection = '<script>window.MASSEUSES_SERVEUR = ' . json_encode($fiches, $codage) . ';'
-    . 'window.SALON_ETAT = ' . json_encode($etatSalon, $codage) . ';</script>';
+    . 'window.SALON_ETAT = ' . json_encode($etatSalon, $codage) . ';'
+    . 'window.LANGUE_SERVEUR = ' . json_encode($langue) . ';</script>';
+
+$modele = str_replace('<html lang="fr">', '<html lang="' . $langue . '">', $modele);
 
 $modele = str_replace(
     '<script src="js/site.js"></script>',

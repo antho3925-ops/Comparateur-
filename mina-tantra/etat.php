@@ -43,6 +43,7 @@ $temoins = [
     'Les alertes par e-mail' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/alertes.php'"),
     'Les jours de fermeture' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/fermetures.php'"),
     'La sauvegarde' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/sauvegarde.php'"),
+    'Les quatre langues' => contient($racine, 'js/traductions.js', 'LANGUES_SITE'),
 ];
 
 $ancienne = is_file($racine . '/index.html');

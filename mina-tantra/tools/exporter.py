@@ -30,12 +30,14 @@ def lire(rel: str) -> str:
 def main() -> int:
     html = lire('modele.html')
     css = lire('assets/styles.css')
-    js = lire('js/contenu.js') + '\n' + lire('js/site.js')
+    js = (lire('js/contenu.js') + '\n' + lire('js/traductions.js')
+          + '\n' + lire('js/site.js'))
 
     # 1. Les feuilles de style et les scripts deviennent des blocs en ligne.
     html = html.replace('<link rel="stylesheet" href="assets/styles.css">',
                         '<style>\n%s\n</style>' % css)
     html = re.sub(r'\n?\s*<script src="js/contenu\.js"></script>\s*\n?\s*'
+                  r'<script src="js/traductions\.js"></script>\s*\n?\s*'
                   r'<script src="js/site\.js"></script>',
                   lambda _: '\n<script>\n%s\n</script>' % js, html)
     if '<script src=' in html:

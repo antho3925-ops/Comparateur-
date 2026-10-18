@@ -72,6 +72,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST' || ($_POST['action'] ?? '') !=
 
 if (reservation_suspendue()) {
     repondre(['ok' => false,
+        'code' => 'suspendu',
         'erreur' => 'La réservation en ligne est momentanément fermée. Appelez-nous.'], 503);
 }
 
@@ -90,13 +91,14 @@ $prenom     = mb_substr(trim((string) ($_POST['prenom'] ?? '')), 0, 40);
 $telephone  = mb_substr(trim((string) ($_POST['telephone'] ?? '')), 0, 25);
 
 if ($prenom === '' || mb_strlen($prenom) < 2) {
-    repondre(['ok' => false, 'erreur' => 'Merci d’indiquer un prénom.'], 422);
+    repondre(['ok' => false, 'code' => 'prenom', 'erreur' => 'Merci d’indiquer un prénom.'], 422);
 }
 if (strlen(preg_replace('/\D/', '', $telephone) ?? '') < 9) {
-    repondre(['ok' => false, 'erreur' => 'Le numéro de téléphone semble incomplet.'], 422);
+    repondre(['ok' => false, 'code' => 'telephone',
+        'erreur' => 'Le numéro de téléphone semble incomplet.'], 422);
 }
 if (!preg_match('/^\d{2}:\d{2}$/', $heure)) {
-    repondre(['ok' => false, 'erreur' => 'Créneau invalide.'], 422);
+    repondre(['ok' => false, 'code' => 'heure', 'erreur' => 'Créneau invalide.'], 422);
 }
 
 $fiche = fiche($masseuse);
@@ -107,13 +109,15 @@ if ($fiche === null) {
 /* Un jour ferme merite sa propre explication : « ce creneau vient d'etre
    pris » laisserait croire a une course perdue de peu. */
 if (horaires_du_jour($date) === null) {
-    repondre(['ok' => false, 'erreur' => 'Le salon est fermé ce jour-là. Choisissez un autre jour.'], 422);
+    repondre(['ok' => false, 'code' => 'ferme',
+        'erreur' => 'Le salon est fermé ce jour-là. Choisissez un autre jour.'], 422);
 }
 
 /* Le creneau demande doit figurer parmi ceux que le serveur juge libres :
    c'est ce qui empeche de reserver la nuit, trop tot, ou par-dessus un autre. */
 if (!in_array($heure, creneaux_libres($masseuse, $date, $duree), true)) {
-    repondre(['ok' => false, 'erreur' => 'Ce créneau vient d’être pris. Choisissez-en un autre.'], 409);
+    repondre(['ok' => false, 'code' => 'creneau',
+        'erreur' => 'Ce créneau vient d’être pris. Choisissez-en un autre.'], 409);
 }
 
 $liste = reservations();

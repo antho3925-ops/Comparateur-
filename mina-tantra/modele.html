@@ -31,15 +31,15 @@
 <div class="porte" id="porte" hidden>
   <div class="porte-carte">
     <p class="porte-marque" id="porte-marque"></p>
-    <h1>Ce site est réservé aux adultes</h1>
-    <p class="porte-texte">
+    <h1 data-t="porte_titre">Ce site est réservé aux adultes</h1>
+    <p class="porte-texte" data-t="porte_texte">
       Il contient des textes et des images à caractère sensuel destinés à un
       public majeur. En entrant, vous certifiez avoir 18 ans révolus et
       consulter ce site de votre plein gré.
     </p>
     <div class="porte-actions">
-      <button type="button" class="btn btn-plein" id="porte-oui">J'ai 18 ans ou plus — entrer</button>
-      <a class="btn btn-vide" href="https://www.google.ch">Quitter</a>
+      <button type="button" class="btn btn-plein" id="porte-oui" data-t="porte_entrer">J'ai 18 ans ou plus — entrer</button>
+      <a class="btn btn-vide" href="https://www.google.ch" data-t="porte_quitter">Quitter</a>
     </div>
   </div>
 </div>
@@ -52,17 +52,19 @@
       <span class="marque-sous">La Chaux-de-Fonds</span>
     </a>
 
-    <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false">
+    <div class="langues" id="langues"></div>
+
+    <button class="burger" id="burger" aria-label="Ouvrir le menu" data-t-aria="menu_ouvrir" aria-expanded="false">
       <span></span><span></span><span></span>
     </button>
 
     <nav class="menu" id="menu">
-      <a href="#accueil">Accueil</a>
-      <a href="#masseuses">Masseuses</a>
-      <a href="#horaires">Horaires</a>
-      <a href="#tarifs">Tarifs</a>
-      <a href="#galerie">Le salon</a>
-      <a href="#contact" class="menu-cta">Rendez-vous</a>
+      <a href="#accueil" data-t="menu_accueil">Accueil</a>
+      <a href="#masseuses" data-t="menu_masseuses">Masseuses</a>
+      <a href="#horaires" data-t="menu_horaires">Horaires</a>
+      <a href="#tarifs" data-t="menu_tarifs">Tarifs</a>
+      <a href="#galerie" data-t="menu_salon">Le salon</a>
+      <a href="#contact" class="menu-cta" data-t="menu_rdv">Rendez-vous</a>
     </nav>
   </div>
 </header>
@@ -71,27 +73,27 @@
 <section class="hero" id="accueil">
   <div class="hero-voile"></div>
   <div class="conteneur hero-in">
-    <p class="hero-eyebrow">Nouveau &middot; Ouverture à La Chaux-de-Fonds</p>
+    <p class="hero-eyebrow" data-t="hero_eyebrow">Nouveau &middot; Ouverture à La Chaux-de-Fonds</p>
     <h1 class="hero-titre" id="hero-titre"></h1>
-    <p class="hero-slogan">Massage érotique &amp; tantrique — l'art de prendre son temps</p>
+    <p class="hero-slogan" data-t="hero_slogan">Massage érotique &amp; tantrique — l'art de prendre son temps</p>
     <div class="hero-actions">
-      <a class="btn btn-plein" href="#masseuses">Voir les masseuses</a>
-      <a class="btn btn-vide" href="#contact">Prendre rendez-vous</a>
+      <a class="btn btn-plein" href="#masseuses" data-t="hero_voir">Voir les masseuses</a>
+      <a class="btn btn-vide" href="#contact" data-t="hero_rdv">Prendre rendez-vous</a>
     </div>
     <ul class="hero-puces">
-      <li>Sur rendez-vous</li>
-      <li>Discrétion absolue</li>
-      <li>7 jours sur 7</li>
+      <li data-t="hero_puce_1">Sur rendez-vous</li>
+      <li data-t="hero_puce_2">Discrétion absolue</li>
+      <li data-t="hero_puce_3">7 jours sur 7</li>
     </ul>
   </div>
-  <a class="hero-fleche" href="#presentation" aria-label="Descendre">&#8595;</a>
+  <a class="hero-fleche" href="#presentation" aria-label="Descendre" data-t-aria="hero_descendre">&#8595;</a>
 </section>
 
 <!-- ----------------------------- Présentation ---------------------------- -->
 <section class="section" id="presentation">
   <div class="conteneur">
-    <p class="chapeau">Le mot du salon</p>
-    <h2 class="titre">Des années d'expérience,<br>une nouvelle adresse</h2>
+    <p class="chapeau" data-t="presentation_chapeau">Le mot du salon</p>
+    <h2 class="titre" data-t-html="presentation_titre">Des années d'expérience,<br>une nouvelle adresse</h2>
     <div class="presentation" id="presentation-texte"></div>
     <div class="atouts" id="atouts"></div>
 
@@ -111,13 +113,13 @@
     <div class="grille-masseuses" id="grille-masseuses"></div>
 
     <div class="groupe" id="bloc-avance" hidden>
-      <h3 class="groupe-titre">Prochaines arrivées</h3>
+      <h3 class="groupe-titre" data-t="avance_titre">Prochaines arrivées</h3>
       <p class="groupe-intro" id="avance-intro"></p>
       <div class="grille-masseuses" id="grille-avance"></div>
     </div>
 
     <div class="groupe" id="bloc-bientot" hidden>
-      <h3 class="groupe-titre">Bientôt de retour</h3>
+      <h3 class="groupe-titre" data-t="bientot_titre">Bientôt de retour</h3>
       <p class="groupe-intro" id="bientot-intro"></p>
       <div class="grille-masseuses" id="grille-bientot"></div>
     </div>
@@ -127,8 +129,8 @@
 <!-- ------------------------------- Horaires ------------------------------ -->
 <section class="section" id="horaires">
   <div class="conteneur conteneur-etroit">
-    <p class="chapeau">Quand nous trouver</p>
-    <h2 class="titre">Horaires d'ouverture</h2>
+    <p class="chapeau" data-t="horaires_chapeau">Quand nous trouver</p>
+    <h2 class="titre" data-t="horaires_titre">Horaires d'ouverture</h2>
     <table class="horaires" id="horaires-table"></table>
     <p class="note" id="horaires-note"></p>
   </div>
@@ -137,8 +139,8 @@
 <!-- -------------------------------- Tarifs ------------------------------- -->
 <section class="section section-sombre" id="tarifs">
   <div class="conteneur">
-    <p class="chapeau">En toute transparence</p>
-    <h2 class="titre">Nos tarifs</h2>
+    <p class="chapeau" data-t="tarifs_chapeau">En toute transparence</p>
+    <h2 class="titre" data-t="tarifs_titre">Nos tarifs</h2>
     <div class="grille-tarifs" id="grille-tarifs"></div>
     <div class="quatre-mains" id="quatre-mains" hidden>
       <h3 id="quatre-mains-titre"></h3>
@@ -147,7 +149,7 @@
     </div>
 
     <div class="supplements">
-      <h3>Suppléments</h3>
+      <h3 data-t="supplements_titre">Suppléments</h3>
       <ul id="supplements"></ul>
     </div>
     <p class="note" id="tarifs-note"></p>
@@ -157,50 +159,50 @@
 <!-- ------------------------------ Réservation ---------------------------- -->
 <section class="section section-reserver" id="reserver" hidden>
   <div class="conteneur conteneur-etroit">
-    <p class="chapeau">En deux minutes</p>
-    <h2 class="titre">Réserver en ligne</h2>
-    <p class="intro">
+    <p class="chapeau" data-t="reserver_chapeau">En deux minutes</p>
+    <h2 class="titre" data-t="reserver_titre">Réserver en ligne</h2>
+    <p class="intro" data-t="reserver_intro">
       Choisissez votre masseuse, le soin et l'heure qui vous arrange.
       Nous vous rappelons pour confirmer le rendez-vous.
     </p>
 
     <form class="reservation" id="reservation" novalidate>
       <div class="champ">
-        <label for="r-masseuse">Masseuse</label>
+        <label for="r-masseuse" data-t="champ_masseuse">Masseuse</label>
         <select id="r-masseuse" required></select>
       </div>
       <div class="champ">
-        <label for="r-prestation">Prestation</label>
+        <label for="r-prestation" data-t="champ_prestation">Prestation</label>
         <select id="r-prestation" required></select>
       </div>
       <div class="champ">
-        <label for="r-date">Jour</label>
+        <label for="r-date" data-t="champ_jour">Jour</label>
         <input type="date" id="r-date" required>
       </div>
       <div class="champ champ-large">
-        <label>Heure</label>
+        <label data-t="champ_heure">Heure</label>
         <div class="creneaux" id="r-creneaux"><p class="note">Choisissez d'abord un jour.</p></div>
       </div>
       <div class="champ">
-        <label for="r-prenom">Votre prénom</label>
+        <label for="r-prenom" data-t="champ_prenom">Votre prénom</label>
         <input type="text" id="r-prenom" maxlength="40" autocomplete="given-name" required>
       </div>
       <div class="champ">
-        <label for="r-tel">Votre téléphone</label>
+        <label for="r-tel" data-t="champ_tel">Votre téléphone</label>
         <input type="tel" id="r-tel" maxlength="25" autocomplete="tel" placeholder="+41 …" required>
       </div>
 
       <input type="text" id="r-site" name="site" class="piege" tabindex="-1" aria-hidden="true" autocomplete="off">
 
       <div class="champ champ-large">
-        <button type="submit" class="btn btn-plein" id="r-envoyer">Demander ce rendez-vous</button>
+        <button type="submit" class="btn btn-plein" id="r-envoyer" data-t="bouton_envoyer">Demander ce rendez-vous</button>
         <p class="reponse" id="r-reponse"></p>
       </div>
     </form>
 
     <p class="note" id="reserver-note-duo"></p>
 
-    <p class="note">
+    <p class="note" data-t="note_donnees">
       Nous ne conservons que votre prénom et votre numéro, le temps du rendez-vous,
       et uniquement pour vous rappeler. Rien n'est publié, rien n'est transmis à personne.
     </p>
@@ -210,9 +212,9 @@
 <!-- ------------------------------- Galerie ------------------------------- -->
 <section class="section" id="galerie">
   <div class="conteneur">
-    <p class="chapeau">L'écrin</p>
-    <h2 class="titre">Le salon</h2>
-    <p class="intro">Un lieu calme, chaud et net. Quelques images pour vous en faire une idée.</p>
+    <p class="chapeau" data-t="galerie_chapeau">L'écrin</p>
+    <h2 class="titre" data-t="galerie_titre">Le salon</h2>
+    <p class="intro" data-t="galerie_intro">Un lieu calme, chaud et net. Quelques images pour vous en faire une idée.</p>
     <div class="galerie" id="grille-galerie"></div>
   </div>
 </section>
@@ -220,23 +222,23 @@
 <!-- -------------------------------- Contact ------------------------------ -->
 <section class="section section-contact" id="contact">
   <div class="conteneur">
-    <p class="chapeau">On vous attend</p>
-    <h2 class="titre">Prendre rendez-vous</h2>
+    <p class="chapeau" data-t="contact_chapeau">On vous attend</p>
+    <h2 class="titre" data-t="contact_titre">Prendre rendez-vous</h2>
     <div class="contact-grille">
       <div class="contact-bloc">
-        <h3>Nous appeler</h3>
+        <h3 data-t="contact_appeler">Nous appeler</h3>
         <p class="contact-tel" id="contact-tel"></p>
         <div class="contact-boutons" id="contact-boutons"></div>
-        <p class="note">Un appel vaut mieux qu'un message : nous confirmons la disponibilité en direct.</p>
+        <p class="note" data-t="contact_note">Un appel vaut mieux qu'un message : nous confirmons la disponibilité en direct.</p>
       </div>
       <div class="contact-bloc">
-        <h3>Nous rejoindre</h3>
+        <h3 data-t="contact_rejoindre">Nous rejoindre</h3>
         <p id="contact-adresse"></p>
         <p class="note" id="contact-parking"></p>
         <div id="contact-photo"></div>
       </div>
       <div class="contact-bloc">
-        <h3>Le cadre</h3>
+        <h3 data-t="contact_cadre">Le cadre</h3>
         <ul class="regles" id="regles"></ul>
       </div>
     </div>
@@ -248,10 +250,11 @@
   <div class="conteneur pied-in">
     <p class="pied-marque" id="pied-marque"></p>
     <p class="pied-texte">
-      Salon de massage érotique et tantrique — <span id="pied-adresse"></span>.
-      Site strictement réservé aux personnes majeures (18+).
+      <span data-t="pied_texte">Salon de massage érotique et tantrique —</span>
+      <span id="pied-adresse"></span>.
+      <span data-t="pied_majeur">Site strictement réservé aux personnes majeures (18+).</span>
     </p>
-    <p class="pied-mini">
+    <p class="pied-mini" data-t="pied_mini">
       Les massages proposés sont des prestations de bien-être entre adultes
       consentants. Aucune donnée personnelle n'est collectée sur ce site.
     </p>
@@ -261,16 +264,17 @@
 
 <!-- ------------------------------- Lightbox ------------------------------ -->
 <div class="lightbox" id="lightbox" hidden>
-  <button class="lightbox-fermer" id="lightbox-fermer" aria-label="Fermer">&times;</button>
-  <button class="lightbox-fleche precedent" id="lightbox-precedent" aria-label="Photo précédente">&#10094;</button>
+  <button class="lightbox-fermer" id="lightbox-fermer" aria-label="Fermer" data-t-aria="photo_fermer">&times;</button>
+  <button class="lightbox-fleche precedent" id="lightbox-precedent" aria-label="Photo précédente" data-t-aria="photo_precedente">&#10094;</button>
   <img id="lightbox-img" src="" alt="">
-  <button class="lightbox-fleche suivant" id="lightbox-suivant" aria-label="Photo suivante">&#10095;</button>
+  <button class="lightbox-fleche suivant" id="lightbox-suivant" aria-label="Photo suivante" data-t-aria="photo_suivante">&#10095;</button>
   <p class="lightbox-legende" id="lightbox-legende"></p>
   <p class="lightbox-compteur" id="lightbox-compteur"></p>
 </div>
 
 <script type="application/ld+json" id="donnees-structurees"></script>
 <script src="js/contenu.js"></script>
+<script src="js/traductions.js"></script>
 <script src="js/site.js"></script>
 </body>
 </html>

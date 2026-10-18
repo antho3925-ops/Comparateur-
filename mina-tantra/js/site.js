@@ -6,11 +6,100 @@
   'use strict';
 
   var $  = function (s) { return document.querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
   var esc = function (t) {
     return String(t == null ? '' : t)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
   };
+
+  /* ============================== Les langues ============================= */
+  /* Le francais vit dans contenu.js ; les autres langues dans traductions.js.
+     Le choix du visiteur est retenu, et un changement recharge simplement la
+     page : tout se reconstruit alors dans la bonne langue. */
+  var LANGUES_CONNUES = (typeof LANGUES_SITE !== 'undefined') ? LANGUES_SITE
+    : [{ code: 'fr', drapeau: '🇫🇷', nom: 'Français', locale: 'fr-CH' }];
+  var CLE_LANGUE = 'chez-eva-langue';
+
+  function langueDemandee() {
+    var par = /[?&]lang=([a-z]{2})/.exec(window.location.search);
+    if (par && connue(par[1])) { return par[1]; }
+    try {
+      var gardee = localStorage.getItem(CLE_LANGUE);
+      if (gardee && connue(gardee)) { return gardee; }
+    } catch (e) {}
+    if (window.LANGUE_SERVEUR && connue(window.LANGUE_SERVEUR)) { return window.LANGUE_SERVEUR; }
+    var duTelephone = (navigator.language || '').slice(0, 2).toLowerCase();
+    return connue(duTelephone) ? duTelephone : 'fr';
+  }
+
+  function connue(code) {
+    return LANGUES_CONNUES.some(function (l) { return l.code === code; });
+  }
+
+  var LANGUE = langueDemandee();
+  var LOCALE = (LANGUES_CONNUES.filter(function (l) { return l.code === LANGUE; })[0] || {}).locale || 'fr-CH';
+  document.documentElement.lang = LANGUE;
+
+  var TRAD = (typeof TRADUCTIONS !== 'undefined') ? (TRADUCTIONS[LANGUE] || {}) : {};
+  var TRAD_FR = (typeof TRADUCTIONS !== 'undefined') ? (TRADUCTIONS.fr || {}) : {};
+
+  /** L'heure telle qu'on l'ecrit dans la langue courante. */
+  function heureAffichee(h) {
+    return LANGUE === 'fr' ? String(h).replace(':', 'h') : String(h);
+  }
+
+  /** Un texte d'interface, avec le francais pour filet. */
+  function T(cle) {
+    var ui = TRAD.ui || {};
+    if (typeof ui[cle] === 'string') { return ui[cle]; }
+    var secours = TRAD_FR.ui || {};
+    return typeof secours[cle] === 'string' ? secours[cle] : '';
+  }
+
+  /** Un morceau de contenu traduit, ou celui de contenu.js en francais. */
+  function C(nom, defaut) {
+    return (TRAD[nom] !== undefined && TRAD[nom] !== null) ? TRAD[nom] : defaut;
+  }
+
+  /** La traduction d'un terme du catalogue (prestation, langue, origine). */
+  function terme(table, mot) {
+    var dico = TRAD[table] || {};
+    return dico[mot] || mot;
+  }
+
+  /* Le choix de langue, en drapeaux, dans l'en-tete. */
+  (function poserLesDrapeaux() {
+    var zone = $('#langues');
+    if (!zone) { return; }
+    zone.setAttribute('aria-label', T('langue_choisir'));
+    zone.innerHTML = LANGUES_CONNUES.map(function (l) {
+      return '<button type="button" class="langue' + (l.code === LANGUE ? ' active' : '')
+           + '" data-langue="' + esc(l.code) + '" lang="' + esc(l.code) + '"'
+           + ' title="' + esc(l.nom) + '" aria-label="' + esc(l.nom) + '"'
+           + (l.code === LANGUE ? ' aria-current="true"' : '') + '>'
+           + '<span class="drapeau">' + l.drapeau + '</span>'
+           + '<span class="langue-code">' + esc(l.code.toUpperCase()) + '</span>'
+           + '</button>';
+    }).join('');
+
+    zone.addEventListener('click', function (ev) {
+      var b = ev.target.closest('.langue');
+      if (!b || b.dataset.langue === LANGUE) { return; }
+      try { localStorage.setItem(CLE_LANGUE, b.dataset.langue); } catch (e) {}
+      var adresse = window.location.pathname + '?lang=' + b.dataset.langue + window.location.hash;
+      window.location.replace(adresse);
+    });
+  }());
+
+  /* Les textes fixes de la page portent un marqueur : on les remplit ici. */
+  $$('[data-t]').forEach(function (el) { el.textContent = T(el.dataset.t); });
+  $$('[data-t-html]').forEach(function (el) { el.innerHTML = T(el.dataset.tHtml); });
+  $$('[data-t-aria]').forEach(function (el) { el.setAttribute('aria-label', T(el.dataset.tAria)); });
+
+  document.title = T('titre_page');
+  var metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) { metaDesc.setAttribute('content', T('description_page')); }
 
   /* ------------------------------ Porte 18+ ------------------------------ */
   var CLE = 'chez-eva-majeur';
@@ -59,31 +148,30 @@
 
   /* ------------------------------ Présentation --------------------------- */
   $('#presentation-texte').innerHTML =
-    PRESENTATION.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
+    C('presentation', PRESENTATION).map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
 
-  $('#atouts').innerHTML = ATOUTS.map(function (a) {
+  $('#atouts').innerHTML = C('atouts', ATOUTS).map(function (a) {
     return '<article class="atout"><h3>' + esc(a.titre) + '</h3><p>' + esc(a.texte) + '</p></article>';
   }).join('');
 
   /* ------------------- Les façons de prendre rendez-vous ----------------- */
   if (typeof PRISE_DE_RDV !== 'undefined' && $('#prise-rdv')) {
-    if (typeof PRISE_DE_RDV_TITRE === 'string') {
-      $('#prise-rdv-titre').textContent = PRISE_DE_RDV_TITRE;
-    }
+    $('#prise-rdv-titre').textContent =
+      C('priseDeRdvTitre', typeof PRISE_DE_RDV_TITRE === 'string' ? PRISE_DE_RDV_TITRE : '');
 
     var numeroSalon = (SALON.telephone || '').replace(/[^\d+]/g, '');
     var waSalon = (SALON.whatsapp || '').replace(/\D/g, '');
 
-    $('#prise-rdv').innerHTML = PRISE_DE_RDV.map(function (f) {
+    $('#prise-rdv').innerHTML = C('priseDeRdv', PRISE_DE_RDV).map(function (f) {
       var lien = '';
       if (f.bouton === 'telephone' && numeroSalon) {
         lien = '<a class="btn btn-plein" href="tel:' + esc(numeroSalon) + '">'
              + esc(SALON.telephone) + '</a>';
       } else if (f.bouton === 'whatsapp' && waSalon) {
         lien = '<a class="btn btn-vide" href="https://wa.me/' + esc(waSalon)
-             + '" target="_blank" rel="noopener">Écrire sur WhatsApp</a>';
+             + '" target="_blank" rel="noopener">' + esc(T('bouton_whatsapp')) + '</a>';
       } else if (f.bouton === 'formulaire') {
-        lien = '<a class="btn btn-vide" href="#reserver">Réserver en ligne</a>';
+        lien = '<a class="btn btn-vide" href="#reserver">' + esc(T('reserver_titre')) + '</a>';
       }
       return '<article class="rdv-carte' + (f.bouton === 'formulaire' ? ' rdv-en-ligne' : '') + '">'
            + '<h4>' + esc(f.titre) + '</h4>'
@@ -110,7 +198,7 @@
   function enFrancais(d) {
     var options = { day: 'numeric', month: 'long' };
     if (d.getFullYear() !== new Date().getFullYear()) { options.year = 'numeric'; }
-    return d.toLocaleDateString('fr-CH', options);
+    return d.toLocaleDateString(LOCALE, options);
   }
 
   /* Trois situations, et une seule compte vraiment pour le client :
@@ -124,24 +212,25 @@
     aujourdhui.setHours(0, 0, 0, 0);
 
     if (m.disponible === false || (fin && aujourdhui > fin)) {
-      return { etat: 'absente', badge: 'Bientôt de retour', ligne: null };
+      return { etat: 'absente', badge: T('badge_bientot'), ligne: null };
     }
     if (debut && aujourdhui < debut) {
       var meme = fin && debut.getMonth() === fin.getMonth()
                      && debut.getFullYear() === fin.getFullYear();
       return {
         etat: 'avenir',
-        badge: 'À partir du ' + enFrancais(debut),
+        badge: T('badge_a_partir') + ' ' + enFrancais(debut),
         ligne: fin
-          ? 'Présente du ' + (meme ? debut.getDate() : enFrancais(debut))
-            + ' au ' + enFrancais(fin)
+          ? T('ligne_presente_du') + ' ' + (meme ? debut.getDate() : enFrancais(debut))
+            + ' ' + T('ligne_au') + ' ' + enFrancais(fin)
           : null
       };
     }
     if (fin) {
-      return { etat: 'ici', badge: 'Disponible', ligne: "Jusqu'au " + enFrancais(fin) };
+      return { etat: 'ici', badge: T('badge_disponible'),
+               ligne: T('ligne_jusquau') + ' ' + enFrancais(fin) };
     }
-    return { etat: 'ici', badge: 'Disponible', ligne: null };
+    return { etat: 'ici', badge: T('badge_disponible'), ligne: null };
   }
 
   /* Les langues, avec leur drapeau quand elles figurent au catalogue.
@@ -160,9 +249,17 @@
         if (c.nom.toLowerCase() === l.toLowerCase()) { trouvee = c; }
       });
       return '<span class="langue">'
-           + (trouvee ? esc(trouvee.drapeau) + ' ' + esc(trouvee.nom) : esc(l))
+           + (trouvee ? esc(trouvee.drapeau) + ' ' + esc(terme('languesParlees', trouvee.nom))
+                      : esc(l))
            + '</span>';
     }).join('');
+  }
+
+  /* Le salon peut saisir la presentation d'une masseuse dans chaque langue.
+     Tant qu'un champ est vide, le francais tient lieu de version unique. */
+  function presentationTraduite(m) {
+    var propre = m['presentation_' + LANGUE];
+    return (typeof propre === 'string' && propre.trim() !== '') ? propre : (m.presentation || '');
   }
 
   /* Construit une fiche. Le bouton d'appel n'apparait que pour les masseuses
@@ -172,8 +269,8 @@
   function carteMasseuse(m, choix) {
     var avecAppel = choix && choix.appel;
     var meta = [];
-    if (m.age)     { meta.push(m.age + ' ans'); }
-    if (m.origine) { meta.push(m.origine); }
+    if (m.age)     { meta.push(m.age + ' ' + T('ans')); }
+    if (m.origine) { meta.push(terme('origines', m.origine)); }
 
     var principale = m.photo || (m.photos && m.photos[0]);
     var photo = principale
@@ -188,17 +285,19 @@
     var langues = languesAffichees(m.langues);
 
     var tags = (m.specialites || []).map(function (s) {
-      return '<span class="tag">' + esc(s) + '</span>';
+      return '<span class="tag">' + esc(terme('specialites', s)) + '</span>';
     }).join('');
 
     var sonNumero = (m.telephone || '').trim();
     var bouton = '';
     if (avecAppel && sonNumero) {
       bouton = '<a class="fiche-tel" href="tel:' + esc(sonNumero.replace(/[^\d+]/g, '')) + '">'
-             + 'Appeler ' + esc(m.prenom) + ' &middot; ' + esc(sonNumero) + '</a>';
+             + esc(T('fiche_appeler')) + ' ' + esc(m.prenom)
+             + ' &middot; ' + esc(sonNumero) + '</a>';
     } else if (choix && choix.reserver) {
       bouton = '<button type="button" class="fiche-reserver" data-masseuse="'
-             + esc(m.id || '') + '">Réserver avec ' + esc(m.prenom) + '</button>';
+             + esc(m.id || '') + '">' + esc(T('fiche_reserver')) + ' '
+             + esc(m.prenom) + '</button>';
     }
 
     var vignettes = (m.photos || []).map(function (src) {
@@ -219,7 +318,7 @@
           '<h3 class="fiche-nom">' + esc(m.prenom) + '</h3>' +
           (meta.length ? '<p class="fiche-meta">' + esc(meta.join(' · ')) + '</p>' : '') +
           (ici.ligne ? '<p class="fiche-periode">' + esc(ici.ligne) + '</p>' : '') +
-          '<p class="fiche-texte">' + esc(m.presentation) + '</p>' +
+          '<p class="fiche-texte">' + esc(presentationTraduite(m)) + '</p>' +
           (langues ? '<p class="fiche-langues">' + langues + '</p>' : '') +
           '<div class="tags">' + tags + '</div>' +
           bouton +
@@ -242,9 +341,10 @@
   });
 
   var solo = presentes.length === 1;
-  $('#masseuses-chapeau').textContent = solo ? 'Qui vous reçoit' : 'Notre équipe';
-  $('#masseuses-titre').textContent   = solo ? 'La masseuse' : 'Les masseuses';
-  $('#masseuses-intro').textContent   = typeof MASSEUSES_INTRO === 'string' ? MASSEUSES_INTRO : '';
+  $('#masseuses-chapeau').textContent = T(solo ? 'masseuses_chapeau_solo' : 'masseuses_chapeau_equipe');
+  $('#masseuses-titre').textContent   = T(solo ? 'masseuses_titre_solo' : 'masseuses_titre_equipe');
+  $('#masseuses-intro').textContent   =
+    C('masseusesIntro', typeof MASSEUSES_INTRO === 'string' ? MASSEUSES_INTRO : '');
 
   var grille = $('#grille-masseuses');
   grille.classList.toggle('solo', solo);
@@ -253,16 +353,14 @@
   }).join('');
 
   if (!presentes.length) {
-    grille.innerHTML = '<p class="intro">Aucune masseuse au salon en ce moment. '
-      + 'Appelez-nous, nous vous dirons qui revient et quand.</p>';
+    grille.innerHTML = '<p class="intro">' + esc(T('bientot_note')) + '</p>';
   }
 
   var blocAvance = $('#bloc-avance');
   if (blocAvance) {
     blocAvance.hidden = aVenir.length === 0;
-    $('#avance-intro').textContent = aVenir.length > 1
-      ? 'Elles arrivent à une date connue. Vous pouvez déjà réserver votre rendez-vous avec elles.'
-      : 'Elle arrive à une date connue. Vous pouvez déjà réserver votre rendez-vous avec elle.';
+    $('#avance-intro').textContent =
+      T(aVenir.length > 1 ? 'avance_intro_plusieurs' : 'avance_intro_une');
     $('#grille-avance').innerHTML = aVenir.map(function (m) {
       return carteMasseuse(m, { reserver: true });
     }).join('');
@@ -271,72 +369,117 @@
   var blocBientot = $('#bloc-bientot');
   if (blocBientot) {
     blocBientot.hidden = bientot.length === 0;
-    $('#bientot-intro').textContent = bientot.length > 1
-      ? 'Elles ne sont pas au salon en ce moment et leur retour n\'a pas encore de date. Appelez-nous pour en savoir plus.'
-      : 'Elle n\'est pas au salon en ce moment et son retour n\'a pas encore de date. Appelez-nous pour en savoir plus.';
+    $('#bientot-intro').textContent =
+      T(bientot.length > 1 ? 'bientot_intro_plusieurs' : 'bientot_intro_une');
     $('#grille-bientot').innerHTML = bientot.map(function (m) {
       return carteMasseuse(m, {});
     }).join('');
   }
 
   /* -------------------------------- Horaires ----------------------------- */
+  /* Le tableau garde l'ordre de contenu.js (lundi d'abord) ; seuls les mots
+     changent de langue. */
+  var joursTraduits = C('jours', null);
+  var heuresTraduites = C('heures', null);
   var jourJs = new Date().getDay();                       // 0 = dimanche
-  var jourAuj = ['Dimanche','Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi'][jourJs];
+  var indexAuj = (jourJs + 6) % 7;                        // 0 = lundi
 
-  $('#horaires-table').innerHTML = '<tbody>' + HORAIRES.map(function (h) {
+  $('#horaires-table').innerHTML = '<tbody>' + HORAIRES.map(function (h, i) {
+    var ferme = /ferm/i.test(h.heures);
     var classes = [];
-    if (/ferm/i.test(h.heures)) classes.push('ferme');
-    if (h.jour.toLowerCase() === jourAuj.toLowerCase()) classes.push('aujourdhui');
+    if (ferme) classes.push('ferme');
+    if (i === indexAuj) classes.push('aujourdhui');
+    var nomJour = joursTraduits ? joursTraduits[i] : h.jour;
+    var heures = (heuresTraduites && !ferme) ? heuresTraduites : h.heures;
     return '<tr' + (classes.length ? ' class="' + classes.join(' ') + '"' : '') + '>' +
-             '<td>' + esc(h.jour) + '</td><td>' + esc(h.heures) + '</td></tr>';
+             '<td>' + esc(nomJour) + '</td><td>' + esc(heures) + '</td></tr>';
   }).join('') + '</tbody>';
 
-  $('#horaires-note').textContent = HORAIRES_NOTE;
+  $('#horaires-note').textContent = C('horairesNote', HORAIRES_NOTE);
 
   /* Les jours ou le salon n'ouvre pas, annonces avant que le client n'essaie. */
   (function annoncerFermetures() {
     var etat = window.SALON_ETAT || {};
-    var dits = etat.fermetures || [];
-    if (!dits.length) { return; }
+    var jours = etat.fermetures_jours || [];
+    var phrases = [];
+
+    /* Les journees entieres qui se suivent sont regroupees : « fermé du 24
+       au 26 décembre » se lit mieux que trois lignes. */
+    var debut = null, precedent = null;
+    function clore() {
+      if (!debut) { return; }
+      phrases.push(debut === precedent
+        ? T('ferme_le') + ' ' + enFrancais(jour(debut))
+        : T('ferme_du') + ' ' + enFrancais(jour(debut))
+          + ' ' + T('ferme_au') + ' ' + enFrancais(jour(precedent)));
+      debut = null;
+    }
+    jours.forEach(function (f) {
+      if (f.moment !== 'journee') {
+        clore();
+        phrases.push(T('ferme_le') + ' ' + enFrancais(jour(f.date))
+          + T(f.moment === 'matin' ? 'ferme_matin' : 'ferme_apresmidi'));
+        precedent = null;
+        return;
+      }
+      if (debut && precedent) {
+        var veille = jour(precedent);
+        veille.setDate(veille.getDate() + 1);
+        var deuxChiffres = function (n) { return (n < 10 ? '0' : '') + n; };
+        var lendemain = veille.getFullYear() + '-' + deuxChiffres(veille.getMonth() + 1)
+                      + '-' + deuxChiffres(veille.getDate());
+        if (lendemain === f.date) { precedent = f.date; return; }
+      }
+      clore();
+      debut = f.date;
+      precedent = f.date;
+    });
+    clore();
+
+    if (!phrases.length) { return; }
     var note = $('#horaires-note');
     var bloc = document.createElement('p');
     bloc.className = 'note note-fermeture';
-    bloc.innerHTML = dits.map(function (d) { return esc(d); }).join('<br>');
+    bloc.innerHTML = phrases.map(function (d) { return esc(d); }).join('<br>');
     note.parentNode.insertBefore(bloc, note);
   }());
 
   /* --------------------------------- Tarifs ------------------------------ */
   $('#grille-tarifs').innerHTML = TARIFS.map(function (t) {
+    var dit = (TRAD.tarifs || {})[t.nom] || {};
     var lignes = (t.lignes || []).map(function (l) {
-      return '<li><span class="duree">' + esc(l.duree) + '</span>' +
+      return '<li><span class="duree">' + esc(terme('durees', l.duree)) + '</span>' +
              '<span class="prix">' + esc(l.prix) + '</span></li>';
     }).join('');
     return '<article class="carte-tarif' + (t.vedette ? ' vedette' : '') + '">' +
-             '<h3>' + esc(t.nom) + '</h3>' +
-             (t.resume ? '<p class="resume">' + esc(t.resume) + '</p>' : '') +
+             '<h3>' + esc(dit.nom || t.nom) + '</h3>' +
+             ((dit.resume || t.resume) ? '<p class="resume">' + esc(dit.resume || t.resume) + '</p>' : '') +
              '<ul class="lignes">' + lignes + '</ul>' +
            '</article>';
   }).join('');
 
   if (typeof QUATRE_MAINS !== 'undefined' && $('#quatre-mains')) {
     $('#quatre-mains').hidden = false;
-    $('#quatre-mains-titre').textContent = QUATRE_MAINS.titre || '';
-    $('#quatre-mains-texte').textContent = QUATRE_MAINS.texte || '';
-    $('#quatre-mains-note').textContent = QUATRE_MAINS.note || '';
+    var duo = C('quatreMains', QUATRE_MAINS);
+    $('#quatre-mains-titre').textContent = duo.titre || '';
+    $('#quatre-mains-texte').textContent = duo.texte || '';
+    $('#quatre-mains-note').textContent = duo.note || '';
   }
 
   $('#supplements').innerHTML = SUPPLEMENTS.map(function (s) {
-    return '<li><span class="supp-nom">' + esc(s.nom) + '</span>' +
+    return '<li><span class="supp-nom">' + esc(terme('supplements', s.nom)) + '</span>' +
            '<span class="supp-prix">' + esc(s.prix) + '</span></li>';
   }).join('');
 
-  $('#tarifs-note').textContent = TARIFS_NOTE;
+  $('#tarifs-note').textContent = C('tarifsNote', TARIFS_NOTE);
 
   /* -------------------------------- Galerie ------------------------------ */
-  $('#grille-galerie').innerHTML = GALERIE.map(function (g) {
+  $('#grille-galerie').innerHTML = GALERIE.map(function (gf, i) {
+    var dites = C('galerie', null);
+    var g = { src: gf.src, legende: (dites && dites[i]) || gf.legende };
     return '<button type="button" class="vignette"' +
              ' data-src="' + esc(g.src) + '" data-legende="' + esc(g.legende || '') + '">' +
-             '<span class="vignette-vide">Photo à venir</span>' +
+             '<span class="vignette-vide">' + esc(T('photo_a_venir')) + '</span>' +
              '<img src="' + esc(g.src) + '" alt="' + esc(g.legende || 'Le salon') + '"' +
              ' loading="lazy" onerror="this.style.display=\'none\'">' +
              (g.legende ? '<span class="vignette-legende">' + esc(g.legende) + '</span>' : '') +
@@ -457,7 +600,8 @@
 
   var boutons = [];
   if (telBrut) {
-    boutons.push('<a class="btn btn-plein" href="tel:' + esc(telBrut) + '">Appeler</a>');
+    boutons.push('<a class="btn btn-plein" href="tel:' + esc(telBrut) + '">'
+                 + esc(T('bouton_appeler')) + '</a>');
   }
   if (SALON.whatsapp) {
     var wa = SALON.whatsapp.replace(/[^\d]/g, '');
@@ -475,11 +619,12 @@
     (SALON.codePostal ? '<span class="contact-adresse-ville">' + esc(SALON.codePostal) + '</span>' : '') +
     '<a class="contact-lien" target="_blank" rel="noopener"' +
     ' href="https://www.google.com/maps/search/?api=1&query=' +
-    encodeURIComponent(adresseComplete) + '">Voir sur la carte &rarr;</a>';
-  $('#contact-parking').textContent = SALON.parking || '';
+    encodeURIComponent(adresseComplete) + '">' + esc(T('contact_carte')) + ' &rarr;</a>';
+  $('#contact-parking').textContent = (TRAD.salon || {}).parking || SALON.parking || '';
 
   if (SALON.photoEntree) {
-    var legendeEntree = SALON.photoEntreeLegende || "L'entrée";
+    var legendeEntree = (TRAD.salon || {}).photoEntreeLegende
+                      || SALON.photoEntreeLegende || T('entree_defaut');
     $('#contact-photo').innerHTML =
       '<button type="button" class="vignette vignette-entree"' +
         ' data-src="' + esc(SALON.photoEntree) + '" data-legende="' + esc(legendeEntree) + '">' +
@@ -489,7 +634,7 @@
       '</button>';
   }
 
-  $('#regles').innerHTML = REGLES.map(function (r) {
+  $('#regles').innerHTML = C('regles', REGLES).map(function (r) {
     return '<li>' + esc(r) + '</li>';
   }).join('');
 
@@ -556,8 +701,7 @@
     if ((window.SALON_ETAT || {}).suspendue) {
       var intro = section.querySelector('.intro');
       if (intro) {
-        intro.textContent = 'La réservation en ligne est momentanément fermée. '
-          + 'Appelez-nous, nous fixons le rendez-vous avec vous.';
+        intro.textContent = T('suspendu_intro');
       }
       form.innerHTML =
         '<div class="champ champ-large suspendu">'
@@ -565,7 +709,7 @@
         + esc(SALON.telephone) + '</a>'
         + (SALON.whatsapp
            ? '<a class="btn" href="https://wa.me/' + esc(SALON.whatsapp.replace(/\D/g, '')) + '">'
-             + 'Écrire sur WhatsApp</a>'
+             + esc(T('bouton_whatsapp')) + '</a>'
            : '')
         + '</div>';
 
@@ -583,9 +727,7 @@
     );
 
     if ($('#reserver-note-duo') && typeof QUATRE_MAINS !== 'undefined') {
-      $('#reserver-note-duo').textContent =
-        'Le formulaire réserve une masseuse. Pour un massage à quatre mains, '
-        + 'appelez-nous : nous composons le duo avec vous.';
+      $('#reserver-note-duo').textContent = T('note_duo');
     }
 
     var champMasseuse   = $('#r-masseuse');
@@ -625,19 +767,35 @@
 
     champPrestation.innerHTML = TARIFS.map(function (t) {
       /* Le nom complet figure dans l'intitule : replie, un menu deroulant
-         n'affiche que l'option choisie, pas le groupe auquel elle appartient. */
-      var court = t.nom.replace(/^Massage\s+/i, '');
+         n'affiche que l'option choisie, pas le groupe auquel elle appartient.
+         Le salon, lui, recevra toujours le nom francais : c'est sa langue de
+         travail, et c'est elle qui figure dans l'agenda. */
+      var nomDit = ((TRAD.tarifs || {})[t.nom] || {}).nom || t.nom;
+      var court = nomDit.replace(/^(Massage|Masaje|Massagem)\s+/i, '');
       court = court.charAt(0).toUpperCase() + court.slice(1);
 
       var options = (t.lignes || []).map(function (l) {
         var n = minutes(l.duree);
         if (!n) { return ''; }
+        var dureeDite = terme('durees', l.duree);
         return '<option value="' + n + '" data-nom="' + esc(t.nom + ' — ' + l.duree) + '"'
              + ' data-prix="' + esc(l.prix) + '">'
-             + esc(court + ' · ' + l.duree + ' — ' + l.prix) + '</option>';
+             + esc(court + ' · ' + dureeDite + ' — ' + l.prix) + '</option>';
       }).join('');
-      return options ? '<optgroup label="' + esc(t.nom) + '">' + options + '</optgroup>' : '';
+      return options ? '<optgroup label="' + esc(nomDit) + '">' + options + '</optgroup>' : '';
     }).join('');
+
+    /* Le serveur repond en francais, mais joint un code : on prefere la
+       phrase traduite quand on la connait. */
+    function messageServeur(d) {
+      var codes = {
+        creneau: 'err_creneau', ferme: 'err_ferme', suspendu: 'err_suspendu',
+        prenom: 'msg_prenom', telephone: 'msg_tel', heure: 'msg_heure',
+      };
+      var cle = d && codes[d.code];
+      if (cle) { return T(cle); }
+      return (d && d.erreur) || T('msg_ko');
+    }
 
     /* --- Le jour --- */
     function iso(d) {
@@ -657,10 +815,10 @@
       heureChoisie = null;
       var date = champDate.value;
       if (!date) {
-        zoneCreneaux.innerHTML = '<p class="note">Choisissez d\'abord un jour.</p>';
+        zoneCreneaux.innerHTML = '<p class="note">' + esc(T('creneaux_jour')) + '</p>';
         return;
       }
-      zoneCreneaux.innerHTML = '<p class="note">Recherche des disponibilités…</p>';
+      zoneCreneaux.innerHTML = '<p class="note">' + esc(T('creneaux_recherche')) + '</p>';
 
       var adresse = 'reserver.php?action=creneaux'
         + '&masseuse=' + encodeURIComponent(champMasseuse.value)
@@ -672,8 +830,7 @@
         .then(function (d) {
           var libres = (d && d.creneaux) || [];
           if (!libres.length) {
-            zoneCreneaux.innerHTML = '<p class="note">Aucune disponibilité ce jour-là. '
-              + 'Essayez un autre jour, ou appelez-nous.</p>';
+            zoneCreneaux.innerHTML = '<p class="note">' + esc(T('creneaux_aucun')) + '</p>';
             return;
           }
           /* Les quarts d'heure font une longue liste. On la range en trois
@@ -711,7 +868,7 @@
                      + (g.heures.length
                         ? g.heures.map(function (h) {
                             return '<button type="button" class="creneau" data-heure="' + esc(h) + '">'
-                                 + esc(h.replace(':', 'h')) + '</button>';
+                                 + esc(heureAffichee(h)) + '</button>';
                           }).join('')
                         : '<p class="note">' + esc(g.vide) + '</p>')
                      + '</div>';
@@ -719,16 +876,16 @@
             + '<p class="creneaux-choix" hidden></p>';
         })
         .catch(function () {
-          zoneCreneaux.innerHTML = '<p class="note">Disponibilités indisponibles. Appelez-nous.</p>';
+          zoneCreneaux.innerHTML = '<p class="note">' + esc(T('creneaux_indispo')) + '</p>';
         });
     }
 
     /* Les trois moments de la journee, et ce qu'on dit quand l'un d'eux
        n'a plus rien a offrir. */
     var MOMENTS = [
-      { titre: 'Matin',      jusqua: 12, vide: 'Plus de place le matin. Essayez l’après-midi ou la soirée.' },
-      { titre: 'Après-midi', jusqua: 18, vide: 'Plus de place l’après-midi. Essayez le matin ou la soirée.' },
-      { titre: 'Soirée',     jusqua: 24, vide: 'Plus de place en soirée. Essayez le matin ou l’après-midi.' },
+      { titre: T('moment_matin'),      jusqua: 12, vide: T('moment_matin_vide') },
+      { titre: T('moment_apresmidi'),  jusqua: 18, vide: T('moment_apresmidi_vide') },
+      { titre: T('moment_soiree'),     jusqua: 24, vide: T('moment_soiree_vide') },
     ];
 
     /* Rappelle l'heure retenue : elle peut appartenir a un moment de la
@@ -738,7 +895,7 @@
       if (!rappel) { return; }
       rappel.hidden = !heureChoisie;
       rappel.textContent = heureChoisie
-        ? 'Heure retenue : ' + heureChoisie.replace(':', 'h')
+        ? T('heure_retenue') + ' ' + heureAffichee(heureChoisie)
         : '';
     }
 
@@ -791,9 +948,9 @@
     form.addEventListener('submit', function (ev) {
       ev.preventDefault();
 
-      if (!heureChoisie) { message('Choisissez une heure.', 'ko'); return; }
-      if ($('#r-prenom').value.trim().length < 2) { message('Indiquez votre prénom.', 'ko'); return; }
-      if ($('#r-tel').value.replace(/\D/g, '').length < 9) { message('Indiquez un numéro de téléphone valable.', 'ko'); return; }
+      if (!heureChoisie) { message(T('msg_heure'), 'ko'); return; }
+      if ($('#r-prenom').value.trim().length < 2) { message(T('msg_prenom'), 'ko'); return; }
+      if ($('#r-tel').value.replace(/\D/g, '').length < 9) { message(T('msg_tel'), 'ko'); return; }
 
       var choix = champPrestation.options[champPrestation.selectedIndex];
       var donnees = new FormData();
@@ -809,7 +966,7 @@
       donnees.append('site', $('#r-site').value);
 
       bouton.disabled = true;
-      message('Envoi…');
+      message(T('msg_envoi'));
 
       fetch('reserver.php', { method: 'POST', body: donnees })
         .then(function (r) { return r.json(); })
@@ -819,15 +976,15 @@
             form.reset();
             heureChoisie = null;
             zoneCreneaux.innerHTML = '<p class="note">Choisissez d\'abord un jour.</p>';
-            message(d.message || 'Demande enregistrée.', 'ok');
+            message(T('msg_ok'), 'ok');
           } else {
-            message((d && d.erreur) || 'Envoi impossible. Appelez-nous.', 'ko');
+            message(messageServeur(d), 'ko');
             chargerCreneaux();
           }
         })
         .catch(function () {
           bouton.disabled = false;
-          message('Envoi impossible. Appelez-nous.', 'ko');
+          message(T('msg_ko'), 'ko');
         });
     });
   }

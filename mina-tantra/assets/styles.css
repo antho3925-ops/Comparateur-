@@ -141,9 +141,11 @@ a{ color:inherit; }
 
 .marque{ text-decoration:none; line-height:1.1; }
 .marque-nom{ display:block; font-family:var(--nom); font-size:1.55rem; letter-spacing:.14em; color:var(--texte); }
-.marque-sous{ display:block; font-size:.62rem; letter-spacing:.34em; text-transform:uppercase; color:var(--or); }
+.marque-sous{ display:block; font-size:.62rem; letter-spacing:.34em; text-transform:uppercase;
+              color:var(--or); white-space:nowrap; }
 
-.menu{ display:flex; align-items:center; gap:30px; }
+.menu{ display:flex; align-items:center; gap:22px; margin-left:auto; }
+.menu a{ white-space:nowrap; }
 .menu a{
   text-decoration:none; font-size:.76rem; letter-spacing:.18em;
   text-transform:uppercase; color:var(--texte-doux); padding:6px 0;
@@ -155,6 +157,21 @@ a{ color:inherit; }
   color:var(--or-clair);
 }
 .menu .menu-cta:hover{ background:var(--or); color:#1a1208; border-bottom-color:var(--or); }
+
+/* ------------------------- Le choix de la langue ------------------------- */
+/* Sur grand ecran les drapeaux ferment la ligne, apres le menu ; au
+   telephone ils se glissent entre le nom et le bouton du menu. */
+.langues{ display:flex; align-items:center; gap:2px; order:3; margin-left:20px; }
+.langue{
+  display:flex; align-items:center; gap:5px; padding:5px 9px; border-radius:999px;
+  background:transparent; border:1px solid transparent; color:var(--texte-doux);
+  font-family:var(--sans); font-size:.62rem; letter-spacing:.14em;
+  line-height:1; cursor:pointer; transition:.2s ease;
+}
+.langue .drapeau{ font-size:1.05rem; line-height:1; }
+.langue:hover{ color:var(--or-clair); }
+.langue.active{ border-color:var(--bord); background:rgba(201,162,39,.12); color:var(--or-clair); }
+.langue:not(.active) .drapeau{ filter:saturate(.55) opacity(.75); }
 
 .burger{ display:none; background:none; border:0; padding:10px; cursor:pointer; }
 .burger span{ display:block; width:26px; height:2px; margin:5px 0; background:var(--texte); transition:.3s; }
@@ -582,6 +599,14 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
   .solo .fiche-corps{ padding:24px 22px 28px; }
   .solo .fiche-nom{ font-size:2rem; }
   .burger{ display:block; }
+  /* Au telephone, les drapeaux parlent d'eux-memes : les lettres s'effacent,
+     et le nom de la ville tient sur une ligne malgre la place prise. */
+  .langues{ order:0; margin-left:auto; margin-right:4px; gap:0; }
+  .langue{ padding:5px 4px; }
+  .langue .drapeau{ font-size:.95rem; }
+  .langue-code{ display:none; }
+  .marque-nom{ font-size:1.35rem; }
+  .marque-sous{ font-size:.54rem; letter-spacing:.2em; white-space:nowrap; }
   .menu{
     position:fixed; inset:76px 0 auto 0; flex-direction:column; gap:0;
     background:rgba(18,11,18,.98); border-bottom:1px solid var(--bord);

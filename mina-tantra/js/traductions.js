@@ -1,0 +1,565 @@
+/* ---------------------------------------------------------------------------
+   Chez Eva — les langues du site
+   ---------------------------------------------------------------------------
+   Le site parle français, allemand, anglais et espagnol. Le français vit
+   dans contenu.js : c'est la version de référence, celle que le salon
+   modifie. Les trois autres langues sont ici.
+
+   Pour corriger une traduction : trouver la phrase et la réécrire. Rien
+   d'autre à toucher. Une entrée absente retombe sur le français.
+--------------------------------------------------------------------------- */
+
+const LANGUES_SITE = [
+  { code: 'fr', drapeau: '🇫🇷', nom: 'Français', locale: 'fr-CH' },
+  { code: 'de', drapeau: '🇩🇪', nom: 'Deutsch',  locale: 'de-CH' },
+  { code: 'en', drapeau: '🇬🇧', nom: 'English',  locale: 'en-GB' },
+  { code: 'es', drapeau: '🇪🇸', nom: 'Español',  locale: 'es-ES' },
+];
+
+const TRADUCTIONS = {
+
+/* ========================================================================= */
+fr: {
+  ui: {
+    titre_page: 'Chez Eva — Massage érotique et tantrique à La Chaux-de-Fonds',
+    description_page: 'Chez Eva, salon de massage érotique et tantrique, Rue du Pont 34 à La Chaux-de-Fonds. Masseuses, horaires et tarifs.',
+
+    porte_titre: 'Ce site est réservé aux adultes',
+    porte_texte: 'Il contient des textes et des images à caractère sensuel destinés à un public majeur. En entrant, vous certifiez avoir 18 ans révolus et consulter ce site de votre plein gré.',
+    porte_entrer: 'J’ai 18 ans ou plus — entrer',
+    porte_quitter: 'Quitter',
+
+    menu_accueil: 'Accueil', menu_masseuses: 'Masseuses', menu_horaires: 'Horaires',
+    menu_tarifs: 'Tarifs', menu_salon: 'Le salon', menu_rdv: 'Rendez-vous',
+    menu_ouvrir: 'Ouvrir le menu',
+
+    hero_eyebrow: 'Nouveau · Ouverture à La Chaux-de-Fonds',
+    hero_slogan: 'Massage érotique & tantrique — l’art de prendre son temps',
+    hero_voir: 'Voir les masseuses',
+    hero_rdv: 'Prendre rendez-vous',
+    hero_puce_1: 'Sur rendez-vous', hero_puce_2: 'Discrétion absolue', hero_puce_3: '7 jours sur 7',
+    hero_descendre: 'Descendre',
+
+    presentation_chapeau: 'Le mot du salon',
+    presentation_titre: 'Des années d’expérience,<br>une nouvelle adresse',
+
+    masseuses_chapeau_solo: 'Qui vous reçoit', masseuses_chapeau_equipe: 'Notre équipe',
+    masseuses_titre_solo: 'La masseuse', masseuses_titre_equipe: 'Les masseuses',
+    avance_titre: 'Prochaines arrivées', bientot_titre: 'Bientôt de retour',
+    avance_intro_une: 'Elle arrive à une date connue. Vous pouvez déjà réserver votre rendez-vous avec elle.',
+    avance_intro_plusieurs: 'Elles arrivent à une date connue. Vous pouvez déjà réserver votre rendez-vous avec elles.',
+    bientot_intro_une: 'Elle n’est pas au salon en ce moment et son retour n’a pas encore de date. Appelez-nous pour en savoir plus.',
+    bientot_intro_plusieurs: 'Elles ne sont pas au salon en ce moment et leur retour n’a pas encore de date. Appelez-nous pour en savoir plus.',
+    bientot_note: 'Appelez-nous, nous vous dirons qui revient et quand.',
+
+    badge_disponible: 'Disponible', badge_bientot: 'Bientôt de retour',
+    badge_a_partir: 'À partir du', ligne_presente_du: 'Présente du', ligne_au: 'au',
+    ligne_jusquau: 'Jusqu’au', fiche_appeler: 'Appeler', fiche_reserver: 'Réserver avec',
+
+    horaires_chapeau: 'Quand nous trouver', horaires_titre: 'Horaires d’ouverture',
+    ferme_le: 'Fermé le', ferme_du: 'Fermé du', ferme_au: 'au',
+    ferme_matin: ', le matin', ferme_apresmidi: ', l’après-midi',
+
+    tarifs_chapeau: 'En toute transparence', tarifs_titre: 'Nos tarifs',
+    supplements_titre: 'Suppléments',
+
+    reserver_chapeau: 'En deux minutes', reserver_titre: 'Réserver en ligne',
+    reserver_intro: 'Choisissez votre masseuse, le soin et l’heure qui vous arrange. Nous vous rappelons pour confirmer le rendez-vous.',
+    champ_masseuse: 'Masseuse', champ_prestation: 'Prestation', champ_jour: 'Jour',
+    champ_heure: 'Heure', champ_prenom: 'Votre prénom', champ_tel: 'Votre téléphone',
+    bouton_envoyer: 'Demander ce rendez-vous',
+    note_donnees: 'Nous ne conservons que votre prénom et votre numéro, le temps du rendez-vous, et uniquement pour vous rappeler. Rien n’est publié, rien n’est transmis à personne.',
+    note_duo: 'Le formulaire réserve une masseuse. Pour un massage à quatre mains, appelez-nous : nous composons le duo avec vous.',
+    suspendu_intro: 'La réservation en ligne est momentanément fermée. Appelez-nous, nous fixons le rendez-vous avec vous.',
+    bouton_whatsapp: 'Écrire sur WhatsApp',
+
+    creneaux_jour: 'Choisissez d’abord un jour.',
+    creneaux_recherche: 'Recherche des disponibilités…',
+    creneaux_aucun: 'Aucune disponibilité ce jour-là. Essayez un autre jour, ou appelez-nous.',
+    creneaux_indispo: 'Disponibilités indisponibles. Appelez-nous.',
+    moment_matin: 'Matin', moment_apresmidi: 'Après-midi', moment_soiree: 'Soirée',
+    moment_matin_vide: 'Plus de place le matin. Essayez l’après-midi ou la soirée.',
+    moment_apresmidi_vide: 'Plus de place l’après-midi. Essayez le matin ou la soirée.',
+    moment_soiree_vide: 'Plus de place en soirée. Essayez le matin ou l’après-midi.',
+    heure_retenue: 'Heure retenue :',
+
+    msg_heure: 'Choisissez une heure.', msg_prenom: 'Indiquez votre prénom.',
+    msg_tel: 'Indiquez un numéro de téléphone valable.', msg_envoi: 'Envoi…',
+    msg_ok: 'Demande enregistrée. Nous vous rappelons rapidement pour confirmer.',
+    msg_ko: 'Envoi impossible. Appelez-nous.',
+    err_creneau: 'Ce créneau vient d’être pris. Choisissez-en un autre.',
+    err_ferme: 'Le salon est fermé ce jour-là. Choisissez un autre jour.',
+    err_suspendu: 'La réservation en ligne est momentanément fermée. Appelez-nous.',
+
+    galerie_chapeau: 'L’écrin', galerie_titre: 'Le salon',
+    galerie_intro: 'Un lieu calme, chaud et net. Quelques images pour vous en faire une idée.',
+
+    contact_chapeau: 'On vous attend', contact_titre: 'Prendre rendez-vous',
+    contact_appeler: 'Nous appeler', contact_rejoindre: 'Nous rejoindre', contact_cadre: 'Le cadre',
+    contact_note: 'Un appel vaut mieux qu’un message : nous confirmons la disponibilité en direct.',
+
+    pied_texte: 'Salon de massage érotique et tantrique —',
+    pied_majeur: 'Site strictement réservé aux personnes majeures (18+).',
+    pied_mini: 'Les massages proposés sont des prestations de bien-être entre adultes consentants. Aucune donnée personnelle n’est collectée sur ce site.',
+
+    photo_fermer: 'Fermer', photo_precedente: 'Photo précédente', photo_suivante: 'Photo suivante',
+    langue_choisir: 'Choisir la langue',
+    ans: 'ans',
+    contact_carte: 'Voir sur la carte',
+    bouton_appeler: 'Appeler',
+    photo_a_venir: 'Photo à venir',
+    entree_defaut: 'L’entrée',
+  },
+},
+
+/* ========================================================================= */
+de: {
+  ui: {
+    titre_page: 'Chez Eva — Erotische und tantrische Massage in La Chaux-de-Fonds',
+    description_page: 'Chez Eva, Salon für erotische und tantrische Massage, Rue du Pont 34 in La Chaux-de-Fonds. Masseurinnen, Öffnungszeiten und Preise.',
+
+    porte_titre: 'Diese Seite ist nur für Erwachsene',
+    porte_texte: 'Sie enthält Texte und Bilder sinnlichen Inhalts für ein erwachsenes Publikum. Mit dem Eintreten bestätigen Sie, dass Sie mindestens 18 Jahre alt sind und diese Seite aus freiem Willen besuchen.',
+    porte_entrer: 'Ich bin 18 oder älter — eintreten',
+    porte_quitter: 'Verlassen',
+
+    menu_accueil: 'Start', menu_masseuses: 'Masseurinnen', menu_horaires: 'Öffnungszeiten',
+    menu_tarifs: 'Preise', menu_salon: 'Der Salon', menu_rdv: 'Termin',
+    menu_ouvrir: 'Menü öffnen',
+
+    hero_eyebrow: 'Neu · Eröffnung in La Chaux-de-Fonds',
+    hero_slogan: 'Erotische & tantrische Massage — die Kunst, sich Zeit zu nehmen',
+    hero_voir: 'Masseurinnen ansehen',
+    hero_rdv: 'Termin vereinbaren',
+    hero_puce_1: 'Nur nach Vereinbarung', hero_puce_2: 'Absolute Diskretion', hero_puce_3: '7 Tage die Woche',
+    hero_descendre: 'Nach unten',
+
+    presentation_chapeau: 'Ein Wort des Salons',
+    presentation_titre: 'Jahrelange Erfahrung,<br>eine neue Adresse',
+
+    masseuses_chapeau_solo: 'Wer Sie empfängt', masseuses_chapeau_equipe: 'Unser Team',
+    masseuses_titre_solo: 'Die Masseurin', masseuses_titre_equipe: 'Die Masseurinnen',
+    avance_titre: 'Demnächst bei uns', bientot_titre: 'Bald zurück',
+    avance_intro_une: 'Ihr Ankunftsdatum steht fest. Sie können Ihren Termin schon jetzt buchen.',
+    avance_intro_plusieurs: 'Ihre Ankunftsdaten stehen fest. Sie können Ihren Termin schon jetzt buchen.',
+    bientot_intro_une: 'Sie ist zurzeit nicht im Salon, und ihre Rückkehr hat noch kein Datum. Rufen Sie uns an, wir sagen Ihnen mehr.',
+    bientot_intro_plusieurs: 'Sie sind zurzeit nicht im Salon, und ihre Rückkehr hat noch kein Datum. Rufen Sie uns an, wir sagen Ihnen mehr.',
+    bientot_note: 'Rufen Sie uns an — wir sagen Ihnen, wer wann zurückkommt.',
+
+    badge_disponible: 'Verfügbar', badge_bientot: 'Bald zurück',
+    badge_a_partir: 'Ab dem', ligne_presente_du: 'Da vom', ligne_au: 'bis',
+    ligne_jusquau: 'Bis zum', fiche_appeler: 'Anrufen:', fiche_reserver: 'Termin bei',
+
+    horaires_chapeau: 'Wann Sie uns finden', horaires_titre: 'Öffnungszeiten',
+    ferme_le: 'Geschlossen am', ferme_du: 'Geschlossen vom', ferme_au: 'bis',
+    ferme_matin: ', vormittags', ferme_apresmidi: ', nachmittags',
+
+    tarifs_chapeau: 'Ganz transparent', tarifs_titre: 'Unsere Preise',
+    supplements_titre: 'Zusatzleistungen',
+
+    reserver_chapeau: 'In zwei Minuten', reserver_titre: 'Online buchen',
+    reserver_intro: 'Wählen Sie Ihre Masseurin, die Massage und die Uhrzeit, die Ihnen passt. Wir rufen Sie zur Bestätigung zurück.',
+    champ_masseuse: 'Masseurin', champ_prestation: 'Massage', champ_jour: 'Tag',
+    champ_heure: 'Uhrzeit', champ_prenom: 'Ihr Vorname', champ_tel: 'Ihre Telefonnummer',
+    bouton_envoyer: 'Diesen Termin anfragen',
+    note_donnees: 'Wir speichern nur Ihren Vornamen und Ihre Nummer, für die Dauer des Termins und ausschliesslich für den Rückruf. Nichts wird veröffentlicht, nichts weitergegeben.',
+    note_duo: 'Das Formular bucht eine Masseurin. Für eine Vier-Hände-Massage rufen Sie uns an: wir stellen das Duo mit Ihnen zusammen.',
+    suspendu_intro: 'Die Online-Buchung ist vorübergehend geschlossen. Rufen Sie uns an, wir vereinbaren den Termin mit Ihnen.',
+    bouton_whatsapp: 'Auf WhatsApp schreiben',
+
+    creneaux_jour: 'Wählen Sie zuerst einen Tag.',
+    creneaux_recherche: 'Freie Zeiten werden gesucht…',
+    creneaux_aucun: 'An diesem Tag ist nichts mehr frei. Versuchen Sie einen anderen Tag, oder rufen Sie uns an.',
+    creneaux_indispo: 'Zeiten nicht abrufbar. Rufen Sie uns an.',
+    moment_matin: 'Vormittag', moment_apresmidi: 'Nachmittag', moment_soiree: 'Abend',
+    moment_matin_vide: 'Vormittags ist nichts mehr frei. Versuchen Sie nachmittags oder abends.',
+    moment_apresmidi_vide: 'Nachmittags ist nichts mehr frei. Versuchen Sie vormittags oder abends.',
+    moment_soiree_vide: 'Abends ist nichts mehr frei. Versuchen Sie vormittags oder nachmittags.',
+    heure_retenue: 'Gewählte Uhrzeit:',
+
+    msg_heure: 'Wählen Sie eine Uhrzeit.', msg_prenom: 'Bitte geben Sie Ihren Vornamen an.',
+    msg_tel: 'Bitte geben Sie eine gültige Telefonnummer an.', msg_envoi: 'Wird gesendet…',
+    msg_ok: 'Anfrage erfasst. Wir rufen Sie in Kürze zur Bestätigung zurück.',
+    msg_ko: 'Senden nicht möglich. Rufen Sie uns an.',
+    err_creneau: 'Diese Zeit wurde gerade vergeben. Bitte wählen Sie eine andere.',
+    err_ferme: 'An diesem Tag ist der Salon geschlossen. Bitte wählen Sie einen anderen Tag.',
+    err_suspendu: 'Die Online-Buchung ist vorübergehend geschlossen. Rufen Sie uns an.',
+
+    galerie_chapeau: 'Der Rahmen', galerie_titre: 'Der Salon',
+    galerie_intro: 'Ein ruhiger, warmer und gepflegter Ort. Ein paar Bilder, um sich ein Bild zu machen.',
+
+    contact_chapeau: 'Wir erwarten Sie', contact_titre: 'Termin vereinbaren',
+    contact_appeler: 'Anrufen', contact_rejoindre: 'Herkommen', contact_cadre: 'Der Rahmen',
+    contact_note: 'Ein Anruf ist besser als eine Nachricht: wir bestätigen die Verfügbarkeit sofort.',
+
+    pied_texte: 'Salon für erotische und tantrische Massage —',
+    pied_majeur: 'Diese Seite ist ausschliesslich für Volljährige (18+).',
+    pied_mini: 'Die angebotenen Massagen sind Wellnessleistungen unter einwilligenden Erwachsenen. Auf dieser Seite werden keine personenbezogenen Daten gesammelt.',
+
+    photo_fermer: 'Schliessen', photo_precedente: 'Vorheriges Foto', photo_suivante: 'Nächstes Foto',
+    langue_choisir: 'Sprache wählen',
+    ans: 'Jahre',
+    contact_carte: 'Auf der Karte ansehen',
+    bouton_appeler: 'Anrufen',
+    photo_a_venir: 'Foto folgt',
+    entree_defaut: 'Der Eingang',
+  },
+
+  presentation: [
+    'Seit Jahren begleiten wir eine treue, diskrete und anspruchsvolle Kundschaft. Jahre, in denen wir unser Handwerk verfeinert, unsere Masseurinnen ausgebildet und eine einzige Idee gepflegt haben: die erotische Massage ist zuerst eine Kunst der Zuwendung.',
+    'Heute schlagen wir ein neues Kapitel auf: Chez Eva kommt nach La Chaux-de-Fonds. Ein warmer Rahmen, gemacht für Entspannung, sanftes Licht und Stille, zwei Schritte vom Zentrum — mit demselben Anspruch und derselben absoluten Diskretion.',
+    'Sie werden ohne Eile empfangen, in einem sauberen und erlesenen Rahmen, von einer aufmerksamen Masseurin, die sich Zeit nimmt zu verstehen, was Sie suchen. Nichts wird aufgedrängt, alles wird angeboten. Hier atmet man auf.',
+  ],
+  atouts: [
+    { titre: 'Jahrelange Erfahrung', texte: 'Ein bewährtes Können, geduldig verfeinert, und Hunderte von Gästen, die wiederkommen.' },
+    { titre: 'Völlige Diskretion', texte: 'Eingang vor Blicken geschützt, keine Spuren, kein Urteil. Was hier geschieht, bleibt hier.' },
+    { titre: 'Ein gepflegter Rahmen', texte: 'Beheizte Kabinen, frische Wäsche für jede Massage, Dusche vorhanden, hochwertige Öle.' },
+  ],
+  priseDeRdvTitre: 'Drei Wege zum Termin',
+  priseDeRdv: [
+    { bouton: 'telephone', titre: 'Per Telefon', texte: 'Am direktesten. Wir prüfen die Verfügbarkeit mit Ihnen, beantworten Ihre Fragen, und der Termin steht in einer Minute.' },
+    { bouton: 'whatsapp', titre: 'Per WhatsApp', texte: 'Wenn Sie lieber schreiben, oder aus dem Ausland anrufen. Gleiche Nummer, gleiche Diskretion.' },
+    { bouton: 'formulaire', titre: 'Online, rund um die Uhr', texte: 'Wählen Sie Masseurin, Massage und Uhrzeit. Wir rufen Sie zur Bestätigung zurück. Eine angekündigte Masseurin lässt sich schon vor ihrer Ankunft buchen.' },
+  ],
+  masseusesIntro: 'Termin nach telefonischer Absprache: wir sagen Ihnen offen, wer Sie empfängt, was sie anbietet und wann.',
+  jours: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'],
+  heures: '09:00 – 22:00 Uhr',
+  horairesNote: 'Sieben Tage die Woche geöffnet, auch sonntags. Nur nach Vereinbarung, am besten ein bis zwei Stunden im Voraus; Anfragen ausserhalb dieser Zeiten prüfen wir von Fall zu Fall.',
+  tarifs: {
+    'Massage érotique': { nom: 'Erotische Massage', resume: 'Warme Öle und erfahrene Hände, der ganze Körper, in einem langsamen Crescendo.' },
+    'Massage body body': { nom: 'Body-to-Body-Massage', resume: 'Körper an Körper: die Masseurin massiert mit ihrem ganzen Körper, gleitend und umhüllend.' },
+    'Massage nuru': { nom: 'Nuru-Massage', resume: 'Das Körper-an-Körper aus Japan: ein dickes, laues Gel, keine Reibung, ein durchgehendes Gleiten vom Nacken bis zu den Füssen.' },
+    'Massage tantra': { nom: 'Tantra-Massage', resume: 'Die Signatur des Hauses: geführter Atem, Langsamkeit und Arbeit am ganzen Körper.' },
+    'Massage tantra réciproque': { nom: 'Gegenseitige Tantra-Massage', resume: 'Dasselbe Ritual, zu zweit: Sie massieren Ihrerseits, Schritt für Schritt von der Masseurin geführt.' },
+    'Massage prostatique': { nom: 'Prostatamassage', resume: 'Eine innere Behandlung, ganz sanft und in Ihrem Tempo: Handschuh, Gel und einwandfreie Hygiene — und nichts geschieht ohne Ihr Einverständnis.' },
+  },
+  durees: { '30 minutes': '30 Minuten', '40 minutes': '40 Minuten', '45 minutes': '45 Minuten', '1 heure': '1 Stunde', '1 heure 30': '1,5 Stunden', '2 heures': '2 Stunden' },
+  quatreMains: {
+    titre: 'Zu vier Händen',
+    texte: 'Zwei Masseurinnen für Sie allein: doppelt so viele Hände, doppelt so viel Empfinden. Das gilt für jede Massage aus der Liste.',
+    note: 'Preis: das Doppelte der gewählten Massage. Nach telefonischer Absprache, je nach anwesenden Masseurinnen.',
+  },
+  supplements: { 'Deuxième éjaculation': 'Zweiter Höhepunkt' },
+  tarifsNote: 'Zahlung vor Ort in bar oder mit Twint. Die Preise umfassen die Kabine, die Wäsche, die Dusche und ein Getränk.',
+  galerie: ['Der Futon und der Kamin', 'Der Tantra-Raum', 'Der goldene Spiegel'],
+  regles: [
+    'Salon ausschliesslich für Volljährige (ab 18 Jahren).',
+    'Einwandfreie Hygiene wird erwartet — bei der Ankunft steht eine Dusche bereit.',
+    'Die Masseurin darf eine Anfrage annehmen oder ablehnen, ohne Diskussion.',
+    'Keine Fotos, keine Videos, keine Aufnahmen im Salon.',
+    'Wer betrunken oder respektlos ist, wird zur Tür begleitet.',
+  ],
+  specialites: {
+    'Tantra': 'Tantra', 'Tantra réciproque': 'Gegenseitiges Tantra', 'Body body': 'Body to Body',
+    'Érotique': 'Erotisch', 'Nuru': 'Nuru', 'Prostatique': 'Prostata',
+  },
+  languesParlees: { 'Français': 'Französisch', 'Anglais': 'Englisch', 'Espagnol': 'Spanisch', 'Portugais': 'Portugiesisch' },
+  origines: { 'Française': 'Französin', 'Suisse': 'Schweizerin', 'Espagnole': 'Spanierin', 'Portugaise': 'Portugiesin', 'Italienne': 'Italienerin', 'Brésilienne': 'Brasilianerin' },
+  salon: {
+    slogan: 'Salon für erotische und tantrische Massage',
+    parking: 'Diskreter Eingang, Parkplätze in der Nähe.',
+    photoEntreeLegende: 'Der Hauseingang, Rue du Pont 34',
+  },
+},
+
+/* ========================================================================= */
+en: {
+  ui: {
+    titre_page: 'Chez Eva — Erotic and tantric massage in La Chaux-de-Fonds',
+    description_page: 'Chez Eva, erotic and tantric massage parlour, Rue du Pont 34 in La Chaux-de-Fonds. Masseuses, opening hours and prices.',
+
+    porte_titre: 'This site is for adults only',
+    porte_texte: 'It contains sensual texts and images intended for an adult audience. By entering, you confirm that you are 18 or over and are visiting this site of your own free will.',
+    porte_entrer: 'I am 18 or over — enter',
+    porte_quitter: 'Leave',
+
+    menu_accueil: 'Home', menu_masseuses: 'Masseuses', menu_horaires: 'Hours',
+    menu_tarifs: 'Prices', menu_salon: 'The parlour', menu_rdv: 'Book',
+    menu_ouvrir: 'Open the menu',
+
+    hero_eyebrow: 'New · Now open in La Chaux-de-Fonds',
+    hero_slogan: 'Erotic & tantric massage — the art of taking your time',
+    hero_voir: 'Meet the masseuses',
+    hero_rdv: 'Book an appointment',
+    hero_puce_1: 'By appointment', hero_puce_2: 'Complete discretion', hero_puce_3: 'Seven days a week',
+    hero_descendre: 'Scroll down',
+
+    presentation_chapeau: 'A word from us',
+    presentation_titre: 'Years of experience,<br>a new address',
+
+    masseuses_chapeau_solo: 'Who will receive you', masseuses_chapeau_equipe: 'Our team',
+    masseuses_titre_solo: 'The masseuse', masseuses_titre_equipe: 'The masseuses',
+    avance_titre: 'Arriving soon', bientot_titre: 'Back before long',
+    avance_intro_une: 'Her arrival date is set. You can already book your appointment with her.',
+    avance_intro_plusieurs: 'Their arrival dates are set. You can already book your appointment with them.',
+    bientot_intro_une: 'She is away at the moment and her return has no date yet. Call us and we will tell you more.',
+    bientot_intro_plusieurs: 'They are away at the moment and their return has no date yet. Call us and we will tell you more.',
+    bientot_note: 'Call us — we will tell you who is coming back, and when.',
+
+    badge_disponible: 'Available', badge_bientot: 'Back before long',
+    badge_a_partir: 'From', ligne_presente_du: 'Here from', ligne_au: 'to',
+    ligne_jusquau: 'Until', fiche_appeler: 'Call', fiche_reserver: 'Book with',
+
+    horaires_chapeau: 'When to find us', horaires_titre: 'Opening hours',
+    ferme_le: 'Closed on', ferme_du: 'Closed from', ferme_au: 'to',
+    ferme_matin: ', in the morning', ferme_apresmidi: ', in the afternoon',
+
+    tarifs_chapeau: 'Plain and clear', tarifs_titre: 'Our prices',
+    supplements_titre: 'Extras',
+
+    reserver_chapeau: 'In two minutes', reserver_titre: 'Book online',
+    reserver_intro: 'Choose your masseuse, the massage and the time that suits you. We will call you back to confirm.',
+    champ_masseuse: 'Masseuse', champ_prestation: 'Massage', champ_jour: 'Day',
+    champ_heure: 'Time', champ_prenom: 'Your first name', champ_tel: 'Your phone number',
+    bouton_envoyer: 'Request this appointment',
+    note_donnees: 'We keep only your first name and your number, for the time of the appointment, and only to call you back. Nothing is published, nothing is passed on.',
+    note_duo: 'The form books one masseuse. For a four-hands massage, call us: we will put the pair together with you.',
+    suspendu_intro: 'Online booking is closed for the moment. Call us and we will arrange the appointment with you.',
+    bouton_whatsapp: 'Message on WhatsApp',
+
+    creneaux_jour: 'Choose a day first.',
+    creneaux_recherche: 'Looking for free times…',
+    creneaux_aucun: 'Nothing free that day. Try another day, or call us.',
+    creneaux_indispo: 'Times unavailable. Please call us.',
+    moment_matin: 'Morning', moment_apresmidi: 'Afternoon', moment_soiree: 'Evening',
+    moment_matin_vide: 'Nothing left in the morning. Try the afternoon or the evening.',
+    moment_apresmidi_vide: 'Nothing left in the afternoon. Try the morning or the evening.',
+    moment_soiree_vide: 'Nothing left in the evening. Try the morning or the afternoon.',
+    heure_retenue: 'Time chosen:',
+
+    msg_heure: 'Please choose a time.', msg_prenom: 'Please give your first name.',
+    msg_tel: 'Please give a valid phone number.', msg_envoi: 'Sending…',
+    msg_ok: 'Request received. We will call you back shortly to confirm.',
+    msg_ko: 'Could not send. Please call us.',
+    err_creneau: 'That time has just been taken. Please choose another.',
+    err_ferme: 'We are closed that day. Please choose another day.',
+    err_suspendu: 'Online booking is closed for the moment. Please call us.',
+
+    galerie_chapeau: 'The setting', galerie_titre: 'The parlour',
+    galerie_intro: 'A quiet, warm and spotless place. A few pictures to give you an idea.',
+
+    contact_chapeau: 'We are waiting for you', contact_titre: 'Book an appointment',
+    contact_appeler: 'Call us', contact_rejoindre: 'Find us', contact_cadre: 'House rules',
+    contact_note: 'A call beats a message: we confirm availability there and then.',
+
+    pied_texte: 'Erotic and tantric massage parlour —',
+    pied_majeur: 'This site is strictly for adults (18+).',
+    pied_mini: 'The massages offered are wellness services between consenting adults. No personal data is collected on this site.',
+
+    photo_fermer: 'Close', photo_precedente: 'Previous photo', photo_suivante: 'Next photo',
+    langue_choisir: 'Choose a language',
+    ans: 'years old',
+    contact_carte: 'See it on the map',
+    bouton_appeler: 'Call',
+    photo_a_venir: 'Photo coming',
+    entree_defaut: 'The entrance',
+  },
+
+  presentation: [
+    'For years we have looked after a loyal, discreet and demanding clientele. Years spent honing a craft, training our masseuses and holding to one idea: erotic massage is an art of care before it is anything else.',
+    'Today we open a new chapter: Chez Eva is settling in La Chaux-de-Fonds. A warm setting, made for relaxation, soft light and quiet, a stone’s throw from the centre — with the same standards and the same absolute discretion.',
+    'You will be received without haste, in a clean and refined setting, by an attentive masseuse who takes the time to understand what you are looking for. Nothing is imposed, everything is offered. Here, you can breathe.',
+  ],
+  atouts: [
+    { titre: 'Years of experience', texte: 'A proven craft, patiently refined, and hundreds of guests who come back.' },
+    { titre: 'Complete discretion', texte: 'An entrance away from prying eyes, no trace, no judgement. What happens here stays here.' },
+    { titre: 'A well-kept setting', texte: 'Heated rooms, fresh linen for every massage, a shower at your disposal, quality oils.' },
+  ],
+  priseDeRdvTitre: 'Three ways to book',
+  priseDeRdv: [
+    { bouton: 'telephone', titre: 'By phone', texte: 'The most direct way. We check availability with you, answer your questions, and the appointment is set within the minute.' },
+    { bouton: 'whatsapp', titre: 'On WhatsApp', texte: 'If you would rather write, or call from abroad. Same number, same discretion.' },
+    { bouton: 'formulaire', titre: 'Online, at any hour', texte: 'Choose the masseuse, the massage and the time that suits you. We call you back to confirm. A masseuse announced here can even be booked before she arrives.' },
+  ],
+  masseusesIntro: 'Appointments arranged by phone: we will tell you plainly who is here, what she offers and when.',
+  jours: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+  heures: '9 am – 10 pm',
+  horairesNote: 'Open seven days a week, Sundays included. By appointment, ideally an hour or two ahead; requests outside these hours are considered case by case.',
+  tarifs: {
+    'Massage érotique': { nom: 'Erotic massage', resume: 'Warm oils and expert hands, the whole body, in a slow build-up.' },
+    'Massage body body': { nom: 'Body-to-body massage', resume: 'Body against body: the masseuse massages with her whole body, gliding and enveloping.' },
+    'Massage nuru': { nom: 'Nuru massage', resume: 'The body-to-body from Japan: a thick, warm gel, no friction, one continuous glide from the neck to the feet.' },
+    'Massage tantra': { nom: 'Tantric massage', resume: 'The signature of the house: guided breathing, slowness and work over the whole body.' },
+    'Massage tantra réciproque': { nom: 'Reciprocal tantric massage', resume: 'The same ritual, shared: you massage in turn, guided step by step by the masseuse.' },
+    'Massage prostatique': { nom: 'Prostate massage', resume: 'An internal treatment carried out gently, at your pace: glove, gel and impeccable hygiene — and nothing happens without your consent.' },
+  },
+  durees: { '30 minutes': '30 minutes', '40 minutes': '40 minutes', '45 minutes': '45 minutes', '1 heure': '1 hour', '1 heure 30': '1.5 hours', '2 heures': '2 hours' },
+  quatreMains: {
+    titre: 'Four hands',
+    texte: 'Two masseuses for you alone: twice the hands, twice the sensation. It applies to any massage on the list.',
+    note: 'Price: double the chosen massage. To be arranged by phone, depending on who is here.',
+  },
+  supplements: { 'Deuxième éjaculation': 'Second release' },
+  tarifsNote: 'Payment in cash or by Twint on the spot. Prices include the room, the linen, the shower and a drink.',
+  galerie: ['The futon and the fireplace', 'The tantra room', 'The gilded mirror'],
+  regles: [
+    'Adults only (18 and over).',
+    'Impeccable hygiene is expected — a shower is available on arrival.',
+    'The masseuse is free to accept or decline a request, without discussion.',
+    'No photos, no videos, no recordings inside the parlour.',
+    'Anyone drunk or disrespectful will be shown out.',
+  ],
+  specialites: {
+    'Tantra': 'Tantra', 'Tantra réciproque': 'Reciprocal tantra', 'Body body': 'Body to body',
+    'Érotique': 'Erotic', 'Nuru': 'Nuru', 'Prostatique': 'Prostate',
+  },
+  languesParlees: { 'Français': 'French', 'Anglais': 'English', 'Espagnol': 'Spanish', 'Portugais': 'Portuguese' },
+  origines: { 'Française': 'French', 'Suisse': 'Swiss', 'Espagnole': 'Spanish', 'Portugaise': 'Portuguese', 'Italienne': 'Italian', 'Brésilienne': 'Brazilian' },
+  salon: {
+    slogan: 'Erotic & tantric massage parlour',
+    parking: 'Discreet entrance, parking nearby.',
+    photoEntreeLegende: 'The entrance to the building, Rue du Pont 34',
+  },
+},
+
+/* ========================================================================= */
+es: {
+  ui: {
+    titre_page: 'Chez Eva — Masaje erótico y tántrico en La Chaux-de-Fonds',
+    description_page: 'Chez Eva, salón de masaje erótico y tántrico, Rue du Pont 34 en La Chaux-de-Fonds. Masajistas, horarios y tarifas.',
+
+    porte_titre: 'Este sitio es solo para adultos',
+    porte_texte: 'Contiene textos e imágenes de carácter sensual destinados a un público adulto. Al entrar, usted certifica que tiene 18 años cumplidos y que visita este sitio por voluntad propia.',
+    porte_entrer: 'Tengo 18 años o más — entrar',
+    porte_quitter: 'Salir',
+
+    menu_accueil: 'Inicio', menu_masseuses: 'Masajistas', menu_horaires: 'Horarios',
+    menu_tarifs: 'Tarifas', menu_salon: 'El salón', menu_rdv: 'Cita',
+    menu_ouvrir: 'Abrir el menú',
+
+    hero_eyebrow: 'Nuevo · Apertura en La Chaux-de-Fonds',
+    hero_slogan: 'Masaje erótico y tántrico — el arte de tomarse su tiempo',
+    hero_voir: 'Ver las masajistas',
+    hero_rdv: 'Pedir cita',
+    hero_puce_1: 'Con cita previa', hero_puce_2: 'Discreción absoluta', hero_puce_3: 'Los siete días',
+    hero_descendre: 'Bajar',
+
+    presentation_chapeau: 'Unas palabras',
+    presentation_titre: 'Años de experiencia,<br>una nueva dirección',
+
+    masseuses_chapeau_solo: 'Quién le recibe', masseuses_chapeau_equipe: 'Nuestro equipo',
+    masseuses_titre_solo: 'La masajista', masseuses_titre_equipe: 'Las masajistas',
+    avance_titre: 'Próximas llegadas', bientot_titre: 'Pronto de vuelta',
+    avance_intro_une: 'Su fecha de llegada está fijada. Ya puede reservar su cita con ella.',
+    avance_intro_plusieurs: 'Sus fechas de llegada están fijadas. Ya puede reservar su cita con ellas.',
+    bientot_intro_une: 'Ahora mismo no está en el salón y su regreso aún no tiene fecha. Llámenos y le contamos más.',
+    bientot_intro_plusieurs: 'Ahora mismo no están en el salón y su regreso aún no tiene fecha. Llámenos y le contamos más.',
+    bientot_note: 'Llámenos: le diremos quién vuelve y cuándo.',
+
+    badge_disponible: 'Disponible', badge_bientot: 'Pronto de vuelta',
+    badge_a_partir: 'A partir del', ligne_presente_du: 'Presente del', ligne_au: 'al',
+    ligne_jusquau: 'Hasta el', fiche_appeler: 'Llamar a', fiche_reserver: 'Reservar con',
+
+    horaires_chapeau: 'Dónde encontrarnos', horaires_titre: 'Horario de apertura',
+    ferme_le: 'Cerrado el', ferme_du: 'Cerrado del', ferme_au: 'al',
+    ferme_matin: ', por la mañana', ferme_apresmidi: ', por la tarde',
+
+    tarifs_chapeau: 'Con toda transparencia', tarifs_titre: 'Nuestras tarifas',
+    supplements_titre: 'Suplementos',
+
+    reserver_chapeau: 'En dos minutos', reserver_titre: 'Reservar en línea',
+    reserver_intro: 'Elija su masajista, el masaje y la hora que le convenga. Le llamamos para confirmar.',
+    champ_masseuse: 'Masajista', champ_prestation: 'Masaje', champ_jour: 'Día',
+    champ_heure: 'Hora', champ_prenom: 'Su nombre', champ_tel: 'Su teléfono',
+    bouton_envoyer: 'Pedir esta cita',
+    note_donnees: 'Solo conservamos su nombre y su número, el tiempo de la cita, y únicamente para llamarle. Nada se publica, nada se transmite a nadie.',
+    note_duo: 'El formulario reserva una masajista. Para un masaje a cuatro manos, llámenos: formamos el dúo con usted.',
+    suspendu_intro: 'La reserva en línea está cerrada por el momento. Llámenos y fijamos la cita con usted.',
+    bouton_whatsapp: 'Escribir por WhatsApp',
+
+    creneaux_jour: 'Elija primero un día.',
+    creneaux_recherche: 'Buscando disponibilidad…',
+    creneaux_aucun: 'No queda nada ese día. Pruebe otro día, o llámenos.',
+    creneaux_indispo: 'Horas no disponibles. Llámenos.',
+    moment_matin: 'Mañana', moment_apresmidi: 'Tarde', moment_soiree: 'Noche',
+    moment_matin_vide: 'No queda nada por la mañana. Pruebe por la tarde o por la noche.',
+    moment_apresmidi_vide: 'No queda nada por la tarde. Pruebe por la mañana o por la noche.',
+    moment_soiree_vide: 'No queda nada por la noche. Pruebe por la mañana o por la tarde.',
+    heure_retenue: 'Hora elegida:',
+
+    msg_heure: 'Elija una hora.', msg_prenom: 'Indique su nombre.',
+    msg_tel: 'Indique un número de teléfono válido.', msg_envoi: 'Enviando…',
+    msg_ok: 'Solicitud registrada. Le llamamos enseguida para confirmar.',
+    msg_ko: 'No se ha podido enviar. Llámenos.',
+    err_creneau: 'Esa hora acaba de ocuparse. Elija otra.',
+    err_ferme: 'El salón está cerrado ese día. Elija otro día.',
+    err_suspendu: 'La reserva en línea está cerrada por el momento. Llámenos.',
+
+    galerie_chapeau: 'El marco', galerie_titre: 'El salón',
+    galerie_intro: 'Un lugar tranquilo, cálido y pulcro. Unas imágenes para hacerse una idea.',
+
+    contact_chapeau: 'Le esperamos', contact_titre: 'Pedir cita',
+    contact_appeler: 'Llamarnos', contact_rejoindre: 'Cómo llegar', contact_cadre: 'Las normas',
+    contact_note: 'Una llamada vale más que un mensaje: confirmamos la disponibilidad al momento.',
+
+    pied_texte: 'Salón de masaje erótico y tántrico —',
+    pied_majeur: 'Sitio estrictamente reservado a personas mayores de edad (18+).',
+    pied_mini: 'Los masajes ofrecidos son servicios de bienestar entre adultos que consienten. En este sitio no se recoge ningún dato personal.',
+
+    photo_fermer: 'Cerrar', photo_precedente: 'Foto anterior', photo_suivante: 'Foto siguiente',
+    langue_choisir: 'Elegir el idioma',
+    ans: 'años',
+    contact_carte: 'Ver en el mapa',
+    bouton_appeler: 'Llamar',
+    photo_a_venir: 'Foto próximamente',
+    entree_defaut: 'La entrada',
+  },
+
+  presentation: [
+    'Llevamos años acompañando a una clientela fiel, discreta y exigente. Años afinando un oficio, formando a nuestras masajistas y cultivando una sola idea: el masaje erótico es un arte del cuidado antes que ninguna otra cosa.',
+    'Hoy abrimos un nuevo capítulo: Chez Eva se instala en La Chaux-de-Fonds. Un marco cálido, pensado para la calma, la luz suave y el silencio, a dos pasos del centro — con la misma exigencia y la misma discreción absoluta.',
+    'Le recibiremos sin prisa, en un lugar limpio y refinado, con una masajista atenta que se toma el tiempo de entender lo que viene a buscar. Nada se impone, todo se propone. Aquí se respira.',
+  ],
+  atouts: [
+    { titre: 'Años de experiencia', texte: 'Un oficio probado, afinado con paciencia, y cientos de clientes que vuelven.' },
+    { titre: 'Discreción total', texte: 'Entrada al abrigo de las miradas, sin rastro, sin juicio. Lo que pasa aquí se queda aquí.' },
+    { titre: 'Un marco cuidado', texte: 'Cabinas con calefacción, ropa limpia en cada masaje, ducha a su disposición, aceites de calidad.' },
+  ],
+  priseDeRdvTitre: 'Tres maneras de pedir cita',
+  priseDeRdv: [
+    { bouton: 'telephone', titre: 'Por teléfono', texte: 'Lo más directo. Comprobamos la disponibilidad con usted, respondemos a sus preguntas, y la cita queda fijada en un minuto.' },
+    { bouton: 'whatsapp', titre: 'Por WhatsApp', texte: 'Si prefiere escribir, o llamar desde el extranjero. El mismo número, la misma discreción.' },
+    { bouton: 'formulaire', titre: 'En línea, a cualquier hora', texte: 'Elija la masajista, el masaje y la hora que le convenga. Le llamamos para confirmar. Una masajista anunciada puede reservarse incluso antes de su llegada.' },
+  ],
+  masseusesIntro: 'Cita a convenir por teléfono: le diremos sin rodeos quién le recibe, qué ofrece y en qué momento.',
+  jours: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+  heures: '09:00 – 22:00',
+  horairesNote: 'Abierto los siete días de la semana, domingos incluidos. Con cita previa, preferiblemente con una o dos horas de antelación; las peticiones fuera de este horario se estudian caso por caso.',
+  tarifs: {
+    'Massage érotique': { nom: 'Masaje erótico', resume: 'Aceites calientes y manos expertas, todo el cuerpo, en una subida lenta.' },
+    'Massage body body': { nom: 'Masaje body to body', resume: 'Cuerpo a cuerpo: la masajista masajea con todo su cuerpo, deslizante y envolvente.' },
+    'Massage nuru': { nom: 'Masaje nuru', resume: 'El cuerpo a cuerpo venido de Japón: un gel espeso y tibio, sin fricción, un deslizamiento continuo de la nuca a los pies.' },
+    'Massage tantra': { nom: 'Masaje tántrico', resume: 'El sello de la casa: respiración guiada, lentitud y trabajo sobre todo el cuerpo.' },
+    'Massage tantra réciproque': { nom: 'Masaje tántrico recíproco', resume: 'El mismo ritual, entre dos: usted masajea a su vez, guiado paso a paso por la masajista.' },
+    'Massage prostatique': { nom: 'Masaje prostático', resume: 'Un cuidado interno llevado con suavidad y a su ritmo: guante, gel e higiene impecable — y nada se emprende sin su acuerdo.' },
+  },
+  durees: { '30 minutes': '30 minutos', '40 minutes': '40 minutos', '45 minutes': '45 minutos', '1 heure': '1 hora', '1 heure 30': '1 hora y media', '2 heures': '2 horas' },
+  quatreMains: {
+    titre: 'A cuatro manos',
+    texte: 'Dos masajistas para usted solo: el doble de manos, el doble de sensaciones. Vale para cualquier masaje de la lista.',
+    note: 'Tarifa: el doble del masaje elegido. A convenir por teléfono, según las masajistas presentes.',
+  },
+  supplements: { 'Deuxième éjaculation': 'Segunda eyaculación' },
+  tarifsNote: 'Pago en efectivo o con Twint en el salón. Las tarifas incluyen la cabina, la ropa, la ducha y una bebida.',
+  galerie: ['El futón y la chimenea', 'El espacio tantra', 'El espejo dorado'],
+  regles: [
+    'Salón reservado a personas mayores de edad (18 años cumplidos).',
+    'Se exige una higiene impecable — hay una ducha a su disposición a la llegada.',
+    'La masajista es libre de aceptar o rechazar una petición, sin discusión.',
+    'Ni fotos, ni vídeos, ni grabaciones dentro del salón.',
+    'Toda persona ebria o irrespetuosa será acompañada a la puerta.',
+  ],
+  specialites: {
+    'Tantra': 'Tantra', 'Tantra réciproque': 'Tantra recíproco', 'Body body': 'Body to body',
+    'Érotique': 'Erótico', 'Nuru': 'Nuru', 'Prostatique': 'Prostático',
+  },
+  languesParlees: { 'Français': 'Francés', 'Anglais': 'Inglés', 'Espagnol': 'Español', 'Portugais': 'Portugués' },
+  origines: { 'Française': 'Francesa', 'Suisse': 'Suiza', 'Espagnole': 'Española', 'Portugaise': 'Portuguesa', 'Italienne': 'Italiana', 'Brésilienne': 'Brasileña' },
+  salon: {
+    slogan: 'Salón de masaje erótico y tántrico',
+    parking: 'Entrada discreta, aparcamiento cerca.',
+    photoEntreeLegende: 'La entrada del edificio, Rue du Pont 34',
+  },
+},
+
+};
