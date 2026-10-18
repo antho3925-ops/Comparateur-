@@ -44,6 +44,14 @@
   var TRAD = (typeof TRADUCTIONS !== 'undefined') ? (TRADUCTIONS[LANGUE] || {}) : {};
   var TRAD_FR = (typeof TRADUCTIONS !== 'undefined') ? (TRADUCTIONS.fr || {}) : {};
 
+  /** L'adresse d'une photo, suivie de la date du fichier : une photo
+      retouchee s'affiche aussitot, sans vider le cache du telephone. */
+  function adressePhoto(src) {
+    var versions = window.PHOTOS_VERSIONS || {};
+    var date = versions[String(src)];
+    return date ? src + '?v=' + date : src;
+  }
+
   /** L'heure telle qu'on l'ecrit dans la langue courante. */
   function heureAffichee(h) {
     return LANGUE === 'fr' ? String(h).replace(':', 'h') : String(h);
@@ -100,6 +108,18 @@
   document.title = T('titre_page');
   var metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) { metaDesc.setAttribute('content', T('description_page')); }
+
+  /* La photo d'accueil vient de la feuille de style : on lui redonne son
+     adresse datee, sinon elle resterait celle que le telephone a en memoire. */
+  (function fondAccueil() {
+    var fond = 'photos/salon/hero.jpg';
+    var date = (window.PHOTOS_VERSIONS || {})[fond];
+    if (!date) { return; }
+    /* L'adresse doit etre complete : dans une variable de style, un chemin
+       relatif se compte depuis la feuille de style, pas depuis la page. */
+    var complete = new URL(fond + '?v=' + date, document.baseURI).href;
+    document.documentElement.style.setProperty('--fond-accueil', "url('" + complete + "')");
+  }());
 
   /* ------------------------------ Porte 18+ ------------------------------ */
   var CLE = 'chez-eva-majeur';
@@ -274,7 +294,7 @@
 
     var principale = m.photo || (m.photos && m.photos[0]);
     var photo = principale
-      ? '<img src="' + esc(principale) + '" alt="' + esc(m.prenom) + '" loading="lazy"' +
+      ? '<img src="' + esc(adressePhoto(principale)) + '" alt="' + esc(m.prenom) + '" loading="lazy"' +
         ' onerror="this.style.display=\'none\'">'
       : '';
 
@@ -309,8 +329,8 @@
 
     var vignettes = (m.photos || []).map(function (src) {
       return '<button type="button" class="vignette vignette-mini"' +
-               ' data-src="' + esc(src) + '" data-legende="' + esc(m.prenom) + '">' +
-               '<img src="' + esc(src) + '" alt="' + esc(m.prenom) + '" loading="lazy"' +
+               ' data-src="' + esc(adressePhoto(src)) + '" data-legende="' + esc(m.prenom) + '">' +
+               '<img src="' + esc(adressePhoto(src)) + '" alt="' + esc(m.prenom) + '" loading="lazy"' +
                ' onerror="this.closest(\'.vignette\').style.display=\'none\'">' +
              '</button>';
     }).join('');
@@ -519,9 +539,9 @@
     var dites = C('galerie', null);
     var g = { src: gf.src, legende: (dites && dites[i]) || gf.legende };
     return '<button type="button" class="vignette"' +
-             ' data-src="' + esc(g.src) + '" data-legende="' + esc(g.legende || '') + '">' +
+             ' data-src="' + esc(adressePhoto(g.src)) + '" data-legende="' + esc(g.legende || '') + '">' +
              '<span class="vignette-vide">' + esc(T('photo_a_venir')) + '</span>' +
-             '<img src="' + esc(g.src) + '" alt="' + esc(g.legende || 'Le salon') + '"' +
+             '<img src="' + esc(adressePhoto(g.src)) + '" alt="' + esc(g.legende || 'Le salon') + '"' +
              ' loading="lazy" onerror="this.style.display=\'none\'">' +
              (g.legende ? '<span class="vignette-legende">' + esc(g.legende) + '</span>' : '') +
            '</button>';
@@ -739,8 +759,8 @@
                       || SALON.photoEntreeLegende || T('entree_defaut');
     $('#contact-photo').innerHTML =
       '<button type="button" class="vignette vignette-entree"' +
-        ' data-src="' + esc(SALON.photoEntree) + '" data-legende="' + esc(legendeEntree) + '">' +
-        '<img src="' + esc(SALON.photoEntree) + '" alt="' + esc(legendeEntree) + '" loading="lazy"' +
+        ' data-src="' + esc(adressePhoto(SALON.photoEntree)) + '" data-legende="' + esc(legendeEntree) + '">' +
+        '<img src="' + esc(adressePhoto(SALON.photoEntree)) + '" alt="' + esc(legendeEntree) + '" loading="lazy"' +
         ' onerror="this.closest(\'.vignette\').style.display=\'none\'">' +
         '<span class="vignette-legende">' + esc(legendeEntree) + '</span>' +
       '</button>';

@@ -243,7 +243,9 @@ body.bloque .sortie{ display:none; }
   background:
     radial-gradient(110% 80% at 50% 42%, rgba(18,11,18,.15), rgba(18,11,18,.78) 100%),
     linear-gradient(180deg, rgba(18,11,18,.62) 0%, rgba(18,11,18,.48) 38%, rgba(18,11,18,.92) 100%),
-    url('../photos/salon/hero.jpg') center 40%/cover no-repeat,
+    /* Le site remplace cette adresse par la meme, suivie de la date du
+       fichier : une photo d'accueil changee s'affiche aussitot. */
+    var(--fond-accueil, url('../photos/salon/hero.jpg')) center 40%/cover no-repeat,
     linear-gradient(160deg, #2a1622, #120b12 65%);
 }
 .hero-voile{

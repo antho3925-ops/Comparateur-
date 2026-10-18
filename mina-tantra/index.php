@@ -75,12 +75,25 @@ if (function_exists('fermetures_annoncees')) {
     ];
 }
 
+/* Une photo retouchee garde le meme nom : sans la date du fichier dans son
+   adresse, le navigateur continuerait d'afficher celle qu'il garde en
+   memoire -- parfois des jours. */
+$versions = [];
+foreach (['photos/masseuses', 'photos/salon'] as $dossier) {
+    foreach (glob(__DIR__ . '/' . $dossier . '/*') ?: [] as $chemin) {
+        if (is_file($chemin)) {
+            $versions[$dossier . '/' . basename($chemin)] = (int) filemtime($chemin);
+        }
+    }
+}
+
 /* Les drapeaux HEX empechent qu'un texte de fiche puisse refermer la balise. */
 $codage = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
         | JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 $injection = '<script>window.MASSEUSES_SERVEUR = ' . json_encode($fiches, $codage) . ';'
     . 'window.SALON_ETAT = ' . json_encode($etatSalon, $codage) . ';'
-    . 'window.LANGUE_SERVEUR = ' . json_encode($langue) . ';</script>';
+    . 'window.LANGUE_SERVEUR = ' . json_encode($langue) . ';'
+    . 'window.PHOTOS_VERSIONS = ' . json_encode($versions, $codage) . ';</script>';
 
 $modele = str_replace('<html lang="fr">', '<html lang="' . $langue . '">', $modele);
 

@@ -46,6 +46,13 @@ $photos = array_values(array_filter((array) ($f['photos'] ?? []), static functio
 }));
 $principale = (string) ($f['photo'] ?? ($photos[0] ?? ''));
 
+/** L'adresse d'une photo, suivie de la date du fichier. */
+function photo_datee(string $racine, string $rel): string
+{
+    $date = @filemtime(__DIR__ . '/' . $rel);
+    return $racine . '/' . $rel . ($date ? '?v=' . $date : '');
+}
+
 $adresse = rtrim(adresse_site(), '/');
 $lien = $adresse . '/m/' . rawurlencode($id);
 
@@ -79,7 +86,7 @@ header('Content-Type: text/html; charset=utf-8');
 <meta property="og:title" content="<?= htmlspecialchars($prenom . ' — ' . $nomSalon, ENT_QUOTES) ?>">
 <meta property="og:description" content="<?= htmlspecialchars($description, ENT_QUOTES) ?>">
 <?php if ($principale !== ''): ?>
-  <meta property="og:image" content="<?= htmlspecialchars($adresse . '/' . $principale, ENT_QUOTES) ?>">
+  <meta property="og:image" content="<?= htmlspecialchars(photo_datee($adresse, $principale), ENT_QUOTES) ?>">
 <?php endif; ?>
 <style>
   body{ background:var(--nuit); }
@@ -108,7 +115,7 @@ header('Content-Type: text/html; charset=utf-8');
   <p class="lieu"><?= htmlspecialchars($nomSalon . ' · ' . $dit['chez'], ENT_QUOTES) ?></p>
 
   <?php if ($principale !== ''): ?>
-    <img class="grande" src="<?= htmlspecialchars($adresse . '/' . $principale, ENT_QUOTES) ?>"
+    <img class="grande" src="<?= htmlspecialchars(photo_datee($adresse, $principale), ENT_QUOTES) ?>"
          alt="<?= htmlspecialchars($prenom, ENT_QUOTES) ?>">
   <?php endif; ?>
 
@@ -127,7 +134,7 @@ header('Content-Type: text/html; charset=utf-8');
   <?php if (count($photos) > 1): ?>
     <div class="vignettes">
       <?php foreach ($photos as $photo): ?>
-        <img src="<?= htmlspecialchars($adresse . '/' . $photo, ENT_QUOTES) ?>" loading="lazy"
+        <img src="<?= htmlspecialchars(photo_datee($adresse, $photo), ENT_QUOTES) ?>" loading="lazy"
              alt="<?= htmlspecialchars($prenom, ENT_QUOTES) ?>">
       <?php endforeach; ?>
     </div>
