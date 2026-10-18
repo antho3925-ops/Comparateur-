@@ -209,7 +209,10 @@ def main() -> int:
         print("Pas de data/config.json : l'administration demandera de creer "
               'un mot de passe a la premiere visite.')
 
-    cle = secrets.token_urlsafe(12)
+    # Une cle courte, sans caractere qui se confonde (ni l, ni o, ni 0, ni 1)
+    # ni signe de ponctuation : elle se tape a la main sur un telephone sans
+    # risquer d'etre tronquee par un copier-coller.
+    cle = ''.join(secrets.choice('abcdefghijkmnpqrstuvwxyz23456789') for _ in range(6))
 
     morceaux = []
     for rel in fichiers:

@@ -1502,9 +1502,18 @@ if ($page === 'reservations') {
           <summary>Le serveur d'envoi</summary>
           <div class="choix-liste">
             <p class="aide">Cet hébergement n'envoie pas de courrier tout seul :
-               il faut lui donner une boîte mail, comme on le ferait dans un
-               logiciel de messagerie. Chez Infomaniak, créez une adresse sur
-               votre domaine puis reportez-la ici.</p>
+               il faut lui prêter une boîte mail, comme on le ferait dans un
+               logiciel de messagerie. Ce n'est que le facteur — les alertes
+               arriveront toujours à l'adresse indiquée plus haut.</p>
+            <p class="aide"><strong>Avec votre Gmail</strong> (rien à créer) :
+               serveur <code>smtp.gmail.com</code>, port <code>587</code>,
+               STARTTLS, votre adresse Gmail, et un
+               <em>mot de passe d'application</em> à générer dans votre compte
+               Google (Sécurité → Validation en deux étapes → Mots de passe des
+               applications). Votre mot de passe Google habituel ne marchera pas.</p>
+            <p class="aide"><strong>Avec une adresse de votre domaine</strong> :
+               serveur <code>mail.infomaniak.com</code>, port <code>587</code>,
+               STARTTLS, l'adresse et son mot de passe.</p>
 
             <label for="e-serveur">Serveur</label>
             <input type="text" id="e-serveur" name="envoi_serveur"
