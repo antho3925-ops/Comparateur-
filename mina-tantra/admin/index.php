@@ -694,7 +694,10 @@ if ($page === 'connexion') {
         <form method="post">
           <input type="hidden" name="action" value="connexion">
           <label for="util">Nom d'utilisateur</label>
-          <input type="text" id="util" name="utilisateur" required autocomplete="username">
+          <!-- Apres un essai manque, le nom reste en place : seul le mot de
+               passe est a retaper. -->
+          <input type="text" id="util" name="utilisateur" required autocomplete="username"
+                 value="<?= proteger((string) ($_POST['utilisateur'] ?? '')) ?>">
           <label for="mdp">Mot de passe</label>
           <input type="password" id="mdp" name="motdepasse" required autocomplete="current-password">
           <div class="actions"><button class="btn" type="submit">Entrer</button></div>
