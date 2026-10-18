@@ -80,6 +80,36 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         exit;
     }
 
+    if ($action === 'alertes') {
+        $adresse = trim((string) ($_POST['adresse'] ?? ''));
+        if ($adresse !== '' && !filter_var($adresse, FILTER_VALIDATE_EMAIL)) {
+            header('Location: index.php?p=reservations&e=1&m='
+                . urlencode('Cette adresse e-mail ne semble pas valable.'));
+            exit;
+        }
+        ecrire_alertes([
+            'adresse'       => $adresse,
+            'nouvelle'      => isset($_POST['nouvelle']),
+            'annulation'    => isset($_POST['annulation']),
+            'recapitulatif' => isset($_POST['recapitulatif']),
+            'relance'       => isset($_POST['relance']),
+        ]);
+        header('Location: index.php?p=reservations&m=' . urlencode('Alertes enregistrées.'));
+        exit;
+    }
+
+    if ($action === 'alertes_essai') {
+        $envoye = envoyer_courriel(
+            (string) (parametres()['nom'] ?? 'Chez Eva') . ' — essai d’alerte',
+            "Si vous lisez ce message, les alertes du site fonctionnent.\n"
+            . "Vous serez prévenu à chaque nouvelle demande." . pied_courriel()
+        );
+        header('Location: index.php?p=reservations' . ($envoye ? '' : '&e=1') . '&m=' . urlencode($envoye
+            ? 'Essai envoyé. Regardez votre boîte, et le dossier indésirables.'
+            : 'Le serveur a refusé l’envoi. Vérifiez l’adresse.'));
+        exit;
+    }
+
     if ($action === 'cle_agenda') {
         renouveler_cle_agenda();
         header('Location: index.php?p=reservations&m='
@@ -290,7 +320,7 @@ p.aide{ color:var(--doux); font-size:.9rem; margin:0 0 22px; }
 label{ display:block; margin:16px 0 6px; font-size:.78rem; letter-spacing:.1em;
        text-transform:uppercase; color:var(--doux); }
 input[type=text], input[type=number], input[type=password], input[type=date],
-input[type=tel], textarea{
+input[type=tel], input[type=email], textarea{
   width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--bord);
   background:var(--nuit-3); color:var(--texte); font:inherit; }
 textarea{ min-height:140px; resize:vertical; }
@@ -605,6 +635,56 @@ if ($page === 'reservations') {
         <button class="btn vide mini" type="submit">Renouveler l'adresse</button>
       </form>
     </div>
+    <div class="pied">
+      <h2>Alertes par e-mail</h2>
+      <p class="aide">Un agenda par abonnement ne se rafraîchit qu'une fois par heure.
+         L'e-mail, lui, arrive tout de suite.</p>
+      <?php $al = alertes(); ?>
+      <form method="post">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="alertes">
+        <label for="al-adresse">Adresse qui reçoit les alertes</label>
+        <input type="email" id="al-adresse" name="adresse" placeholder="vous@exemple.ch"
+               value="<?= proteger($al['adresse']) ?>">
+        <p class="aide">Laissez vide pour ne plus rien recevoir.</p>
+
+        <div class="choix-liste">
+          <?php foreach ([
+            'nouvelle'      => 'Une nouvelle demande arrive',
+            'annulation'    => 'Un client annule lui-même',
+            'recapitulatif' => 'Le programme du lendemain, chaque soir',
+            'relance'       => 'Une demande attend depuis deux heures',
+          ] as $cle => $libelle): ?>
+            <label class="choix-ligne">
+              <input type="checkbox" name="<?= proteger($cle) ?>"<?= $al[$cle] ? ' checked' : '' ?>>
+              <span><?= proteger($libelle) ?></span>
+            </label>
+          <?php endforeach; ?>
+        </div>
+        <button class="btn" type="submit">Enregistrer les alertes</button>
+      </form>
+
+      <form method="post">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="alertes_essai">
+        <button class="btn vide mini" type="submit">Envoyer un essai</button>
+      </form>
+
+      <?php
+      $envois = array_slice(journal_alertes()['envois'], -3);
+      if ($envois):
+      ?>
+        <p class="aide">Derniers envois :</p>
+        <ul class="aide">
+          <?php foreach (array_reverse($envois) as $e): ?>
+            <li><?= proteger(date_francaise((string) ($e['date'] ?? ''))) ?> —
+                <?= proteger((string) ($e['objet'] ?? '')) ?>
+                <?= !empty($e['ok']) ? '✓' : '✗' ?></li>
+          <?php endforeach; ?>
+        </ul>
+      <?php endif; ?>
+    </div>
+
     <?php
     pied();
     exit;

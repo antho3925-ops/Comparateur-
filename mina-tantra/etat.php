@@ -30,7 +30,7 @@ function contient(string $racine, string $rel, string $aiguille): bool
 $essentiels = [
     'index.php', 'modele.html', 'js/site.js', 'js/contenu.js',
     'assets/styles.css', 'assets/polices/italiana.woff2',
-    'admin/index.php', 'reserver.php',
+    'admin/index.php', 'admin/alertes.php', 'reserver.php', 'taches.php',
 ];
 
 /* Les trois temoins des dernieres modifications. */
@@ -40,6 +40,7 @@ $temoins = [
     'Le massage nuru' => contient($racine, 'js/contenu.js', 'uru'),
     'Les flèches dans les photos' => contient($racine, 'modele.html', 'lightbox-suivant'),
     'Le rechargement automatique' => contient($racine, 'index.php', 'filemtime'),
+    'Les alertes par e-mail' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/alertes.php'"),
 ];
 
 $ancienne = is_file($racine . '/index.html');

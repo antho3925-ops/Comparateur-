@@ -542,3 +542,7 @@ function reservations_triees(): array
     usort($liste, static fn (array $a, array $b): int => strcmp((string) ($a['debut'] ?? ''), (string) ($b['debut'] ?? '')));
     return $liste;
 }
+
+/* Les alertes par courriel vivent dans leur propre fichier : elles se
+   servent de tout ce qui precede. */
+require __DIR__ . '/alertes.php';

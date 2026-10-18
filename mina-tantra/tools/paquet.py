@@ -24,8 +24,8 @@ SORTIE = RACINE / 'dist' / 'installateur.php'
 # Ce qui part sur le serveur. Le reste (tools, dist, README) n'y a rien a faire.
 A_DEPLOYER = [
     'index.php', 'modele.html', 'robots.txt', 'sitemap.xml', '.htaccess',
-    'reserver.php', 'agenda.php', 'etat.php',
-    'admin/index.php', 'admin/noyau.php',
+    'reserver.php', 'agenda.php', 'etat.php', 'taches.php',
+    'admin/index.php', 'admin/noyau.php', 'admin/alertes.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
     'assets/favicon-180.png', 'assets/partage.jpg',
     'assets/polices/italiana.woff2', 'assets/polices/cormorant-300.woff2',
@@ -43,6 +43,18 @@ A_DEPLOYER += sorted(
 # Ces fichiers ne sont ecrits que s'ils n'existent pas deja sur le serveur :
 # ils appartiennent a l'administration, pas au paquet.
 PRESERVES = ['data/masseuses.json', 'data/reservations.json', 'data/config.json']
+
+
+# L'adresse qui recoit les alertes du site. Elle n'apparait nulle part sur la
+# page publique : elle ne vit que dans data/, que le serveur refuse de servir.
+# Le salon peut la changer lui-meme depuis l'administration.
+ALERTES = {
+    'adresse': 'chez.eva.cdf@gmail.com',
+    'nouvelle': True,
+    'annulation': True,
+    'recapitulatif': True,
+    'relance': True,
+}
 
 
 JOURS = ['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche']
@@ -113,6 +125,7 @@ def ecrire_parametres() -> None:
         'codePostal': champ('codePostal'),
         'telephone': champ('telephone'),
         'horaires': horaires,
+        'alertes': ALERTES,
     }
     (RACINE / 'data' / 'parametres.json').write_text(
         json.dumps(parametres, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')

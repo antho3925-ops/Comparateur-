@@ -123,7 +123,7 @@ if (trop_de_demandes()) {
 }
 
 $debut = (int) strtotime($date . ' ' . $heure);
-$liste[] = [
+$demande = [
     'id'           => 'r' . bin2hex(random_bytes(6)),
     'cree'         => date('c'),
     'masseuse'     => $masseuse,
@@ -137,9 +137,19 @@ $liste[] = [
     'telephone'    => $telephone,
     'etat'         => 'attente',
 ];
+$liste[] = $demande;
 
 if (!ecrire_reservations($liste)) {
     repondre(['ok' => false, 'erreur' => 'Enregistrement impossible. Appelez-nous.'], 500);
+}
+
+/* Le salon est prevenu tout de suite : l'agenda par abonnement, lui, peut
+   mettre une heure a se rafraichir. Un courrier qui ne part pas ne doit
+   jamais faire echouer la demande du client. */
+try {
+    alerte_nouvelle_demande($demande);
+} catch (Throwable $e) {
+    /* tant pis : la demande est enregistree, elle attend dans l'administration */
 }
 
 repondre([

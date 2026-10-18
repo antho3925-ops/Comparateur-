@@ -61,5 +61,12 @@
       "09:00",
       "22:00"
     ]
+  },
+  "alertes": {
+    "adresse": "chez.eva.cdf@gmail.com",
+    "nouvelle": true,
+    "annulation": true,
+    "recapitulatif": true,
+    "relance": true
   }
 }

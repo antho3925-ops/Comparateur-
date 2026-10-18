@@ -8,6 +8,18 @@
 --------------------------------------------------------------------------- */
 declare(strict_types=1);
 
+/* Le recapitulatif du soir et les relances n'ont pas besoin d'une tache
+   planifiee : la premiere visite venue s'en charge, quelques fois par heure
+   seulement, et jamais au point de ralentir la page. */
+if (is_readable(__DIR__ . '/admin/noyau.php')) {
+    require_once __DIR__ . '/admin/noyau.php';
+    try {
+        taches_si_besoin();
+    } catch (Throwable $e) {
+        /* le site s'affiche, quoi qu'il arrive au courrier */
+    }
+}
+
 $modele = @file_get_contents(__DIR__ . '/modele.html');
 if ($modele === false) {
     http_response_code(500);
