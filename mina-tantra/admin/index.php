@@ -399,6 +399,18 @@ a{ color:var(--or-clair); }
         padding:14px 18px; background:var(--nuit-2); border-bottom:1px solid var(--bord); }
 .barre b{ font-weight:600; letter-spacing:.14em; text-transform:uppercase; font-size:.76rem; color:var(--or); }
 .barre a, .barre button{ font-size:.78rem; }
+/* La barre reste sur une seule ligne : elle glisse si elle est trop longue. */
+.barre b{ white-space:nowrap; }
+.barre > span{ display:flex; align-items:center; gap:14px; flex-wrap:nowrap;
+               overflow-x:auto; -webkit-overflow-scrolling:touch; }
+.barre > span > a{ white-space:nowrap; }
+@media (max-width:430px){
+  .barre{ padding:12px 14px; gap:10px; }
+  .barre b{ font-size:.68rem; }
+  .barre a, .barre button{ font-size:.72rem; }
+  .barre > span{ gap:11px; }
+  .barre .btn.mini{ padding:6px 11px; }
+}
 .pastille{ display:inline-block; min-width:18px; padding:1px 6px; border-radius:999px;
            background:var(--or); color:#1a1208; font-weight:700; font-size:.7rem; text-align:center; }
 main{ max-width:720px; margin:0 auto; padding:22px 18px 70px; }
@@ -448,6 +460,40 @@ input[type=file]{ width:100%; color:var(--doux); font-size:.9rem; padding:12px 0
 .carte .periode{ font-size:.8rem; color:var(--doux); margin-top:2px; }
 .carte .detail{ margin:8px 0 0; font-size:.92rem; }
 .carte.rdv{ display:block; }
+
+/* ----------------------------- La journée ------------------------------- */
+.jour-barre{ display:flex; align-items:center; justify-content:space-between;
+             gap:12px; margin:0 0 6px; }
+.jour-barre strong{ font-size:1.05rem; font-weight:500; }
+.planning{ display:flex; gap:8px; margin:18px 0 10px; overflow-x:auto; padding-bottom:6px; }
+.planning-heures{ flex:0 0 52px; }
+.planning-colonne{ flex:1 1 150px; min-width:130px; }
+.planning-tete{
+  height:30px; display:flex; align-items:center; justify-content:center;
+  font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--or);
+}
+.planning-heure{
+  border-top:1px solid var(--bord); position:relative;
+}
+.planning-heure span{
+  position:absolute; top:-8px; right:6px; font-size:.68rem; color:var(--doux);
+  background:var(--nuit); padding:0 3px;
+}
+.planning-piste{
+  position:relative; border:1px solid var(--bord); border-radius:10px;
+  background:var(--nuit-2); overflow:hidden;
+}
+.planning-rdv{
+  position:absolute; left:4px; right:4px; border-radius:8px; padding:4px 7px;
+  font-size:.74rem; line-height:1.25; overflow:hidden;
+  background:rgba(201,162,39,.16); border:1px solid var(--or);
+}
+.planning-rdv.attente{ background:rgba(201,162,39,.07); border-style:dashed; }
+.planning-rdv b{ display:block; color:var(--or-clair); font-size:.7rem; }
+.planning-quoi{ display:block; color:var(--doux); font-size:.68rem; }
+.puce{ display:inline-block; width:10px; height:10px; border-radius:3px;
+       border:1px solid var(--or); background:rgba(201,162,39,.16); vertical-align:-1px; }
+.puce.attente{ background:rgba(201,162,39,.07); border-style:dashed; }
 .carte.rdv.attention{ border-color:var(--rouge); }
 .ligne-fermeture{ display:flex; flex-wrap:wrap; gap:10px; align-items:center; margin-bottom:14px; }
 .ligne-fermeture input[type=date]{ flex:1 1 150px; margin:0; }
@@ -477,6 +523,7 @@ form.ligne{ display:inline; }
   <?php if (est_connecte()): ?>
     <span>
       <a href="index.php">Masseuses</a> &nbsp;
+      <a href="index.php?p=planning">Journée</a> &nbsp;
       <a href="index.php?p=reservations">Rendez-vous<?php
           $attente = demandes_en_attente();
           echo $attente ? ' <span class="pastille">' . $attente . '</span>' : ''; ?></a> &nbsp;
@@ -632,6 +679,120 @@ function en_francais(string $local): string
              'août', 'septembre', 'octobre', 'novembre', 'décembre'];
     $t = (int) strtotime($local);
     return $jours[(int) date('N', $t)] . ' ' . date('j', $t) . ' ' . $mois[(int) date('n', $t)];
+}
+
+if ($page === 'planning') {
+    fuseau();
+
+    /* Une date doit exister vraiment : « 2026-13-45 » a la bonne forme mais
+       n'est pas un jour, et tout ce qui suit s'en trouverait fausse. */
+    $jour = (string) ($_GET['date'] ?? '');
+    $morceaux = explode('-', $jour);
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $jour)
+        || !checkdate((int) $morceaux[1], (int) $morceaux[2], (int) $morceaux[0])) {
+        $jour = date('Y-m-d');
+    }
+    $veille   = date('Y-m-d', strtotime($jour . ' -1 day'));
+    $lendemain = date('Y-m-d', strtotime($jour . ' +1 day'));
+    $plage = horaires_du_jour($jour);
+
+    /* Les rendez-vous du jour, et les masseuses qui y figurent. */
+    $duJour = array_values(array_filter(reservations_triees(), static function (array $r) use ($jour): bool {
+        return substr((string) ($r['debut'] ?? ''), 0, 10) === $jour
+            && (string) ($r['etat'] ?? '') !== 'annule';
+    }));
+
+    /* Une colonne par masseuse presente ce jour-la ; celles qui ont un
+       rendez-vous y figurent de toute facon. */
+    $colonnes = [];
+    foreach (fiches() as $f) {
+        if (masseuse_presente($f, $jour)) {
+            $colonnes[(string) ($f['id'] ?? '')] = (string) ($f['prenom'] ?? '');
+        }
+    }
+    foreach ($duJour as $r) {
+        $id = (string) ($r['masseuse'] ?? '');
+        if ($id !== '' && !isset($colonnes[$id])) {
+            $colonnes[$id] = (string) ($r['masseuse_nom'] ?? $id);
+        }
+    }
+
+    /* L'echelle : une minute vaut 0,9 pixel, ce qui tient sur un telephone. */
+    $debutJour = $plage ? (int) strtotime($jour . ' ' . $plage[0]) : (int) strtotime($jour . ' 09:00');
+    $finJour   = $plage ? (int) strtotime($jour . ' ' . $plage[1]) : (int) strtotime($jour . ' 22:00');
+    /* Un rendez-vous pose jusqu'a la fermeture deborde : la grille le suit. */
+    foreach ($duJour as $r) {
+        $finJour = max($finJour, (int) strtotime((string) ($r['fin'] ?? '')));
+    }
+    $minutes = max(60, (int) (($finJour - $debutJour) / 60));
+    $echelle = 1.1;
+
+    entete('La journée');
+    avis($message, $erreur);
+    ?>
+    <h1>La journée</h1>
+
+    <div class="jour-barre">
+      <a class="btn vide mini" href="index.php?p=planning&amp;date=<?= $veille ?>">←</a>
+      <strong><?= proteger(date_francaise($jour, false)) ?></strong>
+      <a class="btn vide mini" href="index.php?p=planning&amp;date=<?= $lendemain ?>">→</a>
+    </div>
+    <p class="aide">
+      <a href="index.php?p=planning">Aujourd'hui</a>
+      <?= $plage ? ' · ouvert ' . proteger($plage[0]) . ' – ' . proteger($plage[1])
+                 : ' · <strong>salon fermé ce jour-là</strong>' ?>
+    </p>
+
+    <?php if (!$colonnes): ?>
+      <p class="aide">Aucune masseuse ce jour-là.</p>
+    <?php else: ?>
+      <div class="planning" style="--minutes:<?= $minutes ?>; --echelle:<?= $echelle ?>">
+        <div class="planning-heures">
+          <div class="planning-tete"></div>
+          <?php for ($t = $debutJour; $t < $finJour; $t += 3600):
+              $hauteur = min(60, (int) (($finJour - $t) / 60)); ?>
+            <div class="planning-heure" style="height:<?= $hauteur * $echelle ?>px">
+              <span><?= date('H\hi', $t) ?></span>
+            </div>
+          <?php endfor; ?>
+        </div>
+
+        <?php foreach ($colonnes as $id => $prenom): ?>
+          <div class="planning-colonne">
+            <div class="planning-tete"><?= proteger($prenom) ?></div>
+            <div class="planning-piste" style="height:<?= $minutes * $echelle ?>px">
+              <?php foreach ($duJour as $r):
+                  if ((string) ($r['masseuse'] ?? '') !== $id) { continue; }
+                  $d = (int) strtotime((string) $r['debut']);
+                  $f = (int) strtotime((string) $r['fin']);
+                  $haut = (int) (($d - $debutJour) / 60) * $echelle;
+                  $haute = max(22, (int) (($f - $d) / 60) * $echelle);
+                  $etat = (string) ($r['etat'] ?? 'attente'); ?>
+                <div class="planning-rdv <?= proteger($etat) ?>"
+                     style="top:<?= $haut ?>px; height:<?= $haute ?>px">
+                  <b><?= date('H\hi', $d) ?></b>
+                  <?= proteger((string) ($r['prenom'] ?? '')) ?>
+                  <?php if (!empty($r['prestation']) && $haute >= 50): ?>
+                    <span class="planning-quoi"><?= proteger((string) $r['prestation']) ?></span>
+                  <?php endif; ?>
+                </div>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+
+      <p class="aide">
+        <span class="puce confirme"></span> confirmé &nbsp;
+        <span class="puce attente"></span> à confirmer &nbsp;
+        · <?= count($duJour) ?> rendez-vous ce jour-là
+      </p>
+    <?php endif; ?>
+
+    <p class="aide"><a href="index.php?p=reservations">← Les rendez-vous en détail</a></p>
+    <?php
+    pied();
+    exit;
 }
 
 if ($page === 'reservations') {
