@@ -22,8 +22,12 @@ function texte_filigrane(): string
     return $nom !== '' ? $nom : 'Chez Eva';
 }
 
+/* La banniere : un ruban rouge en travers du coin bas-droit, le nom du
+   salon ecrit dessus en blanc. */
+const RUBAN_ROUGE = [176, 24, 32];
+
 /**
- * Pose le filigrane sur une image deja ouverte. Rend false si le serveur
+ * Pose la banniere sur une image deja ouverte. Rend false si le serveur
  * n'a pas de quoi ecrire du texte : la photo part alors sans marque,
  * ce qui vaut mieux que pas de photo du tout.
  */
@@ -35,33 +39,68 @@ function poser_filigrane($image): bool
     $texte = texte_filigrane();
     $large = imagesx($image);
     $haut  = imagesy($image);
+    $cote  = min($large, $haut);
+    if ($cote < 120) {
+        return false;          /* trop petite pour porter une banniere */
+    }
 
-    /* La marque suit la taille de la photo : un trentieme de sa largeur. */
-    $corps = max(11, (int) round($large / 30));
-    $marge = max(10, (int) round($large / 48));
-
+    /* La taille du texte suit la photo ; la banniere suit le texte. */
+    $corps = max(11, (int) round($cote / 26));
     $boite = @imagettfbbox($corps, 0, POLICE_FILIGRANE, $texte);
     if ($boite === false) {
         return false;
     }
     $largeurTexte = abs($boite[2] - $boite[0]);
-    $hauteurTexte = abs($boite[7] - $boite[1]);
+    $epaisseur = (int) round($corps * 2.1);          /* hauteur du ruban */
 
-    $x = $large - $largeurTexte - $marge;
-    $y = $haut - $marge;
+    /* Le ruban joint deux points des bords, a egale distance du coin : sa
+       corde doit laisser de l'air autour du texte. */
+    $corde = $largeurTexte + $corps * 2.4;
+    $milieu = (int) round($corde / M_SQRT2);
+    $milieu = min($milieu, (int) round($cote * 0.62));
 
-    /* Une ombre portee garde la marque lisible sur un fond clair. */
-    $ombre = imagecolorallocatealpha($image, 0, 0, 0, 85);
-    $blanc = imagecolorallocatealpha($image, 255, 255, 255, 55);
-    @imagettftext($image, $corps, 0, $x + 1, $y + 1, $ombre, POLICE_FILIGRANE, $texte);
-    @imagettftext($image, $corps, 0, $x, $y, $blanc, POLICE_FILIGRANE, $texte);
+    $demi = (int) round($epaisseur * M_SQRT2 / 2);
+    $interieur = max(8, $milieu - $demi);            /* cote du coin */
+    $exterieur = $milieu + $demi;
 
-    /* Sans cette hauteur, la marque sortirait de la photo sur une image
-       minuscule : on verifie qu'elle tient. */
-    return $hauteurTexte < $haut;
+    /* Les quatre coins du ruban, en partant du bord bas. */
+    $points = [
+        $large - $exterieur, $haut,
+        $large,              $haut - $exterieur,
+        $large,              $haut - $interieur,
+        $large - $interieur, $haut,
+    ];
+
+    $rouge = imagecolorallocate($image, RUBAN_ROUGE[0], RUBAN_ROUGE[1], RUBAN_ROUGE[2]);
+    $ombre = imagecolorallocatealpha($image, 0, 0, 0, 100);
+    imagefilledpolygon($image, array_map('intval', $points), $ombre);
+    imagefilledpolygon($image, array_map('intval', $points), $rouge);
+
+    /* Le texte est centre dans le ruban : on demande a GD l'encombrement
+       du texte deja tourne, et on le recale sur le milieu du ruban. */
+    $cx = $large - (int) round($milieu / 2);
+    $cy = $haut  - (int) round($milieu / 2);
+
+    $tourne = @imagettfbbox($corps, 45, POLICE_FILIGRANE, $texte);
+    if ($tourne === false) {
+        return true;                                  /* le ruban seul fera l'affaire */
+    }
+    $xs = [$tourne[0], $tourne[2], $tourne[4], $tourne[6]];
+    $ys = [$tourne[1], $tourne[3], $tourne[5], $tourne[7]];
+    $x = (int) round($cx - (min($xs) + max($xs)) / 2);
+    $y = (int) round($cy - (min($ys) + max($ys)) / 2);
+
+    $blanc = imagecolorallocate($image, 255, 255, 255);
+    @imagettftext($image, $corps, 45, $x, $y, $blanc, POLICE_FILIGRANE, $texte);
+
+    return true;
 }
 
 /* ------------------- Les photos deja en ligne ---------------------------- */
+
+/* Le jour ou la marque change de forme, les photos doivent toutes y
+   repasser : le journal porte donc le nom de la marque en cours. */
+const FORME_FILIGRANE = 'ruban-rouge-1';
 
 function journal_filigrane(): array
 {
@@ -69,14 +108,18 @@ function journal_filigrane(): array
         return [];
     }
     $lu = json_decode((string) file_get_contents(JOURNAL_FILIGRANE), true);
-    return is_array($lu) ? $lu : [];
+    if (!is_array($lu) || ($lu['forme'] ?? '') !== FORME_FILIGRANE) {
+        return [];          /* une autre marque : tout est a refaire */
+    }
+    return is_array($lu['faites'] ?? null) ? $lu['faites'] : [];
 }
 
 function ecrire_journal_filigrane(array $faits): bool
 {
     return (bool) @file_put_contents(
         JOURNAL_FILIGRANE,
-        json_encode(array_values(array_unique($faits)), JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT),
+        json_encode(['forme' => FORME_FILIGRANE, 'faites' => array_values(array_unique($faits))],
+            JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT),
         LOCK_EX
     );
 }
