@@ -80,6 +80,33 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         exit;
     }
 
+    if ($action === 'sauvegarde' || $action === 'sauvegarde_secours') {
+        $chemin = $action === 'sauvegarde' ? creer_sauvegarde() : sauvegarde_de_secours();
+        if ($chemin === null || !is_file($chemin)) {
+            header('Location: index.php?p=reservations&e=1&m='
+                . urlencode('Sauvegarde impossible sur ce serveur.'));
+            exit;
+        }
+        $nom = $action === 'sauvegarde' ? nom_sauvegarde() : basename($chemin);
+        header('Content-Type: application/zip');
+        header('Content-Disposition: attachment; filename="' . $nom . '"');
+        header('Content-Length: ' . (string) filesize($chemin));
+        header('X-Content-Type-Options: nosniff');
+        readfile($chemin);
+        if ($action === 'sauvegarde') {
+            @unlink($chemin);   /* l'archive du bouton ne vit que le temps du telechargement */
+        }
+        exit;
+    }
+
+    if ($action === 'restaurer') {
+        $souci = restaurer_sauvegarde($_FILES['archive'] ?? []);
+        header('Location: index.php?p=reservations' . ($souci ? '&e=1' : '') . '&m=' . urlencode(
+            $souci ?? 'Sauvegarde remise en place. Vérifiez vos fiches et vos photos.'
+        ));
+        exit;
+    }
+
     if ($action === 'fermer') {
         $date = (string) ($_POST['date'] ?? '');
         $moment = (string) ($_POST['moment'] ?? 'journee');
@@ -673,6 +700,37 @@ if ($page === 'reservations') {
         <button class="btn vide mini" type="submit">Renouveler l'adresse</button>
       </form>
     </div>
+    <div class="pied">
+      <h2>Sauvegarde</h2>
+      <p class="aide">Tout le salon — fiches, photos, rendez-vous, réglages — dans
+         un seul fichier, à garder sur votre téléphone ou votre ordinateur.</p>
+      <form method="post">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="sauvegarde">
+        <button class="btn" type="submit">Télécharger la sauvegarde</button>
+      </form>
+
+      <h2>Restaurer</h2>
+      <p class="aide">Remet le site dans l'état de la sauvegarde choisie. Les fiches
+         et les photos d'aujourd'hui seront remplacées.</p>
+      <form method="post" enctype="multipart/form-data"
+            onsubmit="return confirm('Remplacer les fiches et les photos actuelles par celles de cette sauvegarde ?');">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="restaurer">
+        <input type="file" name="archive" accept=".zip,application/zip" required>
+        <button class="btn danger mini" type="submit">Restaurer cette sauvegarde</button>
+      </form>
+      <?php $secours = sauvegarde_de_secours(); if ($secours !== null): ?>
+        <p class="aide">Avant la dernière restauration, l'état précédent a été mis de côté
+           (<?= proteger(date('d/m/Y à H:i', (int) filemtime($secours))) ?>).</p>
+        <form method="post">
+          <input type="hidden" name="jeton" value="<?= jeton() ?>">
+          <input type="hidden" name="action" value="sauvegarde_secours">
+          <button class="btn vide mini" type="submit">Télécharger cet état précédent</button>
+        </form>
+      <?php endif; ?>
+    </div>
+
     <div class="pied">
       <h2>Fermetures</h2>
       <?php $f = fermetures(); ?>

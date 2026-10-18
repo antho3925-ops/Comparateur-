@@ -556,3 +556,6 @@ require __DIR__ . '/alertes.php';
 /* Les jours de fermeture : ils se servent des dates mises en francais
    par le module precedent. */
 require __DIR__ . '/fermetures.php';
+
+/* La sauvegarde : elle met data/ et photos/ dans une archive. */
+require __DIR__ . '/sauvegarde.php';

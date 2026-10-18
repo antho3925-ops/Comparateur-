@@ -26,7 +26,7 @@ A_DEPLOYER = [
     'index.php', 'modele.html', 'robots.txt', 'sitemap.xml', '.htaccess',
     'reserver.php', 'agenda.php', 'etat.php', 'taches.php',
     'admin/index.php', 'admin/noyau.php', 'admin/alertes.php',
-    'admin/fermetures.php',
+    'admin/fermetures.php', 'admin/sauvegarde.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
     'assets/favicon-180.png', 'assets/partage.jpg',
     'assets/polices/italiana.woff2', 'assets/polices/cormorant-300.woff2',
