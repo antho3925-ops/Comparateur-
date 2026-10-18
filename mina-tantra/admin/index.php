@@ -80,6 +80,23 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         exit;
     }
 
+    if ($action === 'poser_rdv') {
+        $resultat = poser_rendez_vous([
+            'masseuse'   => (string) ($_POST['masseuse'] ?? ''),
+            'date'       => (string) ($_POST['date'] ?? ''),
+            'heure'      => (string) ($_POST['heure'] ?? ''),
+            'duree'      => (string) ($_POST['duree'] ?? ''),
+            'prestation' => (string) ($_POST['prestation'] ?? ''),
+            'prenom'     => (string) ($_POST['prenom_client'] ?? ''),
+            'telephone'  => (string) ($_POST['telephone_client'] ?? ''),
+        ]);
+        $souci = $resultat['erreur'] ?? null;
+        header('Location: index.php?p=reservations'
+            . (($souci || !empty($resultat['avertissement'])) ? '&e=1' : '')
+            . '&m=' . urlencode($souci ?? ($resultat['avertissement'] ?? 'Rendez-vous posé.')));
+        exit;
+    }
+
     if ($action === 'sauvegarde' || $action === 'sauvegarde_secours') {
         $chemin = $action === 'sauvegarde' ? creer_sauvegarde() : sauvegarde_de_secours();
         if ($chemin === null || !is_file($chemin)) {
@@ -385,10 +402,16 @@ p.aide{ color:var(--doux); font-size:.9rem; margin:0 0 22px; }
 label{ display:block; margin:16px 0 6px; font-size:.78rem; letter-spacing:.1em;
        text-transform:uppercase; color:var(--doux); }
 input[type=text], input[type=number], input[type=password], input[type=date],
-input[type=tel], input[type=email], textarea{
+input[type=tel], input[type=email], input[type=time], select, textarea{
   width:100%; padding:12px 14px; border-radius:10px; border:1px solid var(--bord);
   background:var(--nuit-3); color:var(--texte); font:inherit; }
 textarea{ min-height:140px; resize:vertical; }
+select{ appearance:none; -webkit-appearance:none; cursor:pointer;
+        background-image:linear-gradient(45deg, transparent 50%, var(--or) 50%),
+                         linear-gradient(135deg, var(--or) 50%, transparent 50%);
+        background-position:calc(100% - 20px) 50%, calc(100% - 14px) 50%;
+        background-size:6px 6px, 6px 6px; background-repeat:no-repeat;
+        padding-right:40px; }
 input[type=file]{ width:100%; color:var(--doux); font-size:.9rem; padding:12px 0; }
 .coche{ display:flex; align-items:center; gap:10px; margin-top:18px; }
 .choix{ border:1px solid var(--bord); border-radius:10px; background:var(--nuit-3); margin-bottom:10px; }
@@ -636,9 +659,10 @@ if ($page === 'reservations') {
             <?= proteger((string) ($r['masseuse_nom'] ?? '')) ?>
           </div>
           <p class="detail">
-            <strong><?= proteger((string) ($r['prenom'] ?? '')) ?></strong> —
-            <a href="tel:<?= proteger(preg_replace('/[^\d+]/', '', (string) ($r['telephone'] ?? '')) ?? '') ?>">
-              <?= proteger((string) ($r['telephone'] ?? '')) ?></a><br>
+            <strong><?= proteger((string) ($r['prenom'] ?? '')) ?></strong><?php
+              if (!empty($r['telephone'])): ?> —
+            <a href="tel:<?= proteger(preg_replace('/[^\d+]/', '', (string) $r['telephone']) ?? '') ?>">
+              <?= proteger((string) $r['telephone']) ?></a><?php endif; ?><br>
             <?= proteger((string) ($r['prestation'] ?? '')) ?>
             <?= !empty($r['prix']) ? ' — ' . proteger((string) $r['prix']) : '' ?>
           </p>
@@ -685,6 +709,56 @@ if ($page === 'reservations') {
       <p class="aide">Les rendez-vous de plus de trente jours s'effacent tout seuls,
          coordonnées du client comprises.</p>
     <?php endif; ?>
+
+    <div class="pied">
+      <h2>Poser un rendez-vous</h2>
+      <p class="aide">Pour un client qui a téléphoné — ou simplement pour bloquer
+         une plage : laissez le prénom vide et le créneau s'affiche comme occupé.
+         Dans les deux cas, le site cesse de le proposer.</p>
+      <form method="post" class="pose-rdv">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="poser_rdv">
+
+        <label for="pose-masseuse">Masseuse</label>
+        <select id="pose-masseuse" name="masseuse" required>
+          <?php foreach (fiches() as $m): ?>
+            <option value="<?= proteger((string) ($m['id'] ?? '')) ?>">
+              <?= proteger((string) ($m['prenom'] ?? '')) ?></option>
+          <?php endforeach; ?>
+        </select>
+
+        <div class="ligne-fermeture">
+          <input type="date" name="date" required value="<?= date('Y-m-d') ?>" aria-label="Jour">
+          <input type="time" name="heure" required step="900" aria-label="Heure">
+          <select name="duree" aria-label="Durée">
+            <?php foreach (DUREES_ADMISES as $d): ?>
+              <option value="<?= $d ?>"<?= $d === 60 ? ' selected' : '' ?>>
+                <?= $d < 60 ? $d . ' min' : ($d / 60) . ' h' ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+
+        <details class="choix">
+          <summary>Le client (facultatif)</summary>
+          <div class="choix-liste">
+            <label for="pose-prestation">Prestation</label>
+            <select id="pose-prestation" name="prestation">
+              <option value="">— aucune (simple blocage) —</option>
+              <?php foreach ((array) (parametres()['prestations'] ?? []) as $pr): ?>
+                <option value="<?= proteger((string) $pr) ?>"><?= proteger((string) $pr) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <label for="pose-prenom">Prénom du client</label>
+            <input type="text" id="pose-prenom" name="prenom_client" maxlength="40"
+                   placeholder="Vide = « Occupée »">
+            <label for="pose-tel">Son téléphone</label>
+            <input type="tel" id="pose-tel" name="telephone_client" maxlength="25">
+          </div>
+        </details>
+
+        <button class="btn" type="submit">Poser ce rendez-vous</button>
+      </form>
+    </div>
 
     <div class="pied">
       <h2>Votre agenda</h2>

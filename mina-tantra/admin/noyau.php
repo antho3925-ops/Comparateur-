@@ -541,6 +541,96 @@ function demandes_en_attente(): int
     return count(array_filter(reservations(), static fn (array $r): bool => ($r['etat'] ?? '') === 'attente'));
 }
 
+/**
+ * Pose un rendez-vous depuis l'administration : un client qui a telephone,
+ * ou simplement une plage ou la masseuse n'est pas disponible.
+ *
+ * Le salon sait ce qu'il fait : un chevauchement est signale, jamais refuse.
+ * Rend ['erreur' => ...] si la saisie ne tient pas debout, sinon
+ * ['avertissement' => ...|null] une fois le rendez-vous enregistre.
+ */
+function poser_rendez_vous(array $saisie): array
+{
+    fuseau();
+
+    $masseuse = (string) ($saisie['masseuse'] ?? '');
+    $date     = (string) ($saisie['date'] ?? '');
+    $heure    = (string) ($saisie['heure'] ?? '');
+    $duree    = (int) ($saisie['duree'] ?? 0);
+
+    $fiche = fiche($masseuse);
+    if ($fiche === null) {
+        return ['erreur' => 'Choisissez une masseuse.'];
+    }
+    if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+        return ['erreur' => 'Date invalide.'];
+    }
+    if (!preg_match('/^\d{2}:\d{2}$/', $heure)) {
+        return ['erreur' => 'Heure invalide.'];
+    }
+    if (!in_array($duree, DUREES_ADMISES, true)) {
+        return ['erreur' => 'Durée invalide.'];
+    }
+
+    $debut = (int) strtotime($date . ' ' . $heure);
+    $fin   = $debut + $duree * 60;
+
+    /* Ce qui occupe deja ce moment-la : elle d'abord, les cabines ensuite. */
+    $elle = 0;
+    $cabines = 0;
+    foreach (reservations() as $r) {
+        if (($r['etat'] ?? '') === 'annule') {
+            continue;
+        }
+        $d = (int) strtotime((string) ($r['debut'] ?? ''));
+        $f = (int) strtotime((string) ($r['fin'] ?? ''));
+        if ($debut < $f && $fin > $d) {
+            $cabines++;
+            if (($r['masseuse'] ?? '') === $masseuse) {
+                $elle++;
+            }
+        }
+    }
+
+    $prenom = mb_substr(trim((string) ($saisie['prenom'] ?? '')), 0, 40);
+    $liste = reservations();
+    $liste[] = [
+        'id'           => 'r' . bin2hex(random_bytes(6)),
+        'cree'         => date('c'),
+        'masseuse'     => $masseuse,
+        'masseuse_nom' => (string) ($fiche['prenom'] ?? ''),
+        'prestation'   => mb_substr(trim((string) ($saisie['prestation'] ?? '')), 0, 80),
+        'prix'         => mb_substr(trim((string) ($saisie['prix'] ?? '')), 0, 20),
+        'duree'        => $duree,
+        'debut'        => date('Y-m-d H:i', $debut),
+        'fin'          => date('Y-m-d H:i', $fin),
+        'prenom'       => $prenom !== '' ? $prenom : 'Occupée',
+        'telephone'    => mb_substr(trim((string) ($saisie['telephone'] ?? '')), 0, 25),
+        'etat'         => 'confirme',
+        'pose_par_le_salon' => true,
+    ];
+
+    if (!ecrire_reservations($liste)) {
+        return ['erreur' => 'Enregistrement impossible : vérifiez les droits du dossier data/.'];
+    }
+
+    $avertissements = [];
+    if ($elle > 0) {
+        $avertissements[] = (string) ($fiche['prenom'] ?? 'Elle')
+            . ' a déjà ' . ($elle > 1 ? $elle . ' rendez-vous' : 'un rendez-vous') . ' à ce moment-là';
+    }
+    if ($cabines >= CABINES) {
+        $avertissements[] = 'les ' . CABINES . ' cabines étaient déjà prises';
+    }
+    if (horaires_du_jour($date) === null) {
+        $avertissements[] = 'le salon est annoncé fermé ce jour-là';
+    }
+
+    return ['avertissement' => $avertissements
+        ? 'Rendez-vous posé, mais attention : ' . implode(', ', $avertissements) . '.'
+        : null];
+}
+
 /** Les rendez-vous tries par date, les plus proches d'abord. */
 function reservations_triees(): array
 {
