@@ -698,3 +698,6 @@ require __DIR__ . '/comptes.php';
 
 /* Le filigrane pose sur les photos. */
 require __DIR__ . '/filigrane.php';
+
+/* Les numeros que le site n'accepte plus. */
+require __DIR__ . '/liste-noire.php';

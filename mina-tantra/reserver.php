@@ -75,6 +75,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST' && ($_POST['action'] ?? '') ==
         repondre(['ok' => false, 'code' => 'trop',
             'erreur' => 'Trop de demandes depuis cet appareil. Appelez-nous.'], 429);
     }
+    if (numero_bloque((string) ($_POST['telephone'] ?? ''))) {
+        repondre(['ok' => false, 'code' => 'bloque',
+            'erreur' => 'Nous ne pouvons pas enregistrer cette demande en ligne. Appelez-nous.'], 403);
+    }
     $souci = inscrire_en_attente([
         'prenom'    => (string) ($_POST['prenom'] ?? ''),
         'telephone' => (string) ($_POST['telephone'] ?? ''),
@@ -117,6 +121,13 @@ if ($prenom === '' || mb_strlen($prenom) < 2) {
 if (strlen(preg_replace('/\D/', '', $telephone) ?? '') < 9) {
     repondre(['ok' => false, 'code' => 'telephone',
         'erreur' => 'Le numéro de téléphone semble incomplet.'], 422);
+}
+
+/* Un numero que le salon ne veut plus : le refus reste neutre, il
+   n'apprend pas qu'il figure sur une liste. */
+if (numero_bloque($telephone)) {
+    repondre(['ok' => false, 'code' => 'bloque',
+        'erreur' => 'Nous ne pouvons pas enregistrer cette demande en ligne. Appelez-nous.'], 403);
 }
 if (!preg_match('/^\d{2}:\d{2}$/', $heure)) {
     repondre(['ok' => false, 'code' => 'heure', 'erreur' => 'Créneau invalide.'], 422);

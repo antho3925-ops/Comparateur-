@@ -944,6 +944,7 @@
     function messageServeur(d) {
       var codes = {
         creneau: 'err_creneau', ferme: 'err_ferme', suspendu: 'err_suspendu',
+        bloque: 'err_bloque',
         prenom: 'msg_prenom', telephone: 'msg_tel', heure: 'msg_heure',
       };
       var cle = d && codes[d.code];

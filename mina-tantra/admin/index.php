@@ -80,6 +80,29 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         exit;
     }
 
+    if ($action === 'bloquer') {
+        $resultat = bloquer_numero((string) ($_POST['numero'] ?? ''),
+                                   (string) ($_POST['note'] ?? ''));
+        if (isset($resultat['erreur'])) {
+            header('Location: index.php?p=reservations&e=1&m=' . urlencode($resultat['erreur']));
+            exit;
+        }
+        $avis = !empty($resultat['deja'])
+            ? 'Ce numéro figurait déjà sur la liste.'
+            : 'Numéro bloqué.' . ($resultat['annules']
+                ? ' ' . $resultat['annules'] . ' rendez-vous à venir annulé'
+                  . ($resultat['annules'] > 1 ? 's' : '') . ', les créneaux sont rouverts.'
+                : '');
+        header('Location: index.php?p=reservations&m=' . urlencode($avis));
+        exit;
+    }
+
+    if ($action === 'debloquer') {
+        debloquer_numero((string) ($_POST['numero'] ?? ''));
+        header('Location: index.php?p=reservations&m=' . urlencode('Numéro débloqué.'));
+        exit;
+    }
+
     if ($action === 'encaisser' || $action === 'encaissement_annuler') {
         $rid = (string) ($_POST['rid'] ?? '');
         if ($action === 'encaissement_annuler') {
@@ -970,6 +993,16 @@ if ($page === 'reservations') {
             <?= !empty($r['prix']) ? ' — ' . proteger((string) $r['prix']) : '' ?>
           </p>
           <div class="liens">
+            <?php if (!empty($r['telephone']) && !numero_bloque((string) $r['telephone'])): ?>
+              <form method="post" class="ligne"
+                    onsubmit="return confirm('Bloquer ce numéro et annuler ses rendez-vous à venir ?');">
+                <input type="hidden" name="jeton" value="<?= jeton() ?>">
+                <input type="hidden" name="action" value="bloquer">
+                <input type="hidden" name="numero" value="<?= proteger((string) $r['telephone']) ?>">
+                <input type="hidden" name="note" value="<?= proteger((string) ($r['prenom'] ?? '')) ?>">
+                <button class="btn vide mini" type="submit">Bloquer</button>
+              </form>
+            <?php endif; ?>
             <?php foreach ([['confirme', 'Confirmer'], ['annule', 'Annuler']] as [$cible, $libelle]):
                 if ($etat !== $cible): ?>
               <form method="post" class="ligne">
@@ -1076,6 +1109,45 @@ if ($page === 'reservations') {
       <?php endforeach; ?>
     </div>
     <?php endif; ?>
+
+    <div class="pied">
+      <h2>Liste noire</h2>
+      <p class="aide">Un numéro inscrit ici ne peut plus réserver en ligne. Il lit
+         un refus neutre : il ne sait pas qu'il est bloqué.</p>
+      <form method="post">
+        <input type="hidden" name="jeton" value="<?= jeton() ?>">
+        <input type="hidden" name="action" value="bloquer">
+        <div class="ligne-fermeture">
+          <input type="tel" name="numero" required placeholder="079 000 00 00" aria-label="Numéro">
+          <input type="text" name="note" maxlength="120" placeholder="Pourquoi (facultatif)"
+                 aria-label="Note">
+          <button class="btn danger mini" type="submit">Bloquer</button>
+        </div>
+      </form>
+
+      <?php $noire = liste_noire(); if ($noire): ?>
+        <?php foreach (array_reverse($noire) as $b): ?>
+          <div class="carte rdv">
+            <h3><?= proteger((string) ($b['affiche'] ?? $b['numero'] ?? '')) ?></h3>
+            <?php if (!empty($b['note'])): ?>
+              <p class="detail"><?= proteger((string) $b['note']) ?></p>
+            <?php endif; ?>
+            <div class="etat absente">bloqué le
+              <?= proteger(date_francaise((string) ($b['cree'] ?? 'now'), false)) ?></div>
+            <div class="liens">
+              <form method="post" class="ligne">
+                <input type="hidden" name="jeton" value="<?= jeton() ?>">
+                <input type="hidden" name="action" value="debloquer">
+                <input type="hidden" name="numero" value="<?= proteger((string) ($b['numero'] ?? '')) ?>">
+                <button class="btn vide mini" type="submit">Débloquer</button>
+              </form>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <p class="aide">Personne n'est bloqué.</p>
+      <?php endif; ?>
+    </div>
 
     <div class="pied">
       <h2>Poser un rendez-vous</h2>
