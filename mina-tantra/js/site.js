@@ -481,6 +481,26 @@
 
   $('#tarifs-note').textContent = C('tarifsNote', TARIFS_NOTE);
 
+  /* ------------------------------ Actualités ----------------------------- */
+  /* Le salon ecrit en francais ; une traduction vide retombe dessus. */
+  (function carnet() {
+    var section = $('#actualites');
+    var nouvelles = (window.SALON_ETAT || {}).actualites || [];
+    if (!section || !nouvelles.length) { return; }
+    section.hidden = false;
+
+    $('#carnet').innerHTML = nouvelles.map(function (n) {
+      var titre = n['titre_' + LANGUE] || n.titre || '';
+      var texte = n['texte_' + LANGUE] || n.texte || '';
+      var quand = jour(n.date);
+      return '<article class="nouvelle apparait">'
+           + (quand ? '<p class="nouvelle-date">' + esc(enFrancais(quand)) + '</p>' : '')
+           + '<h3>' + esc(titre) + '</h3>'
+           + (texte ? '<p>' + esc(texte) + '</p>' : '')
+           + '</article>';
+    }).join('');
+  }());
+
   /* ---------------------------- Première visite -------------------------- */
   (function premiereVisite() {
     var section = $('#premiere-visite');

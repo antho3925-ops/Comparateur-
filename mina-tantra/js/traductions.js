@@ -53,6 +53,9 @@ fr: {
     bientot_note: 'Appelez-nous, nous vous dirons qui revient et quand.',
 
     fiche_page: 'Sa page',
+    actualites_chapeau: 'Des nouvelles',
+    actualites_titre: 'Le carnet du salon',
+    menu_actualites: 'Actualités',
     badge_disponible: 'Disponible', badge_bientot: 'Bientôt de retour',
     badge_a_partir: 'À partir du', ligne_presente_du: 'Présente du', ligne_au: 'au',
     ligne_jusquau: 'Jusqu’au', fiche_appeler: 'Appeler', fiche_reserver: 'Réserver avec',
@@ -176,6 +179,9 @@ de: {
     bientot_note: 'Rufen Sie uns an — wir sagen Ihnen, wer wann zurückkommt.',
 
     fiche_page: 'Ihre Seite',
+    actualites_chapeau: 'Neuigkeiten',
+    actualites_titre: 'Aus dem Salon',
+    menu_actualites: 'Neuigkeiten',
     badge_disponible: 'Verfügbar', badge_bientot: 'Bald zurück',
     badge_a_partir: 'Ab dem', ligne_presente_du: 'Da vom', ligne_au: 'bis',
     ligne_jusquau: 'Bis zum', fiche_appeler: 'Anrufen:', fiche_reserver: 'Termin bei',
@@ -369,6 +375,9 @@ en: {
     bientot_note: 'Call us — we will tell you who is coming back, and when.',
 
     fiche_page: 'Her page',
+    actualites_chapeau: 'News',
+    actualites_titre: 'From the parlour',
+    menu_actualites: 'News',
     badge_disponible: 'Available', badge_bientot: 'Back before long',
     badge_a_partir: 'From', ligne_presente_du: 'Here from', ligne_au: 'to',
     ligne_jusquau: 'Until', fiche_appeler: 'Call', fiche_reserver: 'Book with',
@@ -562,6 +571,9 @@ es: {
     bientot_note: 'Llámenos: le diremos quién vuelve y cuándo.',
 
     fiche_page: 'Su página',
+    actualites_chapeau: 'Novedades',
+    actualites_titre: 'El cuaderno del salón',
+    menu_actualites: 'Novedades',
     badge_disponible: 'Disponible', badge_bientot: 'Pronto de vuelta',
     badge_a_partir: 'A partir del', ligne_presente_du: 'Presente del', ligne_au: 'al',
     ligne_jusquau: 'Hasta el', fiche_appeler: 'Llamar a', fiche_reserver: 'Reservar con',

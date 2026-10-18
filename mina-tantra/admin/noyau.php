@@ -707,3 +707,6 @@ require __DIR__ . '/filigrane.php';
 
 /* Les numeros que le site n'accepte plus. */
 require __DIR__ . '/liste-noire.php';
+
+/* Le carnet d'actualites du salon. */
+require __DIR__ . '/actualites.php';

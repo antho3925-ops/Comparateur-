@@ -80,6 +80,30 @@ if ($action !== '' && !in_array($action, ['connexion', 'creer_motdepasse', 'deco
         exit;
     }
 
+    if ($action === 'actualite') {
+        $souci = enregistrer_actualite([
+            'id'    => (string) ($_POST['aid'] ?? ''),
+            'date'  => (string) ($_POST['date'] ?? ''),
+            'titre' => (string) ($_POST['titre'] ?? ''),
+            'texte' => (string) ($_POST['texte'] ?? ''),
+            'titre_de' => (string) ($_POST['titre_de'] ?? ''),
+            'texte_de' => (string) ($_POST['texte_de'] ?? ''),
+            'titre_en' => (string) ($_POST['titre_en'] ?? ''),
+            'texte_en' => (string) ($_POST['texte_en'] ?? ''),
+            'titre_es' => (string) ($_POST['titre_es'] ?? ''),
+            'texte_es' => (string) ($_POST['texte_es'] ?? ''),
+        ]);
+        header('Location: index.php?p=actualites' . ($souci ? '&e=1' : '')
+            . '&m=' . urlencode($souci ?? 'Nouvelle enregistrée.'));
+        exit;
+    }
+
+    if ($action === 'actualite_supprimer') {
+        supprimer_actualite((string) ($_POST['aid'] ?? ''));
+        header('Location: index.php?p=actualites&m=' . urlencode('Nouvelle supprimée.'));
+        exit;
+    }
+
     if ($action === 'bloquer') {
         $resultat = bloquer_numero((string) ($_POST['numero'] ?? ''),
                                    (string) ($_POST['note'] ?? ''));
@@ -614,6 +638,7 @@ form.ligne{ display:inline; }
       <a href="index.php">Masseuses</a> &nbsp;
       <a href="index.php?p=planning">Journée</a> &nbsp;
       <a href="index.php?p=decompte">Décompte</a> &nbsp;
+      <a href="index.php?p=actualites">Carnet</a> &nbsp;
       <a href="index.php?p=reservations">Rendez-vous<?php
           $attente = demandes_en_attente();
           echo $attente ? ' <span class="pastille">' . $attente . '</span>' : ''; ?></a> &nbsp;
@@ -786,6 +811,94 @@ function en_francais(string $local): string
              'août', 'septembre', 'octobre', 'novembre', 'décembre'];
     $t = (int) strtotime($local);
     return $jours[(int) date('N', $t)] . ' ' . date('j', $t) . ' ' . $mois[(int) date('n', $t)];
+}
+
+if ($page === 'actualites') {
+    fuseau();
+    entete('Le carnet');
+    avis($message, $erreur);
+
+    $enCours = null;
+    $modifie = (string) ($_GET['id'] ?? '');
+    foreach (actualites() as $a) {
+        if ((string) ($a['id'] ?? '') === $modifie) {
+            $enCours = $a;
+        }
+    }
+    ?>
+    <h1>Le carnet</h1>
+    <p class="aide">Trois lignes de temps en temps — une nouvelle masseuse, une
+       fermeture, une prestation qui arrive. Les trois dernières s'affichent sur
+       le site.</p>
+
+    <form method="post">
+      <input type="hidden" name="jeton" value="<?= jeton() ?>">
+      <input type="hidden" name="action" value="actualite">
+      <input type="hidden" name="aid" value="<?= proteger((string) ($enCours['id'] ?? '')) ?>">
+
+      <label for="a-date">Date</label>
+      <input type="date" id="a-date" name="date"
+             value="<?= proteger((string) ($enCours['date'] ?? date('Y-m-d'))) ?>">
+
+      <label for="a-titre">Titre</label>
+      <input type="text" id="a-titre" name="titre" maxlength="90" required
+             placeholder="Luna rejoint le salon"
+             value="<?= proteger((string) ($enCours['titre'] ?? '')) ?>">
+
+      <label for="a-texte">Le texte</label>
+      <textarea id="a-texte" name="texte" maxlength="600"
+                placeholder="Deux ou trois phrases."><?= proteger((string) ($enCours['texte'] ?? '')) ?></textarea>
+
+      <details class="choix">
+        <summary>Dans les autres langues (facultatif)</summary>
+        <div class="choix-liste">
+          <p class="aide">Laissez vide et le français s'affichera partout.</p>
+          <?php foreach (['de' => '🇩🇪 Allemand', 'en' => '🇬🇧 Anglais', 'es' => '🇪🇸 Espagnol'] as $code => $libelle): ?>
+            <label for="a-titre-<?= $code ?>"><?= proteger($libelle) ?></label>
+            <input type="text" id="a-titre-<?= $code ?>" name="titre_<?= $code ?>" maxlength="90"
+                   placeholder="Titre"
+                   value="<?= proteger((string) ($enCours['titre_' . $code] ?? '')) ?>">
+            <textarea name="texte_<?= $code ?>" maxlength="600"
+                      placeholder="Le texte"><?= proteger((string) ($enCours['texte_' . $code] ?? '')) ?></textarea>
+          <?php endforeach; ?>
+        </div>
+      </details>
+
+      <div class="actions">
+        <button class="btn" type="submit"><?= $enCours ? 'Enregistrer' : 'Ajouter au carnet' ?></button>
+        <?php if ($enCours): ?>
+          <a class="btn vide" href="index.php?p=actualites">Nouvelle entrée</a>
+        <?php endif; ?>
+      </div>
+    </form>
+
+    <?php $carnet = actualites(); if ($carnet): ?>
+      <div class="pied">
+        <h2>Le carnet</h2>
+        <?php foreach ($carnet as $i => $a): ?>
+          <div class="carte rdv<?= $i < ACTUALITES_AFFICHEES ? '' : ' passe' ?>">
+            <div class="etat"><?= proteger(date_francaise((string) $a['date'], false)) ?>
+              <?= $i < ACTUALITES_AFFICHEES ? ' · sur le site' : ' · plus affichée' ?></div>
+            <h3><?= proteger((string) ($a['titre'] ?? '')) ?></h3>
+            <?php if (!empty($a['texte'])): ?>
+              <p class="detail"><?= proteger((string) $a['texte']) ?></p>
+            <?php endif; ?>
+            <div class="liens">
+              <a class="btn vide mini" href="index.php?p=actualites&amp;id=<?= urlencode((string) $a['id']) ?>">Modifier</a>
+              <form method="post" class="ligne" onsubmit="return confirm('Supprimer cette nouvelle ?');">
+                <input type="hidden" name="jeton" value="<?= jeton() ?>">
+                <input type="hidden" name="action" value="actualite_supprimer">
+                <input type="hidden" name="aid" value="<?= proteger((string) $a['id']) ?>">
+                <button class="btn danger mini" type="submit">Supprimer</button>
+              </form>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    <?php endif; ?>
+    <?php
+    pied();
+    exit;
 }
 
 if ($page === 'decompte') {

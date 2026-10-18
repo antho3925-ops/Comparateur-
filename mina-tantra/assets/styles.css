@@ -520,6 +520,19 @@ body.avec-reservation .fiche-reserver:hover{ background:var(--or-clair); border-
 .creneaux-liste[hidden]{ display:none; }
 .creneaux-choix{ margin:14px 0 0; font-size:.86rem; color:var(--or-clair); }
 
+/* ------------------------------ Actualités ------------------------------- */
+.carnet{ margin-top:30px; }
+.nouvelle{
+  padding:22px 0; border-top:1px solid var(--bord);
+}
+.nouvelle:first-child{ border-top:0; padding-top:0; }
+.nouvelle-date{
+  margin:0 0 6px; font-size:.66rem; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--or);
+}
+.nouvelle h3{ margin:0 0 8px; font-size:1.14rem; font-weight:500; color:var(--texte); }
+.nouvelle p{ margin:0; color:var(--texte-doux); font-size:.96rem; }
+
 .fiche-page{
   display:inline-block; margin-top:10px; font-size:.72rem; letter-spacing:.16em;
   text-transform:uppercase; color:var(--or); text-decoration:none;

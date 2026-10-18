@@ -53,6 +53,7 @@ $temoins = [
     'L’administration en application' => is_file($racine . '/admin/manifeste.json'),
     'Le battement de cœur' => is_file($racine . '/ping.php'),
     'Une page par masseuse' => is_file($racine . '/masseuse.php'),
+    'Le carnet d’actualités' => contient($racine, 'admin/noyau.php', "require __DIR__ . '/actualites.php'"),
 ];
 
 $ancienne = is_file($racine . '/index.html');

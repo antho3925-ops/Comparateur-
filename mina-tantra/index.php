@@ -68,6 +68,7 @@ if (function_exists('fermetures_annoncees')) {
         }
     }
     $etatSalon = [
+        'actualites'       => function_exists('actualites_publiees') ? actualites_publiees() : [],
         'suspendue'        => reservation_suspendue(),
         'fermetures'       => fermetures_annoncees(),   /* en francais, pour le repli */
         'fermetures_jours' => $jours,                   /* bruts : le site les met en phrases */

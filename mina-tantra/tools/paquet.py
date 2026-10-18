@@ -26,7 +26,7 @@ A_DEPLOYER = [
     'index.php', 'modele.html', 'robots.txt', 'sitemap.xml', '.htaccess',
     'reserver.php', 'agenda.php', 'etat.php', 'taches.php', 'annuler.php', 'planning.php', 'ping.php', 'masseuse.php',
     'admin/index.php', 'admin/manifeste.json', 'admin/noyau.php', 'admin/alertes.php',
-    'admin/fermetures.php', 'admin/sauvegarde.php', 'admin/attente.php', 'admin/comptes.php', 'admin/filigrane.php', 'admin/liste-noire.php',
+    'admin/fermetures.php', 'admin/sauvegarde.php', 'admin/attente.php', 'admin/comptes.php', 'admin/filigrane.php', 'admin/liste-noire.php', 'admin/actualites.php',
     'assets/styles.css', 'assets/favicon.ico', 'assets/favicon.png',
     'assets/favicon-180.png', 'assets/icone-512.png', 'assets/partage.jpg',
     'assets/polices/italiana.woff2', 'assets/polices/cormorant-300.woff2',
@@ -34,7 +34,7 @@ A_DEPLOYER = [
     'assets/polices/italiana.ttf',
     'js/site.js', 'js/contenu.js', 'js/traductions.js',
     'data/masseuses.json', 'data/parametres.json',
-    'data/reservations.json', 'data/fermetures.json', 'data/attente.json', 'data/liste-noire.json',
+    'data/reservations.json', 'data/fermetures.json', 'data/attente.json', 'data/liste-noire.json', 'data/actualites.json',
     'data/.htaccess',
 ]
 A_DEPLOYER += sorted(
@@ -47,7 +47,7 @@ A_DEPLOYER += sorted(
 # ils appartiennent a l'administration, pas au paquet.
 PRESERVES = ['data/masseuses.json', 'data/reservations.json', 'data/config.json',
              'data/fermetures.json', 'data/attente.json',
-             'data/liste-noire.json']
+             'data/liste-noire.json', 'data/actualites.json']
 
 
 # L'adresse qui recoit les alertes du site. Elle n'apparait nulle part sur la
