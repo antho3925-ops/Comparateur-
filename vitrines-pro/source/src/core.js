@@ -114,7 +114,7 @@ function hoursRows(H){
 let storageOK=true;
 function defaults(){return{
  settings:{agency:'Votre Agence',tagline:'Sites internet pour commerces de proximité',commercial:'',phone:'',email:'',city:'',pin:'1234',pinChanged:false,
-  price:590,monthlyMin:20,monthlyMax:50,commission:100,updatedAt:0,delay:'7 jours ouvrés',
+  coms:[],price:590,monthlyMin:20,monthlyMax:50,commission:100,updatedAt:0,delay:'7 jours ouvrés',
   rdv:{days:[1,2,3,4,5,6],start:'09:00',end:'18:00',step:30},
   options:[
    {id:'resa',n:'Réservation en ligne',p:150},{id:'shop',n:'Commande en ligne et retrait en boutique',p:250},
@@ -122,7 +122,7 @@ function defaults(){return{
    {id:'gmb',n:'Fiche Google optimisée',p:80},{id:'logo',n:'Logo et identité visuelle',p:120},
    {id:'shoot',n:'Shooting photo professionnel',p:150},{id:'en',n:'Version anglaise',p:100},
    {id:'insta',n:'Flux Instagram intégré',p:40},{id:'seo',n:'Référencement local renforcé',p:90}]},
- prospects:[],quotes:[],appts:[],views:{},viewsU:0,viewsRemote:{},visit:null,savedAt:0,deviceId:uid(),
+ prospects:[],quotes:[],appts:[],tours:[],me:'',views:{},viewsU:0,viewsRemote:{},visit:null,savedAt:0,deviceId:uid(),
  sync:{on:false,cfg:{pid:'',key:'',team:'',host:''},last:'1970-01-01T00:00:00Z',pushed:{},tomb:[],lastOk:0,err:''}};}
 function lsGet(){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):null}catch(e){storageOK=false;return null}}
 function lsSet(o){try{localStorage.setItem(LS_KEY,JSON.stringify(o));return true}catch(e){storageOK=false;return false}}
@@ -143,7 +143,7 @@ const STATUS={nouveau:['Nouveau','blue'],contacte:['Contacté',''],rdv2:['2e RDV
 const HEAT={froid:['Froid','#7a8cff'],tiede:['Tiède','#e89a0c'],chaud:['Chaud','#d6334a']};
 const prospectById=id=>S.prospects.find(p=>p.id===id);
 const quoteById=id=>S.quotes.find(p=>p.id===id);
-function addProspect(p){const o=Object.assign({id:uid(),createdAt:Date.now(),updatedAt:Date.now(),status:'nouveau',heat:'tiede',notes:[],viewed:[]},p);S.prospects.unshift(o);save();return o}
+function addProspect(p){const o=Object.assign({id:uid(),createdAt:Date.now(),updatedAt:Date.now(),status:'nouveau',heat:'tiede',notes:[],viewed:[],by:S.me||''},p);S.prospects.unshift(o);save();return o}
 function patchProspect(id,patch){const p=prospectById(id);if(!p)return;Object.assign(p,patch,{updatedAt:Date.now()});save();return p}
 function addNote(id,text){const p=prospectById(id);if(!p||!text.trim())return;p.notes.unshift({t:Date.now(),x:text.trim()});p.updatedAt=Date.now();save()}
 function logView(demoId){
@@ -184,12 +184,12 @@ function prospectText(p){
 /* ===== Export / import ===== */
 function exportObj(){
   const s=Object.assign({},S.settings);delete s.pin;
-  return{app:'vitrines-pro',v:1,exportedAt:new Date().toISOString(),settings:s,prospects:S.prospects,quotes:S.quotes,appts:S.appts,views:S.views};
+  return{app:'vitrines-pro',v:1,exportedAt:new Date().toISOString(),settings:s,prospects:S.prospects,quotes:S.quotes,appts:S.appts,tours:S.tours,views:S.views};
 }
 function mergeIn(o){
   let add=0,upd=0;
   const mergeArr=(dst,src)=>{(src||[]).forEach(r=>{const i=dst.findIndex(x=>x.id===r.id);if(i<0){dst.push(r);add++}else if((r.updatedAt||r.createdAt||0)>(dst[i].updatedAt||dst[i].createdAt||0)){dst[i]=r;upd++}})};
-  mergeArr(S.prospects,o.prospects);mergeArr(S.quotes,o.quotes);mergeArr(S.appts,o.appts);
+  mergeArr(S.prospects,o.prospects);mergeArr(S.quotes,o.quotes);mergeArr(S.appts,o.appts);mergeArr(S.tours,o.tours);
   Object.entries(o.views||{}).forEach(([k,v])=>{S.views[k]=Math.max(S.views[k]||0,v)});
   save();return{add,upd};
 }

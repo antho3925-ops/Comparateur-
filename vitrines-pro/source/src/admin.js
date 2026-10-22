@@ -16,20 +16,77 @@ function summaryText(){
 function pageAdmin(){
   if(!adminOK){
     const html=`<div class="page gut"><div class="narrow"><div class="pagehead"><h1>Espace administrateur</h1><p>Saisissez votre code pour voir les prospects, les rendez-vous et les devis notés par le commercial.</p></div>
-    <div class="card"><label class="fld" style="margin-top:0"><span>Code</span><input class="inp" id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="••••"></label><p id="pinerr" class="hint" style="color:var(--bad);margin-top:8px" hidden>Code incorrect.</p><button class="btn block" style="margin-top:14px" data-unlock>${ic('lock',18)} Déverrouiller</button>${!S.settings.pinChanged?'<p class="hint" style="margin-top:12px">Première utilisation : le code par défaut est <b>1234</b>. Changez-le dans Réglages.</p>':''}</div>
+    <div class="card"><label class="fld" style="margin-top:0"><span>Identifiant <small>(commercial · laissez vide pour le patron)</small></span><input class="inp" id="uid" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="ex. COM-4821" value="${esc(S.lastId||'')}"></label><label class="fld"><span>Code</span><input class="inp" id="pin" type="password" inputmode="numeric" autocomplete="off" maxlength="12" placeholder="••••"></label><p id="pinerr" class="hint" style="color:var(--bad);margin-top:8px" hidden>Identifiant ou code incorrect.</p><button class="btn block" style="margin-top:14px" data-unlock>${ic('lock',18)} Déverrouiller</button>${!S.settings.pinChanged?'<p class="hint" style="margin-top:12px">Première utilisation : le code par défaut est <b>1234</b>. Changez-le dans Réglages.</p>':''}</div>
     <p class="hint" style="margin-top:14px;text-align:center">Ce code évite les regards curieux. Il ne chiffre pas les données du téléphone.</p></div></div>`;
     return{html,init(root){
-      const go1=()=>{if($('#pin',root).value===String(S.settings.pin)){adminOK=true;try{sessionStorage.setItem('vp-admin','1')}catch(e){}render()}else{$('#pinerr',root).hidden=false;$('#pin',root).value='';$('#pin',root).focus()}};
+      const go1=()=>{const u=($('#uid',root).value||'').trim().toUpperCase(),c=$('#pin',root).value,com=u&&(S.settings.coms||[]).find(x=>String(x.id).toUpperCase()===u),ok=u?(com&&String(com.code)===c):c===String(S.settings.pin);if(ok){adminOK=true;S.me=u?com.id:'';S.lastId=u?com.id:'';saveQuiet();try{sessionStorage.setItem('vp-admin','1')}catch(e){}render()}else{$('#pinerr',root).hidden=false;$('#pin',root).value='';$('#pin',root).focus()}};
       $('[data-unlock]',root).onclick=go1;$('#pin',root).addEventListener('keydown',e=>{if(e.key==='Enter')go1()});}};
   }
-  const tabs=[['apercu','Aperçu'],['prospects','Prospects ('+S.prospects.length+')'],['rdv','RDV ('+upcoming().length+')'],['devis','Devis ('+S.quotes.length+')'],['ventes','Ventes ('+sales().length+')'],['reglages','Réglages'],['donnees','Données']];
+  const tabs=[['apercu','Aperçu'],['tournee','Tournée'],['prospects','Prospects ('+S.prospects.length+')'],['rdv','RDV ('+upcoming().length+')'],['devis','Devis ('+S.quotes.length+')'],['ventes','Ventes ('+sales().length+')'],['reglages','Réglages'],['donnees','Données']];
   const html=`<div class="page gut"><div class="pagehead"><h1>Espace administrateur</h1><p>Tout ce qui a été noté, enregistré sur ce téléphone. <span class="badge" data-syncst>${esc(syncLabel())}</span></p></div><div class="subtabs" role="tablist" id="atabs">${tabs.map(t=>`<button role="tab" data-a="${t[0]}" aria-selected="${adminTab===t[0]}">${esc(t[1])}</button>`).join('')}</div><div id="adm"></div><div style="margin-top:22px"><button class="btn sm line" data-lockadm>${ic('lock',16)} Verrouiller</button></div></div>`;
   return{html,init(root){
     const box=$('#adm',root);
-    const draw=()=>{$$('#atabs button',root).forEach(b=>b.setAttribute('aria-selected',b.dataset.a===adminTab));({apercu:tApercu,prospects:tProspects,rdv:tRdv,devis:tDevis,ventes:tVentes,reglages:tReglages,donnees:tDonnees}[adminTab])(box,draw)};
+    const draw=()=>{$$('#atabs button',root).forEach(b=>b.setAttribute('aria-selected',b.dataset.a===adminTab));({apercu:tApercu,tournee:tTournee,prospects:tProspects,rdv:tRdv,devis:tDevis,ventes:tVentes,reglages:tReglages,donnees:tDonnees}[adminTab])(box,draw)};
     $('#atabs',root).addEventListener('click',e=>{const b=e.target.closest('[data-a]');if(b){adminTab=b.dataset.a;draw()}});
     $('[data-lockadm]',root).onclick=()=>{adminOK=false;try{sessionStorage.removeItem('vp-admin')}catch(e){}render()};
     draw();}};
+}
+/* --- feuille de tournée --- */
+let tourDate='';
+const comById=id=>(S.settings.coms||[]).find(c=>c.id===id);
+const comName=id=>{const c=comById(id);return c?c.name:(id?id:'')};
+const RES={A:['A · 2e RDV fixé','ok'],B:['B · à relancer','warn'],C:['C · refus poli','bad']};
+function tourText(d){
+  const L=S.tours.filter(t=>t.date===d).sort((a,b)=>a.time.localeCompare(b.time)),me=S.me&&comById(S.me);
+  let x=`FEUILLE DE TOURNÉE · ${fmtDate(d)}\n${me?me.name+' · ID '+me.id:(S.settings.commercial||'')}\n\n`;
+  L.forEach(t=>{x+=`${t.time} · ${t.business}${t.name?' ('+t.name+')':''} · ${(DEMO_BY_ID[t.demo]||{}).name||'—'} · ${t.res||'—'}${t.next?' · '+t.next:''}${t.by&&!me?' · '+comName(t.by):''}\n`});
+  const n=r=>L.filter(t=>t.res===r).length;x+=`\n${L.length} visites · A : ${n('A')} · B : ${n('B')} · C : ${n('C')}`;return x;
+}
+function printTour(d){
+  const L=S.tours.filter(t=>t.date===d).sort((a,b)=>a.time.localeCompare(b.time)),me=S.me&&comById(S.me),rows=L.concat(Array(Math.max(0,14-L.length)).fill(null));
+  const h=`<!doctype html><meta charset="utf-8"><title>Feuille de tournée</title><style>body{font:12px Arial,sans-serif;margin:14mm}h1{font-size:18px;margin:0 0 4px}p{margin:0 0 10px;color:#555}table{border-collapse:collapse;width:100%}th,td{border:1px solid #999;padding:6px;text-align:left;height:22px;vertical-align:top}th{background:#eee;font-size:11px}small{color:#666}</style><h1>Feuille de tournée · ${esc(fmtDate(d))}</h1><p>${esc(me?me.name+' · ID '+me.id:(S.settings.commercial||''))} · ${esc(S.settings.agency)}</p><table><tr><th>Heure</th><th>Commerce</th><th>Gérant vu</th><th>Démo montrée</th><th>Résultat</th><th>Prochaine action</th></tr>${rows.map(t=>t?`<tr><td>${esc(t.time)}</td><td>${esc(t.business)}</td><td>${esc(t.name||'')}</td><td>${esc((DEMO_BY_ID[t.demo]||{}).name||'')}</td><td>${esc(t.res||'')}</td><td>${esc(t.next||'')}</td></tr>`:'<tr><td></td><td></td><td></td><td></td><td></td><td></td></tr>').join('')}</table><p style="margin-top:8px"><small>A : démo vue et 2e rendez-vous fixé · B : intéressé, à relancer · C : refus poli</small></p>`;
+  const f=document.createElement('iframe');f.style.cssText='position:fixed;right:0;bottom:0;width:0;height:0;border:0';document.body.appendChild(f);
+  f.contentDocument.open();f.contentDocument.write(h);f.contentDocument.close();
+  setTimeout(()=>{try{f.contentWindow.focus();f.contentWindow.print()}catch(e){toast('Impression indisponible')}setTimeout(()=>f.remove(),4000)},300);
+}
+function editTour(id,date,after){
+  const t=id?S.tours.find(x=>x.id===id):null,now=new Date(),d=t?Object.assign({},t):{date,time:String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0'),business:'',name:'',demo:'',res:'',next:'',notes:''};
+  const m=openModal(`<h3>${t?'Modifier la visite':'Nouvelle visite'}</h3>
+  <div class="grid2"><label class="fld"><span>Heure</span><input class="inp" type="time" data-k="time" value="${esc(d.time)}"></label><label class="fld"><span>Commerce</span><input class="inp" data-k="business" value="${esc(d.business)}" placeholder="Nom du commerce"></label><label class="fld"><span>Gérant vu</span><input class="inp" data-k="name" value="${esc(d.name)}"></label><label class="fld"><span>Démo montrée</span><select class="sel" data-k="demo"><option value="">—</option>${DEMOS.map(x=>`<option value="${x.id}"${x.id===d.demo?' selected':''}>${esc(x.name)}</option>`).join('')}</select></label></div>
+  <div class="fld"><span>Résultat</span><div class="seg" style="margin-top:0" id="rs">${Object.entries(RES).map(([k,v])=>`<button data-r="${k}" aria-pressed="${d.res===k}">${esc(v[0])}</button>`).join('')}</div></div>
+  <label class="fld"><span>Prochaine action</span><input class="inp" data-k="next" value="${esc(d.next)}" placeholder="ex. Repasser jeudi 15 h"></label>
+  ${t?'':`<label class="fld" style="grid-auto-flow:column;justify-content:start;gap:8px;align-items:center"><input type="checkbox" id="mkp" checked> <span>Créer aussi la fiche prospect</span></label>`}
+  <div class="row" style="margin-top:18px"><button class="btn" data-save>Enregistrer</button>${t?`<button class="btn line" data-del>${ic('trash',18)} Supprimer</button>`:''}</div>`);
+  m.addEventListener('click',e=>{const r=e.target.closest('[data-r]');if(r){d.res=d.res===r.dataset.r?'':r.dataset.r;$$('#rs button',m).forEach(b=>b.setAttribute('aria-pressed',b.dataset.r===d.res))}});
+  $$('[data-k]',m).forEach(el=>el.addEventListener('input',()=>{d[el.dataset.k]=el.value}));
+  $('[data-save]',m).onclick=()=>{
+    if(!(d.business||'').trim()){toast('Indiquez le commerce');return}
+    d.business=d.business.trim();
+    if(t){Object.assign(t,d,{updatedAt:Date.now()})}
+    else{
+      const o=Object.assign({id:uid(),by:S.me||'',createdAt:Date.now(),updatedAt:Date.now()},d);S.tours.unshift(o);
+      if($('#mkp',m)&&$('#mkp',m).checked&&!S.prospects.some(p=>(p.business||'').toLowerCase()===d.business.toLowerCase())){
+        const p=addProspect({business:d.business,name:(d.name||'').trim(),status:d.res==='A'?'rdv2':'contacte',heat:d.res==='A'?'chaud':d.res==='C'?'froid':'tiede',viewed:d.demo?[d.demo]:[]});
+        if(d.next)addNote(p.id,'Tournée : '+d.next);o.prospectId=p.id}
+    }
+    save();closeModal();toast('Visite enregistrée');after()};
+  if(t)$('[data-del]',m).onclick=async()=>{if(await confirmBox('Supprimer cette visite ?','Supprimer')){tombstone('t',t.id);S.tours=S.tours.filter(x=>x.id!==t.id);save();closeModal();after()}};
+}
+function tTournee(box,redraw){
+  if(!tourDate)tourDate=todayStr();
+  const L=S.tours.filter(t=>t.date===tourDate).sort((a,b)=>a.time.localeCompare(b.time)),n=r=>L.filter(t=>t.res===r).length,me=S.me&&comById(S.me);
+  box.innerHTML=`<div class="card" style="margin-top:12px"><div class="top"><div><h3>${me?esc(me.name):esc(S.settings.commercial||'Espace commercial')}</h3><p class="hint">${me?'Identifiant : <b>'+esc(me.id)+'</b>':'Connecté en tant que patron'}</p></div></div>
+  <div class="row" style="margin-top:10px"><label class="fld" style="margin:0"><span>Jour</span><input class="inp" type="date" id="td" value="${esc(tourDate)}"></label><button class="btn" data-newt style="align-self:end">${ic('plus',18)} Visite</button></div></div>
+  <div class="kpis"><div class="kpi"><b>${L.length}</b><span>Visites</span></div><div class="kpi"><b>${n('A')}</b><span>A · 2e RDV</span></div><div class="kpi"><b>${n('B')}</b><span>B · relance</span></div><div class="kpi"><b>${n('C')}</b><span>C · refus</span></div></div>
+  <div class="list" style="margin-top:12px">${L.length?L.map(t=>`<button class="item" style="text-align:left" data-et="${t.id}"><div class="top"><div><h4>${esc(t.time)} · ${esc(t.business)}</h4><div class="meta">${esc(t.name||'')}${t.demo?' · '+esc((DEMO_BY_ID[t.demo]||{}).name||''):''}${t.next?' · '+esc(t.next):''}${t.by&&!me?' · '+esc(comName(t.by)):''}</div></div>${t.res?badge(RES[t.res][0],RES[t.res][1]):''}</div></button>`).join(''):'<p class="hint" style="margin-top:8px">Aucune visite notée ce jour-là. Touchez « Visite » après chaque commerce.</p>'}</div>
+  <div class="row" style="margin-top:14px"><button class="btn line" data-tcp>${ic('copy',18)} Copier</button><button class="btn line" data-tsh>${ic('share',18)} Envoyer</button><button class="btn line" data-tpr>${ic('file',18)} Imprimer</button></div>`;
+  $('#td',box).onchange=e=>{tourDate=e.target.value||todayStr();redraw()};
+  box.onclick=e=>{
+    if(e.target.closest('[data-newt]')){editTour('',tourDate,redraw);return}
+    const o=e.target.closest('[data-et]');if(o){editTour(o.dataset.et,tourDate,redraw);return}
+    if(e.target.closest('[data-tcp]'))copyText(tourText(tourDate),'Feuille copiée');
+    if(e.target.closest('[data-tsh]'))shareText('Feuille de tournée',tourText(tourDate));
+    if(e.target.closest('[data-tpr]'))printTour(tourDate)};
 }
 /* --- aperçu --- */
 function tApercu(box,redraw){
@@ -123,6 +180,7 @@ function tReglages(box,redraw){
   <div class="card"><h3>Tarifs</h3><div class="grid2">${fld('Prix tout compris, 1re année (€)','price',s.price,'number')}${fld('Mensuel dès la 2e année : minimum (€)','monthlyMin',s.monthlyMin,'number')}${fld('Mensuel dès la 2e année : maximum (€)','monthlyMax',s.monthlyMax,'number')}${fld('Commission du commercial par vente (€)','commission',s.commission,'number')}${fld('Délai de livraison','delay',s.delay)}</div>
   <h3 style="margin-top:18px">Prix des options</h3>${s.options.map(o=>`<label class="fld"><span>${esc(o.n)}${o.unit?' (par page)':''}</span><input class="inp" type="number" inputmode="decimal" data-o="${o.id}" value="${o.p}"></label>`).join('')}</div>
   <div class="card"><h3>Disponibilités pour les rendez-vous</h3><div class="lbl" style="margin-top:10px">Jours</div><div class="seg" id="wd">${[1,2,3,4,5,6,0].map(k=>`<button data-wd="${k}" aria-pressed="${s.rdv.days.includes(k)}">${DAYS_S[k]}</button>`).join('')}</div><div class="grid2"><label class="fld"><span>De</span><input class="inp" type="time" data-r="start" value="${s.rdv.start}"></label><label class="fld"><span>À</span><input class="inp" type="time" data-r="end" value="${s.rdv.end}"></label><label class="fld"><span>Durée d'un créneau</span><select class="sel" data-r="step">${[15,30,45,60].map(n=>`<option value="${n}"${+s.rdv.step===n?' selected':''}>${n} min</option>`).join('')}</select></label></div></div>
+  <div class="card"><h3>Commerciaux (identifiants)</h3><p class="hint">Chaque commercial a un identifiant et un code personnels. Il se connecte dans Admin avec les deux. Ses visites, prospects et devis sont à son nom.</p><div id="coms">${(s.coms||[]).map(c=>`<div class="item" style="margin-top:8px"><div class="top"><div><h4>${esc(c.name)}</h4><div class="meta">ID <b>${esc(c.id)}</b> · code <b>${esc(c.code)}</b></div></div><button class="btn sm line" data-dc="${esc(c.id)}">${ic('trash',16)}</button></div></div>`).join('')||'<p class="hint">Aucun commercial pour l\'instant.</p>'}</div><div class="grid2"><label class="fld"><span>Prénom du commercial</span><input class="inp" id="cn" placeholder="ex. Nadir"></label><div style="align-self:end"><button class="btn line" data-addc style="margin-top:14px">${ic('plus',16)} Créer son identifiant</button></div></div></div>
   <div class="card"><h3>Code de l'espace admin</h3><div class="grid2"><label class="fld"><span>Nouveau code (4 chiffres ou plus)</span><input class="inp" id="np" type="password" inputmode="numeric" maxlength="12" autocomplete="off"></label><div style="align-self:end"><button class="btn line" data-pin style="margin-top:14px">Changer le code</button></div></div></div>`;
   box.oninput=e=>{const k=e.target.dataset;
     if(k.s){const t=e.target.type==='number';s[k.s]=t?(+e.target.value||0):e.target.value;s.updatedAt=Date.now();save()}
@@ -131,6 +189,10 @@ function tReglages(box,redraw){
   box.onchange=e=>{if(e.target.dataset.r==='step'){s.rdv.step=+e.target.value;s.updatedAt=Date.now();save()}};
   box.onclick=e=>{
     const w=e.target.closest('[data-wd]');if(w){const k=+w.dataset.wd,a=s.rdv.days;a.includes(k)?a.splice(a.indexOf(k),1):a.push(k);s.updatedAt=Date.now();save();w.setAttribute('aria-pressed',a.includes(k));return}
+    const dc=e.target.closest('[data-dc]');if(dc){confirmBox('Supprimer cet identifiant ?','Supprimer').then(ok=>{if(ok){s.coms=s.coms.filter(c=>c.id!==dc.dataset.dc);s.updatedAt=Date.now();save();redraw()}});return}
+    if(e.target.closest('[data-addc]')){const nm=($('#cn',box).value||'').trim();if(!nm){toast('Indiquez un prénom');return}
+      const rnd=n=>String(Math.floor(Math.random()*Math.pow(10,n))).padStart(n,'0');let id;do{id='COM-'+rnd(4)}while((s.coms||[]).some(c=>c.id===id));
+      s.coms=(s.coms||[]).concat([{id,name:nm,code:rnd(4)}]);s.updatedAt=Date.now();save();toast('Identifiant créé : '+id);redraw();return}
     if(e.target.closest('[data-pin]')){const v=$('#np',box).value;if(!/^\d{4,12}$/.test(v)){toast('Le code doit contenir 4 chiffres au minimum');return}s.pin=v;s.pinChanged=true;save();$('#np',box).value='';toast('Code modifié')}};
 }
 /* --- données --- */

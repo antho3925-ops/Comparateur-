@@ -132,7 +132,7 @@ function pageDevis(qs){
       const pg=e.target.closest('[data-pg]');if(pg){f.pages=Math.max(0,f.pages+(+pg.dataset.pg));f.pages>0?f.opts.add('page'):f.opts.delete('page');draw();return}
       if(e.target.closest('[data-save]')){
         if(!ppValid(P)){toast('Indiquez au moins le nom du commerce ou du contact');$('[data-pp="business"]',box).focus();return}
-        const p=ppCommit(P),c=cq(),q={id:uid(),num:nextQuoteNum(),prospectId:p.id,createdAt:Date.now(),updatedAt:Date.now(),status:'envoye',opts:[...f.opts],pages:f.pages,discount:+f.discount||0,custom:f.custom,delay:f.delay,budget:f.budget,notes:f.notes,demo:f.demo,total:c.total};
+        const p=ppCommit(P),c=cq(),q={id:uid(),by:S.me||'',num:nextQuoteNum(),prospectId:p.id,createdAt:Date.now(),updatedAt:Date.now(),status:'envoye',opts:[...f.opts],pages:f.pages,discount:+f.discount||0,custom:f.custom,delay:f.delay,budget:f.budget,notes:f.notes,demo:f.demo,total:c.total};
         S.quotes.unshift(q);bumpStatus(p,'devis');if(f.demo){const pp=prospectById(p.id);pp.viewed=pp.viewed||[];if(!pp.viewed.includes(f.demo)){pp.viewed.push(f.demo);pp.updatedAt=Date.now()}}if(f.notes)addNote(p.id,'Devis '+q.num+' : '+f.notes);save();f.saved=q;toast('Devis '+q.num+' enregistré');draw();window.scrollTo(0,0)}
     });
     box.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.f;if(!k)return;f[k]=e.target.value;if(['discount','custom'].includes(k))$('#tb',box).innerHTML=totalsBar()});
@@ -185,7 +185,7 @@ function pageRdv(qs){
       if(e.target.closest('[data-ok]')){
         if(!ppValid(P)){toast('Indiquez au moins le nom du commerce ou du contact');$('[data-pp="business"]',box).focus();return}
         if(taken(f.date,f.time)){toast('Ce créneau vient d\'être pris');draw();return}
-        const pr=ppCommit(P),a={id:uid(),prospectId:pr.id,date:f.date,time:f.time,goal:GOALS[f.goal],place:PLACES[f.place],notes:f.notes,quoteId:f.quote,status:'prevu',createdAt:Date.now(),updatedAt:Date.now()};
+        const pr=ppCommit(P),a={id:uid(),by:S.me||'',prospectId:pr.id,date:f.date,time:f.time,goal:GOALS[f.goal],place:PLACES[f.place],notes:f.notes,quoteId:f.quote,status:'prevu',createdAt:Date.now(),updatedAt:Date.now()};
         S.appts.unshift(a);bumpStatus(pr,'rdv2');if(f.notes)addNote(pr.id,'RDV '+fmtDateS(a.date)+' : '+f.notes);save();f.saved=a;toast('Rendez-vous enregistré');draw();window.scrollTo(0,0)}
     });
     box.addEventListener('input',e=>{if(e.target.matches('[data-n]'))f.notes=e.target.value});

@@ -1,6 +1,6 @@
 /* ===== Synchronisation en direct (Firebase Firestore, API REST) =====
    Les données restent d'abord sur le téléphone. Dès qu'il y a du réseau, elles sont envoyées et reçues.
-   Un seul regroupement "items" : p-<id> prospects, q- devis, a- rendez-vous, s-main réglages, v-<appareil> démos vues. */
+   Un seul regroupement "items" : p-<id> prospects, q- devis, a- rendez-vous, t- feuille de tournée, s-main réglages, v-<appareil> démos vues. */
 const SYNC={busy:false,soonT:null,onChange:null,started:false};
 const syncOn=()=>!!(S.sync&&S.sync.on&&S.sync.cfg.pid&&S.sync.cfg.key&&S.sync.cfg.team);
 const fsRoot=c=>(c.host||'https://firestore.googleapis.com')+'/v1/projects/'+encodeURIComponent(c.pid)+'/databases/(default)/documents';
@@ -15,7 +15,7 @@ const sharedSettings=()=>{const s=Object.assign({},S.settings);delete s.pin;dele
 function collectDirty(){
   const out=[],P=S.sync.pushed;
   const add=(type,r)=>{const k=type+'-'+r.id,u=r.updatedAt||r.createdAt||0;if((P[k]||0)<u)out.push({k,u,d:false,rec:r})};
-  S.prospects.forEach(r=>add('p',r));S.quotes.forEach(r=>add('q',r));S.appts.forEach(r=>add('a',r));
+  S.prospects.forEach(r=>add('p',r));S.quotes.forEach(r=>add('q',r));S.appts.forEach(r=>add('a',r));S.tours.forEach(r=>add('t',r));
   S.sync.tomb.forEach(t=>{if((P[t.k]||0)<t.u)out.push({k:t.k,u:t.u,d:true,rec:{id:t.k.slice(2)}})});
   const su=S.settings.updatedAt||0;if(su&&(P['s-main']||0)<su)out.push({k:'s-main',u:su,d:false,rec:sharedSettings()});
   const vk='v-'+S.deviceId;if((S.viewsU||0)&&(P[vk]||0)<S.viewsU)out.push({k:vk,u:S.viewsU,d:false,rec:{views:S.views}});
@@ -37,7 +37,7 @@ function applyRemote(doc){
   const P=S.sync.pushed;
   if(type==='s'){if(u>(S.settings.updatedAt||0)){const keep={pin:S.settings.pin,pinChanged:S.settings.pinChanged};S.settings=Object.assign({},S.settings,rec,keep,{updatedAt:u});P[k]=u;return 1}P[k]=Math.max(P[k]||0,u);return 0}
   if(type==='v'){const id=k.slice(2);if(id!==S.deviceId){S.viewsRemote[id]=rec.views||{};return 1}return 0}
-  const arr={p:S.prospects,q:S.quotes,a:S.appts}[type];if(!arr)return 0;
+  const arr={p:S.prospects,q:S.quotes,a:S.appts,t:S.tours}[type];if(!arr)return 0;
   const id=k.slice(2),i=arr.findIndex(x=>x.id===id),lu=i>=0?(arr[i].updatedAt||arr[i].createdAt||0):0;
   if(del){if(i>=0&&lu<=u){arr.splice(i,1);P[k]=u;return 1}P[k]=Math.max(P[k]||0,u);return 0}
   if(i<0){if(S.sync.tomb.some(t=>t.k===k))return 0;arr.push(rec);P[k]=u;return 1}
