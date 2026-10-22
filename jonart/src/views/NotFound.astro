@@ -1,0 +1,18 @@
+---
+import Base from '../layouts/Base.astro';
+import { ui } from '../i18n/ui.js';
+import { href } from '../lib/routes.js';
+const t = ui.fr.notFound;
+---
+<Base lang="fr" page="home" title={t.title} description={t.text} noindex>
+  <section class="section">
+    <div class="wrap prose">
+      <h1>{t.title}</h1>
+      <p class="lead">{t.text} <span lang="es">— {ui.es.notFound.text}</span></p>
+      <div class="actions">
+        <a class="btn btn--navy" href={href('home', 'fr')}>{ui.fr.merci.back}</a>
+        <a class="btn btn--ghost" href={href('home', 'es')} lang="es">{ui.es.merci.back}</a>
+      </div>
+    </div>
+  </section>
+</Base>

@@ -1,0 +1,18 @@
+---
+// Bloc de coordonnées (téléphone, e-mail, adresse, zones). Jamais de coordonnées bancaires.
+import Icon from './Icon.astro';
+import Text from './Text.astro';
+import { ui } from '../i18n/ui.js';
+import site from '../content/site.json';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang].contact;
+---
+<ul class="coords">
+  <li><Icon name="phone" /><div><span class="label">{t.phone}</span><a href={`tel:${site.telephone.replace(/\s/g, '')}`}>{site.telephone}</a></div></li>
+  <li><Icon name="mail" /><div><span class="label">{t.email}</span><a href={`mailto:${site.email}`}>{site.email}</a></div></li>
+  <li><Icon name="pin" /><div><span class="label">{t.address}</span>{site.adresse.rue}, {site.adresse.codePostal} {site.adresse.ville}</div></li>
+  <li><Icon name="map" /><div><span class="label">{t.zones}</span><Text value={site.zones[lang]} /></div></li>
+  <li><Icon name="clock" /><div><span class="label">{t.hours}</span><Text value={site.horaires[lang]} /></div></li>
+</ul>

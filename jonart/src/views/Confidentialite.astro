@@ -1,0 +1,94 @@
+---
+// Politique de confidentialité (RGPD) pour une SRL belge.
+// Le site ne dépose aucun cookie de mesure d'audience ou publicitaire : pas de bandeau cookies.
+import Base from '../layouts/Base.astro';
+import site from '../content/site.json';
+import { mark } from '../lib/legal.js';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const a = site.adresse;
+const mail = `<a href="mailto:${site.email}">${site.email}</a>`;
+
+const content = {
+  fr: {
+    title: 'Politique de confidentialité',
+    description: "Comment JON'ART SRL traite les données personnelles transmises via son site, conformément au RGPD.",
+    updated: 'Dernière mise à jour : [À COMPLÉTER : date de mise en ligne]',
+    sections: [
+      ['Responsable du traitement', `<p>JON'ART SRL, ${a.rue}, ${a.codePostal} ${a.ville} (Belgique), n° d'entreprise ${site.tva}. Contact pour toute question relative à vos données : ${mail}.</p>`],
+      ['Données collectées', `<ul>
+        <li><strong>Formulaire de demande de devis :</strong> nom et prénom, téléphone, adresse e-mail, commune du chantier, type de travaux, surface, délai souhaité et description du projet.</li>
+        <li><strong>Échanges par e-mail ou téléphone :</strong> les informations que vous choisissez de nous communiquer.</li>
+        <li><strong>Données techniques :</strong> l'hébergeur enregistre des journaux de connexion (adresse IP, date, page consultée) pour assurer la sécurité et le bon fonctionnement du site.</li>
+      </ul><p>Nous ne collectons aucune donnée sensible. Merci de ne pas en indiquer dans le formulaire.</p>`],
+      ['Finalités et bases légales', `<ul>
+        <li>Répondre à votre demande et établir un devis : mesures précontractuelles prises à votre demande (art. 6.1.b RGPD).</li>
+        <li>Exécuter le contrat de travaux et respecter nos obligations comptables et fiscales : exécution du contrat et obligation légale (art. 6.1.b et 6.1.c).</li>
+        <li>Protéger le site contre les abus et le spam : intérêt légitime (art. 6.1.f).</li>
+      </ul><p>Vos données ne sont jamais vendues, ni utilisées à des fins de prospection sans votre accord.</p>`],
+      ['Durée de conservation', `<ul>
+        <li>Demandes de devis non suivies d'un contrat : [À COMPLÉTER : durée — proposition : 3 ans après le dernier contact].</li>
+        <li>Données clients : pendant la durée du chantier et des garanties, puis la durée légale de conservation des documents comptables et fiscaux [À VÉRIFIER avec le comptable].</li>
+        <li>Journaux techniques : selon la politique de l'hébergeur [À COMPLÉTER].</li>
+      </ul>`],
+      ['Destinataires et sous-traitants', `<p>Vos données sont destinées uniquement à JON'ART SRL. Elles transitent par des prestataires techniques agissant pour notre compte :</p>
+      <ul>
+        <li>hébergement du site : [À COMPLÉTER : hébergeur, ex. Netlify, Inc.] ;</li>
+        <li>acheminement des e-mails du formulaire : [À COMPLÉTER : service d'envoi, ex. Resend] ;</li>
+        <li>messagerie de l'entreprise : Microsoft (Outlook/Hotmail).</li>
+      </ul>
+      <p>Certains de ces prestataires peuvent traiter des données hors de l'Union européenne. Ces transferts sont alors encadrés par les garanties prévues par le RGPD (décision d'adéquation ou clauses contractuelles types) [À VÉRIFIER pour chaque prestataire].</p>`],
+      ['Cookies', `<p>Ce site ne dépose <strong>aucun cookie publicitaire ni de mesure d'audience</strong>. Les polices de caractères sont hébergées sur notre propre serveur et aucun contenu Instagram n'est intégré : les liens vers Instagram ne transmettent rien tant que vous ne cliquez pas. C'est pourquoi aucun bandeau de consentement n'est affiché.</p>
+      <p>Seul l'espace d'administration réservé à JON'ART SRL utilise un stockage technique indispensable à la connexion de l'administrateur.</p>`],
+      ['Vos droits', `<p>Vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation, d'opposition et de portabilité de vos données. Pour les exercer, écrivez à ${mail}. Nous répondons dans un délai d'un mois.</p>
+      <p>Vous pouvez introduire une réclamation auprès de l'<strong>Autorité de protection des données</strong> : rue de la Presse 35, 1000 Bruxelles — <a href="https://www.autoriteprotectiondonnees.be" rel="noopener">www.autoriteprotectiondonnees.be</a>.</p>`],
+      ['Sécurité', `<p>Le site est servi en HTTPS, le formulaire est protégé contre le spam et l'accès aux demandes reçues est limité aux personnes habilitées de JON'ART SRL.</p>`],
+    ],
+  },
+  es: {
+    title: 'Política de privacidad',
+    description: 'Cómo trata JON\'ART SRL los datos personales enviados a través de su sitio web, conforme al RGPD.',
+    updated: 'Última actualización: [À COMPLÉTER : fecha de publicación]',
+    sections: [
+      ['Responsable del tratamiento', `<p>JON'ART SRL, ${a.rue}, ${a.codePostal} ${a.ville} (Bélgica), n.º de empresa ${site.tva}. Contacto para cualquier cuestión sobre sus datos: ${mail}.</p>`],
+      ['Datos recogidos', `<ul>
+        <li><strong>Formulario de presupuesto:</strong> nombre y apellidos, teléfono, correo electrónico, localidad de la obra, tipo de obra, superficie, plazo deseado y descripción del proyecto.</li>
+        <li><strong>Intercambios por correo o teléfono:</strong> la información que decida comunicarnos.</li>
+        <li><strong>Datos técnicos:</strong> el proveedor de alojamiento registra datos de conexión (dirección IP, fecha, página consultada) para garantizar la seguridad del sitio.</li>
+      </ul><p>No recogemos datos sensibles. Le rogamos que no los incluya en el formulario.</p>`],
+      ['Finalidades y bases jurídicas', `<ul>
+        <li>Responder a su solicitud y preparar un presupuesto: medidas precontractuales a petición suya (art. 6.1.b RGPD).</li>
+        <li>Ejecutar el contrato de obra y cumplir nuestras obligaciones contables y fiscales (art. 6.1.b y 6.1.c).</li>
+        <li>Proteger el sitio contra abusos y spam: interés legítimo (art. 6.1.f).</li>
+      </ul><p>Sus datos nunca se venden ni se utilizan con fines comerciales sin su consentimiento.</p>`],
+      ['Plazo de conservación', `<ul>
+        <li>Solicitudes sin contrato posterior: [À COMPLÉTER : plazo — propuesta: 3 años desde el último contacto].</li>
+        <li>Datos de clientes: durante la obra y las garantías, y después el plazo legal de conservación de documentos contables y fiscales [À VÉRIFIER con el gestor].</li>
+        <li>Registros técnicos: según la política del proveedor de alojamiento [À COMPLÉTER].</li>
+      </ul>`],
+      ['Destinatarios y encargados', `<p>Sus datos están destinados únicamente a JON'ART SRL y pasan por proveedores técnicos que actúan por nuestra cuenta:</p>
+      <ul>
+        <li>alojamiento del sitio: [À COMPLÉTER : proveedor, p. ej. Netlify, Inc.];</li>
+        <li>envío de los correos del formulario: [À COMPLÉTER : servicio de envío, p. ej. Resend];</li>
+        <li>correo de la empresa: Microsoft (Outlook/Hotmail).</li>
+      </ul>
+      <p>Algunos de estos proveedores pueden tratar datos fuera de la Unión Europea, con las garantías previstas por el RGPD (decisión de adecuación o cláusulas contractuales tipo) [À VÉRIFIER para cada proveedor].</p>`],
+      ['Cookies', `<p>Este sitio <strong>no utiliza cookies publicitarias ni de medición de audiencia</strong>. Las fuentes tipográficas se alojan en nuestro propio servidor y no se integra ningún contenido de Instagram: los enlaces no transmiten nada mientras no haga clic. Por eso no se muestra ningún aviso de consentimiento.</p>
+      <p>Solo el área de administración reservada a JON'ART SRL utiliza un almacenamiento técnico imprescindible para la conexión del administrador.</p>`],
+      ['Sus derechos', `<p>Tiene derecho de acceso, rectificación, supresión, limitación, oposición y portabilidad de sus datos. Para ejercerlos, escriba a ${mail}. Respondemos en el plazo de un mes.</p>
+      <p>Puede presentar una reclamación ante la autoridad de control belga, la <strong>Autorité de protection des données</strong> (rue de la Presse 35, 1000 Bruselas — <a href="https://www.autoriteprotectiondonnees.be" rel="noopener">www.autoriteprotectiondonnees.be</a>), o ante la <strong>Agencia Española de Protección de Datos</strong> (<a href="https://www.aepd.es" rel="noopener">www.aepd.es</a>).</p>`],
+      ['Seguridad', `<p>El sitio se sirve en HTTPS, el formulario está protegido contra el spam y el acceso a las solicitudes recibidas está limitado a las personas autorizadas de JON'ART SRL.</p>`],
+    ],
+  },
+}[lang];
+---
+<Base lang={lang} page="confidentialite" title={content.title} description={content.description}>
+  <header class="page-hero"><div class="wrap"><h1>{content.title}</h1></div></header>
+  <section class="section">
+    <div class="wrap prose">
+      {content.sections.map(([h, body]) => (<><h2>{h}</h2><Fragment set:html={mark(body)} /></>))}
+      <p style="margin-top:3rem;font-size:.9rem" set:html={mark(content.updated)} />
+    </div>
+  </section>
+</Base>

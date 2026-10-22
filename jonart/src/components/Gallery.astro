@@ -1,0 +1,76 @@
+---
+// Grille de réalisations avec visionneuse plein écran (<dialog>) et filtres facultatifs.
+import Pic from './Pic.astro';
+import { ui } from '../i18n/ui.js';
+import { img } from '../lib/images.js';
+import { getImage } from 'astro:assets';
+
+interface Item { image: string; categorie: string; legende: Record<string, string>; alt: Record<string, string>; }
+interface Props { lang: 'fr' | 'es'; items: Item[]; filters?: boolean; variant?: 'home' | 'full'; }
+const { lang, items, filters = false, variant = 'full' } = Astro.props;
+const t = ui[lang];
+
+// Version grand format pour la visionneuse (chargée seulement à l'ouverture).
+const list = await Promise.all(
+  items.map(async (it) => {
+    const src = img(it.image);
+    const large = src ? await getImage({ src, width: Math.min(1600, src.width), format: 'webp', quality: 80 }) : null;
+    return { ...it, large: large?.src };
+  })
+);
+const cats = [...new Set(items.map((i) => i.categorie))];
+---
+<div class="gallery-wrap">
+  {filters && cats.length > 1 && (
+    <div class="filters" role="group" aria-label={lang === 'fr' ? 'Filtrer les réalisations' : 'Filtrar proyectos'}>
+      <button type="button" aria-pressed="true" data-filter="*">{t.all}</button>
+      {cats.map((c) => <button type="button" aria-pressed="false" data-filter={c}>{t.categories[c as keyof typeof t.categories] ?? c}</button>)}
+    </div>
+  )}
+  <div class:list={['gallery', `gallery--${variant}`]}>
+    {list.map((it, i) => (
+      <figure class="gallery__item" data-cat={it.categorie}>
+        <button class="gallery__btn" type="button" data-large={it.large} data-caption={it.legende[lang]} aria-label={`${t.enlarge} : ${it.legende[lang]}`}>
+          <Pic src={it.image} alt={it.alt[lang]} lang={lang} sizes="(min-width: 900px) 33vw, 50vw" widths={[360, 600, 900]} />
+        </button>
+        <figcaption>{it.legende[lang]}</figcaption>
+      </figure>
+    ))}
+  </div>
+</div>
+
+<dialog class="lightbox" aria-label={t.enlarge}>
+  <button class="lightbox__close" type="button" aria-label={t.close}>×</button>
+  <img alt="" />
+  <p></p>
+</dialog>
+
+<script is:inline>
+  // Visionneuse et filtres : sans dépendance, désactivés proprement si JavaScript est absent.
+  (function () {
+    var dlg = document.querySelector('.lightbox');
+    if (dlg && dlg.showModal) {
+      var im = dlg.querySelector('img'), cap = dlg.querySelector('p');
+      document.querySelectorAll('.gallery__btn').forEach(function (b) {
+        b.addEventListener('click', function () {
+          var thumb = b.querySelector('img');
+          im.src = b.dataset.large || (thumb && thumb.currentSrc) || '';
+          im.alt = thumb ? thumb.alt : '';
+          cap.textContent = b.dataset.caption || '';
+          dlg.showModal();
+        });
+      });
+      dlg.querySelector('.lightbox__close').addEventListener('click', function () { dlg.close(); });
+      dlg.addEventListener('click', function (e) { if (e.target === dlg) dlg.close(); });
+    }
+    document.querySelectorAll('.filters button').forEach(function (btn, _, all) {
+      btn.addEventListener('click', function () {
+        var f = btn.dataset.filter;
+        all.forEach(function (b) { b.setAttribute('aria-pressed', b === btn); });
+        document.querySelectorAll('.gallery__item').forEach(function (it) {
+          it.hidden = !(f === '*' || it.dataset.cat === f);
+        });
+      });
+    });
+  })();
+</script>

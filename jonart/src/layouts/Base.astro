@@ -1,0 +1,123 @@
+---
+// Gabarit commun à toutes les pages : <head> (SEO, hreflang, Open Graph, schema.org),
+// en-tête, pied de page et filigrane du mode aperçu.
+import '@fontsource/jost/latin-400.css';
+import '@fontsource/jost/latin-500.css';
+import '@fontsource/cormorant-garamond/latin-500.css';
+import '@fontsource/cormorant-garamond/latin-600.css';
+import '@fontsource/cormorant-garamond/latin-500-italic.css';
+import '../styles/global.css';
+
+import { getImage } from 'astro:assets';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { PREVIEW, SITE_URL } from '../config.js';
+import { ROUTES, LANGS, href } from '../lib/routes.js';
+import { img } from '../lib/images.js';
+import { ui } from '../i18n/ui.js';
+import site from '../content/site.json';
+import accueil from '../content/accueil.json';
+import logoSrc from '../assets/logo-jonart.jpg';
+
+interface Props {
+  lang: 'fr' | 'es';
+  page: keyof typeof ROUTES;
+  title: string;
+  description: string;
+  noindex?: boolean;
+}
+const { lang, page, title, description, noindex = false } = Astro.props;
+const t = ui[lang];
+
+const fullTitle = page === 'home' ? `${site.nom} — ${title}` : `${title} | ${site.nom}`;
+const abs = (path: string) => new URL(path, SITE_URL).href;
+
+// Icônes et image de partage générées à partir des fichiers fournis.
+const favicon = await getImage({ src: logoSrc, width: 64, height: 64, format: 'png' });
+const appleIcon = await getImage({ src: logoSrc, width: 180, height: 180, format: 'png' });
+const heroImg = img(accueil.hero.image);
+const ogImage = heroImg ? await getImage({ src: heroImg, width: 1200, format: 'jpg', quality: 80 }) : null;
+const logoAbs = await getImage({ src: logoSrc, width: 512, format: 'png' });
+
+// Données structurées LocalBusiness (aucune note ni avis inventé).
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'GeneralContractor',
+  name: site.nom,
+  url: abs(href('home', lang)),
+  logo: abs(logoAbs.src),
+  image: ogImage ? abs(ogImage.src) : undefined,
+  telephone: site.telephone.replace(/\s/g, ''),
+  email: site.email,
+  vatID: site.tva,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: site.adresse.rue,
+    postalCode: site.adresse.codePostal,
+    addressLocality: site.adresse.ville,
+    addressCountry: site.adresse.pays,
+  },
+  areaServed: ['Linkebeek', 'Bruxelles', 'Belgique', 'España'],
+  sameAs: [`https://www.instagram.com/${site.instagram}/`],
+  knowsLanguage: ['fr', 'es'],
+};
+---
+<!doctype html>
+<html lang={lang === 'fr' ? 'fr-BE' : 'es'}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <meta name="theme-color" content="#13307A" />
+  <link rel="icon" type="image/png" href={favicon.src} />
+  <link rel="apple-touch-icon" href={appleIcon.src} />
+  <script is:inline>document.documentElement.classList.add('js');</script>
+  {!PREVIEW && (
+    <script is:inline>
+      // Liens d'invitation / de réinitialisation de mot de passe de l'admin : renvoi vers /admin/.
+      if (/(invite|recovery|confirmation|email_change)_token=/.test(location.hash)) location.replace('/admin/' + location.hash);
+    </script>
+  )}
+
+  {PREVIEW || noindex ? (
+    <meta name="robots" content="noindex, nofollow" />
+  ) : (
+    <>
+      <link rel="canonical" href={abs(href(page, lang))} />
+      {LANGS.map((l) => <link rel="alternate" hreflang={l} href={abs(href(page, l))} />)}
+      <link rel="alternate" hreflang="x-default" href={abs(href(page, 'fr'))} />
+      <meta property="og:type" content="website" />
+      <meta property="og:site_name" content={site.nom} />
+      <meta property="og:title" content={fullTitle} />
+      <meta property="og:description" content={description} />
+      <meta property="og:url" content={abs(href(page, lang))} />
+      <meta property="og:locale" content={lang === 'fr' ? 'fr_BE' : 'es_ES'} />
+      <meta property="og:locale:alternate" content={lang === 'fr' ? 'es_ES' : 'fr_BE'} />
+      {ogImage && <meta property="og:image" content={abs(ogImage.src)} />}
+      <meta name="twitter:card" content="summary_large_image" />
+      <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
+    </>
+  )}
+</head>
+<body class:list={{ 'is-preview': PREVIEW }}>
+  {PREVIEW && (
+    <>
+      <div class="preview-ribbon" role="note">{t.previewBanner}<span>{t.previewNote}</span></div>
+      <div class="watermark" aria-hidden="true"></div>
+    </>
+  )}
+  <a class="skip-link" href="#contenu">{t.skip}</a>
+  <Header lang={lang} page={page} />
+  <main id="contenu" tabindex="-1">
+    <slot />
+  </main>
+  <Footer lang={lang} />
+
+  <!-- Barre d'action fixe sur mobile : appel et devis toujours à portée de pouce -->
+  <div class="callbar">
+    <a class="btn btn--navy" href={`tel:${site.telephone.replace(/\s/g, '')}`}>{t.ctaCall}</a>
+    <a class="btn btn--brass" href={href('devis', lang)}>{t.ctaDevis}</a>
+  </div>
+</body>
+</html>

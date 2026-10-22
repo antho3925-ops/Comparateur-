@@ -1,0 +1,131 @@
+---
+// Page d'accueil : hero, services, réalisations, avant/après, atouts, avis, Instagram, contact.
+import Base from '../layouts/Base.astro';
+import Pic from '../components/Pic.astro';
+import Text from '../components/Text.astro';
+import Gallery from '../components/Gallery.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import Reviews from '../components/Reviews.astro';
+import InstaBand from '../components/InstaBand.astro';
+import Coords from '../components/Coords.astro';
+import Icon from '../components/Icon.astro';
+import { ui } from '../i18n/ui.js';
+import { href } from '../lib/routes.js';
+import accueil from '../content/accueil.json';
+import services from '../content/services.json';
+import galerie from '../content/galerie.json';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang];
+const h = accueil.hero;
+const meta = {
+  fr: {
+    title: 'Enduits décoratifs, peinture et rénovation à Bruxelles',
+    description: "JON'ART SRL, artisan à Linkebeek (Bruxelles) et en Espagne : microciment, béton ciré, peinture, carrelage et rénovation complète de salles de bain. Demandez votre devis.",
+  },
+  es: {
+    title: 'Revestimientos decorativos, pintura y reformas',
+    description: 'JON\'ART SRL, artesano en Bruselas y en España: microcemento, hormigón pulido, pintura, alicatado y reforma integral de baños. Pida su presupuesto.',
+  },
+}[lang];
+---
+<Base lang={lang} page="home" title={meta.title} description={meta.description}>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap hero__grid">
+      <div>
+        <p class="hero__slogan">« {h.slogan[lang]} »</p>
+        <h1>{h.titre[lang]}</h1>
+        <p><Text value={h.texte[lang]} /></p>
+        <div class="actions" style="margin-top:2rem">
+          <a class="btn btn--brass" href={href('devis', lang)}>{t.ctaDevis} <Icon name="arrow" /></a>
+          <a class="btn btn--ghost-light" href={href('realisations', lang)}>{t.ctaRealisations}</a>
+        </div>
+      </div>
+      <div class="hero__media">
+        <Pic src={h.image} alt={h.alt[lang]} lang={lang} eager sizes="(min-width: 900px) 45vw, 100vw" widths={[480, 800, 1166]} />
+      </div>
+    </div>
+  </section>
+
+  <!-- Services -->
+  <section class="section" id="services" aria-labelledby="titre-services">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">{t.sections.services}</p>
+        <h2 id="titre-services">{lang === 'fr' ? 'Un savoir-faire complet pour vos intérieurs' : 'Un saber hacer completo para sus interiores'}</h2>
+        <p class="lead">{t.sections.servicesIntro}</p>
+      </div>
+      <div class="services">
+        {services.services.map((s) => (
+          <article class="service" id={`service-${s.id}`}>
+            <div class="service__media">
+              <Pic src={s.image} alt={s.alt[lang]} lang={lang} sizes="(min-width: 1000px) 50vw, (min-width: 640px) 50vw, 100vw" />
+            </div>
+            <div class="service__body">
+              <p class="service__sub">{s.sousTitre[lang]}</p>
+              <h3>{s.titre[lang]}</h3>
+              <p><Text value={s.texte[lang]} /></p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Réalisations (extrait) -->
+  <section class="section section--beige" aria-labelledby="titre-real">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">{t.sections.realisations}</p>
+        <h2 id="titre-real">{lang === 'fr' ? 'Le détail fait la différence' : 'El detalle marca la diferencia'}</h2>
+        <p class="lead">{t.sections.realisationsIntro}</p>
+      </div>
+      <Gallery lang={lang} items={galerie.realisations.slice(1, 6)} variant="home" />
+      <p style="margin-top:2.5rem"><a class="btn btn--ghost" href={href('realisations', lang)}>{t.ctaRealisations} <Icon name="arrow" /></a></p>
+    </div>
+  </section>
+
+  <BeforeAfter lang={lang} pairs={galerie.avantApres} />
+
+  <!-- Atouts -->
+  <section class="section section--navy" aria-labelledby="titre-atouts">
+    <div class="wrap atouts-grid">
+      <div>
+        <p class="eyebrow">{t.sections.atouts}</p>
+        <h2 id="titre-atouts">{lang === 'fr' ? 'Votre projet, notre passion' : 'Su proyecto, nuestra pasión'}</h2>
+        <ul class="atouts" style="margin-top:2.5rem">
+          {accueil.atouts.map((a, i) => (
+            <li class="atout">
+              <h3><span class="atout__num">0{i + 1}</span>{a.titre[lang]}</h3>
+              <p><Text value={a.texte[lang]} /></p>
+            </li>
+          ))}
+        </ul>
+      </div>
+      <div class="atouts-media">
+        <Pic src={accueil.atoutsImage} alt={accueil.atoutsAlt[lang]} lang={lang} sizes="(min-width: 1000px) 40vw, 100vw" />
+      </div>
+    </div>
+  </section>
+
+  <Reviews lang={lang} />
+
+  <InstaBand lang={lang} />
+
+  <!-- Contact -->
+  <section class="section" id="contact" aria-labelledby="titre-contact">
+    <div class="wrap contact-grid">
+      <div>
+        <p class="eyebrow">Contact</p>
+        <h2 id="titre-contact">{t.sections.contact}</h2>
+        <p class="lead">{t.sections.contactIntro}</p>
+      </div>
+      <div>
+        <Coords lang={lang} />
+        <a class="btn btn--brass" href={href('devis', lang)}>{t.ctaDevis} <Icon name="arrow" /></a>
+      </div>
+    </div>
+  </section>
+</Base>

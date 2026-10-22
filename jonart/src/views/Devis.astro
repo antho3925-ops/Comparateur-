@@ -1,0 +1,33 @@
+---
+// Page "Demande de devis" : formulaire détaillé + coordonnées directes.
+import Base from '../layouts/Base.astro';
+import QuoteForm from '../components/QuoteForm.astro';
+import Coords from '../components/Coords.astro';
+import { ui } from '../i18n/ui.js';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang];
+const meta = {
+  fr: { title: 'Demande de devis', description: "Décrivez vos travaux d'enduit décoratif, de peinture, de carrelage ou de rénovation : JON'ART SRL vous recontacte pour établir un devis." },
+  es: { title: 'Solicitud de presupuesto', description: 'Describa su obra de revestimiento decorativo, pintura, alicatado o reforma: JON\'ART SRL le contactará para preparar un presupuesto.' },
+}[lang];
+---
+<Base lang={lang} page="devis" title={meta.title} description={meta.description}>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">{lang === 'fr' ? 'Devis & contact' : 'Presupuesto y contacto'}</p>
+      <h1>{t.sections.contact}</h1>
+      <p class="lead">{t.sections.contactIntro}</p>
+    </div>
+  </header>
+  <section class="section">
+    <div class="wrap contact-grid">
+      <aside>
+        <h2 class="h3" style="font-size:1.8rem">{lang === 'fr' ? 'Nous joindre directement' : 'Contacto directo'}</h2>
+        <Coords lang={lang} />
+      </aside>
+      <QuoteForm lang={lang} />
+    </div>
+  </section>
+</Base>

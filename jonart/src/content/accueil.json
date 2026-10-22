@@ -1,0 +1,53 @@
+{
+  "hero": {
+    "slogan": { "fr": "L'art de la construction", "es": "El arte de la construcción" },
+    "titre": {
+      "fr": "Enduits décoratifs, peinture, carrelage et rénovation complète",
+      "es": "Revestimientos decorativos, pintura, alicatado y reforma integral"
+    },
+    "texte": {
+      "fr": "Travail soigné, résultat durable. JON'ART SRL rénove vos intérieurs à Bruxelles et en Espagne, avec des finitions pensées dans le moindre détail.",
+      "es": "Trabajo cuidado, resultado duradero. JON'ART SRL reforma sus interiores en Bruselas y en España, con acabados pensados hasta el último detalle."
+    },
+    "image": "/src/assets/photos/sdb-douche-italienne.jpg",
+    "alt": {
+      "fr": "Salle de bain rénovée : douche à l'italienne vitrée, robinetterie en laiton doré, murs en enduit beige et éclairage indirect",
+      "es": "Baño reformado: ducha de obra con mampara, grifería en latón dorado, paredes con revestimiento beige e iluminación indirecta"
+    }
+  },
+  "atouts": [
+    {
+      "titre": { "fr": "Qualité premium", "es": "Calidad premium" },
+      "texte": {
+        "fr": "Des matériaux choisis avec soin et une mise en œuvre rigoureuse, pour un résultat qui dure.",
+        "es": "Materiales elegidos con cuidado y una ejecución rigurosa, para un resultado que perdura."
+      }
+    },
+    {
+      "titre": { "fr": "Savoir-faire artisanal", "es": "Saber hacer artesanal" },
+      "texte": {
+        "fr": "Chaque enduit est appliqué à la main : un travail d'artisan, pièce par pièce.",
+        "es": "Cada revestimiento se aplica a mano: un trabajo de artesano, estancia por estancia."
+      }
+    },
+    {
+      "titre": { "fr": "Rénovation complète", "es": "Reforma integral" },
+      "texte": {
+        "fr": "Salle de bain, escalier, murs et sols : un seul interlocuteur du début à la fin du chantier.",
+        "es": "Baño, escalera, paredes y suelos: un único interlocutor de principio a fin de la obra."
+      }
+    },
+    {
+      "titre": { "fr": "Finitions parfaites", "es": "Acabados perfectos" },
+      "texte": {
+        "fr": "Angles, joints, niches, raccords : nous soignons les détails qui font la différence.",
+        "es": "Esquinas, juntas, hornacinas, remates: cuidamos los detalles que marcan la diferencia."
+      }
+    }
+  ],
+  "atoutsImage": "/src/assets/photos/sdb-miroir-led-enduit.jpg",
+  "atoutsAlt": {
+    "fr": "Détail d'un mur en enduit décoratif, miroir rond rétroéclairé et vase noir",
+    "es": "Detalle de una pared con revestimiento decorativo, espejo redondo retroiluminado y jarrón negro"
+  }
+}

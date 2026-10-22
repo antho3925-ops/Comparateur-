@@ -1,0 +1,19 @@
+---
+// Page de confirmation après envoi du formulaire (utilisée quand JavaScript est désactivé).
+import Base from '../layouts/Base.astro';
+import { ui } from '../i18n/ui.js';
+import { href } from '../lib/routes.js';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang].merci;
+---
+<Base lang={lang} page="merci" title={t.title} description={t.text} noindex>
+  <section class="section">
+    <div class="wrap prose">
+      <h1>{t.title}</h1>
+      <p class="lead">{t.text}</p>
+      <a class="btn btn--navy" href={href('home', lang)}>{t.back}</a>
+    </div>
+  </section>
+</Base>

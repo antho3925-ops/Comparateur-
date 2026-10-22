@@ -1,0 +1,56 @@
+{
+  "titre": { "fr": "Votre projet, notre passion", "es": "Su proyecto, nuestra pasión" },
+  "intro": {
+    "fr": "JON'ART SRL est une entreprise de finition et de rénovation intérieure dirigée par Jonathan Tinoco. Basée à Linkebeek, aux portes de Bruxelles, elle intervient aussi en Espagne.",
+    "es": "JON'ART SRL es una empresa de acabados y reforma interior dirigida por Jonathan Tinoco. Con sede en Linkebeek, a las puertas de Bruselas, también trabaja en España."
+  },
+  "paragraphes": [
+    {
+      "fr": "Notre spécialité : les enduits décoratifs — microciment, béton ciré — qui donnent aux murs, sols, douches et escaliers un aspect minéral, continu et sans joints. Nous réalisons aussi la peinture, le carrelage et la rénovation complète de salles de bain.",
+      "es": "Nuestra especialidad: los revestimientos decorativos — microcemento, hormigón pulido — que dan a paredes, suelos, duchas y escaleras un aspecto mineral, continuo y sin juntas. También realizamos pintura, alicatado y la reforma integral de baños."
+    },
+    {
+      "fr": "Notre façon de travailler tient en une phrase : travail soigné, résultat durable. Nous prenons le temps d'écouter votre projet, de préparer correctement les supports et de soigner chaque finition.",
+      "es": "Nuestra forma de trabajar cabe en una frase: trabajo cuidado, resultado duradero. Nos tomamos el tiempo de escuchar su proyecto, preparar bien los soportes y cuidar cada acabado."
+    },
+    {
+      "fr": "[À COMPLÉTER : parcours de Jonathan Tinoco, année de création, ce qui l'a amené au métier — quelques phrases personnelles rendent la page plus vivante.]",
+      "es": "[À COMPLÉTER : trayectoria de Jonathan Tinoco, año de creación, qué le llevó al oficio.]"
+    }
+  ],
+  "etapes": [
+    {
+      "titre": { "fr": "Votre demande", "es": "Su solicitud" },
+      "texte": {
+        "fr": "Vous décrivez votre projet via le formulaire, par téléphone ou par e-mail.",
+        "es": "Nos describe su proyecto mediante el formulario, por teléfono o por correo."
+      }
+    },
+    {
+      "titre": { "fr": "Visite et devis", "es": "Visita y presupuesto" },
+      "texte": {
+        "fr": "Nous convenons ensemble d'une visite pour évaluer le chantier, puis nous vous remettons un devis détaillé.",
+        "es": "Acordamos una visita para evaluar la obra y le entregamos un presupuesto detallado."
+      }
+    },
+    {
+      "titre": { "fr": "Réalisation", "es": "Ejecución" },
+      "texte": {
+        "fr": "Préparation des supports, mise en œuvre, finitions : le chantier est mené avec soin et propreté.",
+        "es": "Preparación de soportes, ejecución y acabados: la obra se realiza con cuidado y limpieza."
+      }
+    },
+    {
+      "titre": { "fr": "Réception", "es": "Entrega" },
+      "texte": {
+        "fr": "Nous vérifions le résultat avec vous avant de clôturer le chantier.",
+        "es": "Revisamos el resultado con usted antes de cerrar la obra."
+      }
+    }
+  ],
+  "image": "/src/assets/photos/sdb-niche-douche-laiton.jpg",
+  "alt": {
+    "fr": "Niche de douche en enduit beige avec pots en céramique et colonne de douche en laiton brossé",
+    "es": "Hornacina de ducha con revestimiento beige, tarros de cerámica y columna de ducha en latón cepillado"
+  }
+}

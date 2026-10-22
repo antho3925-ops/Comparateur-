@@ -1,0 +1,38 @@
+---
+// Photo optimisée : WebP en plusieurs largeurs, chargement différé par défaut.
+// Si la photo manque (champ vide dans l'admin), affiche un emplacement [À COMPLÉTER].
+import { Image } from 'astro:assets';
+import { img } from '../lib/images.js';
+import { ui } from '../i18n/ui.js';
+
+interface Props {
+  src: string;
+  alt: string;
+  lang: 'fr' | 'es';
+  sizes?: string;
+  widths?: number[];
+  eager?: boolean;
+  class?: string;
+}
+const { src, alt, lang, sizes = '(min-width: 1000px) 33vw, 100vw', widths = [480, 800, 1200], eager = false, class: cls } = Astro.props;
+const image = img(src);
+// On ne demande jamais une largeur supérieure à l'original.
+const usable = image ? widths.filter((w) => w <= image.width) : [];
+if (image && usable.length === 0) usable.push(image.width);
+---
+{image ? (
+  <Image
+    src={image}
+    alt={alt}
+    widths={usable}
+    sizes={sizes}
+    format="webp"
+    quality={78}
+    loading={eager ? 'eager' : 'lazy'}
+    fetchpriority={eager ? 'high' : 'auto'}
+    decoding="async"
+    class={cls}
+  />
+) : (
+  <div class="ph" role="img" aria-label={ui[lang].soon}>[À COMPLÉTER] {ui[lang].soon}</div>
+)}

@@ -1,0 +1,123 @@
+---
+// Formulaire de demande de devis.
+// - Aperçu (PREVIEW=true) : tous les champs sont désactivés, rien ne peut être envoyé.
+// - Production : envoi vers la fonction serveur /api/devis (validation + anti-spam côté serveur).
+//   Fonctionne aussi sans JavaScript (redirection vers la page de remerciement).
+import { ui } from '../i18n/ui.js';
+import { href } from '../lib/routes.js';
+import { PREVIEW, FORM_ENDPOINT } from '../config.js';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang].form;
+const off = PREVIEW;
+---
+<form class="form" method="post" action={off ? undefined : FORM_ENDPOINT} data-quote-form={off ? undefined : ''} aria-describedby="form-intro">
+  <h2 class="h3" style="font-size:clamp(1.7rem,3vw,2.2rem)">{t.title}</h2>
+  <p id="form-intro" class="hint">{t.intro}</p>
+  {off && <p class="form-disabled-note" role="note">{t.disabled}</p>}
+
+  <fieldset disabled={off}>
+    <input type="hidden" name="lang" value={lang} />
+    <input type="hidden" name="ts" value="" />
+    <!-- Piège à robots : champ invisible pour les humains, rempli par les robots -->
+    <div class="hp" aria-hidden="true">
+      <label for="site_web">{t.honeypot}</label>
+      <input type="text" id="site_web" name="site_web" tabindex="-1" autocomplete="off" />
+    </div>
+
+    <div class="form-grid">
+      <div class="field">
+        <label for="nom">{t.name} <span class="req" aria-hidden="true">*</span></label>
+        <input id="nom" name="nom" type="text" autocomplete="name" required maxlength="100" />
+      </div>
+      <div class="field">
+        <label for="telephone">{t.phone} <span class="req" aria-hidden="true">*</span></label>
+        <input id="telephone" name="telephone" type="tel" autocomplete="tel" required maxlength="30" pattern="[0-9+()./ \-]{8,30}" />
+      </div>
+      <div class="field">
+        <label for="email">{t.email} <span class="req" aria-hidden="true">*</span></label>
+        <input id="email" name="email" type="email" autocomplete="email" required maxlength="150" />
+      </div>
+      <div class="field">
+        <label for="commune">{t.city} <span class="req" aria-hidden="true">*</span></label>
+        <input id="commune" name="commune" type="text" autocomplete="address-level2" required maxlength="100" />
+      </div>
+
+      <fieldset class="field field--full">
+        <legend>{t.services} <span class="hint">— {t.servicesHint}</span></legend>
+        <div class="checks">
+          {Object.entries(t.options).map(([value, label]) => (
+            <label class="check"><input type="checkbox" name="travaux" value={value} /> {label}</label>
+          ))}
+        </div>
+      </fieldset>
+
+      <div class="field">
+        <label for="surface">{t.surface} <span class="hint">({t.surfaceHint})</span></label>
+        <input id="surface" name="surface" type="number" inputmode="numeric" min="1" max="10000" />
+      </div>
+      <div class="field">
+        <label for="delai">{t.timing}</label>
+        <select id="delai" name="delai">
+          {Object.entries(t.timings).map(([value, label]) => <option value={value}>{label}</option>)}
+        </select>
+      </div>
+
+      <div class="field field--full">
+        <label for="message">{t.message} <span class="req" aria-hidden="true">*</span></label>
+        <textarea id="message" name="message" required minlength="10" maxlength="3000" aria-describedby="message-hint"></textarea>
+        <span id="message-hint" class="hint">{t.messageHint} {t.photosHint}</span>
+      </div>
+
+      <div class="field field--full">
+        <label class="consent">
+          <input type="checkbox" name="consentement" value="oui" required />
+          <span>{t.consent} <a href={href('confidentialite', lang)}>{t.consentLink}</a>. <span class="req" aria-hidden="true">*</span></span>
+        </label>
+      </div>
+
+      <div class="field field--full">
+        <button class="btn btn--navy" type="submit" data-sending={t.sending}>{t.submit}</button>
+      </div>
+    </div>
+  </fieldset>
+  <div class="form-status" role="status" aria-live="polite" data-success={t.success} data-error={t.error}></div>
+</form>
+
+{!off && (
+  <script is:inline>
+    // Envoi en arrière-plan avec message de confirmation ; sans JS, le formulaire est posté normalement.
+    (function () {
+      var form = document.querySelector('[data-quote-form]');
+      if (!form || !window.fetch) return;
+      form.elements.ts.value = String(Date.now());
+      var status = form.querySelector('.form-status');
+      var btn = form.querySelector('button[type="submit"]');
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (!form.checkValidity()) { form.reportValidity(); return; }
+        var label = btn.textContent;
+        btn.disabled = true; btn.textContent = btn.dataset.sending;
+        fetch(form.action, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new URLSearchParams(new FormData(form)),
+        })
+          .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, body: j }; }); })
+          .then(function (res) {
+            if (!res.ok) throw new Error((res.body && res.body.error) || 'error');
+            status.dataset.type = 'success';
+            status.textContent = status.dataset.success;
+            form.reset();
+            form.elements.ts.value = String(Date.now());
+          })
+          .catch(function (err) {
+            status.dataset.type = 'error';
+            status.textContent = status.dataset.error + (err && err.message && err.message !== 'error' ? ' (' + err.message + ')' : '');
+          })
+          .finally(function () { btn.disabled = false; btn.textContent = label; });
+      });
+    })();
+  </script>
+)}

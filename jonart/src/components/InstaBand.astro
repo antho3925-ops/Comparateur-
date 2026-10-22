@@ -1,0 +1,28 @@
+---
+// Bandeau d'invitation vers Instagram (simple lien : aucun widget ni cookie tiers).
+import Icon from './Icon.astro';
+import Pic from './Pic.astro';
+import { ui } from '../i18n/ui.js';
+import { href } from '../lib/routes.js';
+import site from '../content/site.json';
+import galerie from '../content/galerie.json';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang];
+const thumbs = galerie.realisations.slice(3, 6);
+---
+<section class="section section--navy" aria-labelledby="titre-insta">
+  <div class="wrap insta-band">
+    <div>
+      <p class="eyebrow">Instagram</p>
+      <h2 id="titre-insta">{t.sections.instagram}</h2>
+      <p class="insta-handle">@{site.instagram}</p>
+      <p class="lead">{t.sections.instagramIntro}</p>
+      <a class="btn btn--brass" href={href('instagram', lang)}><Icon name="instagram" /> {t.insta.button}</a>
+    </div>
+    <div class="insta-thumbs">
+      {thumbs.map((g) => <Pic src={g.image} alt={g.alt[lang]} lang={lang} sizes="(min-width: 900px) 18vw, 33vw" widths={[240, 400]} />)}
+    </div>
+  </div>
+</section>

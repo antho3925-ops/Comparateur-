@@ -1,0 +1,79 @@
+---
+// Mentions légales d'une SRL belge (Code de droit économique, art. III.74 et XII.6).
+// Les éléments inconnus sont marqués [À COMPLÉTER] / [À VÉRIFIER].
+import Base from '../layouts/Base.astro';
+import site from '../content/site.json';
+import { mark } from '../lib/legal.js';
+import { href } from '../lib/routes.js';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const a = site.adresse;
+const tel = site.telephone, mail = site.email;
+
+const content = {
+  fr: {
+    title: 'Mentions légales',
+    description: "Mentions légales du site de JON'ART SRL : éditeur, numéro d'entreprise, hébergement, propriété intellectuelle.",
+    updated: 'Dernière mise à jour : [À COMPLÉTER : date de mise en ligne]',
+    sections: [
+      ['Éditeur du site', `
+        <dl>
+          <dt>Dénomination</dt><dd>JON'ART SRL</dd>
+          <dt>Forme juridique</dt><dd>Société à responsabilité limitée (SRL) de droit belge</dd>
+          <dt>Siège</dt><dd>${a.rue}, ${a.codePostal} ${a.ville}, Belgique</dd>
+          <dt>N° d'entreprise (BCE) / TVA</dt><dd>${site.tva}</dd>
+          <dt>RPM</dt><dd>[À COMPLÉTER : RPM et tribunal de l'entreprise compétent, tel qu'indiqué à la BCE]</dd>
+          <dt>Gérant, responsable de la publication</dt><dd>${site.gerant}</dd>
+          <dt>Téléphone</dt><dd><a href="tel:${tel.replace(/\s/g, '')}">${tel}</a></dd>
+          <dt>E-mail</dt><dd><a href="mailto:${mail}">${mail}</a></dd>
+        </dl>`],
+      ['Activité en Espagne', `<p>JON'ART SRL intervient également en Espagne. [À COMPLÉTER : le cas échéant, adresse et NIF de l'établissement ou de la structure en Espagne.]</p>`],
+      ['Assurance professionnelle', `<p>[À COMPLÉTER : nom de l'assureur et numéro de police de l'assurance responsabilité civile professionnelle / décennale (loi du 31 mai 2017 pour les travaux concernés).]</p>`],
+      ['Hébergement', `<p>[À COMPLÉTER : nom, adresse et site de l'hébergeur — par exemple Netlify, Inc., si le site y est déployé.]</p>`],
+      ['Propriété intellectuelle', `<p>L'ensemble des contenus de ce site (textes, photographies de réalisations, logo, mise en page) est la propriété de JON'ART SRL ou est utilisé avec l'autorisation de leurs titulaires. Toute reproduction, même partielle, sans autorisation écrite préalable est interdite.</p>`],
+      ['Responsabilité', `<p>Les informations de ce site sont fournies à titre indicatif et ne constituent pas une offre contractuelle : seul un devis écrit et signé engage JON'ART SRL. Malgré le soin apporté à leur rédaction, elles peuvent contenir des inexactitudes que nous corrigerons dès qu'elles nous seront signalées.</p>
+        <p>Les liens vers des sites externes (notamment Instagram) sont fournis pour votre confort ; JON'ART SRL n'est pas responsable de leur contenu ni de leurs pratiques en matière de données personnelles.</p>`],
+      ['Données personnelles', `<p>Le traitement de vos données est décrit dans notre <a href="${href('confidentialite', 'fr')}">politique de confidentialité</a>.</p>`],
+      ['Litiges', `<p>Le présent site est soumis au droit belge. En cas de litige, et à défaut de solution amiable, les tribunaux de l'arrondissement judiciaire de Bruxelles sont compétents [À VÉRIFIER], sans préjudice des règles protectrices applicables aux consommateurs.</p>
+        <p>Les consommateurs peuvent aussi s'adresser gratuitement au Service de Médiation pour le Consommateur (<a href="https://www.mediationconsommateur.be" rel="noopener">www.mediationconsommateur.be</a>).</p>`],
+    ],
+  },
+  es: {
+    title: 'Aviso legal',
+    description: 'Aviso legal del sitio de JON\'ART SRL: titular, número de empresa, alojamiento, propiedad intelectual.',
+    updated: 'Última actualización: [À COMPLÉTER : fecha de publicación]',
+    sections: [
+      ['Titular del sitio', `
+        <dl>
+          <dt>Denominación</dt><dd>JON'ART SRL</dd>
+          <dt>Forma jurídica</dt><dd>Sociedad de responsabilidad limitada (SRL) de derecho belga</dd>
+          <dt>Domicilio social</dt><dd>${a.rue}, ${a.codePostal} ${a.ville}, Bélgica</dd>
+          <dt>N.º de empresa (BCE) / IVA</dt><dd>${site.tva}</dd>
+          <dt>Registro (RPM)</dt><dd>[À COMPLÉTER : RPM y tribunal de empresa competente, según la BCE]</dd>
+          <dt>Gerente, responsable de la publicación</dt><dd>${site.gerant}</dd>
+          <dt>Teléfono</dt><dd><a href="tel:${tel.replace(/\s/g, '')}">${tel}</a></dd>
+          <dt>Correo</dt><dd><a href="mailto:${mail}">${mail}</a></dd>
+        </dl>`],
+      ['Actividad en España', `<p>JON'ART SRL también trabaja en España. [À COMPLÉTER : en su caso, dirección y NIF del establecimiento o de la estructura en España.]</p>`],
+      ['Seguro profesional', `<p>[À COMPLÉTER : aseguradora y número de póliza del seguro de responsabilidad civil profesional / decenal.]</p>`],
+      ['Alojamiento', `<p>[À COMPLÉTER : nombre, dirección y web del proveedor de alojamiento — por ejemplo Netlify, Inc.]</p>`],
+      ['Propiedad intelectual', `<p>Todos los contenidos de este sitio (textos, fotografías de proyectos, logotipo, diseño) son propiedad de JON'ART SRL o se utilizan con autorización de sus titulares. Queda prohibida cualquier reproducción, incluso parcial, sin autorización previa por escrito.</p>`],
+      ['Responsabilidad', `<p>La información de este sitio es orientativa y no constituye una oferta contractual: solo un presupuesto escrito y firmado compromete a JON'ART SRL. Corregiremos cualquier inexactitud en cuanto se nos comunique.</p>
+        <p>Los enlaces a sitios externos (en particular Instagram) se ofrecen por comodidad; JON'ART SRL no es responsable de su contenido ni de sus prácticas en materia de datos personales.</p>`],
+      ['Datos personales', `<p>El tratamiento de sus datos se describe en nuestra <a href="${href('confidentialite', 'es')}">política de privacidad</a>.</p>`],
+      ['Litigios', `<p>Este sitio se rige por el derecho belga. En caso de litigio, y a falta de acuerdo amistoso, serán competentes los tribunales del distrito judicial de Bruselas [À VÉRIFIER], sin perjuicio de las normas de protección de los consumidores.</p>
+        <p>Los consumidores pueden dirigirse gratuitamente al Servicio de Mediación del Consumidor belga (<a href="https://www.mediationconsommateur.be" rel="noopener">www.mediationconsommateur.be</a>).</p>`],
+    ],
+  },
+}[lang];
+---
+<Base lang={lang} page="mentions" title={content.title} description={content.description}>
+  <header class="page-hero"><div class="wrap"><h1>{content.title}</h1></div></header>
+  <section class="section">
+    <div class="wrap prose">
+      {content.sections.map(([h, body]) => (<><h2>{h}</h2><Fragment set:html={mark(body)} /></>))}
+      <p style="margin-top:3rem;font-size:.9rem" set:html={mark(content.updated)} />
+    </div>
+  </section>
+</Base>

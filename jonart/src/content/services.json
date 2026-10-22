@@ -1,0 +1,65 @@
+{
+  "services": [
+    {
+      "id": "enduits",
+      "titre": { "fr": "Enduits décoratifs", "es": "Revestimientos decorativos" },
+      "sousTitre": { "fr": "Microciment, béton ciré", "es": "Microcemento, hormigón pulido" },
+      "texte": {
+        "fr": "Un revêtement minéral continu, sans joints, pour murs, sols, douches, plans et escaliers. Doux au toucher, facile à entretenir, il apporte de la matière et de la chaleur à chaque pièce.",
+        "es": "Un revestimiento mineral continuo, sin juntas, para paredes, suelos, duchas, encimeras y escaleras. Suave al tacto y fácil de mantener, aporta textura y calidez a cada estancia."
+      },
+      "image": "/src/assets/photos/salon-meuble-tv-enduit.jpg",
+      "alt": {
+        "fr": "Salon avec meuble TV maçonné et niches recouverts d'un enduit décoratif doré",
+        "es": "Salón con mueble de TV de obra y hornacinas con revestimiento decorativo dorado"
+      }
+    },
+    {
+      "id": "salle-de-bain",
+      "titre": { "fr": "Salles de bain", "es": "Baños" },
+      "sousTitre": { "fr": "Rénovation complète", "es": "Reforma integral" },
+      "texte": {
+        "fr": "De la démolition aux finitions : douche à l'italienne, niches, meubles suspendus, enduit ou carrelage, éclairage. Un seul interlocuteur pour toute la pièce.",
+        "es": "De la demolición a los acabados: ducha de obra, hornacinas, muebles suspendidos, revestimiento o azulejo, iluminación. Un único interlocutor para todo el baño."
+      },
+      "image": "/src/assets/photos/sdb-vue-ensemble-douche.jpg",
+      "alt": {
+        "fr": "Vue d'ensemble d'une salle de bain rénovée en enduit beige, douche de plain-pied et meuble vasque en bois",
+        "es": "Vista general de un baño reformado con revestimiento beige, ducha a ras de suelo y mueble de lavabo de madera"
+      }
+    },
+    {
+      "id": "peinture",
+      "titre": { "fr": "Peinture", "es": "Pintura" },
+      "sousTitre": { "fr": "Intérieure, murs et plafonds", "es": "Interior, paredes y techos" },
+      "texte": {
+        "fr": "Préparation soignée des supports, enduisage, ponçage et mise en peinture pour des murs et plafonds nets et réguliers.",
+        "es": "Preparación cuidadosa de los soportes, enlucido, lijado y pintura para paredes y techos limpios y uniformes."
+      },
+      "image": "",
+      "alt": { "fr": "", "es": "" }
+    },
+    {
+      "id": "carrelage",
+      "titre": { "fr": "Carrelage", "es": "Alicatado y solados" },
+      "sousTitre": { "fr": "Sols et murs", "es": "Suelos y paredes" },
+      "texte": {
+        "fr": "Pose de carrelage au sol et au mur, faïence de salle de bain, grands formats : des alignements et des joints réguliers.",
+        "es": "Colocación de baldosas en suelos y paredes, azulejos de baño, grandes formatos: alineaciones y juntas regulares."
+      },
+      "image": "",
+      "alt": { "fr": "", "es": "" }
+    },
+    {
+      "id": "renovation",
+      "titre": { "fr": "Rénovation générale", "es": "Reforma general" },
+      "sousTitre": { "fr": "Escaliers, pièces de vie", "es": "Escaleras, estancias" },
+      "texte": {
+        "fr": "Rénovation d'escaliers, de pièces de vie et d'aménagements intérieurs, en coordonnant les différentes étapes du chantier.",
+        "es": "Reforma de escaleras, estancias y acondicionamientos interiores, coordinando las distintas fases de la obra."
+      },
+      "image": "",
+      "alt": { "fr": "", "es": "" }
+    }
+  ]
+}

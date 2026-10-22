@@ -1,0 +1,50 @@
+---
+// Pied de page : coordonnées légales (sans aucune coordonnée bancaire), liens utiles.
+import { href } from '../lib/routes.js';
+import { ui } from '../i18n/ui.js';
+import site from '../content/site.json';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang];
+const year = new Date().getFullYear();
+---
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer__grid">
+      <div>
+        <h2>JON'ART SRL</h2>
+        <p class="footer__slogan">{lang === 'fr' ? '« Travail soigné, résultat durable »' : '« Trabajo cuidado, resultado duradero »'}</p>
+        <p>
+          {site.adresse.rue}<br />
+          {site.adresse.codePostal} {site.adresse.ville}, {lang === 'fr' ? 'Belgique' : 'Bélgica'}<br />
+          {t.contact.vat} : {site.tva}
+        </p>
+      </div>
+      <div>
+        <h2>Contact</h2>
+        <ul>
+          <li><a href={`tel:${site.telephone.replace(/\s/g, '')}`}>{site.telephone}</a></li>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={href('instagram', lang)}>Instagram @{site.instagram}</a></li>
+        </ul>
+      </div>
+      <div>
+        <h2>{lang === 'fr' ? 'Navigation' : 'Navegación'}</h2>
+        <ul>
+          <li><a href={href('presentation', lang)}>{t.nav.presentation}</a></li>
+          <li><a href={href('realisations', lang)}>{t.nav.realisations}</a></li>
+          <li><a href={href('devis', lang)}>{t.ctaDevis}</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer__bottom">
+      <span>© {year} JON'ART SRL — {t.footer.rights}</span>
+      <span>
+        <a href={href('mentions', lang)}>{t.footer.legal}</a>
+        &nbsp;·&nbsp;
+        <a href={href('confidentialite', lang)}>{t.footer.privacy}</a>
+      </span>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,48 @@
+---
+// Comparateur avant/après au curseur (input range accessible au clavier).
+// Sans paire de photos : emplacement [À COMPLÉTER] en aperçu, section masquée en production.
+import Pic from './Pic.astro';
+import { ui } from '../i18n/ui.js';
+import { PREVIEW } from '../config.js';
+
+interface Pair { avant: string; apres: string; legende: Record<string, string>; alt: Record<string, string>; }
+interface Props { lang: 'fr' | 'es'; pairs: Pair[]; }
+const { lang, pairs } = Astro.props;
+const t = ui[lang];
+const show = pairs.length > 0 || PREVIEW;
+---
+{show && (
+  <section class="section" aria-labelledby="titre-avant-apres">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">{t.sections.avantApres}</p>
+        <h2 id="titre-avant-apres">{lang === 'fr' ? 'La transformation, en un geste' : 'La transformación, de un vistazo'}</h2>
+      </div>
+      {pairs.length === 0 ? (
+        <p class="empty-box"><mark class="todo">{t.sections.avantApresEmpty}</mark></p>
+      ) : (
+        <div class="ba-list">
+          {pairs.map((p) => (
+            <figure style="margin:0">
+              <div class="ba">
+                <Pic src={p.avant} alt={`${t.before} : ${p.alt[lang]}`} lang={lang} sizes="(min-width: 900px) 50vw, 100vw" />
+                <div class="ba__after"><Pic src={p.apres} alt={`${t.after} : ${p.alt[lang]}`} lang={lang} sizes="(min-width: 900px) 50vw, 100vw" /></div>
+                <span class="ba__label ba__label--before">{t.before}</span>
+                <span class="ba__label ba__label--after">{t.after}</span>
+                <input type="range" min="0" max="100" value="50" aria-label={t.compare} />
+                <span class="ba__line"></span>
+              </div>
+              <figcaption class="hint">{p.legende[lang]}</figcaption>
+            </figure>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<script is:inline>
+  document.querySelectorAll('.ba input[type="range"]').forEach(function (r) {
+    r.addEventListener('input', function () { r.parentElement.style.setProperty('--pos', r.value + '%'); });
+  });
+</script>

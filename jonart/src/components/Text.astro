@@ -1,0 +1,7 @@
+---
+// Affiche un texte de contenu en surlignant les placeholders entre crochets ([À COMPLÉTER…]).
+interface Props { value?: string; as?: string; class?: string; }
+const { value = '', as: Tag = 'span', class: cls } = Astro.props;
+const parts = value.split(/(\[[^\]]+\])/).filter(Boolean);
+---
+<Tag class={cls}>{parts.map((p) => (p.startsWith('[') && p.endsWith(']') ? <mark class="todo">{p}</mark> : p))}</Tag>

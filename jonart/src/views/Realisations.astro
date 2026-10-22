@@ -1,0 +1,33 @@
+---
+// Page "Réalisations" : galerie complète filtrable + comparaisons avant/après.
+import Base from '../layouts/Base.astro';
+import Gallery from '../components/Gallery.astro';
+import BeforeAfter from '../components/BeforeAfter.astro';
+import InstaBand from '../components/InstaBand.astro';
+import { ui } from '../i18n/ui.js';
+import galerie from '../content/galerie.json';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang];
+const meta = {
+  fr: { title: 'Réalisations', description: "Salles de bain, enduits décoratifs et finitions : découvrez en photos les chantiers réalisés par JON'ART SRL." },
+  es: { title: 'Proyectos', description: 'Baños, revestimientos decorativos y acabados: descubra en fotos las obras realizadas por JON\'ART SRL.' },
+}[lang];
+---
+<Base lang={lang} page="realisations" title={meta.title} description={meta.description}>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">{t.sections.realisations}</p>
+      <h1>{lang === 'fr' ? 'Nos réalisations' : 'Nuestros proyectos'}</h1>
+      <p class="lead">{t.sections.realisationsIntro}</p>
+    </div>
+  </header>
+  <section class="section">
+    <div class="wrap">
+      <Gallery lang={lang} items={galerie.realisations} filters />
+    </div>
+  </section>
+  <BeforeAfter lang={lang} pairs={galerie.avantApres} />
+  <InstaBand lang={lang} />
+</Base>

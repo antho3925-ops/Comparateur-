@@ -1,0 +1,38 @@
+---
+// Avis clients. Règle : uniquement de vrais avis, publiés avec l'accord du client.
+// Tant qu'un avis contient [À COMPLÉTER], la section est visible en aperçu (pour être remplie)
+// mais retirée du site en production. Aucune note ni donnée schema.org n'est générée.
+import Text from './Text.astro';
+import { ui } from '../i18n/ui.js';
+import { PREVIEW } from '../config.js';
+import { isPlaceholder } from '../lib/images.js';
+import data from '../content/avis.json';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang];
+const complete = data.avis.filter((a) => !isPlaceholder(a.texte[lang]) && !isPlaceholder(a.auteur) && !a.auteur.startsWith('['));
+const list = PREVIEW ? data.avis : complete;
+---
+{list.length > 0 && (
+  <section class="section section--beige" aria-labelledby="titre-avis">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">{lang === 'fr' ? 'Avis' : 'Opiniones'}</p>
+        <h2 id="titre-avis">{t.sections.avis}</h2>
+      </div>
+      <div class="reviews">
+        {list.map((a) => (
+          <figure class="review">
+            <blockquote><Text value={a.texte[lang]} /></blockquote>
+            <figcaption>
+              <strong><Text value={a.auteur} /></strong> — <Text value={a.lieu} /><br />
+              <Text value={a.travaux[lang]} />
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+      {PREVIEW && complete.length < data.avis.length && <p class="preview-note"><mark class="todo">{t.sections.avisPreviewNote}</mark></p>}
+    </div>
+  </section>
+)}

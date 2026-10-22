@@ -1,0 +1,166 @@
+# Configuration de l'espace administrateur (Decap CMS).
+# Chaque modification enregistrée crée un commit Git, puis Netlify republie le site (≈ 1 à 2 min).
+# Les chemins partent de la racine du dépôt : le site se trouve dans le dossier "jonart/".
+
+backend:
+  name: git-gateway        # connexion par identifiant / mot de passe (Netlify Identity)
+  branch: main             # [À COMPLÉTER] branche publiée par Netlify
+
+locale: fr
+
+# Photos envoyées depuis l'admin. Le site les redimensionne automatiquement au build
+# (versions WebP de 360 à 1200 px) : on peut téléverser directement les photos du téléphone.
+media_folder: "jonart/src/assets/galerie"
+public_folder: "/src/assets/galerie"
+
+# site_url: "https://votre-domaine.be"   # [À COMPLÉTER] lien "Voir le site" dans l'admin
+logo_url: "/admin/logo.png"
+
+# Les champs bilingues réutilisent deux listes de sous-champs (FR / ES) définies
+# à leur première utilisation (&bi_court, &bi_long) puis rappelées (*bi_court, *bi_long).
+
+collections:
+  - name: contenus
+    label: "Textes du site"
+    editor: { preview: false }
+    files:
+      - name: accueil
+        label: "Page d'accueil"
+        file: "jonart/src/content/accueil.json"
+        fields:
+          - label: "Grand bandeau (hero)"
+            name: hero
+            widget: object
+            fields:
+              - label: "Slogan"
+                name: slogan
+                widget: object
+                fields: &bi_court
+                  - { label: "Français", name: fr, widget: string }
+                  - { label: "Español", name: es, widget: string }
+              - { label: "Titre", name: titre, widget: object, fields: *bi_court }
+              - label: "Texte"
+                name: texte
+                widget: object
+                fields: &bi_long
+                  - { label: "Français", name: fr, widget: text }
+                  - { label: "Español", name: es, widget: text }
+              - { label: "Photo", name: image, widget: image }
+              - { label: "Description de la photo (accessibilité)", name: alt, widget: object, fields: *bi_court }
+          - label: "Atouts"
+            name: atouts
+            widget: list
+            fields:
+              - { label: "Titre", name: titre, widget: object, fields: *bi_court }
+              - { label: "Texte", name: texte, widget: object, fields: *bi_long }
+          - { label: "Photo des atouts", name: atoutsImage, widget: image }
+          - { label: "Description de la photo des atouts", name: atoutsAlt, widget: object, fields: *bi_court }
+
+      - name: presentation
+        label: "Page Présentation"
+        file: "jonart/src/content/presentation.json"
+        fields:
+          - { label: "Titre", name: titre, widget: object, fields: *bi_court }
+          - { label: "Introduction", name: intro, widget: object, fields: *bi_long }
+          - label: "Paragraphes"
+            name: paragraphes
+            widget: list
+            fields:
+              - { label: "Français", name: fr, widget: text }
+              - { label: "Español", name: es, widget: text }
+          - label: "Étapes de travail"
+            name: etapes
+            widget: list
+            fields:
+              - { label: "Titre", name: titre, widget: object, fields: *bi_court }
+              - { label: "Texte", name: texte, widget: object, fields: *bi_long }
+          - { label: "Photo", name: image, widget: image }
+          - { label: "Description de la photo", name: alt, widget: object, fields: *bi_court }
+
+      - name: services
+        label: "Services"
+        file: "jonart/src/content/services.json"
+        fields:
+          - label: "Services"
+            name: services
+            widget: list
+            summary: "{{fields.titre.fr}}"
+            fields:
+              - { label: "Identifiant (sans espace)", name: id, widget: string }
+              - { label: "Titre", name: titre, widget: object, fields: *bi_court }
+              - { label: "Sous-titre", name: sousTitre, widget: object, fields: *bi_court }
+              - { label: "Description", name: texte, widget: object, fields: *bi_long }
+              - { label: "Photo", name: image, widget: image, required: false }
+              - { label: "Description de la photo", name: alt, widget: object, fields: *bi_court }
+
+      - name: site
+        label: "Coordonnées"
+        file: "jonart/src/content/site.json"
+        fields:
+          - { label: "Nom de l'entreprise", name: nom, widget: string }
+          - { label: "Gérant", name: gerant, widget: string }
+          - { label: "Téléphone", name: telephone, widget: string }
+          - { label: "E-mail", name: email, widget: string }
+          - label: "Adresse"
+            name: adresse
+            widget: object
+            fields:
+              - { label: "Rue et numéro", name: rue, widget: string }
+              - { label: "Code postal", name: codePostal, widget: string }
+              - { label: "Commune", name: ville, widget: string }
+              - { label: "Pays (code)", name: pays, widget: string }
+          - { label: "Numéro de TVA", name: tva, widget: string }
+          - { label: "Compte Instagram (sans @)", name: instagram, widget: string }
+          - { label: "Zones d'intervention", name: zones, widget: object, fields: *bi_long }
+          - { label: "Disponibilités", name: horaires, widget: object, fields: *bi_court }
+
+  - name: photos
+    label: "Photos et avis"
+    editor: { preview: false }
+    files:
+      - name: galerie
+        label: "Galerie des réalisations"
+        file: "jonart/src/content/galerie.json"
+        fields:
+          - label: "Réalisations"
+            name: realisations
+            widget: list
+            summary: "{{fields.legende.fr}}"
+            fields:
+              - { label: "Photo", name: image, widget: image }
+              - label: "Catégorie"
+                name: categorie
+                widget: select
+                options:
+                  - { label: "Salle de bain", value: "salle-de-bain" }
+                  - { label: "Enduits décoratifs", value: "enduits" }
+                  - { label: "Peinture", value: "peinture" }
+                  - { label: "Carrelage", value: "carrelage" }
+                  - { label: "Rénovation", value: "renovation" }
+              - { label: "Légende", name: legende, widget: object, fields: *bi_court }
+              - { label: "Description de la photo (accessibilité)", name: alt, widget: object, fields: *bi_court }
+          - label: "Avant / après"
+            name: avantApres
+            widget: list
+            required: false
+            summary: "{{fields.legende.fr}}"
+            fields:
+              - { label: "Photo AVANT", name: avant, widget: image }
+              - { label: "Photo APRÈS", name: apres, widget: image }
+              - { label: "Légende", name: legende, widget: object, fields: *bi_court }
+              - { label: "Description du chantier", name: alt, widget: object, fields: *bi_court }
+
+      - name: avis
+        label: "Avis clients (uniquement de vrais avis, avec l'accord du client)"
+        file: "jonart/src/content/avis.json"
+        fields:
+          - { label: "Note interne", name: _note, widget: hidden }
+          - label: "Avis"
+            name: avis
+            widget: list
+            summary: "{{fields.auteur}}"
+            fields:
+              - { label: "Texte de l'avis", name: texte, widget: object, fields: *bi_long }
+              - { label: "Prénom et initiale du client", name: auteur, widget: string }
+              - { label: "Commune", name: lieu, widget: string }
+              - { label: "Travaux réalisés", name: travaux, widget: object, fields: *bi_court }

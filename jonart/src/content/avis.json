@@ -1,0 +1,9 @@
+{
+  "_note": "Uniquement des avis réels, avec l'accord du client. Tant qu'un avis contient [À COMPLÉTER], la section n'est pas affichée en production.",
+  "avis": [
+    { "texte": { "fr": "[À COMPLÉTER : avis réel d'un client]", "es": "[À COMPLÉTER : opinión real de un cliente]" }, "auteur": "[Prénom N.]", "lieu": "[Commune]", "travaux": { "fr": "[Type de travaux]", "es": "[Tipo de obra]" } },
+    { "texte": { "fr": "[À COMPLÉTER : avis réel d'un client]", "es": "[À COMPLÉTER : opinión real de un cliente]" }, "auteur": "[Prénom N.]", "lieu": "[Commune]", "travaux": { "fr": "[Type de travaux]", "es": "[Tipo de obra]" } },
+    { "texte": { "fr": "[À COMPLÉTER : avis réel d'un client]", "es": "[À COMPLÉTER : opinión real de un cliente]" }, "auteur": "[Prénom N.]", "lieu": "[Commune]", "travaux": { "fr": "[Type de travaux]", "es": "[Tipo de obra]" } },
+    { "texte": { "fr": "[À COMPLÉTER : avis réel d'un client]", "es": "[À COMPLÉTER : opinión real de un cliente]" }, "auteur": "[Prénom N.]", "lieu": "[Commune]", "travaux": { "fr": "[Type de travaux]", "es": "[Tipo de obra]" } }
+  ]
+}

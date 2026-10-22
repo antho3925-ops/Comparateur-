@@ -1,0 +1,61 @@
+---
+// Page relais vers Instagram. En production, redirection automatique après un court
+// compte à rebours (annulable). En aperçu hors ligne : simple bouton, pas de redirection.
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Gallery from '../components/Gallery.astro';
+import { ui } from '../i18n/ui.js';
+import { PREVIEW } from '../config.js';
+import site from '../content/site.json';
+import galerie from '../content/galerie.json';
+
+interface Props { lang: 'fr' | 'es'; }
+const { lang } = Astro.props;
+const t = ui[lang].insta;
+const url = `https://www.instagram.com/${site.instagram}/`;
+const meta = {
+  fr: { title: 'Instagram', description: `Suivez les chantiers de JON'ART SRL sur Instagram : @${site.instagram}.` },
+  es: { title: 'Instagram', description: `Siga las obras de JON'ART SRL en Instagram: @${site.instagram}.` },
+}[lang];
+---
+<Base lang={lang} page="instagram" title={meta.title} description={meta.description}>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="eyebrow">Instagram</p>
+      <h1>{t.title}</h1>
+      <p class="insta-handle">@{site.instagram}</p>
+      <p class="lead">{t.text}</p>
+      <div class="actions" style="margin-top:2rem">
+        <a class="btn btn--brass" href={url} rel="noopener" target="_blank" id="insta-link"><Icon name="instagram" /> {t.button}</a>
+        {!PREVIEW && <button class="btn btn--ghost-light" type="button" id="insta-stay" hidden>{t.stay}</button>}
+      </div>
+      {!PREVIEW && <p id="insta-countdown" aria-live="polite" style="margin-top:1rem" hidden>{t.redirect} <strong data-n>8</strong> {t.seconds}</p>}
+      <p style="margin-top:1rem;font-size:.9rem">{t.external}</p>
+    </div>
+  </header>
+  <section class="section">
+    <div class="wrap">
+      <Gallery lang={lang} items={galerie.realisations.slice(0, 6)} />
+    </div>
+  </section>
+</Base>
+
+{!PREVIEW && (
+  <script is:inline define:vars={{ url }}>
+    // Compte à rebours de 8 s, annulable (bouton « Rester sur le site » ou touche Échap).
+    (function () {
+      var box = document.getElementById('insta-countdown');
+      var stay = document.getElementById('insta-stay');
+      if (!box || !stay) return;
+      var n = 8, out = box.querySelector('[data-n]');
+      box.hidden = false; stay.hidden = false;
+      var timer = setInterval(function () {
+        n -= 1; out.textContent = n;
+        if (n <= 0) { clearInterval(timer); window.location.href = url; }
+      }, 1000);
+      function cancel() { clearInterval(timer); box.hidden = true; stay.hidden = true; }
+      stay.addEventListener('click', cancel);
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') cancel(); });
+    })();
+  </script>
+)}

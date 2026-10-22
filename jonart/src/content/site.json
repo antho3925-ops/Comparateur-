@@ -1,0 +1,22 @@
+{
+  "nom": "JON'ART SRL",
+  "gerant": "Tinoco Jonathan",
+  "telephone": "+32 488 03 64 86",
+  "email": "jonartsrl@hotmail.com",
+  "adresse": {
+    "rue": "Chaussée d'Alsemberg 34",
+    "codePostal": "1630",
+    "ville": "Linkebeek",
+    "pays": "BE"
+  },
+  "tva": "BE 0793.658.948",
+  "instagram": "jon_art_srl",
+  "zones": {
+    "fr": "Linkebeek, Bruxelles et environs — ainsi qu'en Espagne [À COMPLÉTER : région ou ville en Espagne]",
+    "es": "Linkebeek, Bruselas y alrededores — y también en España [À COMPLÉTER : región o ciudad en España]"
+  },
+  "horaires": {
+    "fr": "[À COMPLÉTER : horaires de contact, ex. du lundi au vendredi]",
+    "es": "[À COMPLÉTER : horario de contacto, p. ej. de lunes a viernes]"
+  }
+}

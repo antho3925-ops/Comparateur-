@@ -1,0 +1,62 @@
+---
+// En-tête : logo, navigation principale, sélecteur de langue et bouton devis.
+import Icon from './Icon.astro';
+import { href, LANGS } from '../lib/routes.js';
+import { ui } from '../i18n/ui.js';
+import logo from '../assets/logo-jonart.jpg';
+import { Image } from 'astro:assets';
+
+interface Props { lang: 'fr' | 'es'; page: string; }
+const { lang, page } = Astro.props;
+const t = ui[lang];
+const items = ['home', 'presentation', 'realisations', 'instagram'] as const;
+// La page "merci" n'a pas d'équivalent dans le menu : on renvoie vers le devis.
+const switchKey = page === 'merci' ? 'devis' : page;
+---
+<header class="header">
+  <div class="wrap header__bar">
+    <a class="brand" href={href('home', lang)}>
+      <Image src={logo} alt="" width={52} height={52} densities={[1, 2]} format="webp" loading="eager" />
+      <span>
+        <span class="brand__name">JON'ART</span>
+        <span class="brand__tag">{lang === 'fr' ? "L'art de la construction" : 'El arte de la construcción'}</span>
+      </span>
+    </a>
+
+    <nav class="lang" aria-label={lang === 'fr' ? 'Langue' : 'Idioma'}>
+      {LANGS.map((l) =>
+        l === lang ? (
+          <span aria-current="true" lang={l}><span class="sr-only">{ui[l].langName}</span><span aria-hidden="true">{l}</span></span>
+        ) : (
+          <a href={href(switchKey as any, l)} hreflang={l} lang={l}><span class="sr-only">{ui[l].langName}</span><span aria-hidden="true">{l}</span></a>
+        )
+      )}
+    </nav>
+
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="menu-principal" hidden>
+      <Icon name="menu" /><span class="sr-only">{t.menu}</span>
+    </button>
+
+    <nav class="nav" id="menu-principal" aria-label={t.menu}>
+      <ul>
+        {items.map((key) => (
+          <li><a href={href(key, lang)} aria-current={key === page ? 'page' : undefined}>{t.nav[key]}</a></li>
+        ))}
+        <li><a class="btn btn--brass" href={href('devis', lang)} aria-current={page === 'devis' ? 'page' : undefined}>{t.ctaDevis}</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<script is:inline>
+  // Menu mobile : ouverture/fermeture accessible (aria-expanded, touche Échap).
+  (function () {
+    var btn = document.querySelector('.nav-toggle');
+    var nav = document.getElementById('menu-principal');
+    if (!btn || !nav) return;
+    btn.hidden = false;
+    function set(open) { btn.setAttribute('aria-expanded', open); nav.dataset.open = open; }
+    btn.addEventListener('click', function () { set(btn.getAttribute('aria-expanded') !== 'true'); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') set(false); });
+  })();
+</script>

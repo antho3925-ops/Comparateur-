@@ -1,0 +1,77 @@
+{
+  "realisations": [
+    {
+      "image": "/src/assets/photos/sdb-douche-italienne.jpg",
+      "categorie": "salle-de-bain",
+      "legende": { "fr": "Salle de bain complète, finitions laiton", "es": "Baño completo, acabados en latón" },
+      "alt": {
+        "fr": "Salle de bain avec douche à l'italienne vitrée, niche éclairée, robinetterie laiton et plante verte",
+        "es": "Baño con ducha de obra con mampara, hornacina iluminada, grifería de latón y planta verde"
+      }
+    },
+    {
+      "image": "/src/assets/photos/sdb-douche-meuble-vasque.jpg",
+      "categorie": "salle-de-bain",
+      "legende": { "fr": "Douche, WC suspendu et meuble vasque", "es": "Ducha, inodoro suspendido y mueble de lavabo" },
+      "alt": {
+        "fr": "Salle de bain en enduit beige avec douche vitrée, WC suspendu, vasque posée et miroir rond rétroéclairé",
+        "es": "Baño con revestimiento beige, ducha con mampara, inodoro suspendido, lavabo sobre encimera y espejo redondo retroiluminado"
+      }
+    },
+    {
+      "image": "/src/assets/photos/salon-meuble-tv-enduit.jpg",
+      "categorie": "enduits",
+      "legende": { "fr": "Meuble TV maçonné en enduit décoratif", "es": "Mueble de TV de obra con revestimiento decorativo" },
+      "alt": {
+        "fr": "Salon chaleureux avec meuble TV et étagères maçonnés recouverts d'enduit décoratif",
+        "es": "Salón acogedor con mueble de TV y estanterías de obra con revestimiento decorativo"
+      }
+    },
+    {
+      "image": "/src/assets/photos/sdb-niche-douche-laiton.jpg",
+      "categorie": "enduits",
+      "legende": { "fr": "Niche de douche en enduit", "es": "Hornacina de ducha con revestimiento" },
+      "alt": {
+        "fr": "Double niche de douche en enduit lisse et colonne de douche en laiton brossé",
+        "es": "Doble hornacina de ducha con revestimiento liso y columna de ducha en latón cepillado"
+      }
+    },
+    {
+      "image": "/src/assets/photos/sdb-vue-ensemble-douche.jpg",
+      "categorie": "salle-de-bain",
+      "legende": { "fr": "Salle de bain en longueur", "es": "Baño alargado" },
+      "alt": {
+        "fr": "Salle de bain en longueur entièrement en enduit, receveur de douche blanc et fenêtre au fond",
+        "es": "Baño alargado completamente revestido, plato de ducha blanco y ventana al fondo"
+      }
+    },
+    {
+      "image": "/src/assets/photos/sdb-vasque-miroir-led.jpg",
+      "categorie": "salle-de-bain",
+      "legende": { "fr": "Vasque et miroir rétroéclairé", "es": "Lavabo y espejo retroiluminado" },
+      "alt": {
+        "fr": "Vasque ronde blanche sur plan en bois, robinet laiton et miroir rond rétroéclairé sur mur en enduit",
+        "es": "Lavabo redondo blanco sobre encimera de madera, grifo de latón y espejo redondo retroiluminado sobre pared revestida"
+      }
+    },
+    {
+      "image": "/src/assets/photos/sdb-colonne-douche-niche.jpg",
+      "categorie": "salle-de-bain",
+      "legende": { "fr": "Colonne de douche et profilé laiton", "es": "Columna de ducha y perfil de latón" },
+      "alt": {
+        "fr": "Douche en enduit avec colonne et douchette en laiton, niche et profilé doré",
+        "es": "Ducha revestida con columna y teleducha de latón, hornacina y perfil dorado"
+      }
+    },
+    {
+      "image": "/src/assets/photos/sdb-miroir-led-enduit.jpg",
+      "categorie": "enduits",
+      "legende": { "fr": "Texture d'enduit sous lumière rasante", "es": "Textura del revestimiento con luz rasante" },
+      "alt": {
+        "fr": "Texture d'un mur en enduit décoratif éclairé par un miroir rond rétroéclairé, vase noir sur tablette",
+        "es": "Textura de una pared con revestimiento decorativo iluminada por un espejo redondo retroiluminado, jarrón negro sobre repisa"
+      }
+    }
+  ],
+  "avantApres": []
+}
