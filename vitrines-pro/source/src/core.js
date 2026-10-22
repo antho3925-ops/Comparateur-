@@ -114,7 +114,7 @@ function hoursRows(H){
 let storageOK=true;
 function defaults(){return{
  settings:{agency:'Votre Agence',tagline:'Sites internet pour commerces de proximité',commercial:'',phone:'',email:'',city:'',pin:'1234',pinChanged:false,
-  price:500,monthly:29,delay:'7 jours ouvrés',firstYear:true,
+  price:590,delay:'7 jours ouvrés',
   rdv:{days:[1,2,3,4,5,6],start:'09:00',end:'18:00',step:30},
   options:[
    {id:'resa',n:'Réservation en ligne',p:150},{id:'shop',n:'Commande en ligne et retrait en boutique',p:250},
@@ -152,7 +152,7 @@ function calcQuote(q){
   (q.opts||[]).forEach(id=>{const o=s.options.find(x=>x.id===id);if(!o)return;const n=o.unit?(+q.pages||0):1;if(n>0){const a=o.p*n;total+=a;lines.push([o.n+(o.unit?' × '+n:''),a])}});
   const disc=+q.discount||0;if(disc>0){total-=disc;lines.push(['Remise',-disc])}
   if(q.custom!==''&&q.custom!=null&&!isNaN(+q.custom)){total=+q.custom}
-  return{total:Math.max(0,total),lines,monthly:+s.monthly||0};
+  return{total:Math.max(0,total),lines};
 }
 function nextQuoteNum(){const y=new Date().getFullYear();const n=S.quotes.filter(q=>String(q.num||'').includes('-'+y+'-')).length+1;return 'D-'+y+'-'+String(n).padStart(3,'0')}
 
@@ -162,7 +162,7 @@ function quoteText(q){
   const p=prospectById(q.prospectId),s=S.settings,c=calcQuote(q);
   let t=`DEVIS ${q.num}\n${s.agency}${s.commercial?' · '+s.commercial:''}${s.phone?' · '+s.phone:''}\n\nClient : ${prospectLabel(p)}${p&&p.name&&p.business?' ('+p.name+')':''}\n`;
   t+=c.lines.map(l=>'• '+l[0]+' : '+eur(l[1])).join('\n');
-  t+=`\n\nTOTAL (paiement unique) : ${eur(c.total)}\n${s.firstYear?'Première année d\'hébergement et de nom de domaine incluse.\nEnsuite':'Puis'} ${eur(c.monthly)}/mois (hébergement, nom de domaine, maintenance)\nDélai de livraison : ${q.delay||s.delay}\n\n0 € à payer avant d'avoir vu votre site.`;
+  t+=`\n\nTOTAL TOUT COMPRIS (paiement unique) : ${eur(c.total)}\nTout compris : création du site, hébergement, nom de domaine, maintenance et modifications.\nDélai de livraison : ${q.delay||s.delay}\n\n0 € à payer avant d'avoir vu votre site.`;
   return t;
 }
 function apptText(a){
@@ -195,7 +195,7 @@ function csvProspects(){
   return toCSV([head].concat(S.prospects.map(p=>[p.business,p.name,p.phone,p.email,p.address,p.metier,(STATUS[p.status]||[p.status])[0],(HEAT[p.heat]||[p.heat])[0],(p.viewed||[]).map(id=>(DEMO_BY_ID[id]||{}).name||id).join(', '),(p.notes||[]).map(n=>n.x).join(' | '),fmtDT(p.createdAt)])));
 }
 function csvAppts(){return toCSV([['Date','Heure','Commerce','Contact','Téléphone','Lieu','Objet','Statut','Notes']].concat(S.appts.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(a=>{const p=prospectById(a.prospectId)||{};return[a.date,a.time,p.business,p.name,p.phone,a.place,a.goal,a.status,a.notes]})))}
-function csvQuotes(){return toCSV([['N°','Date','Commerce','Total','Mensualité','Statut','Options','Notes']].concat(S.quotes.map(q=>{const p=prospectById(q.prospectId)||{},c=calcQuote(q);return[q.num,fmtDT(q.createdAt),p.business||p.name,c.total,c.monthly,q.status,(q.opts||[]).join(', '),q.notes]})))}
+function csvQuotes(){return toCSV([['N°','Date','Commerce','Total','Statut','Options','Notes']].concat(S.quotes.map(q=>{const p=prospectById(q.prospectId)||{},c=calcQuote(q);return[q.num,fmtDT(q.createdAt),p.business||p.name,c.total,q.status,(q.opts||[]).join(', '),q.notes]})))}
 
 /* ===== UI utilitaires ===== */
 function toast(msg){

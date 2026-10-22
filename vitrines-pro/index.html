@@ -656,7 +656,7 @@ function hoursRows(H){
 let storageOK=true;
 function defaults(){return{
  settings:{agency:'Votre Agence',tagline:'Sites internet pour commerces de proximité',commercial:'',phone:'',email:'',city:'',pin:'1234',pinChanged:false,
-  price:500,monthly:29,delay:'7 jours ouvrés',firstYear:true,
+  price:590,delay:'7 jours ouvrés',
   rdv:{days:[1,2,3,4,5,6],start:'09:00',end:'18:00',step:30},
   options:[
    {id:'resa',n:'Réservation en ligne',p:150},{id:'shop',n:'Commande en ligne et retrait en boutique',p:250},
@@ -694,7 +694,7 @@ function calcQuote(q){
   (q.opts||[]).forEach(id=>{const o=s.options.find(x=>x.id===id);if(!o)return;const n=o.unit?(+q.pages||0):1;if(n>0){const a=o.p*n;total+=a;lines.push([o.n+(o.unit?' × '+n:''),a])}});
   const disc=+q.discount||0;if(disc>0){total-=disc;lines.push(['Remise',-disc])}
   if(q.custom!==''&&q.custom!=null&&!isNaN(+q.custom)){total=+q.custom}
-  return{total:Math.max(0,total),lines,monthly:+s.monthly||0};
+  return{total:Math.max(0,total),lines};
 }
 function nextQuoteNum(){const y=new Date().getFullYear();const n=S.quotes.filter(q=>String(q.num||'').includes('-'+y+'-')).length+1;return 'D-'+y+'-'+String(n).padStart(3,'0')}
 
@@ -704,7 +704,7 @@ function quoteText(q){
   const p=prospectById(q.prospectId),s=S.settings,c=calcQuote(q);
   let t=`DEVIS ${q.num}\n${s.agency}${s.commercial?' · '+s.commercial:''}${s.phone?' · '+s.phone:''}\n\nClient : ${prospectLabel(p)}${p&&p.name&&p.business?' ('+p.name+')':''}\n`;
   t+=c.lines.map(l=>'• '+l[0]+' : '+eur(l[1])).join('\n');
-  t+=`\n\nTOTAL (paiement unique) : ${eur(c.total)}\n${s.firstYear?'Première année d\'hébergement et de nom de domaine incluse.\nEnsuite':'Puis'} ${eur(c.monthly)}/mois (hébergement, nom de domaine, maintenance)\nDélai de livraison : ${q.delay||s.delay}\n\n0 € à payer avant d'avoir vu votre site.`;
+  t+=`\n\nTOTAL TOUT COMPRIS (paiement unique) : ${eur(c.total)}\nTout compris : création du site, hébergement, nom de domaine, maintenance et modifications.\nDélai de livraison : ${q.delay||s.delay}\n\n0 € à payer avant d'avoir vu votre site.`;
   return t;
 }
 function apptText(a){
@@ -737,7 +737,7 @@ function csvProspects(){
   return toCSV([head].concat(S.prospects.map(p=>[p.business,p.name,p.phone,p.email,p.address,p.metier,(STATUS[p.status]||[p.status])[0],(HEAT[p.heat]||[p.heat])[0],(p.viewed||[]).map(id=>(DEMO_BY_ID[id]||{}).name||id).join(', '),(p.notes||[]).map(n=>n.x).join(' | '),fmtDT(p.createdAt)])));
 }
 function csvAppts(){return toCSV([['Date','Heure','Commerce','Contact','Téléphone','Lieu','Objet','Statut','Notes']].concat(S.appts.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(a=>{const p=prospectById(a.prospectId)||{};return[a.date,a.time,p.business,p.name,p.phone,a.place,a.goal,a.status,a.notes]})))}
-function csvQuotes(){return toCSV([['N°','Date','Commerce','Total','Mensualité','Statut','Options','Notes']].concat(S.quotes.map(q=>{const p=prospectById(q.prospectId)||{},c=calcQuote(q);return[q.num,fmtDT(q.createdAt),p.business||p.name,c.total,c.monthly,q.status,(q.opts||[]).join(', '),q.notes]})))}
+function csvQuotes(){return toCSV([['N°','Date','Commerce','Total','Statut','Options','Notes']].concat(S.quotes.map(q=>{const p=prospectById(q.prospectId)||{},c=calcQuote(q);return[q.num,fmtDT(q.createdAt),p.business||p.name,c.total,q.status,(q.opts||[]).join(', '),q.notes]})))}
 
 /* ===== UI utilitaires ===== */
 function toast(msg){
@@ -1472,7 +1472,7 @@ function pageHome(){
   <h1>Votre commerce, <em>en ligne,</em> sans rien payer d'avance.</h1>
   <p class="sub">${esc(s.tagline||'')} Parcourez des exemples de sites prêts à être adaptés à votre commerce : vos photos, vos horaires, vos prix.</p>
   <div class="row" style="margin-top:22px"><button class="btn sun" data-scrollto="#demos">Parcourir les démos ${ic('arrow',18)}</button><button class="btn ghost" data-go="/offre">Notre offre</button></div>
-  <div class="stats-line"><span>0 € avant de voir votre site</span><span>${eur(s.price)} paiement unique</span><span>Prêt en ${esc(s.delay)}</span></div></div></section>
+  <div class="stats-line"><span>0 € avant de voir votre site</span><span>${eur(s.price)} tout compris</span><span>Prêt en ${esc(s.delay)}</span></div></div></section>
   <div class="page gut"><div class="sec">${vp?`<div class="card" style="border-color:#f1d98b;background:#fff9e6"><h3>Visite en cours : ${esc(prospectLabel(vp))}</h3><p class="hint">${(vp.viewed||[]).length} démo${(vp.viewed||[]).length>1?'s':''} montrée${(vp.viewed||[]).length>1?'s':''} à ce prospect. Elles sont enregistrées dans sa fiche.</p><div class="row" style="margin-top:12px"><button class="btn sm" data-go="/rdv?prospect=${vp.id}">Fixer un 2e RDV</button><button class="btn sm line" data-go="/devis?prospect=${vp.id}">Devis sur mesure</button><button class="btn sm line" data-endvisit>Terminer la visite</button></div></div>`
    :`<div class="card"><h3>Vous êtes chez un commerçant ?</h3><p class="hint">Démarrez une visite : les démos que vous lui montrez sont automatiquement notées dans sa fiche.</p><div style="margin-top:12px"><button class="btn sm" data-startvisit>${ic('plus',16)} Démarrer une visite</button></div></div>`}</div>
   <div class="sec" id="demos"><h2>Choisissez une démo</h2><p class="lead">Touchez un commerce pour parcourir son site comme le ferait un client.</p>
@@ -1496,19 +1496,19 @@ function startVisitModal(){
 function pageOffre(){
   const s=S.settings;
   const html=`<div class="page gut"><div class="pagehead"><div class="eyebrow" style="color:var(--blue)">Notre offre</div><h1>Votre site internet, prêt avant que vous payiez.</h1><p>Nous créons votre site avec vos photos, vos horaires et vos prix. Vous le découvrez, vous demandez des ajustements, et vous ne payez que s'il vous plaît.</p></div>
-  <div class="offer-hero"><div class="big">${eur(s.price)}<small>paiement unique, une fois votre site validé</small></div><div class="row" style="margin-top:18px"><span class="badge" style="background:var(--sun);color:#1b1500;font-size:14px;padding:6px 14px">0 € avant d'avoir vu votre site</span></div>
-  <p style="margin-top:16px;opacity:.92">${s.firstYear?'Première année d\'hébergement et de nom de domaine incluse. ':''}Ensuite ${eur(s.monthly)} par mois pour l'hébergement, la sécurité et les petites modifications.</p>
+  <div class="offer-hero"><div class="big">${eur(s.price)}<small>tout compris, paiement unique une fois votre site validé</small></div><div class="row" style="margin-top:18px"><span class="badge" style="background:var(--sun);color:#1b1500;font-size:14px;padding:6px 14px">0 € avant d'avoir vu votre site</span></div>
+  <p style="margin-top:16px;opacity:.92">Création du site, hébergement, nom de domaine, maintenance et modifications : tout est compris dans ce prix. Pas d'abonnement, pas de frais cachés.</p>
   <div class="row" style="margin-top:18px"><button class="btn sun" data-go="/devis">Devis sur mesure</button><button class="btn ghost" data-go="/rdv">Prendre un 2e RDV</button></div></div>
   <div class="sec"><h2>Comment ça se passe</h2><div class="steps3"><div class="st"><b class="n">1</b><h3>On crée votre site</h3><p class="hint">À partir de vos infos et de vos photos. Cela ne vous coûte rien.</p></div><div class="st"><b class="n">2</b><h3>Vous le découvrez</h3><p class="hint">Nous vous le présentons sur votre téléphone. On ajuste ce que vous voulez changer.</p></div><div class="st"><b class="n">3</b><h3>Il vous plaît, il est à vous</h3><p class="hint">Paiement unique, mise en ligne en ${esc(s.delay)}, et vous recevez votre accès pour le modifier.</p></div></div></div>
-  <div class="sec"><h2>Ce qui est inclus</h2><div class="card"><ul class="check">${['Site sur mesure, adapté au téléphone, à la tablette et à l\'ordinateur','Vos photos, vos horaires, vos prix et vos coordonnées','Horaires « ouvert maintenant » mis à jour en direct','Boutons appeler, itinéraire et réseaux sociaux en un clic','Mentions légales et page de confidentialité','Mise en ligne, nom de domaine en .fr et certificat de sécurité','Un espace administrateur pour modifier textes, photos et prix','Une retouche gratuite après la mise en ligne'].map(t=>`<li>${ic('check',20)}<span>${esc(t)}</span></li>`).join('')}</ul></div></div>
+  <div class="sec"><h2>Ce qui est inclus</h2><div class="card"><ul class="check">${['Site sur mesure, adapté au téléphone, à la tablette et à l\'ordinateur','Vos photos, vos horaires, vos prix et vos coordonnées','Horaires « ouvert maintenant » mis à jour en direct','Boutons appeler, itinéraire et réseaux sociaux en un clic','Mentions légales et page de confidentialité','Mise en ligne, nom de domaine en .fr et certificat de sécurité','Hébergement et nom de domaine inclus','Maintenance et sauvegardes incluses','Modifications possibles (textes, photos, horaires, prix) sans frais supplémentaires'].map(t=>`<li>${ic('check',20)}<span>${esc(t)}</span></li>`).join('')}</ul></div></div>
   <div class="sec"><h2>Options à la carte</h2><p class="lead">Ajoutez seulement ce dont vous avez besoin.</p><div class="card"><table class="tb"><tbody>${s.options.map(o=>`<tr><td>${esc(o.n)}</td><td style="text-align:right;font-weight:700;white-space:nowrap">${o.unit?'':'+ '}${eur(o.p)}${o.unit?' / page':''}</td></tr>`).join('')}</tbody></table></div></div>
   <div class="sec"><h2>Ce que ça change pour vous</h2><div class="card"><ul class="check">${['Vos clients vous trouvent sur Google, de jour comme de nuit','Ils voient vos horaires, vos prix et vos photos avant de venir','Ils réservent ou commandent sans vous déranger','Vous avez un site propre à montrer, sur vos cartes et vos réseaux'].map(t=>`<li>${ic('check',20)}<span>${esc(t)}</span></li>`).join('')}</ul></div></div>
   <div class="sec faqs"><h2>Questions fréquentes</h2>
    <details><summary>Dois-je payer pour voir mon site ?</summary><p>Non. Nous préparons votre site avant tout paiement. Vous ne réglez qu'une fois satisfait.</p></details>
    <details><summary>Le site m'appartient-il ?</summary><p>Oui. Une fois le paiement unique effectué, le site et son contenu sont à vous. Le nom de domaine est enregistré à votre nom.</p></details>
-   <details><summary>Que comprend l'abonnement mensuel ?</summary><p>L'hébergement, la sécurité, les sauvegardes et les petites modifications (horaires, prix, photos). Il est sans engagement de durée.</p></details>
+   <details><summary>Que comprend le prix de ${eur(s.price)} ?</summary><p>La création du site, l'hébergement, le nom de domaine, la maintenance et les modifications. Tout est compris, sans abonnement ni frais cachés.</p></details>
    <details><summary>Combien de temps pour mettre le site en ligne ?</summary><p>${esc(s.delay)} après validation du site et réception de vos photos et informations.</p></details>
-   <details><summary>Puis-je modifier mon site moi-même ?</summary><p>Oui, grâce à votre espace administrateur. Et si vous préférez, vous nous envoyez un message et on s'en occupe.</p></details></div>
+   <details><summary>Puis-je faire modifier mon site ?</summary><p>Oui, sans frais supplémentaires. Envoyez-nous un message (textes, photos, horaires, prix) et nous mettons votre site à jour.</p></details></div>
   <div class="promo"><h3>On en parle ?</h3><p>${s.commercial?esc(s.commercial)+' est votre interlocuteur. ':''}${s.phone?'Appelez-nous au '+esc(s.phone)+' ou ':''}fixez un rendez-vous pour découvrir votre site sur mesure.</p><div class="row"><button class="btn sun" data-go="/rdv">Prendre un 2e RDV</button><button class="btn ghost" data-go="/devis">Devis sur mesure</button></div></div></div>`;
   return{html};
 }
@@ -1523,7 +1523,7 @@ function pageDevis(qs){
     const box=$('#dv',root);
     const cq=()=>calcQuote({opts:[...f.opts],pages:f.pages,discount:+f.discount||0,custom:f.custom});
     const optsSel=()=>S.settings.options.filter(o=>!o.unit);
-    function totalsBar(){const c=cq();return `<div class="sticky-total"><div><small>Total · paiement unique</small><b>${eur(c.total)}</b><small>puis ${eur(c.monthly)}/mois</small></div><button class="btn sun" data-save>Enregistrer le devis</button></div>`}
+    function totalsBar(){const c=cq();return `<div class="sticky-total"><div><small>Total tout compris · paiement unique</small><b>${eur(c.total)}</b><small>hébergement, maintenance et modifications inclus</small></div><button class="btn sun" data-save>Enregistrer le devis</button></div>`}
     function draw(){
       if(f.saved){done();return}
       const c=cq();
@@ -1743,8 +1743,7 @@ function tDevis(box,redraw){
 function tReglages(box,redraw){
   const s=S.settings,fld=(l,k,v,t)=>`<label class="fld"><span>${l}</span><input class="inp" data-s="${k}" ${t?`type="${t}" inputmode="decimal"`:''} value="${esc(v)}"></label>`;
   box.innerHTML=`<div class="card" style="margin-top:12px"><h3>Votre agence</h3><p class="hint">Ces informations apparaissent sur l'accueil, l'offre et les devis.</p><div class="grid2">${fld('Nom de l\'agence','agency',s.agency)}${fld('Slogan','tagline',s.tagline)}${fld('Nom du commercial','commercial',s.commercial)}${fld('Téléphone','phone',s.phone,'tel')}${fld('E-mail','email',s.email,'email')}${fld('Ville','city',s.city)}</div></div>
-  <div class="card"><h3>Tarifs</h3><div class="grid2">${fld('Prix du site (paiement unique, €)','price',s.price,'number')}${fld('Mensualité (€)','monthly',s.monthly,'number')}${fld('Délai de livraison','delay',s.delay)}</div>
-  <button class="opt" data-fy aria-pressed="${s.firstYear}"><span class="box">${ic('check',14)}</span><b>Première année d'hébergement et de domaine incluse</b></button>
+  <div class="card"><h3>Tarifs</h3><div class="grid2">${fld('Prix tout compris (paiement unique, €)','price',s.price,'number')}${fld('Délai de livraison','delay',s.delay)}</div>
   <h3 style="margin-top:18px">Prix des options</h3>${s.options.map(o=>`<label class="fld"><span>${esc(o.n)}${o.unit?' (par page)':''}</span><input class="inp" type="number" inputmode="decimal" data-o="${o.id}" value="${o.p}"></label>`).join('')}</div>
   <div class="card"><h3>Disponibilités pour les rendez-vous</h3><div class="lbl" style="margin-top:10px">Jours</div><div class="seg" id="wd">${[1,2,3,4,5,6,0].map(k=>`<button data-wd="${k}" aria-pressed="${s.rdv.days.includes(k)}">${DAYS_S[k]}</button>`).join('')}</div><div class="grid2"><label class="fld"><span>De</span><input class="inp" type="time" data-r="start" value="${s.rdv.start}"></label><label class="fld"><span>À</span><input class="inp" type="time" data-r="end" value="${s.rdv.end}"></label><label class="fld"><span>Durée d'un créneau</span><select class="sel" data-r="step">${[15,30,45,60].map(n=>`<option value="${n}"${+s.rdv.step===n?' selected':''}>${n} min</option>`).join('')}</select></label></div></div>
   <div class="card"><h3>Code de l'espace admin</h3><div class="grid2"><label class="fld"><span>Nouveau code (4 chiffres ou plus)</span><input class="inp" id="np" type="password" inputmode="numeric" maxlength="12" autocomplete="off"></label><div style="align-self:end"><button class="btn line" data-pin style="margin-top:14px">Changer le code</button></div></div></div>`;
@@ -1754,7 +1753,6 @@ function tReglages(box,redraw){
     if(k.r){s.rdv[k.r]=e.target.value;save()}};
   box.onchange=e=>{if(e.target.dataset.r==='step'){s.rdv.step=+e.target.value;save()}};
   box.onclick=e=>{
-    if(e.target.closest('[data-fy]')){s.firstYear=!s.firstYear;save();tReglages(box,redraw);return}
     const w=e.target.closest('[data-wd]');if(w){const k=+w.dataset.wd,a=s.rdv.days;a.includes(k)?a.splice(a.indexOf(k),1):a.push(k);save();w.setAttribute('aria-pressed',a.includes(k));return}
     if(e.target.closest('[data-pin]')){const v=$('#np',box).value;if(!/^\d{4,12}$/.test(v)){toast('Le code doit contenir 4 chiffres au minimum');return}s.pin=v;s.pinChanged=true;save();$('#np',box).value='';toast('Code modifié')}};
 }
@@ -1802,7 +1800,7 @@ function renderDemoPage(id){
   const i=DEMOS.indexOf(D),pv=DEMOS[(i+DEMOS.length-1)%DEMOS.length],nx=DEMOS[(i+1)%DEMOS.length],s=S.settings;
   app.innerHTML=`<div class="dbar"><div class="in gut"><button data-go="/">${ic('left',16)} Démos</button><span class="tg">DÉMO</span><span class="nm">${esc(D.metier)}</span><button class="nv" data-go="/demo/${pv.id}" aria-label="Démo précédente : ${esc(pv.name)}">${ic('left',16)}</button><button class="nv" data-go="/demo/${nx.id}" aria-label="Démo suivante : ${esc(nx.name)}">${ic('right',16)}</button></div></div>`
    +renderSite(D)
-   +`<section class="demo-end"><div class="page gut"><h3>Ce site peut être le vôtre.</h3><p>Zéro euro avant d'avoir vu votre site fini. Ensuite ${eur(s.price)} en paiement unique${s.firstYear?', première année d\'hébergement incluse':''}, puis ${eur(s.monthly)} par mois.</p><div class="row"><button class="btn sun" data-go="/devis?demo=${D.id}">Devis sur mesure</button><button class="btn ghost" data-go="/rdv?demo=${D.id}">Prendre un 2e RDV</button><button class="btn ghost" data-go="/offre">Notre offre</button></div></div></section>
+   +`<section class="demo-end"><div class="page gut"><h3>Ce site peut être le vôtre.</h3><p>Zéro euro avant d'avoir vu votre site fini. Ensuite ${eur(s.price)} en paiement unique, tout compris : création, hébergement, maintenance et modifications, sans abonnement.</p><div class="row"><button class="btn sun" data-go="/devis?demo=${D.id}">Devis sur mesure</button><button class="btn ghost" data-go="/rdv?demo=${D.id}">Prendre un 2e RDV</button><button class="btn ghost" data-go="/offre">Notre offre</button></div></div></section>
    <div class="dfab"><button class="a" data-go="/devis?demo=${D.id}">Je veux ce site ${ic('arrow',18)}</button></div>`;
   initSite($('.site',app),D);
 }

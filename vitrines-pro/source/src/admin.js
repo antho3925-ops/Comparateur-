@@ -119,8 +119,7 @@ function tDevis(box,redraw){
 function tReglages(box,redraw){
   const s=S.settings,fld=(l,k,v,t)=>`<label class="fld"><span>${l}</span><input class="inp" data-s="${k}" ${t?`type="${t}" inputmode="decimal"`:''} value="${esc(v)}"></label>`;
   box.innerHTML=`<div class="card" style="margin-top:12px"><h3>Votre agence</h3><p class="hint">Ces informations apparaissent sur l'accueil, l'offre et les devis.</p><div class="grid2">${fld('Nom de l\'agence','agency',s.agency)}${fld('Slogan','tagline',s.tagline)}${fld('Nom du commercial','commercial',s.commercial)}${fld('Téléphone','phone',s.phone,'tel')}${fld('E-mail','email',s.email,'email')}${fld('Ville','city',s.city)}</div></div>
-  <div class="card"><h3>Tarifs</h3><div class="grid2">${fld('Prix du site (paiement unique, €)','price',s.price,'number')}${fld('Mensualité (€)','monthly',s.monthly,'number')}${fld('Délai de livraison','delay',s.delay)}</div>
-  <button class="opt" data-fy aria-pressed="${s.firstYear}"><span class="box">${ic('check',14)}</span><b>Première année d'hébergement et de domaine incluse</b></button>
+  <div class="card"><h3>Tarifs</h3><div class="grid2">${fld('Prix tout compris (paiement unique, €)','price',s.price,'number')}${fld('Délai de livraison','delay',s.delay)}</div>
   <h3 style="margin-top:18px">Prix des options</h3>${s.options.map(o=>`<label class="fld"><span>${esc(o.n)}${o.unit?' (par page)':''}</span><input class="inp" type="number" inputmode="decimal" data-o="${o.id}" value="${o.p}"></label>`).join('')}</div>
   <div class="card"><h3>Disponibilités pour les rendez-vous</h3><div class="lbl" style="margin-top:10px">Jours</div><div class="seg" id="wd">${[1,2,3,4,5,6,0].map(k=>`<button data-wd="${k}" aria-pressed="${s.rdv.days.includes(k)}">${DAYS_S[k]}</button>`).join('')}</div><div class="grid2"><label class="fld"><span>De</span><input class="inp" type="time" data-r="start" value="${s.rdv.start}"></label><label class="fld"><span>À</span><input class="inp" type="time" data-r="end" value="${s.rdv.end}"></label><label class="fld"><span>Durée d'un créneau</span><select class="sel" data-r="step">${[15,30,45,60].map(n=>`<option value="${n}"${+s.rdv.step===n?' selected':''}>${n} min</option>`).join('')}</select></label></div></div>
   <div class="card"><h3>Code de l'espace admin</h3><div class="grid2"><label class="fld"><span>Nouveau code (4 chiffres ou plus)</span><input class="inp" id="np" type="password" inputmode="numeric" maxlength="12" autocomplete="off"></label><div style="align-self:end"><button class="btn line" data-pin style="margin-top:14px">Changer le code</button></div></div></div>`;
@@ -130,7 +129,6 @@ function tReglages(box,redraw){
     if(k.r){s.rdv[k.r]=e.target.value;save()}};
   box.onchange=e=>{if(e.target.dataset.r==='step'){s.rdv.step=+e.target.value;save()}};
   box.onclick=e=>{
-    if(e.target.closest('[data-fy]')){s.firstYear=!s.firstYear;save();tReglages(box,redraw);return}
     const w=e.target.closest('[data-wd]');if(w){const k=+w.dataset.wd,a=s.rdv.days;a.includes(k)?a.splice(a.indexOf(k),1):a.push(k);save();w.setAttribute('aria-pressed',a.includes(k));return}
     if(e.target.closest('[data-pin]')){const v=$('#np',box).value;if(!/^\d{4,12}$/.test(v)){toast('Le code doit contenir 4 chiffres au minimum');return}s.pin=v;s.pinChanged=true;save();$('#np',box).value='';toast('Code modifié')}};
 }
