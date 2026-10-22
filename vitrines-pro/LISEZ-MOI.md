@@ -13,7 +13,10 @@ Une appli unique (`index.html`) qui sert de **plaquette** et de **démo** en mag
 
 Fichiers à mettre en ligne : `index.html`, `sw.js`, `manifest.webmanifest`, `icon-192.png`, `icon-512.png`.
 
-## Récupérer les notes du commercial
+## Synchronisation en direct
+Voir `GUIDE-SYNCHRO.md` : le commercial note, tu vois tout sur ton téléphone, même si le réseau coupe.
+
+## Sauvegarde manuelle (secours)
 Espace admin → Données → « Envoyer la sauvegarde » (WhatsApp, SMS, mail), puis sur le téléphone du patron : Données → « Importer » et coller le texte. « Envoyer le résumé du jour » donne un texte lisible.
 
 ## Avant la première visite

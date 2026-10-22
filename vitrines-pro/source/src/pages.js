@@ -133,7 +133,7 @@ function pageDevis(qs){
       if(e.target.closest('[data-save]')){
         if(!ppValid(P)){toast('Indiquez au moins le nom du commerce ou du contact');$('[data-pp="business"]',box).focus();return}
         const p=ppCommit(P),c=cq(),q={id:uid(),num:nextQuoteNum(),prospectId:p.id,createdAt:Date.now(),updatedAt:Date.now(),status:'envoye',opts:[...f.opts],pages:f.pages,discount:+f.discount||0,custom:f.custom,delay:f.delay,budget:f.budget,notes:f.notes,demo:f.demo,total:c.total};
-        S.quotes.unshift(q);bumpStatus(p,'devis');if(f.demo){const pp=prospectById(p.id);pp.viewed=pp.viewed||[];if(!pp.viewed.includes(f.demo))pp.viewed.push(f.demo)}if(f.notes)addNote(p.id,'Devis '+q.num+' : '+f.notes);save();f.saved=q;toast('Devis '+q.num+' enregistré');draw();window.scrollTo(0,0)}
+        S.quotes.unshift(q);bumpStatus(p,'devis');if(f.demo){const pp=prospectById(p.id);pp.viewed=pp.viewed||[];if(!pp.viewed.includes(f.demo)){pp.viewed.push(f.demo);pp.updatedAt=Date.now()}}if(f.notes)addNote(p.id,'Devis '+q.num+' : '+f.notes);save();f.saved=q;toast('Devis '+q.num+' enregistré');draw();window.scrollTo(0,0)}
     });
     box.addEventListener('input',e=>{const k=e.target.dataset&&e.target.dataset.f;if(!k)return;f[k]=e.target.value;if(['discount','custom'].includes(k))$('#tb',box).innerHTML=totalsBar()});
     box.addEventListener('change',e=>{if(e.target.dataset&&e.target.dataset.f==='demo')f.demo=e.target.value});
@@ -196,4 +196,13 @@ function icsFor(a){
   const p=prospectById(a.prospectId)||{},[y,mo,d]=a.date.split('-'),[h,mi]=a.time.split(':'),end=minT(toMin(a.time)+45).split(':');
   const z=n=>String(n).padStart(2,'0'),stamp=new Date().toISOString().replace(/[-:]/g,'').slice(0,15)+'Z';
   return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Vitrines Pro//FR','BEGIN:VEVENT','UID:'+a.id+'@vitrines-pro','DTSTAMP:'+stamp,`DTSTART:${y}${mo}${d}T${h}${mi}00`,`DTEND:${y}${mo}${d}T${z(end[0])}${z(end[1])}00`,'SUMMARY:RDV '+(prospectLabel(p)),'LOCATION:'+(a.place||''),'DESCRIPTION:'+String(a.goal||'').replace(/\n/g,' '),'END:VEVENT','END:VCALENDAR'].join('\r\n');
+}
+
+/* --- rejoindre l'équipe (lien reçu du patron) --- */
+function pageJoin(qs,parts){
+  const cfg=parseJoin(decodeURIComponent((parts&&parts[1])||''));
+  const html=`<div class="page gut"><div class="narrow"><div class="pagehead"><h1>Rejoindre l'équipe</h1><p>${cfg?'Ce téléphone va se connecter à la synchronisation de l\'équipe. Vos notes et vos rendez-vous seront partagés en direct.':'Ce lien n\'est pas valide. Demandez-en un nouveau.'}</p></div>${cfg?`<div class="card"><p class="hint">Projet : <b>${esc(cfg.pid)}</b></p><button class="btn block" style="margin-top:14px" data-join>Connecter ce téléphone</button><p class="hint" id="jst" style="margin-top:10px"></p></div>`:`<button class="btn block" data-go="/">Retour à l'accueil</button>`}</div></div>`;
+  return{html,init(root){
+    const b=$('[data-join]',root);if(!b)return;
+    b.onclick=async()=>{$('#jst',root).textContent='Connexion…';await syncConnect(cfg);if(S.sync.err){$('#jst',root).textContent='Échec : '+S.sync.err;return}toast('Connecté à l\'équipe');go('/admin')};}};
 }

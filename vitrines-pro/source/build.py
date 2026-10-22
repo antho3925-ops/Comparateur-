@@ -1,7 +1,7 @@
 import re, json, base64, os, sys
 from PIL import Image, ImageDraw
 SRC='src/'
-js_files=['core.js','engine.js','demos1.js','demos2.js','demos3.js','pages.js','admin.js','main.js']
+js_files=['core.js','sync.js','engine.js','demos1.js','demos2.js','demos3.js','pages.js','admin.js','main.js']
 js=''.join(open(SRC+f).read()+'\n' for f in js_files)
 demos_src=''.join(open(SRC+f).read() for f in ['demos1.js','demos2.js','demos3.js'])
 ids=set(re.findall(r"(?:img|id|cover|before|after):\s*'?(\d+[ab]?)'?",demos_src))

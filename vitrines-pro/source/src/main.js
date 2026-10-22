@@ -27,7 +27,7 @@ function render(){
   document.body.style.background='';
   if(key==='demo'){renderDemoPage(parts[1]);return}
   document.body.classList.add('has-tabs');
-  const pg=({'':pageHome,offre:pageOffre,devis:pageDevis,rdv:pageRdv,admin:pageAdmin}[key]||pageHome)(qs);
+  const pg=({'':pageHome,offre:pageOffre,devis:pageDevis,rdv:pageRdv,admin:pageAdmin,join:pageJoin}[key]||pageHome)(qs,parts);
   app.innerHTML=topbarHTML()+(storageOK?'':'<div class="warnbar">Le stockage du navigateur est indisponible : les notes seront perdues à la fermeture de la page.</div>')+`<main>${pg.html}</main>`+tabbarHTML(key);
   if(pg.init)pg.init($('main',app));
 }
@@ -40,8 +40,13 @@ document.addEventListener('click',e=>{
   if(e.target.closest('[data-startvisit]')){startVisitModal()}
 });
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();$$('.lb').forEach(x=>x.remove())}});
+SYNC.onChange=(changed)=>{
+  $$('[data-syncst]').forEach(e=>{e.textContent=syncLabel()});
+  const key=(route.split('?')[0].split('/')[1])||'',ae=document.activeElement,typing=ae&&/^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName);
+  if(changed&&!typing&&!modalEl&&(key===''||key==='admin')){const y=window.scrollY;render();window.scrollTo(0,y)}
+};
 function boot(){
-  render();
+  render();syncStart();setInterval(()=>$$('[data-syncst]').forEach(e=>{e.textContent=syncLabel()}),15000);
   try{if(STANDALONE&&'serviceWorker' in navigator&&location.protocol.indexOf('http')===0)navigator.serviceWorker.register('sw.js').catch(()=>{})}catch(e){}
 }
 boot();

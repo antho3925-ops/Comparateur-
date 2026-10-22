@@ -114,7 +114,7 @@ function hoursRows(H){
 let storageOK=true;
 function defaults(){return{
  settings:{agency:'Votre Agence',tagline:'Sites internet pour commerces de proximité',commercial:'',phone:'',email:'',city:'',pin:'1234',pinChanged:false,
-  price:590,monthlyMin:20,monthlyMax:50,delay:'7 jours ouvrés',
+  price:590,monthlyMin:20,monthlyMax:50,commission:100,updatedAt:0,delay:'7 jours ouvrés',
   rdv:{days:[1,2,3,4,5,6],start:'09:00',end:'18:00',step:30},
   options:[
    {id:'resa',n:'Réservation en ligne',p:150},{id:'shop',n:'Commande en ligne et retrait en boutique',p:250},
@@ -122,16 +122,21 @@ function defaults(){return{
    {id:'gmb',n:'Fiche Google optimisée',p:80},{id:'logo',n:'Logo et identité visuelle',p:120},
    {id:'shoot',n:'Shooting photo professionnel',p:150},{id:'en',n:'Version anglaise',p:100},
    {id:'insta',n:'Flux Instagram intégré',p:40},{id:'seo',n:'Référencement local renforcé',p:90}]},
- prospects:[],quotes:[],appts:[],views:{},visit:null,savedAt:0};}
+ prospects:[],quotes:[],appts:[],views:{},viewsU:0,viewsRemote:{},visit:null,savedAt:0,deviceId:uid(),
+ sync:{on:false,cfg:{pid:'',key:'',team:'',host:''},last:'1970-01-01T00:00:00Z',pushed:{},tomb:[],lastOk:0,err:''}};}
 function lsGet(){try{const r=localStorage.getItem(LS_KEY);return r?JSON.parse(r):null}catch(e){storageOK=false;return null}}
 function lsSet(o){try{localStorage.setItem(LS_KEY,JSON.stringify(o));return true}catch(e){storageOK=false;return false}}
 function load(){
   const d=defaults(),s=lsGet();if(!s)return d;
   const st=s.settings||{};
-  return Object.assign(d,s,{settings:Object.assign(d.settings,st,{rdv:Object.assign(d.settings.rdv,st.rdv||{}),options:st.options||d.settings.options})});
+  const sy=Object.assign({},d.sync,s.sync||{});sy.cfg=Object.assign({pid:'',key:'',team:'',host:''},(s.sync||{}).cfg||{});
+  return Object.assign(d,s,{sync:sy,settings:Object.assign(d.settings,st,{rdv:Object.assign(d.settings.rdv,st.rdv||{}),options:st.options||d.settings.options})});
 }
 let S=load();
-function save(){S.savedAt=Date.now();lsSet(S)}
+function save(){S.savedAt=Date.now();lsSet(S);if(typeof syncSoon==='function')syncSoon()}
+function saveQuiet(){lsSet(S)}
+function tombstone(type,id){S.sync.tomb.push({k:type+'-'+id,u:Date.now()});save()}
+function viewsAll(){const t=Object.assign({},S.views);Object.values(S.viewsRemote||{}).forEach(v=>Object.entries(v||{}).forEach(([k,n])=>{t[k]=(t[k]||0)+n}));return t}
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 
 const STATUS={nouveau:['Nouveau','blue'],contacte:['Contacté',''],rdv2:['2e RDV fixé','warn'],devis:['Devis envoyé','warn'],signe:['Signé','ok'],perdu:['Perdu','bad']};
@@ -144,7 +149,7 @@ function addNote(id,text){const p=prospectById(id);if(!p||!text.trim())return;p.
 function logView(demoId){
   S.views[demoId]=(S.views[demoId]||0)+1;
   if(S.visit){const p=prospectById(S.visit);if(p){p.viewed=p.viewed||[];if(!p.viewed.includes(demoId))p.viewed.push(demoId);p.updatedAt=Date.now()}}
-  save();
+  S.viewsU=Date.now();save();
 }
 function optPrice(id){const o=S.settings.options.find(x=>x.id===id);return o?o.p:0}
 function calcQuote(q){
@@ -195,7 +200,7 @@ function csvProspects(){
   return toCSV([head].concat(S.prospects.map(p=>[p.business,p.name,p.phone,p.email,p.address,p.metier,(STATUS[p.status]||[p.status])[0],(HEAT[p.heat]||[p.heat])[0],(p.viewed||[]).map(id=>(DEMO_BY_ID[id]||{}).name||id).join(', '),(p.notes||[]).map(n=>n.x).join(' | '),fmtDT(p.createdAt)])));
 }
 function csvAppts(){return toCSV([['Date','Heure','Commerce','Contact','Téléphone','Lieu','Objet','Statut','Notes']].concat(S.appts.slice().sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).map(a=>{const p=prospectById(a.prospectId)||{};return[a.date,a.time,p.business,p.name,p.phone,a.place,a.goal,a.status,a.notes]})))}
-function csvQuotes(){return toCSV([['N°','Date','Commerce','Total','Statut','Options','Notes']].concat(S.quotes.map(q=>{const p=prospectById(q.prospectId)||{},c=calcQuote(q);return[q.num,fmtDT(q.createdAt),p.business||p.name,c.total,q.status,(q.opts||[]).join(', '),q.notes]})))}
+function csvQuotes(){return toCSV([['N°','Date','Commerce','Total','Statut','Payé','Commission','Commission payée','Plan an 2 (€/mois)','Options','Notes']].concat(S.quotes.map(q=>{const p=prospectById(q.prospectId)||{},c=calcQuote(q);return[q.num,fmtDT(q.createdAt),p.business||p.name,c.total,q.status,q.paid?'oui':'non',q.commission||'',q.commissionPaid?'oui':'non',q.plan||'',(q.opts||[]).join(', '),q.notes]})))}
 
 /* ===== UI utilitaires ===== */
 function toast(msg){
