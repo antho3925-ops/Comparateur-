@@ -114,7 +114,7 @@ function hoursRows(H){
 let storageOK=true;
 function defaults(){return{
  settings:{agency:'Votre Agence',tagline:'Sites internet pour commerces de proximité',commercial:'',phone:'',email:'',city:'',pin:'1234',pinChanged:false,
-  coms:[],price:590,monthlyMin:20,monthlyMax:50,commission:100,updatedAt:0,delay:'7 jours ouvrés',
+  coms:[{id:'COM-0001',name:'Commercial',code:'4821'}],price:590,monthlyMin:20,monthlyMax:50,commission:100,updatedAt:0,delay:'7 jours ouvrés',
   rdv:{days:[1,2,3,4,5,6],start:'09:00',end:'18:00',step:30},
   options:[
    {id:'resa',n:'Réservation en ligne',p:150},{id:'shop',n:'Commande en ligne et retrait en boutique',p:250},
