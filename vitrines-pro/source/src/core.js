@@ -162,7 +162,7 @@ function quoteText(q){
   const p=prospectById(q.prospectId),s=S.settings,c=calcQuote(q);
   let t=`DEVIS ${q.num}\n${s.agency}${s.commercial?' · '+s.commercial:''}${s.phone?' · '+s.phone:''}\n\nClient : ${prospectLabel(p)}${p&&p.name&&p.business?' ('+p.name+')':''}\n`;
   t+=c.lines.map(l=>'• '+l[0]+' : '+eur(l[1])).join('\n');
-  t+=`\n\nTOTAL (paiement unique) : ${eur(c.total)}\nCe prix comprend la création du site et la première année d'hébergement, de nom de domaine, de maintenance et de modifications, offertes.\nÀ partir de la 2e année : de ${eur(s.monthlyMin)} à ${eur(s.monthlyMax)} par mois, selon vos besoins (hébergement et modifications seulement, ou évolution du site si votre activité se développe).\nDélai de livraison : ${q.delay||s.delay}\n\n0 € à payer avant d'avoir vu votre site.`;
+  t+=`\n\nTOTAL (paiement unique) : ${eur(c.total)}\nCe prix est tout compris la première année : création du site, hébergement, nom de domaine, maintenance et modifications. Le devis et la démonstration sont offerts.\nÀ partir de la 2e année : de ${eur(s.monthlyMin)} à ${eur(s.monthlyMax)} par mois, selon vos besoins (hébergement et modifications seulement, ou évolution du site si votre activité se développe).\nDélai de livraison : ${q.delay||s.delay}\n\nRien à payer avant d'avoir vu votre site.`;
   return t;
 }
 function apptText(a){
