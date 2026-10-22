@@ -675,6 +675,8 @@ function load(){
   return Object.assign(d,s,{sync:sy,settings:Object.assign(d.settings,st,{rdv:Object.assign(d.settings.rdv,st.rdv||{}),options:st.options||d.settings.options})});
 }
 let S=load();
+if(!Array.isArray(S.settings.coms))S.settings.coms=[];
+if(!S.settings.coms.some(c=>c.id==='COM-0001')&&!S.settings.comSeeded){S.settings.coms.unshift({id:'COM-0001',name:'Commercial',code:'4821'});S.settings.comSeeded=true}
 function save(){S.savedAt=Date.now();lsSet(S);if(typeof syncSoon==='function')syncSoon()}
 function saveQuiet(){lsSet(S)}
 function tombstone(type,id){S.sync.tomb.push({k:type+'-'+id,u:Date.now()});save()}
