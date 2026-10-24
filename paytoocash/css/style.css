@@ -221,17 +221,17 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .reveal.in { opacity: 1; transform: none; }
 
 /* ---------- Bannière rétro gaming ---------- */
-.banner { position: relative; display: grid; border-radius: 20px; overflow: hidden; text-decoration: none; min-height: 280px; background: #1b1b1b; color: #fff; }
-.banner-img, .banner > .ph { grid-area: 1 / 1; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
+.banner { position: relative; display: grid; border-radius: 20px; overflow: hidden; text-decoration: none; height: 360px; background: #1b1b1b; color: #fff; }
+.banner-img, .banner > .ph { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--ease); }
 .banner > .ph { background: linear-gradient(135deg, #1F6B3A, #123D22); color: var(--gold); place-items: start end; padding: 24px; }
 .banner > .ph .ico { width: 96px; height: 96px; opacity: .5; }
 .banner:hover .banner-img { transform: scale(1.04); }
-.banner-text { grid-area: 1 / 1; align-self: end; padding: 80px 20px 22px; background: linear-gradient(transparent, rgba(0, 0, 0, .82)); }
+.banner-text { position: relative; align-self: end; padding: 80px 20px 22px; background: linear-gradient(transparent, rgba(0, 0, 0, .82)); }
 .banner-text h2 { color: #fff; font-size: clamp(1.3rem, 5vw, 2rem); max-width: 22ch; }
 .banner-text p { opacity: .9; }
 .banner-kicker { display: inline-flex; align-items: center; gap: .4em; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: .08em; font-size: .8rem; margin-bottom: 8px; }
 .banner-kicker .ico { width: 1.6em; height: 1.6em; }
-@media (min-width: 860px) { .banner { min-height: 380px; } .banner-text { padding: 40px; max-width: 640px; background: linear-gradient(90deg, rgba(0, 0, 0, .85), transparent); align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; } }
+@media (min-width: 860px) { .banner { height: 420px; } .banner-text { padding: 40px; max-width: 640px; background: linear-gradient(90deg, rgba(0, 0, 0, .85), transparent); align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; } }
 
 .rachat-teaser { display: flex; flex-direction: column; gap: 16px; }
 @media (min-width: 860px) { .rachat-teaser { flex-direction: row; align-items: center; justify-content: space-between; } }
