@@ -1,0 +1,107 @@
+import { icon } from './icons.js';
+import { loadData } from './store.js';
+import { initPage, finishPage, categoryCard, articleCard, showError } from './layout.js';
+import { infosPratiques } from './infos.js';
+import { esc, pub, smsHref, telIntl } from './util.js';
+
+initPage('accueil');
+const main = document.getElementById('main');
+
+function jsonLd(b) {
+  const days = { lundi: 'Monday', mardi: 'Tuesday', mercredi: 'Wednesday', jeudi: 'Thursday', vendredi: 'Friday', samedi: 'Saturday', dimanche: 'Sunday' };
+  const m = /^(.*?),?\s*(\d{5})\s+(.+)$/.exec(b.adresse || '');
+  const ld = {
+    '@context': 'https://schema.org', '@type': 'Store', name: b.nom, telephone: telIntl(b.tel), email: b.email || undefined,
+    address: m ? { '@type': 'PostalAddress', streetAddress: m[1], postalCode: m[2], addressLocality: m[3], addressCountry: 'FR' } : b.adresse,
+    openingHoursSpecification: b.horaires.filter((h) => h.ouvert).map((h) => ({ '@type': 'OpeningHoursSpecification', dayOfWeek: days[h.jour], opens: h.de, closes: h.a })),
+  };
+  const s = document.createElement('script');
+  s.type = 'application/ld+json';
+  s.textContent = JSON.stringify(ld);
+  document.head.append(s);
+}
+
+try {
+  const data = await loadData();
+  const { boutique: b, categories, articles } = data;
+  const counts = new Map();
+  for (const a of articles) if (a.categorie && a.disponible) counts.set(a.categorie.id, (counts.get(a.categorie.id) || 0) + 1);
+  const derniers = articles.filter((a) => a.disponible).sort((x, y) => String(y.created_at).localeCompare(String(x.created_at))).slice(0, 8);
+  const v = b.vitrine;
+
+  main.innerHTML = `
+    <section class="hero">
+      <div class="wrap hero-in">
+        <img class="hero-logo" src="paytoocash-logo/logo.svg" alt="Paytoocash" width="320" height="76">
+        <h1 class="hero-title">${esc(pub(b.slogan) || 'Nous rachetons tous vos objets en cash')}</h1>
+        <p class="hero-sub">Achat-vente d'occasion à Pontarlier : high-tech, gaming, outillage pro et bien plus, vérifiés et garantis.${pub(b.atout) ? ` ${esc(b.atout)} à visiter.` : ''}</p>
+        <div class="btn-row hero-ctas">
+          <a class="btn btn-gold btn-lg" href="rachat.html">${icon('cash')}Faire racheter un objet</a>
+          <a class="btn btn-white btn-lg" href="catalogue.html">${icon('search')}Voir le catalogue</a>
+        </div>
+        <ul class="hero-points">
+          <li class="anim-icon">${icon('cash')}Paiement cash immédiat</li>
+          <li class="anim-icon">${icon('shield')}Occasion garantie</li>
+          <li class="anim-icon">${icon('store')}${esc(pub(b.atout) || 'Magasin')} à Pontarlier</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="h2">Nos rayons</h2>
+          <a class="link-more" href="catalogue.html">Tout le catalogue ${icon('arrow')}</a>
+        </div>
+        <div class="cat-grid">
+          ${categories.map((c) => categoryCard(c, counts.get(c.id) || 0)).join('')}
+        </div>
+      </div>
+    </section>
+
+    ${derniers.length ? `
+    <section class="section section-alt">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="h2">Derniers arrivages</h2>
+          <a class="link-more" href="catalogue.html">Voir tout ${icon('arrow')}</a>
+        </div>
+        <div class="grid">${derniers.map(articleCard).join('')}</div>
+      </div>
+    </section>` : ''}
+
+    ${v ? `
+    <section class="section">
+      <div class="wrap">
+        <a class="banner reveal anim-icon" href="${esc(v.lien || 'catalogue.html')}">
+          <img class="banner-img" src="${esc(v.photo)}" alt="" loading="lazy" data-fallback="console_portable">
+          <div class="banner-text">
+            <span class="banner-kicker">${icon('console_portable')}${esc(v.categorie || 'Rétro gaming')}</span>
+            <h2>${esc(v.titre)}</h2>
+            <p>En boîte et en loose : venez fouiller en magasin, le stock bouge vite.</p>
+            <span class="btn btn-gold btn-sm">Voir le rayon gaming ${icon('arrow')}</span>
+          </div>
+        </a>
+      </div>
+    </section>` : ''}
+
+    <section class="section section-green">
+      <div class="wrap rachat-teaser reveal">
+        <div>
+          <h2 class="h2">Un objet qui dort dans un placard ?</h2>
+          <p>Apportez-le en magasin : estimation sur place et paiement cash immédiat.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-gold" href="rachat.html">${icon('cash')}Comment ça marche</a>
+          <a class="btn btn-white" href="${smsHref(b.tel, 'Bonjour, je souhaite faire racheter : ')}">${icon('message')}Envoyer un SMS</a>
+        </div>
+      </div>
+    </section>
+
+    ${infosPratiques(b)}`;
+
+  jsonLd(b);
+  finishPage(data);
+} catch (e) {
+  showError(main, e);
+}

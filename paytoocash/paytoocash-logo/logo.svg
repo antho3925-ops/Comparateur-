@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 336 80" width="336" height="80" role="img" aria-label="Paytoocash">
+  <!-- Logo PROVISOIRE : remplacer par le logo.svg fourni par le client. -->
+  <circle cx="40" cy="40" r="32" fill="#E8B530"/>
+  <circle cx="40" cy="40" r="25" fill="none" stroke="#B9851A" stroke-width="3"/>
+  <text x="40" y="52" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="700" fill="#1F6B3A">€</text>
+  <text x="84" y="50" font-family="Arial, Helvetica, sans-serif" font-size="34" font-weight="800" letter-spacing="-0.5" fill="#1F6B3A">Paytoo<tspan fill="#B9851A">cash</tspan></text>
+  <text x="86" y="69" font-family="Arial, Helvetica, sans-serif" font-size="11.5" font-weight="700" letter-spacing="2.2" fill="#4A4A4A">ACHAT · VENTE · RACHAT CASH</text>
+</svg>

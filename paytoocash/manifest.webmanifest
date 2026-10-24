@@ -1,0 +1,14 @@
+{
+  "name": "Paytoocash Pontarlier",
+  "short_name": "Paytoocash",
+  "description": "Achat, vente et rachat cash d'occasion à Pontarlier",
+  "lang": "fr",
+  "start_url": "index.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1F6B3A",
+  "icons": [
+    { "src": "paytoocash-logo/icone.svg", "sizes": "any", "type": "image/svg+xml" },
+    { "src": "paytoocash-logo/icone-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

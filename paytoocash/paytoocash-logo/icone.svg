@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Icône PROVISOIRE : remplacer par l'icone.svg fournie par le client. -->
+  <rect width="512" height="512" rx="112" fill="#1F6B3A"/>
+  <circle cx="256" cy="256" r="170" fill="#E8B530"/>
+  <circle cx="256" cy="256" r="132" fill="none" stroke="#B9851A" stroke-width="16"/>
+  <text x="256" y="322" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="190" font-weight="800" fill="#1F6B3A">€</text>
+</svg>

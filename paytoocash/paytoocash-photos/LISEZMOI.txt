@@ -1,0 +1,4 @@
+Déposez ici les photos du dossier « paytoocash-photos » (dézippé).
+Les noms de fichiers doivent correspondre au champ « photo » de catalogue-paytoocash.json
+(ex. apple-iphone-16-pro-128go-silver.jpg). Tant qu'une photo manque, le site
+affiche l'icône de la catégorie à la place.
