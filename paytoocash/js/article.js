@@ -74,6 +74,7 @@ try {
             <p class="product-price">${formatPrix(a.prix)}</p>
             <div class="product-tags">
               ${a.disponible ? '<span class="chip chip-green">' + icon('check') + 'Disponible en magasin</span>' : '<span class="chip chip-grey">Vendu</span>'}
+              ${a.disponible ? `<span class="chip chip-green">${icon('check')}Testé, en état de marche</span>` : ''}
               ${a.garantie === true ? `<span class="chip chip-gold">${icon('shield')}Garanti</span>` : ''}
               ${a.facture === true ? `<span class="chip chip-gold">${icon('receipt')}Facture</span>` : ''}
             </div>

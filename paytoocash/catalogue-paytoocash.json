@@ -62,7 +62,9 @@
       "etat": "Neuf, fourni avec facture",
       "garantie": true,
       "photo": "paytoocash-photos/apple-watch-se-3-40mm.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Boîte et chargeur",
+      "facture": true
     },
     {
       "id": 4,
@@ -74,7 +76,8 @@
       "etat": "Très bon état",
       "garantie": true,
       "photo": "paytoocash-photos/apple-airpods-pro-1.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Chargeur"
     },
     {
       "id": 5,
@@ -96,10 +99,11 @@
       "categorie": "Outillage pro",
       "type": "Lot d'outils sans fil 18V",
       "prix": 500,
-      "etat": "À confirmer (titre coupé)",
+      "etat": "Très bon état",
       "garantie": null,
       "photo": "paytoocash-photos/dewalt-lot-perfo-scie-sabre-deboulonneuse.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Batteries 18 V, chargeur et coffrets"
     },
     {
       "id": 7,
@@ -108,10 +112,11 @@
       "categorie": "Outillage pro",
       "type": "Pulvérisateur airless",
       "prix": 1500,
-      "etat": "À confirmer (titre coupé)",
+      "etat": "Très bon état",
       "garantie": null,
       "photo": "paytoocash-photos/titan-1150e-performance-airless.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Flexible et pistolet"
     },
     {
       "id": 8,
@@ -136,7 +141,8 @@
       "etat": "Très bon état",
       "garantie": null,
       "photo": "paytoocash-photos/hilti-rt6-22-riveteuse.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "1 batterie 22-110 et chargeur"
     },
     {
       "id": 10,
@@ -150,7 +156,8 @@
       "garantie_jusqu_au": "04/08/2028",
       "photo": "paytoocash-photos/msi-mag-274cxf-ecran-neuf.jpg",
       "disponible": true,
-      "specs": "27\" incurvé, dalle Rapid VA, 280 Hz, 0,5 ms, HDR Ready"
+      "specs": "27\" incurvé, dalle Rapid VA, 280 Hz, 0,5 ms, HDR Ready",
+      "inclus": "Boîte d'origine"
     },
     {
       "id": 11,
@@ -162,7 +169,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "photo": "paytoocash-photos/apple-watch-se-series-2-44mm-cellular.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Boîte et chargeur"
     },
     {
       "id": 12,
@@ -174,7 +182,8 @@
       "etat": "Très bon état",
       "garantie": true,
       "photo": "paytoocash-photos/xiaomi-pro-5-trottinette.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Chargeur"
     },
     {
       "id": 13,
@@ -183,10 +192,11 @@
       "categorie": "Outillage pro",
       "type": "Boulonneuse à choc sans fil",
       "prix": 600,
-      "etat": "À confirmer (titre coupé)",
+      "etat": "Très bon état",
       "garantie": null,
       "photo": "paytoocash-photos/hilti-siw-4at-22-boulonneuse.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Batterie B22-195 et chargeur"
     },
     {
       "id": 14,
@@ -208,10 +218,11 @@
       "categorie": "Audio",
       "type": "Enceinte bluetooth",
       "prix": 160,
-      "etat": "Bon état",
+      "etat": "Très bon état",
       "garantie": true,
       "photo": "paytoocash-photos/jbl-xtreme-3-enceinte.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Chargeur"
     },
     {
       "id": 16,
@@ -224,7 +235,7 @@
       "garantie": true,
       "photo": "paytoocash-photos/meta-quest-3s-128go.jpg",
       "disponible": true,
-      "inclus": "Boîte et 2 manettes"
+      "inclus": "Boîte, 2 manettes et chargeur"
     },
     {
       "id": 17,
@@ -239,7 +250,8 @@
       "photo": "paytoocash-photos/asus-tuf-gaming-tuf506h-pc.jpg",
       "disponible": true,
       "ram": "8 Go",
-      "stockage": "512 Go"
+      "stockage": "512 Go",
+      "inclus": "Boîte et chargeur"
     },
     {
       "id": 18,
@@ -252,7 +264,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "photo": "paytoocash-photos/apple-iphone-16-violet.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Boîte et chargeur"
     },
     {
       "id": 19,
@@ -266,7 +279,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "photo": "paytoocash-photos/apple-iphone-16-pro-128go-silver.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Chargeur"
     },
     {
       "id": 20,
@@ -279,7 +293,7 @@
       "prix": 400,
       "etat": "Parfait état",
       "garantie": true,
-      "inclus": "Coque et clavier",
+      "inclus": "Boîte, coque, clavier et chargeur",
       "photo": "paytoocash-photos/apple-ipad-mini-6-256go-clavier.jpg",
       "disponible": true
     },
@@ -294,7 +308,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "photo": "paytoocash-photos/google-pixel-9-pro-fold-256go.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Boîte, coque et chargeur"
     },
     {
       "id": 22,
@@ -336,7 +351,8 @@
       "garantie_jusqu_au": "07/2028",
       "facture": true,
       "photo": "paytoocash-photos/apple-iphone-17-blanc-256go.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Boîte, coque et chargeur"
     },
     {
       "id": 25,
@@ -364,7 +380,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "photo": "paytoocash-photos/apple-macbook-air-13-m4.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Boîte et chargeur"
     },
     {
       "id": 27,
@@ -378,7 +395,7 @@
       "garantie": null,
       "photo": "paytoocash-photos/samsung-galaxy-tab-s10-ultra-256go.jpg",
       "disponible": true,
-      "inclus": "Étui et stylet S Pen",
+      "inclus": "Étui, stylet S Pen et chargeur",
       "specs": "Batterie : santé 100 %, 134 cycles de charge"
     },
     {
@@ -405,7 +422,7 @@
       "prix": 400,
       "etat": "Parfait état",
       "garantie": true,
-      "inclus": "À confirmer (titre coupé)",
+      "inclus": "Boîte et chargeur",
       "disponible": true,
       "photo": "paytoocash-photos/samsung-galaxy-z-flip-6-256go-bleu.jpg"
     },
@@ -464,7 +481,8 @@
       "garantie_jusqu_au": "30/11/2026",
       "facture": true,
       "disponible": false,
-      "photo": "paytoocash-photos/sony-ps5-slim-edition-fortnite.jpg"
+      "photo": "paytoocash-photos/sony-ps5-slim-edition-fortnite.jpg",
+      "inclus": "Boîte d'origine"
     },
     {
       "id": 34,
@@ -489,7 +507,8 @@
       "garantie": true,
       "specs": "23,8\" Full HD, IPS, 165 Hz (d'après le carton)",
       "disponible": true,
-      "photo": "paytoocash-photos/iiyama-g-master-gb2470hsu-24.jpg"
+      "photo": "paytoocash-photos/iiyama-g-master-gb2470hsu-24.jpg",
+      "inclus": "Boîte d'origine"
     },
     {
       "id": 36,
@@ -498,7 +517,7 @@
       "categorie": "Jardin",
       "type": "Taille-haie thermique",
       "prix": 220,
-      "etat": "Bon état",
+      "etat": "Très bon état",
       "garantie": true,
       "disponible": false,
       "photo": "paytoocash-photos/stihl-hs81t-taille-haie.jpg"
@@ -512,7 +531,7 @@
       "prix": 200,
       "etat": "Parfait état",
       "garantie": null,
-      "inclus": "Batterie 18 V 5 Ah et caisse",
+      "inclus": "Batterie 18 V 5 Ah, chargeur et caisse",
       "disponible": true,
       "photo": "paytoocash-photos/dewalt-dcgg571-graisseuse.jpg"
     },
@@ -525,7 +544,7 @@
       "prix": 450,
       "etat": "Parfait état",
       "garantie": true,
-      "inclus": "Magic Keyboard",
+      "inclus": "Magic Keyboard et chargeur",
       "disponible": false,
       "photo": "paytoocash-photos/apple-ipad-pro-11-m1-magic-keyboard.jpg"
     },
@@ -552,7 +571,8 @@
       "etat": "Très bon état",
       "garantie": true,
       "disponible": true,
-      "photo": "paytoocash-photos/apple-macbook-air-13-rose-gold.jpg"
+      "photo": "paytoocash-photos/apple-macbook-air-13-rose-gold.jpg",
+      "inclus": "Boîte et chargeur"
     },
     {
       "id": 41,
@@ -565,7 +585,8 @@
       "garantie": true,
       "disponible": true,
       "photo": "paytoocash-photos/dell-latitude-5310.jpg",
-      "specs": "Intel Core i5 10e génération"
+      "specs": "Intel Core i5 10e génération",
+      "inclus": "Chargeur"
     },
     {
       "id": 42,
@@ -574,7 +595,7 @@
       "categorie": "Jardin",
       "type": "Fraise à neige thermique",
       "prix": 150,
-      "etat": "Bon état",
+      "etat": "Très bon état",
       "garantie": true,
       "specs": "Moteur Honda",
       "disponible": true,
@@ -587,7 +608,7 @@
       "categorie": "Musique",
       "type": "Guitare électro-acoustique",
       "prix": 200,
-      "etat": "À confirmer (titre coupé)",
+      "etat": "Très bon état",
       "garantie": null,
       "disponible": true,
       "photo": "paytoocash-photos/ibanez-artwood-aw85-electro-acoustique.jpg"
@@ -601,9 +622,9 @@
       "stockage": "256 Go",
       "couleur": "Orange",
       "prix": 1100,
-      "etat": "Bon état",
+      "etat": "Très bon état",
       "garantie": true,
-      "inclus": "À confirmer (titre coupé)",
+      "inclus": "Chargeur",
       "disponible": true,
       "photo": "paytoocash-photos/apple-iphone-17-pro-max-256go-orange.jpg",
       "specs": "Petit choc sur un coin du cadre (visible sur les photos)"
@@ -619,7 +640,8 @@
       "garantie": null,
       "specs": "Hybride, objectifs NIKKOR Z DX 16-50 mm et 50-250 mm f/4.5-6.3 VR",
       "disponible": true,
-      "photo": "paytoocash-photos/nikon-z50-kit-16-50-50-250.jpg"
+      "photo": "paytoocash-photos/nikon-z50-kit-16-50-50-250.jpg",
+      "inclus": "Boîtes, batterie et chargeur"
     }
   ],
   "vitrines": [
