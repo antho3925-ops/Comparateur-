@@ -37,7 +37,9 @@
       "etat": "Parfait état",
       "garantie": true,
       "photo": "paytoocash-photos/aoc-c27g2ze-ecran-gaming.jpg",
-      "disponible": true
+      "disponible": true,
+      "specs": "27\" incurvé, 240 Hz",
+      "inclus": "Câble d'alimentation"
     },
     {
       "id": 2,
@@ -280,7 +282,7 @@
       "garantie": true,
       "photo": "paytoocash-photos/apple-iphone-16-pro-128go-silver.jpg",
       "disponible": true,
-      "inclus": "Chargeur"
+      "inclus": "Coque transparente MagSafe et chargeur"
     },
     {
       "id": 20,
