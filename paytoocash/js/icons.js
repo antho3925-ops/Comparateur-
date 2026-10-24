@@ -33,6 +33,7 @@ export const CATEGORY_ICONS = {
   voiture: { label: 'Auto', svg: '<path d="M3 16v-3.5l2-5A2 2 0 0 1 6.9 6h10.2a2 2 0 0 1 1.9 1.5l2 5V16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 12.5h18"/><circle cx="7" cy="17" r="2"/><circle cx="17" cy="17" r="2"/>' },
   sport: { label: 'Sport', svg: '<circle cx="12" cy="12" r="9"/><path d="M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18M3 12h18"/>' },
   jouet: { label: 'Jouets', svg: '<rect x="4" y="9" width="16" height="11" rx="2"/><path d="M8 9V6.5a4 4 0 0 1 8 0V9"/><path d="M12 13v3"/>' },
+  cartes: { label: 'Cartes à collectionner', svg: '<rect x="3" y="6" width="11" height="15" rx="1.6" transform="rotate(-10 8.5 13.5)"/><rect x="10" y="3" width="11" height="15" rx="1.6" transform="rotate(8 15.5 10.5)"/><path d="m15.6 7.4.9 1.9 2 .3-1.5 1.4.4 2-1.8-1-1.8 1 .4-2-1.5-1.4 2-.3z"/>' },
   carton: { label: 'Divers', svg: '<path d="M3.5 7.5 12 3l8.5 4.5v9L12 21l-8.5-4.5z"/><path d="M3.5 7.5 12 12l8.5-4.5M12 12v9"/>' },
   etiquette: { label: 'Étiquette', svg: `<path d="M3 12.5V4a1 1 0 0 1 1-1h8.5l8.5 8.5-8.5 8.5z"/>${dot(7.5, 7.5, 1.3)}` },
 };

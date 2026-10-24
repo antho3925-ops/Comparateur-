@@ -69,7 +69,6 @@ export function seedToData(seed) {
     created_at: new Date(base + a.id * 60000).toISOString(),
   }));
   const b = seed.boutique || {};
-  const v = (seed.vitrines || [])[0];
   const boutique = {
     nom: b.nom || 'Paytoocash',
     adresse: b.adresse || '',
@@ -82,7 +81,7 @@ export function seedToData(seed) {
     // Conserve la remarque d'origine : elle contient « à confirmer »,
     // elle reste donc visible uniquement dans l'admin.
     horaires_note: b.horaires && /confirmer/i.test(b.horaires) ? b.horaires : '',
-    vitrine: v ? { titre: v.titre, categorie: v.categorie, photo: v.photo, lien: 'catalogue.html?cat=gaming' } : null,
+    vitrine: (seed.vitrines || []).map(({ titre, categorie, texte, icone, lien, photo }) => ({ titre, categorie, texte, icone, lien, photo })),
   };
   return { source: 'json', boutique, categories, articles };
 }
@@ -93,6 +92,9 @@ function relier(data) {
     a.categorie = a.categorie_id != null ? parId.get(String(a.categorie_id)) ?? null : null;
     a.photos = Array.isArray(a.photos) ? a.photos.filter(Boolean) : [];
   }
+  // Ancien format : une seule bannière (objet) au lieu d'une liste.
+  const v = data.boutique.vitrine;
+  data.boutique.vitrine = Array.isArray(v) ? v.filter((x) => x && x.titre) : v?.titre ? [v] : [];
   if (!Array.isArray(data.boutique.horaires) || data.boutique.horaires.length !== 7) {
     data.boutique.horaires = HORAIRES_PAR_DEFAUT;
   }

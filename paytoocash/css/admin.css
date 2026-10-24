@@ -114,6 +114,8 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 .day { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 8px; }
 .day input[type=time] { min-height: 42px; border: 1px solid #D8D8D2; border-radius: 10px; padding: 6px 8px; background: #fff; }
 .day:has(input[type=checkbox]:not(:checked)) input[type=time] { opacity: .35; }
+.vitrine-edit { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; margin: 0 0 12px; }
+.vitrine-edit legend { font-weight: 700; padding: 0 6px; }
 .vitrine-preview { max-height: 180px; border-radius: 12px; margin-top: 4px; }
 .save-bar { position: sticky; bottom: 0; padding: 12px 0 calc(12px + env(safe-area-inset-bottom)); background: linear-gradient(transparent, var(--bg-alt) 30%); }
 .save-bar .btn { width: 100%; }

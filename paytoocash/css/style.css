@@ -233,6 +233,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .banner-kicker .ico { width: 1.6em; height: 1.6em; }
 @media (min-width: 860px) { .banner { height: 420px; } .banner-text { padding: 40px; max-width: 640px; background: linear-gradient(90deg, rgba(0, 0, 0, .85), transparent); align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; } }
 
+.banners { display: grid; gap: 16px; }
+@media (min-width: 1000px) { .banners-2 { grid-template-columns: 1fr 1fr; } .banners-2 .banner-text { max-width: none; background: linear-gradient(transparent, rgba(0, 0, 0, .85)); } }
+
 .rachat-teaser { display: flex; flex-direction: column; gap: 16px; }
 @media (min-width: 860px) { .rachat-teaser { flex-direction: row; align-items: center; justify-content: space-between; } }
 

@@ -193,7 +193,7 @@ async function importer() {
   avance('Catégories créées');
 
   const b = { ...data.boutique };
-  if (b.vitrine?.photo) b.vitrine = { ...b.vitrine, photo: (await photoLocale(b.vitrine.photo, 'vitrines')) || b.vitrine.photo };
+  b.vitrine = await Promise.all((b.vitrine || []).map(async (v) => ({ ...v, photo: (await photoLocale(v.photo, 'vitrines')) || v.photo })));
   const { error: e2 } = await sb.from('boutique').upsert({ id: 1, ...b });
   if (e2) throw e2;
   avance('Infos du magasin enregistrées');
@@ -555,7 +555,8 @@ function choisirIcone(c) {
 function renderBoutique() {
   const b = state.boutique;
   const h = Array.isArray(b.horaires) && b.horaires.length === 7 ? b.horaires : HORAIRES_PAR_DEFAUT;
-  const v = b.vitrine || {};
+  // Les bannières existantes, plus un emplacement vide pour en ajouter une.
+  const vitrines = [...b.vitrine, { titre: '' }];
   const f = (k, label, type = 'text', hint = '') => champ(k, label, b, { type, hint });
   qs('#tab-content').innerHTML = `
     <form id="shop" class="block-form">
@@ -587,20 +588,34 @@ function renderBoutique() {
         ${champ('horaires_note', 'Message sous les horaires', b, { full: true, hint: 'Ex. : Fermé exceptionnellement le 1er novembre. Laissez vide si rien à signaler.' })}
       </section>
       <section class="block">
-        <h2>Bannière de l'accueil</h2>
-        <label class="field check"><input type="checkbox" name="vitrine_on"${b.vitrine ? ' checked' : ''}><span>Afficher la bannière</span></label>
-        <div class="cols">
-          <label class="field"><span>Titre</span><input name="vitrine_titre" value="${esc(v.titre || '')}"></label>
-          <label class="field"><span>Petit titre</span><input name="vitrine_categorie" value="${esc(v.categorie || '')}"></label>
-          <label class="field"><span>Lien</span>
-            <select name="vitrine_lien">
-              <option value="catalogue.html">Tout le catalogue</option>
-              ${state.categories.map((c) => { const l = `catalogue.html?cat=${c.slug}`; return `<option value="${l}"${v.lien === l ? ' selected' : ''}>${esc(c.nom)}</option>`; }).join('')}
-            </select>
-          </label>
-          <label class="field"><span>Photo</span><input type="file" name="vitrine_photo" accept="image/*"></label>
-        </div>
-        ${v.photo ? `<img class="vitrine-preview" src="${esc(v.photo)}" alt="" onerror="this.remove()">` : ''}
+        <h2>Bannières de l'accueil</h2>
+        <p class="muted small">Pour retirer une bannière, décochez « Afficher ». Remplissez le dernier bloc pour en ajouter une.</p>
+        ${vitrines.map((v, i) => `
+        <fieldset class="vitrine-edit">
+          <legend>${v.titre ? esc(v.titre) : 'Nouvelle bannière'}</legend>
+          <label class="field check"><input type="checkbox" name="v_on_${i}"${v.titre ? ' checked' : ''}><span>Afficher</span></label>
+          <div class="cols">
+            <label class="field"><span>Titre</span><input name="v_titre_${i}" value="${esc(v.titre || '')}"></label>
+            <label class="field"><span>Petit titre</span><input name="v_categorie_${i}" value="${esc(v.categorie || '')}"></label>
+          </div>
+          <label class="field full"><span>Texte</span><input name="v_texte_${i}" value="${esc(v.texte || '')}"></label>
+          <div class="cols">
+            <label class="field"><span>Bouton vers</span>
+              <select name="v_lien_${i}">
+                <option value="catalogue.html">Tout le catalogue</option>
+                <option value="index.html#infos"${v.lien === 'index.html#infos' ? ' selected' : ''}>Infos pratiques (venir en magasin)</option>
+                ${state.categories.map((c) => { const l = `catalogue.html?cat=${c.slug}`; return `<option value="${l}"${v.lien === l ? ' selected' : ''}>Rayon ${esc(c.nom)}</option>`; }).join('')}
+              </select>
+            </label>
+            <label class="field"><span>Icône</span>
+              <select name="v_icone_${i}">
+                ${Object.entries(CATEGORY_ICONS).map(([k, x]) => `<option value="${k}"${(v.icone || 'carton') === k ? ' selected' : ''}>${x.label}</option>`).join('')}
+              </select>
+            </label>
+            <label class="field"><span>Photo</span><input type="file" name="v_photo_${i}" accept="image/*"></label>
+          </div>
+          ${v.photo ? `<img class="vitrine-preview" src="${esc(v.photo)}" alt="" onerror="this.remove()">` : ''}
+        </fieldset>`).join('')}
       </section>
       <div class="save-bar"><button class="btn btn-green btn-lg" type="submit">${icon('check')}Enregistrer les infos</button></div>
     </form>`;
@@ -610,15 +625,18 @@ function renderBoutique() {
     const fd = new FormData(e.target);
     const t = (k) => String(fd.get(k) ?? '').trim();
     await busy(e.submitter, async () => {
-      let vitrine = null;
-      if (fd.get('vitrine_on')) {
-        const file = fd.get('vitrine_photo');
+      const vitrine = [];
+      const anciennes = [];
+      for (const [i, v] of vitrines.entries()) {
+        const titre = t(`v_titre_${i}`);
+        if (!fd.get(`v_on_${i}`) || !titre) { if (v.photo) anciennes.push(v.photo); continue; }
+        const file = fd.get(`v_photo_${i}`);
         let photo = v.photo || '';
         if (file && file.size) {
           photo = await envoyer(await reduire(file, 2000), 'vitrines');
-          if (v.photo) await supprimerFichiers([v.photo]).catch(console.warn);
+          if (v.photo) anciennes.push(v.photo);
         }
-        vitrine = { titre: t('vitrine_titre'), categorie: t('vitrine_categorie'), lien: t('vitrine_lien'), photo };
+        vitrine.push({ titre, categorie: t(`v_categorie_${i}`), texte: t(`v_texte_${i}`), lien: t(`v_lien_${i}`), icone: t(`v_icone_${i}`), photo });
       }
       const row = {
         id: 1, nom: t('nom'), tel: t('tel'), email: t('email'), facebook: t('facebook'), adresse: t('adresse'),
@@ -628,6 +646,7 @@ function renderBoutique() {
       };
       const { error } = await sb.from('boutique').upsert(row);
       if (error) throw error;
+      if (anciennes.length) await supprimerFichiers(anciennes).catch(console.warn);
       await recharger(); coquille(); toast('Infos du magasin enregistrées');
     });
   });

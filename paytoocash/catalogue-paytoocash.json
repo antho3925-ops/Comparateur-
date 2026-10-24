@@ -665,7 +665,18 @@
       "titre": "Gros arrivage de Game Boy en boîte et en loose",
       "categorie": "Rétro gaming",
       "note": "Post vitrine sans prix (affiché « gratuit »), à utiliser comme bannière ou section, pas comme article",
-      "photo": "paytoocash-photos/vitrine-gameboy-retro.jpg"
+      "photo": "paytoocash-photos/vitrine-gameboy-retro.jpg",
+      "texte": "En boîte et en loose : venez fouiller en magasin, le stock bouge vite.",
+      "icone": "console_portable",
+      "lien": "catalogue.html?cat=gaming"
+    },
+    {
+      "titre": "Arrivage de cartes Pokémon scellées",
+      "categorie": "Cartes à collectionner",
+      "texte": "Coffrets, displays et boosters scellés : toute la vitrine est à découvrir en magasin.",
+      "icone": "cartes",
+      "lien": "index.html#infos",
+      "photo": "paytoocash-photos/vitrine-cartes-pokemon.jpg"
     }
   ]
 }

@@ -27,7 +27,12 @@ try {
   const counts = new Map();
   for (const a of articles) if (a.categorie && a.disponible) counts.set(a.categorie.id, (counts.get(a.categorie.id) || 0) + 1);
   const derniers = articles.filter((a) => a.disponible).sort((x, y) => String(y.created_at).localeCompare(String(x.created_at))).slice(0, 8);
-  const v = b.vitrine;
+  const catParSlug = new Map(categories.map((c) => [c.slug, c]));
+  const bouton = (lien) => {
+    if (/#infos$/.test(lien || '')) return 'Venir voir en magasin';
+    const c = catParSlug.get(new URLSearchParams((lien || '').split('?')[1] || '').get('cat'));
+    return c ? `Voir le rayon ${c.nom}` : 'Voir le catalogue';
+  };
 
   main.innerHTML = `
     <section class="hero">
@@ -70,18 +75,19 @@ try {
       </div>
     </section>` : ''}
 
-    ${v ? `
+    ${b.vitrine.length ? `
     <section class="section">
-      <div class="wrap">
+      <div class="wrap banners${b.vitrine.length > 1 ? ' banners-2' : ''}">
+        ${b.vitrine.map((v) => `
         <a class="banner reveal anim-icon" href="${esc(v.lien || 'catalogue.html')}">
-          <img class="banner-img" src="${esc(v.photo)}" alt="" loading="lazy" data-fallback="console_portable">
+          <img class="banner-img" src="${esc(v.photo)}" alt="" loading="lazy" data-fallback="${esc(v.icone || 'carton')}">
           <div class="banner-text">
-            <span class="banner-kicker">${icon('console_portable')}${esc(v.categorie || 'Rétro gaming')}</span>
+            ${v.categorie ? `<span class="banner-kicker">${icon(v.icone || 'sparkle')}${esc(v.categorie)}</span>` : ''}
             <h2>${esc(v.titre)}</h2>
-            <p>En boîte et en loose : venez fouiller en magasin, le stock bouge vite.</p>
-            <span class="btn btn-gold btn-sm">Voir le rayon gaming ${icon('arrow')}</span>
+            ${v.texte ? `<p>${esc(v.texte)}</p>` : ''}
+            <span class="btn btn-gold btn-sm">${esc(bouton(v.lien))} ${icon('arrow')}</span>
           </div>
-        </a>
+        </a>`).join('')}
       </div>
     </section>` : ''}
 
