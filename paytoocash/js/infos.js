@@ -1,6 +1,6 @@
 // Bloc « Infos pratiques » : adresse, contact, horaires.
 
-import { icon } from './icons.js';
+import { icon, facebookLogo } from './icons.js';
 import { esc, pub, telHref, mapsHref, facebookHref, statutOuverture, plageTexte, cap } from './util.js';
 
 export function infosPratiques(b) {
@@ -16,7 +16,7 @@ export function infosPratiques(b) {
             <li class="anim-icon"><span class="info-ico">${icon('pin')}</span><div><strong>Adresse</strong><br>${esc(b.adresse)}</div></li>
             <li class="anim-icon"><span class="info-ico">${icon('phone')}</span><div><strong>Téléphone</strong><br><a href="${telHref(b.tel)}">${esc(b.tel)}</a></div></li>
             ${b.email ? `<li class="anim-icon"><span class="info-ico">${icon('mail')}</span><div><strong>E-mail</strong><br><a href="mailto:${esc(b.email)}">${esc(b.email)}</a></div></li>` : ''}
-            ${b.facebook ? `<li class="anim-icon"><span class="info-ico">${icon('social')}</span><div><strong>Facebook</strong><br><a href="${esc(facebookHref(b.facebook))}" target="_blank" rel="noopener">${esc(b.facebook)}</a></div></li>` : ''}
+            ${b.facebook ? `<li class="anim-icon"><span class="info-ico info-ico-fb">${facebookLogo()}</span><div><strong>Facebook</strong><br><a href="${esc(facebookHref(b.facebook))}" target="_blank" rel="noopener">${esc(b.facebook)}</a></div></li>` : ''}
           </ul>
           <div class="btn-row">
             <a class="btn btn-green" href="${telHref(b.tel)}">${icon('phone')}Appeler le magasin</a>

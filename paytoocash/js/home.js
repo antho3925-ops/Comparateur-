@@ -1,8 +1,8 @@
-import { icon } from './icons.js';
+import { icon, facebookLogo } from './icons.js';
 import { loadData } from './store.js';
 import { initPage, finishPage, categoryCard, articleCard, showError } from './layout.js';
 import { infosPratiques } from './infos.js';
-import { esc, pub, smsHref, telIntl } from './util.js';
+import { esc, pub, smsHref, telIntl, facebookHref } from './util.js';
 
 initPage('accueil');
 const main = document.getElementById('main');
@@ -123,6 +123,20 @@ try {
             </figure>`).join('')}
         </div>
         ${b.avis.lien ? `<p class="center"><a class="btn btn-outline" href="${esc(b.avis.lien)}" target="_blank" rel="noopener">${icon('star')}Voir tous les avis sur Google</a></p>` : ''}
+      </div>
+    </section>` : ''}
+
+    ${b.facebook ? `
+    <section class="section">
+      <div class="wrap">
+        <a class="fb-follow reveal anim-icon" href="${esc(facebookHref(b.facebook))}" target="_blank" rel="noopener">
+          ${facebookLogo()}
+          <div class="fb-follow-text">
+            <h2>Suivez-nous sur Facebook</h2>
+            <p>Les nouveaux arrivages sont publiés en premier sur notre page : soyez les premiers sur les bonnes affaires.</p>
+          </div>
+          <span class="btn btn-fb">${facebookLogo()}Suivez-nous</span>
+        </a>
       </div>
     </section>` : ''}
 

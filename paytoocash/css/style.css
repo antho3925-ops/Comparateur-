@@ -249,6 +249,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .avis blockquote { margin: 0; color: #333; }
 .avis figcaption { margin-top: auto; font-size: .85rem; color: var(--grey-2); }
 
+.fb-logo { flex: none; }
+.info-ico-fb { background: #E7F0FE; }
+.info-ico-fb .fb-logo { width: 26px; height: 26px; }
+.fb-follow { display: flex; flex-wrap: wrap; align-items: center; gap: 16px 20px; padding: 22px; border-radius: 20px; background: #F0F5FF; border: 1px solid #D6E4FD; text-decoration: none; color: var(--grey); transition: transform .2s var(--ease), box-shadow .2s; }
+.fb-follow:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.fb-follow > .fb-logo { width: 56px; height: 56px; }
+.fb-follow-text { flex: 1 1 240px; }
+.fb-follow h2 { font-size: 1.3rem; margin-bottom: 4px; }
+.fb-follow p { margin: 0; }
+.btn-fb { background: #1877F2; color: #fff; }
+.btn-fb .fb-logo { width: 1.3em; height: 1.3em; }
+.btn-fb .fb-logo circle { fill: #fff; }
+.btn-fb .fb-logo path { fill: #1877F2; }
+.fb-follow:hover .btn-fb { background: #0F64D2; }
+.anim-icon:hover > .fb-logo { animation: bounce .6s var(--ease); }
+
 .rachat-teaser { display: flex; flex-direction: column; gap: 16px; }
 @media (min-width: 860px) { .rachat-teaser { flex-direction: row; align-items: center; justify-content: space-between; } }
 

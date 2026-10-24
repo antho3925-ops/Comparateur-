@@ -75,6 +75,9 @@ const UI = {
   eye: '<path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',
 };
 
+// Logo Facebook (« f » blanc sur rond bleu), pour les liens vers la page du magasin.
+export const facebookLogo = (cls = '') => `<svg class="fb-logo ${cls}" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="12" fill="#1877F2"/><path fill="#fff" d="M16.67 15.47 17.2 12h-3.33V9.75c0-.95.47-1.87 1.96-1.87h1.51V4.92s-1.37-.23-2.69-.23c-2.74 0-4.53 1.66-4.53 4.67V12H7.08v3.47h3.05v8.39a12.1 12.1 0 0 0 3.75 0v-8.39z"/></svg>`;
+
 export function icon(name, cls = '') {
   const body = UI[name] ?? CATEGORY_ICONS[name]?.svg ?? CATEGORY_ICONS.carton.svg;
   return `<svg class="ico ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${body}</svg>`;

@@ -1,6 +1,6 @@
 // En-tête, pied de page, cartes et animations communes aux pages publiques.
 
-import { icon } from './icons.js';
+import { icon, facebookLogo } from './icons.js';
 import { esc, formatPrix, pub, telHref, mapsHref, facebookHref, estReserve, qs, qsa } from './util.js';
 
 const NAV = [
@@ -44,7 +44,7 @@ export function renderFooter(b) {
         <li>${icon('pin')}<a href="${mapsHref(b.adresse)}" target="_blank" rel="noopener">${esc(b.adresse)}</a></li>
         <li>${icon('phone')}<a href="${telHref(b.tel)}">${esc(b.tel)}</a></li>
         ${b.email ? `<li>${icon('mail')}<a href="mailto:${esc(b.email)}">${esc(b.email)}</a></li>` : ''}
-        ${b.facebook ? `<li>${icon('social')}<a href="${esc(facebookHref(b.facebook))}" target="_blank" rel="noopener">Facebook · ${esc(b.facebook)}</a></li>` : ''}
+        ${b.facebook ? `<li>${facebookLogo('ico')}<a href="${esc(facebookHref(b.facebook))}" target="_blank" rel="noopener">Facebook · ${esc(b.facebook)}</a></li>` : ''}
       </ul>
       <ul class="footer-links">
         ${NAV.map(([, href, label]) => `<li><a href="${href}">${label}</a></li>`).join('')}
