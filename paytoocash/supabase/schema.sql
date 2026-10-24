@@ -106,3 +106,93 @@ create policy "photos lecture" on storage.objects for select using (bucket_id = 
 create policy "photos ajout admin" on storage.objects for insert to authenticated with check (bucket_id = 'photos' and public.is_admin());
 create policy "photos modif admin" on storage.objects for update to authenticated using (bucket_id = 'photos' and public.is_admin());
 create policy "photos suppression admin" on storage.objects for delete to authenticated using (bucket_id = 'photos' and public.is_admin());
+
+-- =====================================================================
+-- Ajouts : réservations 24 h, demandes d'estimation, avis, galerie.
+-- Ce bloc peut être exécuté seul sur une base déjà créée.
+-- =====================================================================
+
+alter table public.articles add column if not exists reserve_jusqu_au timestamptz;
+alter table public.boutique add column if not exists avis jsonb;
+alter table public.boutique add column if not exists galerie jsonb;
+
+-- ---------- Réservations (24 h) ----------
+create table if not exists public.reservations (
+  id bigint generated always as identity primary key,
+  article_id bigint references public.articles (id) on delete cascade,
+  article_titre text,
+  nom text not null check (char_length(nom) between 1 and 80),
+  tel text not null check (char_length(tel) between 6 and 30),
+  created_at timestamptz not null default now(),
+  expire_at timestamptz not null,
+  annulee boolean not null default false
+);
+alter table public.reservations enable row level security;
+drop policy if exists "reservations admin" on public.reservations;
+create policy "reservations admin" on public.reservations for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
+-- Le public réserve uniquement par cette fonction : elle vérifie que
+-- l'article est en vente et libre, puis le bloque 24 h.
+create or replace function public.reserver_article(p_article bigint, p_nom text, p_tel text)
+returns timestamptz
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  a public.articles;
+  fin timestamptz := now() + interval '24 hours';
+  tel_net text := regexp_replace(coalesce(p_tel, ''), '[^0-9+]', '', 'g');
+begin
+  if char_length(trim(coalesce(p_nom, ''))) < 2 or char_length(tel_net) < 10 then
+    raise exception 'Nom ou téléphone invalide';
+  end if;
+  if (select count(*) from public.reservations
+      where regexp_replace(tel, '[^0-9+]', '', 'g') = tel_net and not annulee and expire_at > now()) >= 2 then
+    raise exception 'Trop de réservations en cours pour ce numéro';
+  end if;
+  select * into a from public.articles where id = p_article for update;
+  if not found or not a.disponible then
+    raise exception 'Article indisponible';
+  end if;
+  if a.reserve_jusqu_au is not null and a.reserve_jusqu_au > now() then
+    raise exception 'Article déjà réservé';
+  end if;
+  update public.articles set reserve_jusqu_au = fin where id = p_article;
+  insert into public.reservations (article_id, article_titre, nom, tel, expire_at)
+  values (p_article, a.titre, left(trim(p_nom), 80), left(trim(p_tel), 30), fin);
+  return fin;
+end;
+$$;
+grant execute on function public.reserver_article(bigint, text, text) to anon, authenticated;
+
+-- ---------- Demandes d'estimation (rachat) ----------
+create table if not exists public.estimations (
+  id bigint generated always as identity primary key,
+  nom text not null check (char_length(nom) between 1 and 80),
+  tel text not null check (char_length(tel) between 6 and 30),
+  objet text not null check (char_length(objet) between 1 and 200),
+  etat text check (char_length(etat) <= 100),
+  details text check (char_length(details) <= 1500),
+  prix_souhaite text check (char_length(prix_souhaite) <= 30),
+  photos text[] not null default '{}' check (cardinality(photos) <= 4),
+  traitee boolean not null default false,
+  created_at timestamptz not null default now()
+);
+alter table public.estimations enable row level security;
+drop policy if exists "estimations depot public" on public.estimations;
+drop policy if exists "estimations admin" on public.estimations;
+create policy "estimations depot public" on public.estimations for insert to anon, authenticated with check (not traitee);
+create policy "estimations admin" on public.estimations for all to authenticated using (public.is_admin()) with check (public.is_admin());
+
+-- Photos des demandes : dossier privé (lisible seulement par l'admin),
+-- images de 6 Mo maximum.
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values ('estimations', 'estimations', false, 6291456, array['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'])
+on conflict (id) do update set public = false, file_size_limit = 6291456,
+  allowed_mime_types = array['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'image/heif'];
+
+drop policy if exists "estimations photos depot" on storage.objects;
+drop policy if exists "estimations photos admin" on storage.objects;
+create policy "estimations photos depot" on storage.objects for insert to anon, authenticated with check (bucket_id = 'estimations');
+create policy "estimations photos admin" on storage.objects for all to authenticated using (bucket_id = 'estimations' and public.is_admin());

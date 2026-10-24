@@ -7,6 +7,11 @@ import { esc, pub, smsHref, telIntl } from './util.js';
 initPage('accueil');
 const main = document.getElementById('main');
 
+const etoiles = (n) => {
+  const v = Math.round(Number(n) || 0);
+  return `<span class="stars">${'★'.repeat(v)}<span class="stars-off">${'★'.repeat(Math.max(0, 5 - v))}</span></span>`;
+};
+
 function jsonLd(b) {
   const days = { lundi: 'Monday', mardi: 'Tuesday', mercredi: 'Wednesday', jeudi: 'Thursday', vendredi: 'Friday', samedi: 'Saturday', dimanche: 'Sunday' };
   const m = /^(.*?),?\s*(\d{5})\s+(.+)$/.exec(b.adresse || '');
@@ -88,6 +93,36 @@ try {
             <span class="btn btn-gold btn-sm">${esc(bouton(v.lien))} ${icon('arrow')}</span>
           </div>
         </a>`).join('')}
+      </div>
+    </section>` : ''}
+
+    ${b.galerie.length ? `
+    <section class="section section-alt">
+      <div class="wrap">
+        <h2 class="h2">Le magasin</h2>
+        <p class="lead">${esc(pub(b.atout) || 'Nos salles de vente')} au 16 rue Denis Papin : venez flâner, tout est en rayon.</p>
+        <div class="gallery-shop">
+          ${b.galerie.map((src) => `<a class="reveal" href="${esc(src)}" target="_blank" rel="noopener"><img src="${esc(src)}" alt="Le magasin Paytoocash" loading="lazy"></a>`).join('')}
+        </div>
+      </div>
+    </section>` : ''}
+
+    ${b.avis.liste.length ? `
+    <section class="section">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="h2">Ils nous font confiance</h2>
+          ${b.avis.note ? `<p class="avis-score">${etoiles(b.avis.note)} <strong>${String(b.avis.note).replace('.', ',')}/5</strong>${b.avis.nombre ? ` · ${esc(b.avis.nombre)} avis Google` : ''}</p>` : ''}
+        </div>
+        <div class="avis-grid">
+          ${b.avis.liste.map((a) => `
+            <figure class="avis reveal">
+              ${a.note ? `<div class="avis-stars" aria-label="${a.note} sur 5">${etoiles(a.note)}</div>` : ''}
+              <blockquote>${esc(a.texte)}</blockquote>
+              <figcaption><strong>${esc(a.auteur || 'Client')}</strong>${a.date ? ` · ${esc(a.date)}` : ''}</figcaption>
+            </figure>`).join('')}
+        </div>
+        ${b.avis.lien ? `<p class="center"><a class="btn btn-outline" href="${esc(b.avis.lien)}" target="_blank" rel="noopener">${icon('star')}Voir tous les avis sur Google</a></p>` : ''}
       </div>
     </section>` : ''}
 

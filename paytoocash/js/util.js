@@ -44,6 +44,10 @@ export function telIntl(tel) {
 export const telHref = (tel) => 'tel:' + telIntl(tel);
 // « ?&body= » est la forme comprise à la fois par iOS et Android.
 export const smsHref = (tel, body) => `sms:${telIntl(tel)}?&body=${encodeURIComponent(body)}`;
+export const whatsappHref = (tel, body) => `https://wa.me/${telIntl(tel).replace('+', '')}?text=${encodeURIComponent(body)}`;
+// Un article réservé redevient libre tout seul au bout de 24 h.
+export const estReserve = (a) => Boolean(a?.disponible && a.reserve_jusqu_au && new Date(a.reserve_jusqu_au) > new Date());
+export const heureFin = (iso) => new Date(iso).toLocaleString('fr-FR', { weekday: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' });
 export const mapsHref = (adresse) => 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(adresse);
 export const facebookHref = (fb) => (/^https?:\/\//.test(fb || '') ? fb : 'https://www.facebook.com/' + encodeURIComponent(fb || ''));
 
@@ -81,6 +85,26 @@ export function statutOuverture(horaires) {
     return { ouvert: false, texte: `Fermé · ouvre ${quand} à ${hFmt(d.de)}`, jour };
   }
   return { ouvert: false, texte: 'Fermé', jour };
+}
+
+// Réduit les photos prises au téléphone (souvent 4-8 Mo) avant l'envoi.
+export async function reduire(file, max = 1600, qualite = 0.82) {
+  if (!/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type)) return file;
+  // Un PNG léger garde sa transparence.
+  if (file.type === 'image/png' && file.size < 1.5e6) return file;
+  try {
+    const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    const r = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.round(bmp.width * r);
+    canvas.height = Math.round(bmp.height * r);
+    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
+    const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', qualite));
+    if (!blob || blob.size >= file.size) return file;
+    return new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });
+  } catch {
+    return file;
+  }
 }
 
 export const qs = (sel, el = document) => el.querySelector(sel);

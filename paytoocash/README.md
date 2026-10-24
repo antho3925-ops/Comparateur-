@@ -75,6 +75,23 @@ Plus tard, le nom de domaine s'ajoute dans *Domain management* (Netlify) ou
 Article vendu : bouton **Vendu** dans la liste (un clic). « Remettre en vente »
 l'annule.
 
+## Réservations et estimations
+
+- **Réserver 24 h** (fiche article) : le client laisse son nom et son
+  téléphone ; l'article affiche « Réservé » pendant 24 h, puis revient seul
+  en vente. Sans Supabase (démo), le bouton envoie un SMS au magasin.
+- **Demande d'estimation** (page « On rachète ») : description, état, prix
+  souhaité et jusqu'à 4 photos. Sans Supabase, la demande part par WhatsApp.
+- Le commerçant retrouve tout dans l'onglet **Demandes** de l'admin
+  (pastille quand il y a du nouveau) : appeler ou écrire sur WhatsApp en un
+  clic, annuler une réservation, marquer une estimation « Traitée ».
+
+## Avis Google et photos du magasin
+
+Dans **Infos du magasin** : recopier de vrais avis de la fiche Google (auteur,
+note, texte), la note moyenne et le lien ; ajouter des photos des salles de
+vente. Les deux sections de l'accueil restent masquées tant qu'elles sont vides.
+
 ## Structure
 
 ```

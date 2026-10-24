@@ -24,7 +24,9 @@
     "Musique",
     "Jardin",
     "Photo",
-    "Bijoux"
+    "Bijoux",
+    "Rétro gaming",
+    "Cartes à collectionner"
   ],
   "articles": [
     {
@@ -668,15 +670,22 @@
       "photo": "paytoocash-photos/vitrine-gameboy-retro.jpg",
       "texte": "En boîte et en loose : venez fouiller en magasin, le stock bouge vite.",
       "icone": "console_portable",
-      "lien": "catalogue.html?cat=gaming"
+      "lien": "catalogue.html?cat=retro-gaming"
     },
     {
       "titre": "Arrivage de cartes Pokémon scellées",
       "categorie": "Cartes à collectionner",
       "texte": "Coffrets, displays et boosters scellés : toute la vitrine est à découvrir en magasin.",
       "icone": "cartes",
-      "lien": "index.html#infos",
+      "lien": "catalogue.html?cat=cartes-a-collectionner",
       "photo": "paytoocash-photos/vitrine-cartes-pokemon.jpg"
     }
-  ]
+  ],
+  "avis": {
+    "note": null,
+    "nombre": null,
+    "lien": "",
+    "liste": []
+  },
+  "galerie": []
 }

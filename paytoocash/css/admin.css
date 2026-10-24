@@ -39,7 +39,9 @@ body.admin { background: var(--bg-alt); }
 .row-meta { font-size: .85rem; color: var(--grey-2); }
 .row-warn { font-size: .8rem; color: #7A5710; }
 .row-warn .pastille { margin-left: 0; }
-.row-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; }
+.row-actions { display: flex; align-items: center; gap: 4px; margin-left: auto; flex-wrap: wrap; max-width: 100%; }
+.row { min-width: 0; }
+.estim-row .row-actions, [data-resa] .row-actions { margin-left: 0; }
 .row-actions.vertical { flex-direction: column; }
 .icon-btn.danger { color: #C0392B; }
 .icon-btn:disabled { opacity: .3; cursor: default; }
@@ -111,8 +113,8 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 
 /* Horaires */
 .hours-edit { display: grid; gap: 8px; margin-bottom: 12px; }
-.day { display: grid; grid-template-columns: 1fr auto auto auto; align-items: center; gap: 8px; }
-.day input[type=time] { min-height: 42px; border: 1px solid #D8D8D2; border-radius: 10px; padding: 6px 8px; background: #fff; }
+.day { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; align-items: center; gap: 8px; }
+.day input[type=time] { width: 6.6em; min-width: 0; min-height: 42px; border: 1px solid #D8D8D2; border-radius: 10px; padding: 6px 8px; background: #fff; }
 .day:has(input[type=checkbox]:not(:checked)) input[type=time] { opacity: .35; }
 .vitrine-edit { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; margin: 0 0 12px; }
 .vitrine-edit legend { font-weight: 700; padding: 0 6px; }
@@ -137,3 +139,9 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 .toast-err { background: #B03A2E; }
 .toast.out { opacity: 0; }
 @keyframes toast-in { from { opacity: 0; transform: translate(-50%, 10px); } }
+.photo-del:has(input:checked) { background: #B03A2E; }
+.photo:has(input:checked) img { opacity: .3; }
+.estim-details { margin: 4px 0 0; font-size: .9rem; white-space: pre-line; }
+.estim-photos { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+.estim-photos img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; }
+.row-actions .btn { white-space: nowrap; }

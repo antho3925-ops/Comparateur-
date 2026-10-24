@@ -23,9 +23,17 @@ Tant que ce n'est pas fait, le site fonctionne en démo à partir du JSON.
    adresse à la ligne `insert into public.admins …` (en minuscules).
 3. Cliquer **Run**. Le message « Success. No rows returned » est normal.
 
-Ce script crée les tables `categories`, `articles`, `boutique`, le dossier de
-photos `photos`, et les règles de sécurité : tout le monde peut **lire**, seul
-le compte administrateur peut **modifier**.
+Ce script crée les tables `categories`, `articles`, `boutique`, `reservations`,
+`estimations`, les dossiers de photos `photos` (public) et `estimations` (privé),
+et les règles de sécurité : tout le monde peut **lire** le catalogue, les
+visiteurs peuvent **réserver** et **demander une estimation**, seul le compte
+administrateur peut **modifier** et voir les demandes.
+
+> **Base déjà créée avant la mise à jour « réservations / estimations » ?**
+> Copiez seulement le bloc qui commence par `-- Ajouts : réservations 24 h`
+> (en bas de `schema.sql`) et exécutez-le : il ajoute les tables
+> `reservations` et `estimations`, le dossier privé de photos `estimations`
+> et les colonnes des avis et de la galerie, sans toucher aux articles.
 
 ## 3. Créer le compte administrateur
 

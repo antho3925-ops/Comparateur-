@@ -3,12 +3,12 @@
 import { CONFIG } from './config.js';
 import { icon, CATEGORY_ICONS, ICONES_PAR_DEFAUT } from './icons.js';
 import { isConfigured, getClient, loadFromSupabase, loadSeed, seedToData, relier, ARTICLE_FIELDS, HORAIRES_PAR_DEFAUT } from './store.js';
-import { esc, formatPrix, aConfirmer, aVerifier, slugify, norm, cap, qs, qsa } from './util.js';
+import { esc, formatPrix, aConfirmer, aVerifier, slugify, norm, cap, reduire, estReserve, heureFin, telHref, whatsappHref, qs, qsa } from './util.js';
 
 const app = qs('#app');
 const dlg = qs('#dlg');
 let sb = null;
-let state = { categories: [], articles: [], boutique: {} };
+let state = { categories: [], articles: [], boutique: {}, reservations: [], estimations: [] };
 let tab = 'articles';
 let recherche = '';
 let readonly = false;
@@ -48,26 +48,6 @@ function catVisual(c) {
 }
 
 // ---------- Photos ----------
-
-// Réduit les photos prises au téléphone (souvent 4-8 Mo) avant l'envoi.
-async function reduire(file, max = 1600, qualite = 0.82) {
-  if (!/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type)) return file;
-  // Un PNG léger garde sa transparence.
-  if (file.type === 'image/png' && file.size < 1.5e6) return file;
-  try {
-    const bmp = await createImageBitmap(file, { imageOrientation: 'from-image' });
-    const r = Math.min(1, max / Math.max(bmp.width, bmp.height));
-    const canvas = document.createElement('canvas');
-    canvas.width = Math.round(bmp.width * r);
-    canvas.height = Math.round(bmp.height * r);
-    canvas.getContext('2d').drawImage(bmp, 0, 0, canvas.width, canvas.height);
-    const blob = await new Promise((res) => canvas.toBlob(res, 'image/jpeg', qualite));
-    if (!blob || blob.size >= file.size) return file;
-    return new File([blob], file.name.replace(/\.\w+$/, '') + '.jpg', { type: 'image/jpeg' });
-  } catch {
-    return file;
-  }
-}
 
 async function envoyer(file, dossier, nom) {
   const ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
@@ -156,8 +136,20 @@ async function apresConnexion() {
 }
 
 async function recharger() {
-  state = relier(await loadFromSupabase(sb));
+  const depuis = new Date(Date.now() - 30 * 864e5).toISOString();
+  const [data, r, e] = await Promise.all([
+    loadFromSupabase(sb),
+    sb.from('reservations').select('*').gte('created_at', depuis).order('created_at', { ascending: false }),
+    sb.from('estimations').select('*').order('created_at', { ascending: false }).limit(200),
+  ]);
+  state = relier(data);
+  // Tables absentes si le bloc « Ajouts » de schema.sql n'a pas été exécuté.
+  state.reservations = r.error ? [] : r.data;
+  state.estimations = e.error ? [] : e.data;
 }
+
+const reservationsActives = () => state.reservations.filter((r) => !r.annulee && new Date(r.expire_at) > new Date());
+const nbDemandes = () => reservationsActives().length + state.estimations.filter((x) => !x.traitee).length;
 
 // ---------- Import initial du JSON ----------
 
@@ -234,11 +226,11 @@ function coquille() {
   app.innerHTML = `
     ${barre()}
     <nav class="tabs wrap" role="tablist">
-      ${[['articles', 'Articles', state.articles.length], ['categories', 'Catégories', state.categories.length], ['boutique', 'Infos du magasin', null]]
-        .map(([k, l, n]) => `<button role="tab" type="button" class="tab${tab === k ? ' on' : ''}" data-tab="${k}" aria-selected="${tab === k}">${l}${n != null ? ` <small>${n}</small>` : ''}${k === 'articles' && nbVerif ? '<i class="dot-warn"></i>' : ''}</button>`).join('')}
+      ${[['articles', 'Articles', state.articles.length], ['demandes', 'Demandes', nbDemandes()], ['categories', 'Catégories', state.categories.length], ['boutique', 'Infos du magasin', null]]
+        .map(([k, l, n]) => `<button role="tab" type="button" class="tab${tab === k ? ' on' : ''}" data-tab="${k}" aria-selected="${tab === k}">${l}${n != null ? ` <small>${n}</small>` : ''}${(k === 'articles' && nbVerif) || (k === 'demandes' && n) ? '<i class="dot-warn"></i>' : ''}</button>`).join('')}
     </nav>
     <div class="wrap admin-main" id="tab-content"></div>`;
-  ({ articles: renderArticles, categories: renderCategories, boutique: renderBoutique })[tab]();
+  ({ articles: renderArticles, demandes: renderDemandes, categories: renderCategories, boutique: renderBoutique })[tab]();
 }
 
 // ---------- Articles ----------
@@ -250,7 +242,7 @@ function ligneArticle(a) {
       <div class="row-thumb">${a.photos[0] ? `<img src="${esc(a.photos[0])}" alt="" loading="lazy" onerror="this.remove()">` : ''}${icon(a.categorie?.icone || 'carton')}</div>
       <div class="row-main">
         <strong class="row-title">${esc(a.titre)}</strong>
-        <span class="row-meta">${esc(a.categorie?.nom || 'Sans catégorie')} · <b>${formatPrix(a.prix) || 'prix ?'}</b>${a.disponible ? '' : ' · <span class="chip chip-grey">Vendu</span>'}</span>
+        <span class="row-meta">${esc(a.categorie?.nom || 'Sans catégorie')} · <b>${formatPrix(a.prix) || 'prix ?'}</b>${a.disponible ? '' : ' · <span class="chip chip-grey">Vendu</span>'}${estReserve(a) ? ` · <span class="chip chip-gold">Réservé jusqu'à ${esc(heureFin(a.reserve_jusqu_au))}</span>` : ''}</span>
         ${verif.length ? `<span class="row-warn">${pastille()} ${esc(verif.join(', '))}</span>` : ''}
       </div>
       ${readonly ? '' : `
@@ -440,6 +432,64 @@ function ouvrirArticle(a) {
   dlg.showModal();
 }
 
+// ---------- Demandes (réservations et estimations) ----------
+
+function renderDemandes() {
+  const actives = reservationsActives();
+  const passees = state.reservations.filter((r) => !actives.includes(r)).slice(0, 15);
+  const aTraiter = state.estimations.filter((x) => !x.traitee);
+  const traitees = state.estimations.filter((x) => x.traitee).slice(0, 20);
+  const date = (iso) => new Date(iso).toLocaleString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Paris' });
+  const contact = (nom, tel, objet) => `
+    <a class="btn btn-sm btn-green" href="${telHref(tel)}">${icon('phone')}Appeler</a>
+    <a class="btn btn-sm btn-outline" href="${whatsappHref(tel, `Bonjour ${nom}, c'est Paytoocash au sujet de ${objet}.`)}" target="_blank" rel="noopener">${icon('whatsapp')}WhatsApp</a>`;
+  const resa = (r, active) => `
+    <li class="row${active ? '' : ' sold'}" data-resa="${r.id}">
+      <div class="row-main">
+        <strong class="row-title">${esc(r.article_titre || 'Article supprimé')}</strong>
+        <span class="row-meta">${esc(r.nom)} · ${esc(r.tel)} · réservé le ${date(r.created_at)}</span>
+        <span class="row-meta">${r.annulee ? 'Annulée' : active ? `<b>Jusqu'à ${esc(heureFin(r.expire_at))}</b>` : 'Expirée, article remis en vente'}</span>
+      </div>
+      <div class="row-actions">
+        ${contact(r.nom, r.tel, `votre réservation « ${r.article_titre} »`)}
+        ${active ? `<button type="button" class="btn btn-sm btn-ghost" data-act="annuler-resa">Annuler</button>` : ''}
+      </div>
+    </li>`;
+  const estim = (x) => `
+    <li class="row estim-row${x.traitee ? ' sold' : ''}" data-estim="${x.id}">
+      <div class="row-main">
+        <strong class="row-title">${esc(x.objet)}</strong>
+        <span class="row-meta">${esc(x.nom)} · ${esc(x.tel)} · ${date(x.created_at)}</span>
+        ${x.etat || x.prix_souhaite ? `<span class="row-meta">${[x.etat, x.prix_souhaite ? `Prix souhaité : ${esc(x.prix_souhaite)}` : ''].filter(Boolean).map(esc).join(' · ')}</span>` : ''}
+        ${x.details ? `<p class="estim-details">${esc(x.details)}</p>` : ''}
+        ${x.photos.length ? `<div class="estim-photos" data-photos='${esc(JSON.stringify(x.photos))}'></div>` : ''}
+      </div>
+      <div class="row-actions">
+        ${contact(x.nom, x.tel, `votre demande d'estimation (${x.objet})`)}
+        <button type="button" class="btn btn-sm ${x.traitee ? 'btn-ghost' : 'btn-gold'}" data-act="traiter">${x.traitee ? 'Rouvrir' : 'Traitée'}</button>
+        <button type="button" class="icon-btn danger" data-act="del-estim" aria-label="Supprimer">${icon('trash')}</button>
+      </div>
+    </li>`;
+  qs('#tab-content').innerHTML = `
+    <section class="block${actives.length ? ' block-warn' : ''}">
+      <h2>${icon('calendar')}Réservations en cours <small>${actives.length}</small></h2>
+      <p class="muted small">Un article réservé revient automatiquement en vente au bout de 24 h. S'il est vendu, marquez-le « Vendu » dans l'onglet Articles.</p>
+      ${actives.length ? `<ul class="rows">${actives.map((r) => resa(r, true)).join('')}</ul>` : '<p class="muted">Aucune réservation en cours.</p>'}
+    </section>
+    <section class="block${aTraiter.length ? ' block-warn' : ''}">
+      <h2>${icon('cash')}Demandes d'estimation <small>${aTraiter.length}</small></h2>
+      ${aTraiter.length ? `<ul class="rows">${aTraiter.map(estim).join('')}</ul>` : '<p class="muted">Aucune nouvelle demande.</p>'}
+    </section>
+    ${traitees.length ? `<section class="block"><h2>Estimations traitées</h2><ul class="rows">${traitees.map(estim).join('')}</ul></section>` : ''}
+    ${passees.length ? `<section class="block"><h2>Réservations passées (30 jours)</h2><ul class="rows">${passees.map((r) => resa(r, false)).join('')}</ul></section>` : ''}`;
+  // Photos privées : liens temporaires (1 h).
+  qsa('.estim-photos').forEach(async (el) => {
+    const paths = JSON.parse(el.dataset.photos);
+    const { data } = await sb.storage.from('estimations').createSignedUrls(paths, 3600);
+    el.innerHTML = (data || []).filter((d) => d.signedUrl).map((d) => `<a href="${esc(d.signedUrl)}" target="_blank" rel="noopener"><img src="${esc(d.signedUrl)}" alt=""></a>`).join('');
+  });
+}
+
 // ---------- Catégories ----------
 
 function renderCategories() {
@@ -557,6 +607,8 @@ function renderBoutique() {
   const h = Array.isArray(b.horaires) && b.horaires.length === 7 ? b.horaires : HORAIRES_PAR_DEFAUT;
   // Les bannières existantes, plus un emplacement vide pour en ajouter une.
   const vitrines = [...b.vitrine, { titre: '' }];
+  const avis = b.avis;
+  const listeAvis = [...avis.liste, { texte: '' }];
   const f = (k, label, type = 'text', hint = '') => champ(k, label, b, { type, hint });
   qs('#tab-content').innerHTML = `
     <form id="shop" class="block-form">
@@ -617,6 +669,36 @@ function renderBoutique() {
           ${v.photo ? `<img class="vitrine-preview" src="${esc(v.photo)}" alt="" onerror="this.remove()">` : ''}
         </fieldset>`).join('')}
       </section>
+      <section class="block">
+        <h2>Photos du magasin</h2>
+        <p class="muted small">Affichées sur l'accueil dans « Le magasin ». La section reste masquée tant qu'il n'y a aucune photo.</p>
+        <div class="photos">
+          ${b.galerie.map((src, i) => `
+            <div class="photo"><img src="${esc(src)}" alt="">
+              <label class="photo-btn photo-del" title="Retirer"><input type="checkbox" name="g_del_${i}" hidden>${icon('x')}</label>
+            </div>`).join('')}
+        </div>
+        <label class="field"><span>Ajouter des photos</span><input type="file" name="g_new" accept="image/*" multiple></label>
+      </section>
+      <section class="block">
+        <h2>Avis Google</h2>
+        <p class="muted small">Recopiez de vrais avis publiés sur la fiche Google du magasin. La section reste masquée tant qu'aucun avis n'est saisi.</p>
+        <div class="cols">
+          <label class="field"><span>Note moyenne (ex. 4,8)</span><input name="a_note" inputmode="decimal" value="${esc(avis.note ?? '')}"></label>
+          <label class="field"><span>Nombre d'avis</span><input name="a_nombre" inputmode="numeric" value="${esc(avis.nombre ?? '')}"></label>
+        </div>
+        <label class="field full"><span>Lien vers la fiche Google</span><input name="a_lien" type="url" value="${esc(avis.lien)}" placeholder="https://maps.app.goo.gl/…"></label>
+        ${listeAvis.map((a, i) => `
+        <fieldset class="vitrine-edit">
+          <legend>${a.texte ? esc(a.auteur || 'Avis') : 'Nouvel avis'}</legend>
+          <div class="cols">
+            <label class="field"><span>Auteur</span><input name="av_auteur_${i}" value="${esc(a.auteur || '')}"></label>
+            <label class="field"><span>Note</span><select name="av_note_${i}">${[5, 4, 3, 2, 1].map((n) => `<option${Number(a.note || 5) === n ? ' selected' : ''}>${n}</option>`).join('')}</select></label>
+            <label class="field"><span>Date</span><input name="av_date_${i}" value="${esc(a.date || '')}" placeholder="Ex. : il y a 2 mois"></label>
+          </div>
+          <label class="field full"><span>Texte de l'avis${a.texte ? ' (vider pour supprimer)' : ''}</span><textarea name="av_texte_${i}" rows="3">${esc(a.texte || '')}</textarea></label>
+        </fieldset>`).join('')}
+      </section>
       <div class="save-bar"><button class="btn btn-green btn-lg" type="submit">${icon('check')}Enregistrer les infos</button></div>
     </form>`;
 
@@ -638,8 +720,16 @@ function renderBoutique() {
         }
         vitrine.push({ titre, categorie: t(`v_categorie_${i}`), texte: t(`v_texte_${i}`), lien: t(`v_lien_${i}`), icone: t(`v_icone_${i}`), photo });
       }
+      const galerie = b.galerie.filter((_, i) => !fd.get(`g_del_${i}`));
+      for (const file of fd.getAll('g_new').filter((x) => x && x.size)) galerie.push(await envoyer(await reduire(file, 2000), 'magasin'));
+      anciennes.push(...b.galerie.filter((_, i) => fd.get(`g_del_${i}`)));
+      const nb = (k) => { const v = Number(t(k).replace(',', '.')); return t(k) && Number.isFinite(v) ? v : null; };
+      const avisRow = {
+        note: nb('a_note'), nombre: nb('a_nombre'), lien: t('a_lien'),
+        liste: listeAvis.map((_, i) => ({ auteur: t(`av_auteur_${i}`), note: Number(t(`av_note_${i}`)) || 5, date: t(`av_date_${i}`), texte: t(`av_texte_${i}`) })).filter((x) => x.texte),
+      };
       const row = {
-        id: 1, nom: t('nom'), tel: t('tel'), email: t('email'), facebook: t('facebook'), adresse: t('adresse'),
+        id: 1, avis: avisRow, galerie, nom: t('nom'), tel: t('tel'), email: t('email'), facebook: t('facebook'), adresse: t('adresse'),
         slogan: t('slogan'), atout: t('atout'), horaires_note: t('horaires_note'), vitrine,
         horaires: h.map((d, i) => ({ jour: d.jour, ouvert: Boolean(fd.get(`ouvert-${i}`)), de: t(`de-${i}`) || '10:00', a: t(`a-${i}`) || '19:00' })),
         updated_at: new Date().toISOString(),
@@ -663,7 +753,37 @@ app.addEventListener('click', async (e) => {
   const art = state.articles.find((a) => String(a.id) === btn.closest('[data-id]')?.dataset.id);
   const cat = state.categories.find((c) => String(c.id) === btn.closest('[data-cat]')?.dataset.cat);
 
+  const resaId = btn.closest('[data-resa]')?.dataset.resa;
+  const est = state.estimations.find((x) => String(x.id) === btn.closest('[data-estim]')?.dataset.estim);
+
   if (act === 'logout') { await sb.auth.signOut(); ecranConnexion(); }
+  else if (act === 'annuler-resa') {
+    const r = state.reservations.find((x) => String(x.id) === resaId);
+    if (!confirm(`Annuler la réservation de ${r.nom} ? L'article est remis en vente tout de suite.`)) return;
+    await busy(btn, async () => {
+      const e1 = await sb.from('reservations').update({ annulee: true }).eq('id', r.id);
+      if (e1.error) throw e1.error;
+      if (r.article_id) {
+        const e2 = await sb.from('articles').update({ reserve_jusqu_au: null }).eq('id', r.article_id);
+        if (e2.error) throw e2.error;
+      }
+      await recharger(); coquille(); toast('Réservation annulée');
+    });
+  } else if (act === 'traiter') {
+    await busy(btn, async () => {
+      const { error } = await sb.from('estimations').update({ traitee: !est.traitee }).eq('id', est.id);
+      if (error) throw error;
+      await recharger(); coquille();
+    });
+  } else if (act === 'del-estim') {
+    if (!confirm(`Supprimer la demande de ${est.nom} et ses photos ?`)) return;
+    await busy(btn, async () => {
+      if (est.photos.length) await sb.storage.from('estimations').remove(est.photos).catch(console.warn);
+      const { error } = await sb.from('estimations').delete().eq('id', est.id);
+      if (error) throw error;
+      await recharger(); coquille(); toast('Demande supprimée');
+    });
+  }
   else if (act === 'new') ouvrirArticle(null);
   else if (act === 'edit') ouvrirArticle(art);
   else if (act === 'vendu') {

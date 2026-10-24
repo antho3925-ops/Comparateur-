@@ -13,7 +13,7 @@ export const ARTICLE_FIELDS = [
   'titre', 'marque', 'categorie_id', 'type', 'prix', 'prix_note', 'etat', 'garantie', 'garantie_jusqu_au',
   'facture', 'inclus', 'specs', 'stockage', 'couleur', 'matiere', 'poids', 'ram', 'photos', 'disponible',
 ];
-export const BOUTIQUE_FIELDS = ['nom', 'adresse', 'tel', 'email', 'facebook', 'slogan', 'atout', 'horaires', 'horaires_note', 'vitrine'];
+export const BOUTIQUE_FIELDS = ['nom', 'adresse', 'tel', 'email', 'facebook', 'slogan', 'atout', 'horaires', 'horaires_note', 'vitrine', 'avis', 'galerie'];
 
 // Mardi-samedi 10h-19h (carte du magasin).
 export const HORAIRES_PAR_DEFAUT = JOURS.map((jour) => ({
@@ -65,6 +65,7 @@ export function seedToData(seed) {
     ram: a.ram ?? null,
     photos: a.photos ?? (a.photo ? [a.photo] : []),
     disponible: a.disponible !== false,
+    reserve_jusqu_au: a.reserve_jusqu_au ?? null,
     // Plus l'identifiant est grand, plus l'article est récent.
     created_at: new Date(base + a.id * 60000).toISOString(),
   }));
@@ -81,6 +82,8 @@ export function seedToData(seed) {
     // Conserve la remarque d'origine : elle contient « à confirmer »,
     // elle reste donc visible uniquement dans l'admin.
     horaires_note: b.horaires && /confirmer/i.test(b.horaires) ? b.horaires : '',
+    avis: seed.avis || null,
+    galerie: seed.galerie || [],
     vitrine: (seed.vitrines || []).map(({ titre, categorie, texte, icone, lien, photo }) => ({ titre, categorie, texte, icone, lien, photo })),
   };
   return { source: 'json', boutique, categories, articles };
@@ -95,6 +98,9 @@ function relier(data) {
   // Ancien format : une seule bannière (objet) au lieu d'une liste.
   const v = data.boutique.vitrine;
   data.boutique.vitrine = Array.isArray(v) ? v.filter((x) => x && x.titre) : v?.titre ? [v] : [];
+  const av = data.boutique.avis || {};
+  data.boutique.avis = { note: av.note ?? null, nombre: av.nombre ?? null, lien: av.lien || '', liste: Array.isArray(av.liste) ? av.liste.filter((x) => x && x.texte) : [] };
+  data.boutique.galerie = Array.isArray(data.boutique.galerie) ? data.boutique.galerie.filter(Boolean) : [];
   if (!Array.isArray(data.boutique.horaires) || data.boutique.horaires.length !== 7) {
     data.boutique.horaires = HORAIRES_PAR_DEFAUT;
   }

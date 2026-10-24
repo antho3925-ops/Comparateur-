@@ -1,7 +1,7 @@
 // En-tête, pied de page, cartes et animations communes aux pages publiques.
 
 import { icon } from './icons.js';
-import { esc, formatPrix, pub, telHref, mapsHref, facebookHref, qs, qsa } from './util.js';
+import { esc, formatPrix, pub, telHref, mapsHref, facebookHref, estReserve, qs, qsa } from './util.js';
 
 const NAV = [
   ['accueil', 'index.html', 'Accueil'],
@@ -88,6 +88,7 @@ export function articleCard(a) {
       <div class="card-media">
         ${photoOrPlaceholder(a)}
         ${a.disponible ? '' : '<span class="badge-sold">Vendu</span>'}
+        ${estReserve(a) ? '<span class="badge-sold badge-reserved">Réservé</span>' : ''}
         ${a.categorie ? `<span class="card-cat" title="${esc(a.categorie.nom)}">${catVisual(a.categorie)}</span>` : ''}
       </div>
       <div class="card-body">
