@@ -115,6 +115,11 @@
     '<div class="ix-scene ix-s0">' + scene0 + '<span class="ix-cap">Téléphonie</span></div>' +
     '<div class="ix-scene ix-s1"><div class="ix-fan">' + scene1 + '</div><span class="ix-cap">Informatique</span></div>' +
     '<div class="ix-scene ix-s2"><div class="ix-fan2">' + scene2 + '</div><span class="ix-cap">Tablettes &amp; smartphones</span></div>' +
+    '<div class="ix-scene ix-sp">' + [
+      ['paytoocash-photos/intro-pokemon.jpg', -24], ['paytoocash-photos/intro-iphone.jpg', 0],
+      ['paytoocash-photos/intro-gameboy.jpg', 24]].map(function (f, i) {
+      return '<span class="ix-ph" style="--r:' + f[1] + 'deg;--dl:' + i * 110 + 'ms"><img src="' + f[0] + '" alt=""></span>';
+    }).join('') + '<span class="ix-cap">Pokémon, rétro gaming &amp; iPhone</span></div>' +
     '<div class="ix-scene ix-s3"><div class="ix-s3-d">' + scene3 + '</div><div class="ix-s3-w">' + montre + '</div><span class="ix-cap">Bijoux, or &amp; montres</span></div>' +
     '<div class="ix-logo"><img src="paytoocash-logo/logo.svg" alt=""><i></i><span>Achat · Vente · Rachat cash</span></div>' +
     '<button class="ix-skip" type="button">Passer</button>' +
@@ -135,7 +140,7 @@
     document.documentElement.classList.remove('ix-on');
     setTimeout(function () { el.remove(); }, 1000);
   }
-  var timer = setTimeout(terminer, 6500);
+  var timer = setTimeout(terminer, 7500);
   el.addEventListener('click', function () { clearTimeout(timer); terminer(); });
   addEventListener('keydown', function (e) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { clearTimeout(timer); terminer(); } });
 })();
