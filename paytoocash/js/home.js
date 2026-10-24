@@ -115,14 +115,17 @@ try {
           ${b.avis.note ? `<p class="avis-score">${etoiles(b.avis.note)} <strong>${String(b.avis.note).replace('.', ',')}/5</strong>${b.avis.nombre ? ` · ${esc(b.avis.nombre)} avis Google` : ''}</p>` : ''}
         </div>
         <div class="avis-grid">
-          ${b.avis.liste.map((a) => `
-            <figure class="avis reveal">
+          ${b.avis.liste.map((a, i) => `
+            <figure class="avis reveal"${i >= 6 ? ' hidden' : ''}>
               ${a.note ? `<div class="avis-stars" aria-label="${a.note} sur 5">${etoiles(a.note)}</div>` : ''}
               <blockquote>${esc(a.texte)}</blockquote>
               <figcaption><strong>${esc(a.auteur || 'Client')}</strong>${a.date ? ` · ${esc(a.date)}` : ''}</figcaption>
             </figure>`).join('')}
         </div>
-        ${b.avis.lien ? `<p class="center"><a class="btn btn-outline" href="${esc(b.avis.lien)}" target="_blank" rel="noopener">${icon('star')}Voir tous les avis sur Google</a></p>` : ''}
+        <p class="btn-row avis-actions">
+          ${b.avis.liste.length > 6 ? `<button class="btn btn-ghost" type="button" id="plus-avis">Afficher plus d'avis (${b.avis.liste.length - 6})</button>` : ''}
+          ${b.avis.lien ? `<a class="btn btn-outline" href="${esc(b.avis.lien)}" target="_blank" rel="noopener">${icon('star')}Voir tous les avis sur Google</a>` : ''}
+        </p>
       </div>
     </section>` : ''}
 
@@ -155,6 +158,10 @@ try {
 
     ${infosPratiques(b)}`;
 
+  document.getElementById('plus-avis')?.addEventListener('click', (e) => {
+    document.querySelectorAll('.avis[hidden]').forEach((el) => { el.hidden = false; el.classList.add('in'); });
+    e.currentTarget.remove();
+  });
   jsonLd(b);
   finishPage(data);
 } catch (e) {

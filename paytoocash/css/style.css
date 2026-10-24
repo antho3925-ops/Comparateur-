@@ -247,6 +247,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 @media (min-width: 760px) { .avis-grid { grid-template-columns: repeat(3, 1fr); } }
 .avis { margin: 0; background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; display: flex; flex-direction: column; gap: 8px; }
 .avis blockquote { margin: 0; color: #333; }
+.avis[hidden] { display: none; }
+.avis-actions { justify-content: center; }
 .avis figcaption { margin-top: auto; font-size: .85rem; color: var(--grey-2); }
 
 .fb-logo { flex: none; }
