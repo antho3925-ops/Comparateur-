@@ -54,7 +54,31 @@
     ['billet', 66, 350, 76, 960, -140], ['manette', 60, 65, 74, 1020, 200], ['piece', 36, 205, 68, 1080, -300],
   ];
 
-  var html = '<div class="ix" id="intro" role="presentation" aria-hidden="true">' +
+  // Scène 1 : ordinateurs portables qui s'ouvrent en éventail.
+  var PORTABLES = [
+    ['#d6d8dc', '#f3f4f6', -34, 'linear-gradient(135deg,#a8c0ff,#3f2b96)', 0],
+    ['#ecbcc4', '#fbe7ea', -12, 'linear-gradient(135deg,#ff9a8b,#ff6a88 55%,#ff99ac)', 90],
+    ['#e6df6e', '#f8f5cf', 12, 'linear-gradient(135deg,#f6d365,#fda085)', 180],
+    ['#2e3b58', '#cfd5e2', 34, 'linear-gradient(135deg,#43cea2,#185a9d)', 270],
+  ];
+  var scene1 = PORTABLES.map(function (l) {
+    return '<div class="ix-lpw" style="--c:' + l[0] + ';--c2:' + l[1] + ';--rz:' + l[2] + 'deg;--wp:' + l[3] + ';--dl:' + l[4] + 'ms">' +
+      '<div class="ix-cam"><div class="ix-lp"><div class="ix-lp-base"><i class="kb"></i><i class="tp"></i></div>' +
+      '<div class="ix-lp-lid"><i class="scr"></i></div></div></div></div>';
+  }).join('');
+  // Scène 2 : tablettes déployées comme un jeu de cartes.
+  var TABLETTES = [['#6f7076', -26], ['#c6dde3', -13], ['#e7dcc8', 0], ['#dcd2e8', 13], ['', 26]];
+  var scene2 = TABLETTES.map(function (t, i) {
+    return '<div class="ix-tab' + (t[0] ? '' : ' ix-tab-front') + '" style="--c:' + (t[0] || '#111') + ';--r:' + t[1] + 'deg;--dl:' + i * 60 + 'ms"><i></i></div>';
+  }).join('');
+  // Scène 3 : diamant en trait doré qui se dessine.
+  var traits = ['M35 20H65L85 34L50 82L15 34Z', 'M15 34H85', 'M15 34L35 20L32.5 34L50 20L67.5 34L65 20L85 34',
+    'M32.5 34L50 82L67.5 34', 'M15 34L41 58M85 34L59 58M50 34V82'];
+  var scene3 = '<i class="ix-glow"></i><svg class="ix-diam" viewBox="0 0 100 100"><defs><linearGradient id="ix-gold" x1="0" y1="0" x2="1" y2="1">' +
+    '<stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#e8b530"/><stop offset="1" stop-color="#b9851a"/></linearGradient></defs>' +
+    traits.map(function (d, i) { return '<path pathLength="1" style="--dl:' + i * 90 + 'ms" d="' + d + '"/>'; }).join('') + '</svg><i class="ix-spark"></i>';
+
+  var html = '<div class="ix\" id="intro" role="presentation" aria-hidden="true">' +
     '<svg width="0" height="0" style="position:absolute"><defs>' +
       '<linearGradient id="ix-wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f6b3a"/><stop offset=".55" stop-color="#2f8f52"/><stop offset="1" stop-color="#e8b530"/></linearGradient>' +
       '<linearGradient id="ix-sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient>' +
@@ -64,6 +88,9 @@
       return '<span class="ix-o" style="--a:' + v[2] + 'deg;--d:' + v[3] + 'vmax;--t:' + v[4] + 'ms;--s:' + v[5] + 'deg;--w:' + v[1] + 'px">' +
         '<span class="ix-o-in">' + OBJETS[v[0]] + '</span></span>';
     }).join('') + '</div>' +
+    '<div class="ix-scene ix-s1"><div class="ix-fan">' + scene1 + '</div><span class="ix-cap">Informatique</span></div>' +
+    '<div class="ix-scene ix-s2"><div class="ix-fan2">' + scene2 + '</div><span class="ix-cap">Tablettes &amp; smartphones</span></div>' +
+    '<div class="ix-scene ix-s3">' + scene3 + '<span class="ix-cap">Bijoux &amp; or</span></div>' +
     '<div class="ix-logo"><img src="paytoocash-logo/logo.svg" alt=""><i></i><span>Achat · Vente · Rachat cash</span></div>' +
     '<button class="ix-skip" type="button">Passer</button>' +
     '</div>';
@@ -83,7 +110,7 @@
     document.documentElement.classList.remove('ix-on');
     setTimeout(function () { el.remove(); }, 1000);
   }
-  var timer = setTimeout(terminer, 3100);
+  var timer = setTimeout(terminer, 5600);
   el.addEventListener('click', function () { clearTimeout(timer); terminer(); });
   addEventListener('keydown', function (e) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { clearTimeout(timer); terminer(); } });
 })();
