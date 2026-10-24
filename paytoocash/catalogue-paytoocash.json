@@ -49,7 +49,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "photo": "paytoocash-photos/samsung-smart-tv-49-curve-4k.jpg",
-      "disponible": true
+      "disponible": true,
+      "specs": "Modèle UE49NU7665, écran incurvé"
     },
     {
       "id": 3,
@@ -85,7 +86,8 @@
       "etat": "Très bon état",
       "garantie": true,
       "photo": "paytoocash-photos/bosch-gll-3-80-cg-laser.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Chargeur, sacoche et support"
     },
     {
       "id": 6,
@@ -121,7 +123,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "photo": "paytoocash-photos/flex-vce-44-ac-aspirateur-pro.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Flexible, 3 tubes inox et embouts"
     },
     {
       "id": 9,
@@ -146,7 +149,8 @@
       "garantie": true,
       "garantie_jusqu_au": "04/08/2028",
       "photo": "paytoocash-photos/msi-mag-274cxf-ecran-neuf.jpg",
-      "disponible": true
+      "disponible": true,
+      "specs": "27\" incurvé, dalle Rapid VA, 280 Hz, 0,5 ms, HDR Ready"
     },
     {
       "id": 11,
@@ -219,7 +223,8 @@
       "etat": "Très bon état",
       "garantie": true,
       "photo": "paytoocash-photos/meta-quest-3s-128go.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Boîte et 2 manettes"
     },
     {
       "id": 17,
@@ -230,17 +235,19 @@
       "prix": 450,
       "etat": "Parfait état",
       "garantie": true,
-      "specs": "15,6\" FHD, Intel i5-11400H, 8 Go DDR4, SSD 512 Go (d'après l'étiquette du carton)",
+      "specs": "15,6\" Full HD 144 Hz, Intel Core i5-11400H, carte graphique 4 Go, 8 Go DDR4, SSD 512 Go, Windows 10",
       "photo": "paytoocash-photos/asus-tuf-gaming-tuf506h-pc.jpg",
-      "disponible": true
+      "disponible": true,
+      "ram": "8 Go",
+      "stockage": "512 Go"
     },
     {
       "id": 18,
-      "titre": "iPhone 16 violet",
+      "titre": "iPhone 16 rose",
       "marque": "Apple",
       "categorie": "Téléphones",
       "type": "Smartphone",
-      "couleur": "Violet",
+      "couleur": "Rose",
       "prix": 680,
       "etat": "Parfait état",
       "garantie": true,
@@ -263,12 +270,12 @@
     },
     {
       "id": 20,
-      "titre": "iPad mini 6 silver 256 Go + coque et clavier",
+      "titre": "iPad mini 6 lumière stellaire 256 Go + coque et clavier",
       "marque": "Apple",
       "categorie": "Tablettes",
       "type": "Tablette",
       "stockage": "256 Go",
-      "couleur": "Silver",
+      "couleur": "Lumière stellaire",
       "prix": 400,
       "etat": "Parfait état",
       "garantie": true,
@@ -298,7 +305,7 @@
       "prix": 180,
       "etat": "Parfait état",
       "garantie": true,
-      "inclus": "À confirmer (titre coupé)",
+      "inclus": "Housse de transport, grip pour Joy-Con et chargeur",
       "photo": "paytoocash-photos/nintendo-switch-oled.jpg",
       "disponible": true
     },
@@ -341,7 +348,9 @@
       "etat": "Parfait état",
       "garantie": true,
       "photo": "paytoocash-photos/philips-neopix-230-videoprojecteur.jpg",
-      "disponible": true
+      "disponible": true,
+      "facture": true,
+      "inclus": "Télécommande"
     },
     {
       "id": 26,
@@ -368,7 +377,9 @@
       "etat": "Très bon état",
       "garantie": null,
       "photo": "paytoocash-photos/samsung-galaxy-tab-s10-ultra-256go.jpg",
-      "disponible": true
+      "disponible": true,
+      "inclus": "Étui et stylet S Pen",
+      "specs": "Batterie : santé 100 %, 134 cycles de charge"
     },
     {
       "id": 28,
@@ -435,7 +446,7 @@
       "prix": 950,
       "etat": "Comme neuve",
       "garantie": null,
-      "inclus": "À confirmer (titre coupé)",
+      "inclus": "Housse Ibanez",
       "disponible": true,
       "photo": "paytoocash-photos/ibanez-jem77p-bfp-guitare.jpg"
     },
@@ -499,7 +510,7 @@
       "prix": 200,
       "etat": "Parfait état",
       "garantie": null,
-      "inclus": "Batterie et caisse",
+      "inclus": "Batterie 18 V 5 Ah et caisse",
       "disponible": true,
       "photo": "paytoocash-photos/dewalt-dcgg571-graisseuse.jpg"
     },
@@ -551,7 +562,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "disponible": true,
-      "photo": "paytoocash-photos/dell-latitude-5310.jpg"
+      "photo": "paytoocash-photos/dell-latitude-5310.jpg",
+      "specs": "Intel Core i5 10e génération"
     },
     {
       "id": 42,
@@ -562,7 +574,7 @@
       "prix": 150,
       "etat": "Bon état",
       "garantie": true,
-      "specs": "Moteur Honda visible sur les photos, à confirmer",
+      "specs": "Moteur Honda",
       "disponible": true,
       "photo": "paytoocash-photos/fraise-a-neige-essence.jpg"
     },
@@ -587,11 +599,12 @@
       "stockage": "256 Go",
       "couleur": "Orange",
       "prix": 1100,
-      "etat": "Très bon état",
+      "etat": "Bon état",
       "garantie": true,
       "inclus": "À confirmer (titre coupé)",
       "disponible": true,
-      "photo": "paytoocash-photos/apple-iphone-17-pro-max-256go-orange.jpg"
+      "photo": "paytoocash-photos/apple-iphone-17-pro-max-256go-orange.jpg",
+      "specs": "Petit choc sur un coin du cadre (visible sur les photos)"
     },
     {
       "id": 45,
@@ -602,7 +615,7 @@
       "prix": 650,
       "etat": "Parfait état",
       "garantie": null,
-      "specs": "Le titre dit 16/55 mm, les boîtes indiquent 16-50 mm",
+      "specs": "Hybride, objectifs NIKKOR Z DX 16-50 mm et 50-250 mm f/4.5-6.3 VR",
       "disponible": true,
       "photo": "paytoocash-photos/nikon-z50-kit-16-50-50-250.jpg"
     }
