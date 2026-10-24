@@ -1,0 +1,64 @@
+/* Animation d'entrée de l'accueil (voir js/intro.js). */
+
+.ix-on, .ix-on body { overflow: hidden; }
+.ix {
+  position: fixed; inset: 0; z-index: 1000; overflow: hidden; cursor: pointer;
+  background: radial-gradient(circle at 50% 50%, #1d5a35 0%, #0f2e1b 55%, #081a0f 100%);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent var(--ix-r), #000 calc(var(--ix-r) + 1px));
+  mask: radial-gradient(circle at 50% 50%, transparent var(--ix-r), #000 calc(var(--ix-r) + 1px));
+}
+
+/* Vortex : anneaux en rotation, traînées lumineuses, cœur doré */
+.ix-vortex { position: absolute; left: calc(50% - 50vmax); top: calc(50% - 50vmax); width: 100vmax; height: 100vmax; display: grid; place-items: center; animation: ix-vortex-in 1s cubic-bezier(.2, .8, .2, 1) both; }
+.ix-vortex > i { position: absolute; border-radius: 50%; }
+.ix-ring { inset: 0; margin: auto; }
+.ix-ring.r1 { width: 70%; height: 70%; background: conic-gradient(from 0deg, transparent 0 8%, rgba(232, 181, 48, .55) 18%, transparent 30% 52%, rgba(232, 181, 48, .4) 64%, transparent 76%); -webkit-mask: radial-gradient(circle, transparent 38%, #000 40%, #000 47%, transparent 50%); mask: radial-gradient(circle, transparent 38%, #000 40%, #000 47%, transparent 50%); filter: blur(2px); animation: ix-spin 2.4s linear infinite; }
+.ix-ring.r2 { width: 46%; height: 46%; background: conic-gradient(from 90deg, transparent 0 12%, rgba(255, 236, 170, .7) 22%, transparent 34% 60%, rgba(120, 200, 140, .5) 70%, transparent 82%); -webkit-mask: radial-gradient(circle, transparent 34%, #000 37%, #000 46%, transparent 50%); mask: radial-gradient(circle, transparent 34%, #000 37%, #000 46%, transparent 50%); filter: blur(1.5px); animation: ix-spin 1.6s linear infinite reverse; }
+.ix-ring.r3 { width: 26%; height: 26%; background: conic-gradient(from 200deg, transparent 0 10%, rgba(255, 255, 255, .75) 20%, transparent 32% 58%, rgba(232, 181, 48, .8) 70%, transparent 84%); -webkit-mask: radial-gradient(circle, transparent 30%, #000 34%, #000 46%, transparent 50%); mask: radial-gradient(circle, transparent 30%, #000 34%, #000 46%, transparent 50%); animation: ix-spin 1.1s linear infinite; }
+.ix-streaks { width: 100%; height: 100%; inset: 0; margin: auto; opacity: .35; background: repeating-conic-gradient(from 0deg, rgba(255, 230, 160, .5) 0 .6deg, transparent .6deg 7deg); -webkit-mask: radial-gradient(circle, transparent 6%, #000 20%, transparent 60%); mask: radial-gradient(circle, transparent 6%, #000 20%, transparent 60%); animation: ix-spin 6s linear infinite; }
+.ix-core { width: 9vmax; height: 9vmax; inset: 0; margin: auto; background: radial-gradient(circle, #fff6d6 0%, #f3cd5c 30%, rgba(232, 181, 48, .35) 60%, transparent 72%); filter: blur(4px); animation: ix-pulse 1.2s ease-in-out infinite alternate; }
+
+/* Objets éjectés en spirale */
+.ix-objets { position: absolute; left: 50%; top: 50%; width: 0; height: 0; }
+.ix { --k: 1; }
+@media (min-width: 760px) { .ix { --k: 1.7; } }
+.ix-o { position: absolute; left: 0; top: 0; width: calc(var(--w) * var(--k)); margin-left: calc(var(--w) * var(--k) / -2); margin-top: calc(var(--w) * var(--k) / -2);
+  opacity: 0; animation: ix-spiral 1.9s cubic-bezier(.55, .05, .7, .35) var(--t) both; }
+.ix-o-in { display: block; filter: drop-shadow(0 6px 10px rgba(0, 0, 0, .45)); animation: ix-self 1.9s linear var(--t) both; }
+.ix-o svg { display: block; width: 100%; height: auto; }
+
+/* Logo */
+.ix-logo { position: absolute; inset: 0; justify-content: center; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 12px; animation: ix-logo 2.9s cubic-bezier(.2, .8, .2, 1) both; }
+.ix-logo img { width: min(300px, 68vw); height: auto; background: #fff; border-radius: 18px; padding: 14px 18px; box-shadow: 0 0 0 1px rgba(232, 181, 48, .6), 0 18px 50px rgba(0, 0, 0, .45), 0 0 60px rgba(232, 181, 48, .35); }
+.ix-logo span { color: #f3e3b3; font: 700 .78rem/1 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; letter-spacing: .32em; text-transform: uppercase; animation: ix-fade-up .6s ease 1.7s both; }
+.ix-logo i { position: absolute; left: 50%; top: 50%; width: min(300px, 68vw); aspect-ratio: 336 / 80; transform: translate(-50%, calc(-50% - 13px)); padding: 14px 18px; box-sizing: content-box; border-radius: 18px; pointer-events: none;
+  background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, .85) 50%, transparent 65%) no-repeat; background-size: 250% 100%; background-position: 130% 0; animation: ix-shine 1s ease 1.75s both; mix-blend-mode: overlay; }
+
+.ix-skip { position: absolute; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 3; background: rgba(255, 255, 255, .12); color: #fff; border: 1px solid rgba(255, 255, 255, .3); border-radius: 999px; padding: 8px 16px; font: 600 .85rem system-ui, sans-serif; cursor: pointer; backdrop-filter: blur(6px); animation: ix-fade-up .4s ease .6s both; }
+
+/* Sortie : le vortex s'ouvre comme un portail sur le site */
+.ix::after { content: ""; position: absolute; left: 50%; top: 50%; width: calc(var(--ix-r) * 2 + 8px); height: calc(var(--ix-r) * 2 + 8px); transform: translate(-50%, -50%); border-radius: 50%;
+  box-shadow: 0 0 0 3px #e8b530, 0 0 40px 8px rgba(232, 181, 48, .6); opacity: 0; pointer-events: none; }
+.ix.ix-open { animation: ix-portal .9s cubic-bezier(.7, 0, .25, 1) both; pointer-events: none; }
+.ix.ix-open::after { opacity: 1; }
+.ix.ix-open .ix-logo { animation: ix-logo-out .6s ease both; }
+.ix.ix-open .ix-skip { opacity: 0; }
+.ix.ix-fade { animation: ix-fade-out .6s ease both; pointer-events: none; }
+
+@keyframes ix-spin { to { transform: rotate(360deg); } }
+@keyframes ix-pulse { from { transform: scale(.85); opacity: .8; } to { transform: scale(1.15); opacity: 1; } }
+@keyframes ix-vortex-in { from { transform: scale(.05) rotate(-90deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ix-spiral {
+  0% { transform: rotate(var(--a)) translateX(0) rotate(calc(-1 * var(--a))) scale(.05); opacity: 0; }
+  12% { opacity: 1; }
+  100% { transform: rotate(calc(var(--a) + 200deg)) translateX(var(--d)) rotate(calc(-1 * var(--a) - 200deg)) scale(1.35); opacity: 1; }
+}
+@keyframes ix-self { from { transform: rotate(0); } to { transform: rotate(var(--s)); } }
+@keyframes ix-logo { 0%, 38% { transform: scale(.4); opacity: 0; filter: blur(8px); } 58% { transform: scale(1.04); opacity: 1; filter: none; } 70%, 100% { transform: scale(1); opacity: 1; } }
+@keyframes ix-logo-out { to { transform: scale(1.6); opacity: 0; filter: blur(6px); } }
+@keyframes ix-shine { to { background-position: -30% 0; } }
+@keyframes ix-fade-up { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+@keyframes ix-portal { from { --ix-r: 0px; } to { --ix-r: 110vmax; } }
+@keyframes ix-fade-out { to { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) { .ix { display: none; } }
