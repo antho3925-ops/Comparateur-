@@ -7,7 +7,9 @@ import { esc, pub, smsHref, telIntl, facebookHref } from './util.js';
 initPage('accueil');
 const main = document.getElementById('main');
 
-const MARQUES_EN_PLUS = ['Nintendo', 'Sony', 'Samsung', 'LG', 'Toshiba', 'Lenovo', 'Whirlpool', 'Singer', 'Metabo', 'Makita'];
+// Marques vendues en magasin (js/marques.js) : [nom, chemin SVG du logo ou null].
+const MARQUES = window.PAYTOO_MARQUES || [];
+const norme = (m) => m.toLowerCase().replace(/[^a-z0-9]/g, '');
 
 const etoiles = (n) => {
   const v = Math.round(Number(n) || 0);
@@ -35,9 +37,13 @@ try {
   for (const a of articles) if (a.categorie && a.disponible) counts.set(a.categorie.id, (counts.get(a.categorie.id) || 0) + 1);
   const derniers = articles.filter((a) => a.disponible).sort((x, y) => String(y.created_at).localeCompare(String(x.created_at))).slice(0, 8);
   const catParSlug = new Map(categories.map((c) => [c.slug, c]));
-  // Marques du catalogue, complétées par d'autres grandes marques vendues en magasin (en texte, sans logo).
-  const marques = [...new Set([...articles.map((a) => pub(a.marque)).filter(Boolean), ...MARQUES_EN_PLUS])]
-    .sort((x, y) => x.localeCompare(y, 'fr', { sensitivity: 'base' }));
+  // Marques connues, complétées par celles du catalogue qui n'y figurent pas encore.
+  const connues = new Set(MARQUES.map(([m]) => norme(m)));
+  const marques = [...MARQUES, ...[...new Set(articles.map((a) => pub(a.marque)).filter(Boolean))]
+    .filter((m) => !connues.has(norme(m))).map((m) => [m, null])];
+  const marqueHtml = ([nom, d]) => (d
+    ? `<li class="m-logo"><svg viewBox="0 0 24 24" role="img" aria-label="${esc(nom)}"><title>${esc(nom)}</title><path d="${d}"/></svg></li>`
+    : `<li>${esc(nom)}</li>`);
   const bouton = (lien) => {
     if (/#infos$/.test(lien || '')) return 'Venir voir en magasin';
     const c = catParSlug.get(new URLSearchParams((lien || '').split('?')[1] || '').get('cat'));
@@ -49,7 +55,7 @@ try {
       <div class="wrap hero-in">
         <img class="hero-logo" src="paytoocash-logo/logo.svg" alt="Paytoocash" width="320" height="76">
         <h1 class="hero-title">${esc(pub(b.slogan) || 'Nous rachetons tous vos objets en cash')}</h1>
-        <p class="hero-sub">Achat-vente d'occasion à Pontarlier : high-tech, gaming, outillage pro et bien plus, vérifiés et garantis.${pub(b.atout) ? ` ${esc(b.atout)} à visiter.` : ''}</p>
+        <p class="hero-sub">Achat-vente d'occasion à Pontarlier : high-tech, gaming, outillage pro, luxe et bien plus, vérifiés et garantis.${pub(b.atout) ? ` ${esc(b.atout)} à visiter.` : ''}</p>
         <div class="btn-row hero-ctas">
           <a class="btn btn-gold btn-lg" href="rachat.html">${icon('cash')}Faire racheter un objet</a>
           <a class="btn btn-white btn-lg" href="catalogue.html">${icon('search')}Voir le catalogue</a>
@@ -88,8 +94,9 @@ try {
     <section class="marques" aria-label="Les marques que vous trouverez chez nous">
       <p class="marques-titre">Les marques que vous trouverez chez nous</p>
       <div class="marques-piste"><div class="marques-defile">
-        ${[0, 1].map((k) => `<ul${k ? ' aria-hidden="true"' : ''}>${marques.map((m) => `<li>${esc(m)}</li>`).join('')}</ul>`).join('')}
+        ${[0, 1].map((k) => `<ul${k ? ' aria-hidden="true"' : ''}>${marques.map(marqueHtml).join('')}</ul>`).join('')}
       </div></div>
+      <p class="marques-note">Revendeur indépendant d'articles authentiques : Paytoocash n'est pas affilié aux marques citées.</p>
     </section>
 
     ${b.vitrine.length ? `

@@ -4,6 +4,8 @@ import { initPage, finishPage, articleCard, catVisual, photoOrPlaceholder, showE
 import { esc, formatPrix, pub, telHref, smsHref, whatsappHref, estReserve, heureFin, param, qs, qsa } from './util.js';
 
 initPage('catalogue');
+// Arrivée depuis une carte agrandie : la fiche se pose en douceur.
+try { if (sessionStorage.getItem('zoom-tr')) { sessionStorage.removeItem('zoom-tr'); document.body.classList.add('arrivee'); } } catch {}
 const main = document.getElementById('main');
 
 function garantieTexte(a) {

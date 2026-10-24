@@ -20,7 +20,9 @@ function brancherEstimation(data, wa) {
       err.hidden = false; err.textContent = 'Indiquez votre nom, un numéro de téléphone valide et l’objet à vendre.'; return;
     }
     if (fichiers.length > 4) { err.hidden = false; err.textContent = '4 photos maximum.'; return; }
-    const resume = `Bonjour, je souhaite faire estimer : ${t('objet')}${t('etat') ? ` (${t('etat')})` : ''}.${t('details') ? ` ${t('details')}.` : ''}${t('prix_souhaite') ? ` Prix souhaité : ${t('prix_souhaite')}.` : ''} ${t('nom')}, ${t('tel')}`;
+    const docs = f.getAll('docs');
+    const details = [docs.length ? `Documents : ${docs.join(', ')}.` : 'Aucun document indiqué.', t('details')].filter(Boolean).join(' ');
+    const resume = `Bonjour, je souhaite faire estimer : ${t('objet')}${t('etat') ? ` (${t('etat')})` : ''}. ${details}${t('prix_souhaite') ? ` Prix souhaité : ${t('prix_souhaite')}.` : ''} ${t('nom')}, ${t('tel')}`;
     // Mode démo (sans base) : la demande part par WhatsApp, photos à joindre à la main.
     if (data.source !== 'supabase') {
       window.open(wa.replace(/text=.*/, 'text=' + encodeURIComponent(resume)), '_blank', 'noopener');
@@ -40,7 +42,7 @@ function brancherEstimation(data, wa) {
       }
       const { error } = await sb.from('estimations').insert({
         nom: t('nom'), tel: t('tel'), objet: t('objet'), etat: t('etat') || null,
-        details: t('details') || null, prix_souhaite: t('prix_souhaite') || null, photos,
+        details: details || null, prix_souhaite: t('prix_souhaite') || null, photos,
       });
       if (error) throw error;
       form.innerHTML = `<div class="full estim-ok">${icon('check')}<div><strong>Demande envoyée, merci !</strong><br>Le magasin vous rappelle rapidement au ${esc(t('tel'))}.</div></div>`;
@@ -111,12 +113,32 @@ try {
             <option>Neuf, jamais servi</option><option>Très bon état</option><option>Bon état</option><option>Traces d'usure</option><option>Ne fonctionne plus</option>
           </select></label>
           <label>Prix souhaité (facultatif)<input name="prix_souhaite" maxlength="30" inputmode="decimal" placeholder="Ex. : 300 €"></label>
-          <label class="full">Accessoires, boîte, facture, remarques<textarea name="details" rows="3" maxlength="1500"></textarea></label>
+          <fieldset class="full docs"><legend>Documents disponibles</legend>
+            ${['Facture d’achat', 'Boîte d’origine', 'Certificat / carte de garantie', 'Accessoires d’origine'].map((d) => `<label class="doc"><input type="checkbox" name="docs" value="${d}"><span>${d}</span></label>`).join('')}
+          </fieldset>
+          <label class="full">Remarques (modèle exact, numéro de série, défauts…)<textarea name="details" rows="3" maxlength="1300"></textarea></label>
           <label class="full">Photos (4 maximum)<input name="photos" type="file" accept="image/*" multiple></label>
           <p class="full form-err-pub" id="estim-err" hidden></p>
           <button class="btn btn-gold btn-lg full" type="submit">${icon('cash')}Envoyer ma demande</button>
-          <p class="full small estim-note">Vos coordonnées servent uniquement à vous recontacter au sujet de cette demande.</p>
+          <p class="full small estim-note"><strong>Luxe et téléphones : la facture d’achat est obligatoire.</strong> Vos coordonnées servent uniquement à vous recontacter au sujet de cette demande.</p>
         </form>
+      </div>
+    </section>
+
+    <section class="section luxe">
+      <div class="wrap luxe-in">
+        <div class="reveal">
+          <span class="hero-kicker">${icon('diamant')}Luxe</span>
+          <h2 class="h2">Montres, sacs et vêtements de luxe</h2>
+          <p>Nous achetons et revendons aussi les articles de luxe. Chaque pièce est <strong>estimée et contrôlée en magasin</strong>, ou à distance grâce à une demande d’estimation avec photos.</p>
+          <ul class="tip-list">
+            <li>${icon('receipt')}<span><strong>Facture d’achat obligatoire</strong> pour tout article de luxe.</span></li>
+            <li>${icon('shield')}<span>Plus vous apportez de documents, mieux c’est : certificat d’authenticité, carte de garantie, boîte, pochette, étiquettes.</span></li>
+            <li>${icon('cash')}<span>Offre faite en magasin après vérification, paiement immédiat.</span></li>
+          </ul>
+          <a class="btn btn-gold" href="#estimation">${icon('cash')}Faire estimer un article de luxe</a>
+        </div>
+        <div class="luxe-icons reveal" aria-hidden="true">${['montre', 'sac', 'vetement', 'diamant'].map((k) => `<span class="cat-icon anim-icon">${icon(k)}</span>`).join('')}</div>
       </div>
     </section>
 
@@ -138,6 +160,7 @@ try {
           <li>${icon('check')}<span>Un objet <strong>propre et en état de marche</strong>, chargé si possible.</span></li>
           <li>${icon('receipt')}<span>La <strong>facture</strong>, la <strong>boîte</strong> et les <strong>accessoires</strong> d'origine augmentent l'estimation.</span></li>
           <li>${icon('smartphone')}<span>Téléphones et tablettes : pensez à <strong>déconnecter votre compte</strong> (iCloud, Google) avant de venir.</span></li>
+          <li>${icon('receipt')}<span><strong>Luxe et téléphones : facture d’achat obligatoire.</strong> Apportez un maximum de documents : certificat d’authenticité, carte de garantie, boîte, pochette, étiquettes.</span></li>
         </ul>
         <div class="btn-row">
           <a class="btn btn-green" href="${telHref(b.tel)}">${icon('phone')}${esc(b.tel)}</a>

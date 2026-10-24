@@ -130,6 +130,27 @@ function setupGlobalBehaviours() {
     img.replaceWith(span);
   }, true);
 
+  // Clic sur un article : la carte s'agrandit jusqu'à remplir l'écran, puis la fiche s'ouvre.
+  document.addEventListener('click', (e) => {
+    const lien = e.target.closest?.('a.card');
+    if (!lien || e.defaultPrevented || e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey
+      || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    e.preventDefault();
+    const r = lien.getBoundingClientRect();
+    const img = lien.querySelector('.card-media img');
+    const z = document.createElement('div');
+    z.className = 'zoom-tr';
+    z.innerHTML = `<div class="zoom-media">${img ? `<img src="${esc(img.currentSrc || img.src)}" alt="">` : ''}</div>`;
+    document.body.append(z);
+    const de = { left: `${r.left}px`, top: `${r.top}px`, width: `${r.width}px`, height: `${r.height}px`, borderRadius: '14px' };
+    const vers = { left: '0px', top: '0px', width: `${innerWidth}px`, height: `${innerHeight}px`, borderRadius: '0px' };
+    const anim = z.animate([de, vers], { duration: 480, easing: 'cubic-bezier(.65, 0, .2, 1)', fill: 'forwards' });
+    try { sessionStorage.setItem('zoom-tr', '1'); } catch {}
+    anim.finished.then(() => { location.href = lien.href; });
+  });
+  // Retour arrière depuis la fiche : on retire l'agrandissement resté affiché.
+  addEventListener('pageshow', () => document.querySelectorAll('.zoom-tr').forEach((x) => x.remove()));
+
   // Animation des icônes au toucher (le survol ne fonctionne pas au doigt).
   document.addEventListener('touchstart', (e) => {
     const el = e.target.closest?.('.anim-icon');

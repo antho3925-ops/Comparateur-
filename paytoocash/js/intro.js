@@ -45,8 +45,11 @@
       '<text x="50" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="16" fill="#1f4a2b">50</text></svg>',
   };
   // Noms de marques (en texte, jamais leurs logos) qui jaillissent du vortex.
-  var MARQUES = ['Apple', 'Samsung', 'Sony', 'Nintendo', 'Google', 'Microsoft', 'Xiaomi', 'Lenovo', 'ASUS', 'Dell', 'LG',
-    'Philips', 'JBL', 'Nikon', 'Bosch', 'DeWalt', 'Hilti', 'Metabo', 'Whirlpool', 'Logitech', 'Toshiba', 'MSI'];
+  // Logos des marques vendues (js/marques.js) ; le nom en texte quand il n'y a pas de logo vectoriel.
+  var MARQUES = window.PAYTOO_MARQUES || [];
+  var marque = function (m) {
+    return m[1] ? '<svg viewBox="0 0 24 24" role="img" aria-label="' + m[0] + '"><path d="' + m[1] + '"/></svg>' : '<em>' + m[0] + '</em>';
+  };
   // Particules : objets et marques en alternance, en vagues tout au long de l'intro.
   var TYPES = ['ecran', 'carte', 'piece', 'dosOr', 'manette', 'retro', 'billet', 'dosBleu', 'carte', 'piece', 'dosRose'];
   var TAILLES = { ecran: 40, carte: 42, piece: 36, dosOr: 40, manette: 66, retro: 40, billet: 72, dosBleu: 40, dosRose: 40 };
@@ -55,7 +58,7 @@
     var angle = Math.round((i * 137.5) % 360), delai = 250 + i * 175, dist = 68 + (i * 7) % 15;
     if (i % 2) {
       particules += '<span class="ix-o ix-b" style="--a:' + angle + 'deg;--d:' + dist + 'vmax;--t:' + delai + 'ms;--s:0deg;--w:0px">' +
-        '<span class="ix-o-in"><em>' + MARQUES[((i - 1) / 2) % MARQUES.length] + '</em></span></span>';
+        '<span class="ix-o-in">' + (MARQUES.length ? marque(MARQUES[((i - 1) / 2) % MARQUES.length]) : '') + '</span></span>';
     } else {
       var t = TYPES[(i / 2) % TYPES.length];
       particules += '<span class="ix-o" style="--a:' + angle + 'deg;--d:' + dist + 'vmax;--t:' + delai + 'ms;--s:' + ((i % 4 ? 1 : -1) * (160 + i * 7)) + 'deg;--w:' + TAILLES[t] + 'px">' +
@@ -138,13 +141,7 @@
     '<circle cx="174" cy="189" r="1.8" fill="#7fd67f"/><circle cx="180" cy="189" r="1.8" fill="#7fd67f"/>' +
     '<path d="M104 48h78c10 0 18 8 18 18v16c0 10-8 18-18 18h-78z" fill="url(#ix-sheen)"/></svg></div>';
 
-  // Scène 4 : vraies photos du magasin.
-  var scene4 = [['paytoocash-photos/intro-pokemon.jpg', -24], ['paytoocash-photos/intro-iphone.jpg', 0],
-    ['paytoocash-photos/intro-gameboy.jpg', 24]].map(function (f, i) {
-    return '<span class="ix-ph" style="--r:' + f[1] + 'deg;--dl:' + i * 110 + 'ms"><img src="' + f[0] + '" alt=""></span>';
-  }).join('');
-
-  // Scène 5 : diamant et sac en trait doré, chronographe noir et or, montre acier cadran vert.
+  // Scène 4 : diamant et sac en trait doré, chronographe noir et or, montre acier cadran vert.
   var trace = function (cls, vb, traits) {
     return '<svg class="ix-line ' + cls + '" viewBox="' + vb + '">' + traits.map(function (d, i) {
       return '<path pathLength="1" style="--dl:' + i * 90 + 'ms" d="' + d + '"/>';
@@ -193,9 +190,9 @@
   var SCENES = [
     [scene0, .35, 1.9, 'Téléphonie'], [scene1, 2.05, 1.35, 'Informatique &amp; tablettes'],
     [scene2, 3.15, 1.3, 'Consoles &amp; jeux vidéo'], [scene3, 4.2, 1.15, 'Outillage pro'],
-    [scene4, 5.1, 1.25, 'Pokémon, rétro gaming &amp; iPhone'], [scene5, 6.1, 1.5, 'Bijoux, montres &amp; maroquinerie'],
+    [scene5, 5.1, 1.5, 'Luxe : montres, sacs &amp; bijoux'],
   ];
-  var FIN = 8450;
+  var FIN = 7450;
 
   var html = '<div class="ix" id="intro" role="presentation" aria-hidden="true">' +
     '<svg width="0" height="0" style="position:absolute"><defs>' +

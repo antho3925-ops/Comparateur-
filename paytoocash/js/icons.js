@@ -27,6 +27,7 @@ export const CATEGORY_ICONS = {
   photo: { label: 'Appareil photo', svg: '<path d="M3 8.5A2 2 0 0 1 5 6.5h2.5L9 4h6l1.5 2.5H19a2 2 0 0 1 2 2V18a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="3.8"/>' },
   diamant: { label: 'Diamant', svg: '<path d="M6 3.5h12L21.5 9 12 21 2.5 9z"/><path d="M2.5 9h19M9.5 3.5 8 9l4 12 4-12-1.5-5.5"/>' },
   bague: { label: 'Bague', svg: '<circle cx="12" cy="15" r="6"/><path d="M9 5.5 10.5 3h3L15 5.5 12 9z"/>' },
+  sac: { label: 'Sac', svg: '<path d="M4.5 9h15l-1.3 11.5H5.8z"/><path d="M8.5 9V7.5a3.5 3.5 0 0 1 7 0V9"/><path d="M10.5 13.5h3"/>' },
   vetement: { label: 'Vêtements', svg: '<path d="M8.5 3 3 6l2 4.2 2.5-1.2V21h9V9l2.5 1.2L21 6l-5.5-3a3.5 3.5 0 0 1-7 0z"/>' },
   meuble: { label: 'Meubles', svg: '<path d="M5 11V8a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v3"/><path d="M3 13a2 2 0 0 1 4 0v1h10v-1a2 2 0 0 1 4 0v5H3z"/><path d="M5 18v2.5M19 18v2.5"/>' },
   livre: { label: 'Livres', svg: '<path d="M4 4.5A1.5 1.5 0 0 1 5.5 3H20v15H5.5A1.5 1.5 0 0 0 4 19.5z"/><path d="M4 19.5A1.5 1.5 0 0 0 5.5 21H20v-3"/>' },
@@ -101,4 +102,7 @@ export const ICONES_PAR_DEFAUT = {
   'Bijoux': 'diamant',
   'Rétro gaming': 'console_portable',
   'Cartes à collectionner': 'cartes',
+  'Montres de luxe': 'montre',
+  'Maroquinerie de luxe': 'sac',
+  'Mode de luxe': 'vetement',
 };
