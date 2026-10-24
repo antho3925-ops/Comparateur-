@@ -267,6 +267,16 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .fb-follow:hover .btn-fb { background: #0F64D2; }
 .anim-icon:hover > .fb-logo { animation: bounce .6s var(--ease); }
 
+.marques { padding: 28px 0; background: #13261a; color: #f3e3b3; overflow: hidden; }
+.marques-titre { text-align: center; margin: 0 0 14px; font-size: .78rem; font-weight: 700; letter-spacing: .3em; text-transform: uppercase; color: #c9b27a; padding: 0 16px; }
+.marques-piste { overflow: hidden; -webkit-mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.marques-defile { display: flex; width: max-content; animation: marques 45s linear infinite; }
+.marques-piste:hover .marques-defile { animation-play-state: paused; }
+.marques ul { display: flex; gap: 44px; list-style: none; margin: 0; padding: 0 22px; }
+.marques li { font: 600 1.35rem/1 Georgia, "Times New Roman", serif; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
+@keyframes marques { to { transform: translateX(-50%); } }
+@media (prefers-reduced-motion: reduce) { .marques-defile { width: auto; } .marques ul { flex-wrap: wrap; justify-content: center; row-gap: 14px; } .marques ul[aria-hidden] { display: none; } }
+
 .rachat-teaser { display: flex; flex-direction: column; gap: 16px; }
 @media (min-width: 860px) { .rachat-teaser { flex-direction: row; align-items: center; justify-content: space-between; } }
 

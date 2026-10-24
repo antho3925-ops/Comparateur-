@@ -7,6 +7,8 @@ import { esc, pub, smsHref, telIntl, facebookHref } from './util.js';
 initPage('accueil');
 const main = document.getElementById('main');
 
+const MARQUES_EN_PLUS = ['Nintendo', 'Sony', 'Samsung', 'LG', 'Toshiba', 'Lenovo', 'Whirlpool', 'Singer', 'Metabo', 'Makita'];
+
 const etoiles = (n) => {
   const v = Math.round(Number(n) || 0);
   return `<span class="stars">${'★'.repeat(v)}<span class="stars-off">${'★'.repeat(Math.max(0, 5 - v))}</span></span>`;
@@ -33,6 +35,9 @@ try {
   for (const a of articles) if (a.categorie && a.disponible) counts.set(a.categorie.id, (counts.get(a.categorie.id) || 0) + 1);
   const derniers = articles.filter((a) => a.disponible).sort((x, y) => String(y.created_at).localeCompare(String(x.created_at))).slice(0, 8);
   const catParSlug = new Map(categories.map((c) => [c.slug, c]));
+  // Marques du catalogue, complétées par d'autres grandes marques vendues en magasin (en texte, sans logo).
+  const marques = [...new Set([...articles.map((a) => pub(a.marque)).filter(Boolean), ...MARQUES_EN_PLUS])]
+    .sort((x, y) => x.localeCompare(y, 'fr', { sensitivity: 'base' }));
   const bouton = (lien) => {
     if (/#infos$/.test(lien || '')) return 'Venir voir en magasin';
     const c = catParSlug.get(new URLSearchParams((lien || '').split('?')[1] || '').get('cat'));
@@ -79,6 +84,13 @@ try {
         <div class="grid">${derniers.map(articleCard).join('')}</div>
       </div>
     </section>` : ''}
+
+    <section class="marques" aria-label="Les marques que vous trouverez chez nous">
+      <p class="marques-titre">Les marques que vous trouverez chez nous</p>
+      <div class="marques-piste"><div class="marques-defile">
+        ${[0, 1].map((k) => `<ul${k ? ' aria-hidden="true"' : ''}>${marques.map((m) => `<li>${esc(m)}</li>`).join('')}</ul>`).join('')}
+      </div></div>
+    </section>
 
     ${b.vitrine.length ? `
     <section class="section">

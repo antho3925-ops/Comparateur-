@@ -44,15 +44,24 @@
       '<circle cx="50" cy="26" r="12" fill="#e7f1ea" fill-opacity=".35"/><rect x="1" y="1" width="98" height="50" rx="4" fill="url(#ix-sheen)"/>' +
       '<text x="50" y="32" text-anchor="middle" font-family="Arial,sans-serif" font-weight="700" font-size="16" fill="#1f4a2b">50</text></svg>',
   };
-  // [objet, largeur (px), angle de départ, distance (vmax), délai (ms), rotation propre]
-  var VOL = [
-    ['ecran', 44, 10, 75, 250, 200], ['carte', 46, 55, 80, 330, -260], ['piece', 40, 100, 70, 390, 400],
-    ['dosOr', 42, 145, 78, 460, -180], ['manette', 74, 190, 82, 300, 160], ['retro', 44, 235, 76, 520, -220],
-    ['billet', 80, 280, 80, 420, 120], ['dosBleu', 42, 325, 74, 560, 240], ['carte', 40, 30, 68, 640, 300],
-    ['piece', 34, 80, 72, 700, -360], ['ecran', 38, 125, 70, 760, -160], ['dosRose', 40, 170, 74, 610, 220],
-    ['carte', 44, 215, 72, 820, -240], ['piece', 30, 260, 66, 880, 320], ['retro', 38, 300, 70, 900, 180],
-    ['billet', 66, 350, 76, 960, -140], ['manette', 60, 65, 74, 1020, 200], ['piece', 36, 205, 68, 1080, -300],
-  ];
+  // Noms de marques (en texte, jamais leurs logos) qui jaillissent du vortex.
+  var MARQUES = ['Apple', 'Samsung', 'Sony', 'Nintendo', 'Google', 'Microsoft', 'Xiaomi', 'Lenovo', 'ASUS', 'Dell', 'LG',
+    'Philips', 'JBL', 'Nikon', 'Bosch', 'DeWalt', 'Hilti', 'Metabo', 'Whirlpool', 'Logitech', 'Toshiba', 'MSI'];
+  // Particules : objets et marques en alternance, en vagues tout au long de l'intro.
+  var TYPES = ['ecran', 'carte', 'piece', 'dosOr', 'manette', 'retro', 'billet', 'dosBleu', 'carte', 'piece', 'dosRose'];
+  var TAILLES = { ecran: 40, carte: 42, piece: 36, dosOr: 40, manette: 66, retro: 40, billet: 72, dosBleu: 40, dosRose: 40 };
+  var particules = '';
+  for (var i = 0; i < 40; i++) {
+    var angle = Math.round((i * 137.5) % 360), delai = 250 + i * 175, dist = 68 + (i * 7) % 15;
+    if (i % 2) {
+      particules += '<span class="ix-o ix-b" style="--a:' + angle + 'deg;--d:' + dist + 'vmax;--t:' + delai + 'ms;--s:0deg;--w:0px">' +
+        '<span class="ix-o-in"><em>' + MARQUES[((i - 1) / 2) % MARQUES.length] + '</em></span></span>';
+    } else {
+      var t = TYPES[(i / 2) % TYPES.length];
+      particules += '<span class="ix-o" style="--a:' + angle + 'deg;--d:' + dist + 'vmax;--t:' + delai + 'ms;--s:' + ((i % 4 ? 1 : -1) * (160 + i * 7)) + 'deg;--w:' + TAILLES[t] + 'px">' +
+        '<span class="ix-o-in">' + OBJETS[t] + '</span></span>';
+    }
+  }
 
   // Scène 0 : un smartphone s'allume (logo Paytoocash + chargement), puis
   // son écran d'accueil présente les rayons du magasin comme des applications.
@@ -70,57 +79,135 @@
     '<div class="ix-dock">' + DOCK.map(function (a, i) { return appli(a, i + 16); }).join('') + '</div></div>' +
     '<i class="ix-island"></i></div></div>';
 
-  // Scène 1 : ordinateurs portables qui s'ouvrent en éventail.
+  // Scène 1 : ordinateurs portables qui s'ouvrent en éventail, tablettes devant.
   var PORTABLES = [
     ['#d6d8dc', '#f3f4f6', -34, 'linear-gradient(135deg,#a8c0ff,#3f2b96)', 0],
     ['#ecbcc4', '#fbe7ea', -12, 'linear-gradient(135deg,#ff9a8b,#ff6a88 55%,#ff99ac)', 90],
     ['#e6df6e', '#f8f5cf', 12, 'linear-gradient(135deg,#f6d365,#fda085)', 180],
     ['#2e3b58', '#cfd5e2', 34, 'linear-gradient(135deg,#43cea2,#185a9d)', 270],
   ];
-  var scene1 = PORTABLES.map(function (l) {
+  var TABLETTES = [['#6f7076', -26], ['#c6dde3', -13], ['#e7dcc8', 0], ['#dcd2e8', 13], ['', 26]];
+  var scene1 = '<div class="ix-fan">' + PORTABLES.map(function (l) {
     return '<div class="ix-lpw" style="--c:' + l[0] + ';--c2:' + l[1] + ';--rz:' + l[2] + 'deg;--wp:' + l[3] + ';--dl:' + l[4] + 'ms">' +
       '<div class="ix-cam"><div class="ix-lp"><div class="ix-lp-base"><i class="kb"></i><i class="tp"></i></div>' +
       '<div class="ix-lp-lid"><i class="scr"></i></div></div></div></div>';
-  }).join('');
-  // Scène 2 : tablettes déployées comme un jeu de cartes.
-  var TABLETTES = [['#6f7076', -26], ['#c6dde3', -13], ['#e7dcc8', 0], ['#dcd2e8', 13], ['', 26]];
-  var scene2 = TABLETTES.map(function (t, i) {
+  }).join('') + '</div><div class="ix-fan2">' + TABLETTES.map(function (t, i) {
     return '<div class="ix-tab' + (t[0] ? '' : ' ix-tab-front') + '" style="--c:' + (t[0] || '#111') + ';--r:' + t[1] + 'deg;--dl:' + i * 60 + 'ms"><i></i></div>';
-  }).join('');
-  // Scène 3 : diamant en trait doré qui se dessine.
-  var traits = ['M35 20H65L85 34L50 82L15 34Z', 'M15 34H85', 'M15 34L35 20L32.5 34L50 20L67.5 34L65 20L85 34',
-    'M32.5 34L50 82L67.5 34', 'M15 34L41 58M85 34L59 58M50 34V82'];
-  var scene3 = '<i class="ix-glow"></i><svg class="ix-diam" viewBox="0 0 100 100"><defs><linearGradient id="ix-gold" x1="0" y1="0" x2="1" y2="1">' +
-    '<stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#e8b530"/><stop offset="1" stop-color="#b9851a"/></linearGradient></defs>' +
-    traits.map(function (d, i) { return '<path pathLength="1" style="--dl:' + i * 90 + 'ms" d="' + d + '"/>'; }).join('') + '</svg><i class="ix-spark"></i>';
+  }).join('') + '</div>';
 
-  // Montre à bracelet maillons, en trait doré, aiguilles qui tournent.
-  var montre = '<svg class="ix-watch" viewBox="0 0 100 100">' +
-    ['M38 30L41 8H59L62 30', 'M38 70L41 92H59L62 70', 'M41 15H59M40.5 22H59.5M41 85H59M40.5 78H59.5',
-      'M50 26A24 24 0 1 1 49.9 26', 'M74 47H78V53H74', 'M50 31V34M50 66V69M31 50H34M66 50H69'].map(function (d, i) {
-      return '<path pathLength="1" style="--dl:' + i * 80 + 'ms" d="' + d + '"/>';
-    }).join('') +
-    '<g class="ix-hand h1"><path d="M50 50V36"/></g><g class="ix-hand h2"><path d="M50 50L60 56"/></g><circle cx="50" cy="50" r="1.8" class="ix-pin"/></svg>';
+  // Scène 2 : console de salon blanche, manette, console portable rétro et boîtiers de jeux.
+  var console2 = '<svg viewBox="0 0 60 172"><defs><linearGradient id="ix-wh" x1="0" x2="1"><stop offset="0" stop-color="#fff"/><stop offset=".7" stop-color="#eceef2"/><stop offset="1" stop-color="#c9cdd4"/></linearGradient></defs>' +
+    '<rect x="22" y="8" width="16" height="152" rx="3" fill="#15171c"/>' +
+    '<path d="M24 4C12 4 5 30 5 86s7 82 19 82z" fill="url(#ix-wh)"/><path d="M36 4c12 0 19 26 19 82s-7 82-19 82z" fill="url(#ix-wh)"/>' +
+    '<path d="M24 4C12 4 5 30 5 86s7 82 19 82z" fill="url(#ix-sheen)"/>' +
+    '<rect x="27" y="120" width="6" height="2" rx="1" fill="#8a9099"/><rect x="27" y="126" width="6" height="2" rx="1" fill="#8a9099"/>' +
+    '<rect x="14" y="166" width="32" height="5" rx="2.5" fill="#b9bec6"/></svg>';
+  var manette2 = '<svg viewBox="0 0 120 80"><path d="M28 8h64c16 0 26 10 27 26l1 18c1 14-14 22-23 12l-8-9H31l-8 9c-9 10-24 2-23-12l1-18C2 18 12 8 28 8z" fill="#f4f5f7"/>' +
+    '<path d="M38 12h44v20a6 6 0 0 1-6 6H44a6 6 0 0 1-6-6z" fill="#e3e6ea"/><path d="M34 44h52l-6 9H40z" fill="#16181d"/>' +
+    '<circle cx="44" cy="50" r="8" fill="#16181d"/><circle cx="44" cy="50" r="5" fill="#2c3037"/><circle cx="76" cy="50" r="8" fill="#16181d"/><circle cx="76" cy="50" r="5" fill="#2c3037"/>' +
+    '<path d="M16 30h12M22 24v12" stroke="#2c3037" stroke-width="4" stroke-linecap="round"/>' +
+    '<circle cx="98" cy="23" r="3.2" fill="#9aa1ab"/><circle cx="105" cy="30" r="3.2" fill="#9aa1ab"/><circle cx="91" cy="30" r="3.2" fill="#9aa1ab"/><circle cx="98" cy="37" r="3.2" fill="#9aa1ab"/>' +
+    '<path d="M28 8h64c16 0 26 10 27 26l1 18c1 14-14 22-23 12l-8-9H31l-8 9c-9 10-24 2-23-12l1-18C2 18 12 8 28 8z" fill="url(#ix-sheen)"/></svg>';
+  var JEUX = [['#e4002b', 'radial-gradient(45% 35% at 30% 65%,#ffd23f,transparent 70%),radial-gradient(50% 40% at 75% 40%,#3ec1ff,transparent 70%),linear-gradient(170deg,#7ee081,#2a9d5c)', -16],
+    ['#1a1a1d', 'radial-gradient(40% 35% at 50% 55%,#ff5f5f,transparent 70%),radial-gradient(60% 50% at 30% 30%,#8e7cff,transparent 70%),linear-gradient(160deg,#2b2b45,#121226)', 0],
+    ['#e4002b', 'radial-gradient(50% 40% at 60% 60%,#ff9f1c,transparent 70%),radial-gradient(45% 40% at 30% 35%,#ff4fa3,transparent 70%),linear-gradient(170deg,#ffe066,#ff8c42)', 16]];
+  var scene2 = '<div class="ix-gb ix-pop">' + OBJETS.retro + '</div><div class="ix-cons ix-pop">' + console2 + '</div>' +
+    '<div class="ix-pad ix-pop">' + manette2 + '</div><div class="ix-cases">' + JEUX.map(function (j, i) {
+      return '<span class="ix-case" style="--h:' + j[0] + ';--art:' + j[1] + ';--r:' + j[2] + 'deg;--dl:' + i * 90 + 'ms"><i></i></span>';
+    }).join('') + '</div>';
+
+  // Scène 3 : perceuse-visseuse sans fil, mèche en rotation, étincelles.
+  var stries = '';
+  for (var x = -6; x < 66; x += 6) stries += '<path d="M' + x + ' 71l6 8" stroke="#6c727c" stroke-width="2"/>';
+  var etincelles = '';
+  [[-14, -10], [-18, 4], [-12, 12], [-20, -2], [-10, -14]].forEach(function (p, i) {
+    etincelles += '<circle class="sp" cx="2" cy="75" r="1.6" fill="#ffd27a" style="--sx:' + p[0] + 'px;--sy:' + p[1] + 'px;--dl:' + i * 90 + 'ms"/>';
+  });
+  var scene3 = '<div class="ix-drill"><svg viewBox="0 0 220 200"><defs>' +
+    '<linearGradient id="ix-chrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f1f3f5"/><stop offset=".5" stop-color="#9aa1aa"/><stop offset="1" stop-color="#e2e5e9"/></linearGradient>' +
+    '<clipPath id="ix-bitclip"><rect x="6" y="71" width="56" height="8" rx="2"/></clipPath></defs>' +
+    '<rect x="6" y="71" width="56" height="8" rx="2" fill="#c3c8cf"/><g clip-path="url(#ix-bitclip)"><g class="bit">' + stries + '</g></g>' +
+    '<path d="M6 71L0 75l6 4z" fill="#9aa0a8"/>' + etincelles +
+    '<rect x="60" y="60" width="36" height="30" rx="5" fill="url(#ix-chrome)"/><path d="M68 62v26M76 62v26M84 62v26" stroke="#7d848d" stroke-width="1.4"/>' +
+    '<rect x="94" y="56" width="12" height="38" rx="3" fill="#1c1f22"/>' +
+    '<path d="M104 48h78c10 0 18 8 18 18v16c0 10-8 18-18 18h-78z" fill="#2f6d4c"/><path d="M104 48h78c10 0 18 8 18 18v4H104z" fill="#245a3d"/>' +
+    '<rect x="120" y="66" width="48" height="18" rx="4" fill="#1d2b24"/><path d="M176 72h16M176 78h16M176 84h16" stroke="#1d2b24" stroke-width="2.4" stroke-linecap="round"/>' +
+    '<path d="M128 100l-10 58c-1 8 3 10 9 10h23c7 0 10-3 9-10l4-58z" fill="#1b1d20"/><path d="M133 108l-7 44h22l4-44z" fill="#2f6d4c" opacity=".55"/>' +
+    '<path d="M118 104c-6 2-7 9-6 14l7 10 6-22z" fill="#c8453c"/>' +
+    '<rect x="102" y="164" width="86" height="32" rx="7" fill="#1b1d20"/><rect x="102" y="176" width="86" height="6" fill="#2f6d4c"/>' +
+    '<circle cx="174" cy="189" r="1.8" fill="#7fd67f"/><circle cx="180" cy="189" r="1.8" fill="#7fd67f"/>' +
+    '<path d="M104 48h78c10 0 18 8 18 18v16c0 10-8 18-18 18h-78z" fill="url(#ix-sheen)"/></svg></div>';
+
+  // Scène 4 : vraies photos du magasin.
+  var scene4 = [['paytoocash-photos/intro-pokemon.jpg', -24], ['paytoocash-photos/intro-iphone.jpg', 0],
+    ['paytoocash-photos/intro-gameboy.jpg', 24]].map(function (f, i) {
+    return '<span class="ix-ph" style="--r:' + f[1] + 'deg;--dl:' + i * 110 + 'ms"><img src="' + f[0] + '" alt=""></span>';
+  }).join('');
+
+  // Scène 5 : diamant et sac en trait doré, chronographe noir et or, montre acier cadran vert.
+  var trace = function (cls, vb, traits) {
+    return '<svg class="ix-line ' + cls + '" viewBox="' + vb + '">' + traits.map(function (d, i) {
+      return '<path pathLength="1" style="--dl:' + i * 90 + 'ms" d="' + d + '"/>';
+    }).join('') + '</svg>';
+  };
+  var diamant = trace('ix-diam', '0 0 100 100', ['M35 20H65L85 34L50 82L15 34Z', 'M15 34H85', 'M15 34L35 20L32.5 34L50 20L67.5 34L65 20L85 34',
+    'M32.5 34L50 82L67.5 34', 'M15 34L41 58M85 34L59 58M50 34V82']);
+  var sac = trace('ix-bag', '0 0 100 90', ['M14 36H86L92 84H8Z', 'M34 36C34 10 66 10 66 36', 'M11 50H89',
+    'M46 50H54V60H46Z', 'M47.5 50V46.5A2.5 2.5 0 0 1 52.5 46.5V50', 'M20 36L16 84M80 36L84 84']);
+  var graduations = function (r1, r2, n, couleur, larg) {
+    var out = '';
+    for (var k = 0; k < n; k++) {
+      var an = k * 2 * Math.PI / n, c = Math.cos(an), s = Math.sin(an);
+      out += '<path d="M' + (50 + r1 * c).toFixed(2) + ' ' + (80 + r1 * s).toFixed(2) + 'L' + (50 + r2 * c).toFixed(2) + ' ' + (80 + r2 * s).toFixed(2) + '" stroke="' + couleur + '" stroke-width="' + larg + '"/>';
+    }
+    return out;
+  };
+  var aiguilles = function (c1, c2) {
+    return '<g class="hd"><path d="M50 80V62" stroke="' + c1 + '" stroke-width="2.6" stroke-linecap="round"/></g>' +
+      '<g class="hd hd2"><path d="M50 80L66 70" stroke="' + c1 + '" stroke-width="1.8" stroke-linecap="round"/></g>' +
+      '<g class="sec"><path d="M50 86V56" stroke="' + c2 + '" stroke-width=".8" stroke-linecap="round"/></g><circle cx="50" cy="80" r="1.8" fill="' + c1 + '"/>';
+  };
+  var chrono = '<svg viewBox="0 0 100 160"><defs><radialGradient id="ix-champ"><stop offset="0" stop-color="#ecd29a"/><stop offset="1" stop-color="#b98c43"/></radialGradient></defs>' +
+    '<path d="M33 0h34l-2 50H35z" fill="#1d1d1f"/><path d="M35 110h30l2 50H33z" fill="#1d1d1f"/>' +
+    '<path d="M37 4v40M63 4v40M37 116v40M63 116v40" stroke="#c9a35a" stroke-width=".7" stroke-dasharray="2 2"/>' +
+    '<rect x="85" y="64" width="6" height="7" rx="1.5" fill="#d4ab5c"/><rect x="85" y="76" width="7" height="8" rx="1.5" fill="#d4ab5c"/><rect x="85" y="89" width="6" height="7" rx="1.5" fill="#d4ab5c"/>' +
+    '<circle cx="50" cy="80" r="37" fill="#111113"/><circle cx="50" cy="80" r="33" fill="none" stroke="#232326" stroke-width="7"/>' +
+    graduations(30.5, 35, 60, '#c9a35a', .6) + '<circle cx="50" cy="80" r="27" fill="url(#ix-champ)"/>' +
+    '<circle cx="50" cy="68" r="7" fill="#c49b52" stroke="#9c7a3c" stroke-width=".6"/><circle cx="39" cy="86" r="7" fill="#c49b52" stroke="#9c7a3c" stroke-width=".6"/><circle cx="61" cy="86" r="7" fill="#c49b52" stroke="#9c7a3c" stroke-width=".6"/>' +
+    graduations(22, 25.5, 12, '#5a4220', 1.3) + aiguilles('#2a2118', '#2a2118') +
+    '<circle cx="50" cy="80" r="37" fill="url(#ix-sheen)"/></svg>';
+  var acier = '<svg viewBox="0 0 100 160"><defs><linearGradient id="ix-steel" x1="0" x2="1"><stop offset="0" stop-color="#8d939b"/><stop offset=".35" stop-color="#f2f4f6"/><stop offset=".65" stop-color="#b9bfc6"/><stop offset="1" stop-color="#eef1f4"/></linearGradient>' +
+    '<radialGradient id="ix-green" cx=".4" cy=".35"><stop offset="0" stop-color="#4f9a74"/><stop offset="1" stop-color="#173f2c"/></radialGradient></defs>' +
+    '<path d="M34 0h32l-2 52H36z" fill="url(#ix-steel)"/><path d="M36 108h28l2 52H34z" fill="url(#ix-steel)"/>' +
+    '<path d="M35 8h30M35 16h30M35 24h30M35 32h30M35 40h30M36 116h28M35 124h30M35 132h30M35 140h30M35 148h30M44 0v52M56 0v52M44 108v52M56 108v52" stroke="#7e858e" stroke-width=".7"/>' +
+    '<rect x="82" y="76" width="7" height="8" rx="1.5" fill="url(#ix-steel)"/>' +
+    '<circle cx="50" cy="80" r="34" fill="url(#ix-steel)"/><circle cx="50" cy="80" r="30" fill="none" stroke="#8d939b" stroke-width="5"/>' +
+    '<circle cx="50" cy="80" r="30" fill="none" stroke="#f4f6f8" stroke-width="5" stroke-dasharray=".9 .9"/>' +
+    '<circle cx="50" cy="80" r="26" fill="url(#ix-green)"/>' + graduations(20, 24.5, 12, '#f1f3f5', 1.6) +
+    '<rect x="66" y="76.5" width="9" height="7" rx=".8" fill="#fff"/><text x="70.5" y="82.2" text-anchor="middle" font-family="Arial,sans-serif" font-size="5.6" font-weight="700" fill="#111">28</text>' +
+    aiguilles('#f1f3f5', '#f1f3f5') + '<circle cx="50" cy="80" r="34" fill="url(#ix-sheen)"/></svg>';
+  var scene5 = '<i class="ix-glow"></i>' + diamant + '<i class="ix-spark"></i>' + sac +
+    '<div class="ix-w ix-w1 ix-pop">' + chrono + '</div><div class="ix-w ix-w2 ix-pop">' + acier + '</div>';
+
+  // Déroulé : [scène, début (s), durée (s), légende]
+  var SCENES = [
+    [scene0, .35, 1.9, 'Téléphonie'], [scene1, 2.05, 1.35, 'Informatique &amp; tablettes'],
+    [scene2, 3.15, 1.3, 'Consoles &amp; jeux vidéo'], [scene3, 4.2, 1.15, 'Outillage pro'],
+    [scene4, 5.1, 1.25, 'Pokémon, rétro gaming &amp; iPhone'], [scene5, 6.1, 1.5, 'Bijoux, montres &amp; maroquinerie'],
+  ];
+  var FIN = 8450;
 
   var html = '<div class="ix" id="intro" role="presentation" aria-hidden="true">' +
     '<svg width="0" height="0" style="position:absolute"><defs>' +
       '<linearGradient id="ix-wall" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1f6b3a"/><stop offset=".55" stop-color="#2f8f52"/><stop offset="1" stop-color="#e8b530"/></linearGradient>' +
       '<linearGradient id="ix-sheen" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".45" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".12"/></linearGradient>' +
+      '<linearGradient id="ix-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3c4"/><stop offset=".5" stop-color="#e8b530"/><stop offset="1" stop-color="#b9851a"/></linearGradient>' +
     '</defs></svg>' +
     '<div class="ix-vortex"><i class="ix-ring r1"></i><i class="ix-ring r2"></i><i class="ix-ring r3"></i><i class="ix-streaks"></i><i class="ix-core"></i></div>' +
-    '<div class="ix-objets">' + VOL.map(function (v) {
-      return '<span class="ix-o" style="--a:' + v[2] + 'deg;--d:' + v[3] + 'vmax;--t:' + v[4] + 'ms;--s:' + v[5] + 'deg;--w:' + v[1] + 'px">' +
-        '<span class="ix-o-in">' + OBJETS[v[0]] + '</span></span>';
-    }).join('') + '</div>' +
-    '<div class="ix-scene ix-s0">' + scene0 + '<span class="ix-cap">Téléphonie</span></div>' +
-    '<div class="ix-scene ix-s1"><div class="ix-fan">' + scene1 + '</div><span class="ix-cap">Informatique</span></div>' +
-    '<div class="ix-scene ix-s2"><div class="ix-fan2">' + scene2 + '</div><span class="ix-cap">Tablettes &amp; smartphones</span></div>' +
-    '<div class="ix-scene ix-sp">' + [
-      ['paytoocash-photos/intro-pokemon.jpg', -24], ['paytoocash-photos/intro-iphone.jpg', 0],
-      ['paytoocash-photos/intro-gameboy.jpg', 24]].map(function (f, i) {
-      return '<span class="ix-ph" style="--r:' + f[1] + 'deg;--dl:' + i * 110 + 'ms"><img src="' + f[0] + '" alt=""></span>';
-    }).join('') + '<span class="ix-cap">Pokémon, rétro gaming &amp; iPhone</span></div>' +
-    '<div class="ix-scene ix-s3"><div class="ix-s3-d">' + scene3 + '</div><div class="ix-s3-w">' + montre + '</div><span class="ix-cap">Bijoux, or &amp; montres</span></div>' +
+    '<div class="ix-objets">' + particules + '</div>' +
+    SCENES.map(function (sc, i) {
+      return '<div class="ix-scene ix-s' + i + '" style="--t0:' + sc[1] + 's;--du:' + sc[2] + 's">' + sc[0] + '<span class="ix-cap">' + sc[3] + '</span></div>';
+    }).join('') +
     '<div class="ix-logo"><img src="paytoocash-logo/logo.svg" alt=""><i></i><span>Achat · Vente · Rachat cash</span></div>' +
     '<button class="ix-skip" type="button">Passer</button>' +
     '</div>';
@@ -140,7 +227,7 @@
     document.documentElement.classList.remove('ix-on');
     setTimeout(function () { el.remove(); }, 1000);
   }
-  var timer = setTimeout(terminer, 7500);
+  var timer = setTimeout(terminer, FIN);
   el.addEventListener('click', function () { clearTimeout(timer); terminer(); });
   addEventListener('keydown', function (e) { if (e.key === 'Escape' || e.key === 'Enter' || e.key === ' ') { clearTimeout(timer); terminer(); } });
 })();
