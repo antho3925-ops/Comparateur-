@@ -544,7 +544,7 @@
       "prix": 450,
       "etat": "Parfait état",
       "garantie": true,
-      "inclus": "Magic Keyboard et chargeur",
+      "inclus": "Boîte, Magic Keyboard avec sa boîte, coque et chargeur",
       "disponible": false,
       "photo": "paytoocash-photos/apple-ipad-pro-11-m1-magic-keyboard.jpg"
     },
@@ -642,6 +642,20 @@
       "disponible": true,
       "photo": "paytoocash-photos/nikon-z50-kit-16-50-50-250.jpg",
       "inclus": "Boîtes, batterie et chargeur"
+    },
+    {
+      "id": 46,
+      "titre": "Apple AirPods Pro 3",
+      "marque": "Apple",
+      "categorie": "Audio",
+      "type": "Écouteurs",
+      "prix": 150,
+      "etat": "Très bon état",
+      "garantie": true,
+      "garantie_jusqu_au": "01/12/2026",
+      "inclus": "Chargeur",
+      "disponible": true,
+      "photo": "paytoocash-photos/apple-airpods-pro-3.jpg"
     }
   ],
   "vitrines": [
