@@ -421,7 +421,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "disponible": false,
-      "photo": "paytoocash-photos/xbox-series-s-blanche-512go.jpg"
+      "photo": "paytoocash-photos/xbox-series-s-blanche-512go.jpg",
+      "inclus": "Boîte d'origine"
     },
     {
       "id": 31,
@@ -435,7 +436,8 @@
       "etat": "Parfait état",
       "garantie": true,
       "disponible": false,
-      "photo": "paytoocash-photos/xbox-series-x-digitale-1to.jpg"
+      "photo": "paytoocash-photos/xbox-series-x-digitale-1to.jpg",
+      "inclus": "1 manette"
     },
     {
       "id": 32,
