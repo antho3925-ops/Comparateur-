@@ -682,10 +682,47 @@
     }
   ],
   "avis": {
-    "note": null,
-    "nombre": null,
-    "lien": "",
-    "liste": []
+    "note": 4.8,
+    "nombre": 267,
+    "lien": "https://www.google.com/maps/search/?api=1&query=Paytoocash+Pontarlier",
+    "liste": [
+      {
+        "auteur": "Adam K.",
+        "note": 5,
+        "date": "Avis Google · août 2026",
+        "texte": "Incroyable magasin ! Le gérant est super sympa et m'a même montré l'arrière boutique quand je lui ai dit que ça collection est impressionnante. Vous pourrez trouver des game boy advesse au jeux ps5. Je recommande !"
+      },
+      {
+        "auteur": "Nadia B.",
+        "note": 5,
+        "date": "Avis Google · décembre 2025",
+        "texte": "Je suis venu au magasin parce que je cherchais une Xbox. Sur les conseils avisés du vendeur et grâce à ses explications détaillées, j'ai acheté une Xbox série x. Il m'a également repris une Ps4 et une DS. Je suis vraiment très content de mon achat. Le vendeur est vraiment très sympa, il est très à l'ecoute ses explications sont précises et claires. Je vous recommande vivement ce magasin."
+      },
+      {
+        "auteur": "Marie-Louise R.",
+        "note": 5,
+        "date": "Avis Google · janvier 2026",
+        "texte": "Suite à une arnaque sur Backmarket, je souhaitais avoir un VRAI service et des VRAIS êtres humains en face de moi. Voilà plus d'1 an que j'ai acheté un téléphone qui correspond à mes besoins. Aucun problème depuis. Dès que j'aurai besoin de changer d'ordinateur c'est ici que j'irai. Je suis ravie d'avoir franchi vos portes. Merci et à bientôt !"
+      },
+      {
+        "auteur": "Vincent J.",
+        "note": 5,
+        "date": "Avis Google · juillet 2026",
+        "texte": "Vendeur sérieux. Achat d'un produit scellé, top, à l'ecoute et bons conseils. Je recommande"
+      },
+      {
+        "auteur": "Maelys M.",
+        "note": 5,
+        "date": "Avis Google · juillet 2026",
+        "texte": "Vendeur très agréable et à l’écoute. De très bons produits à de très bons prix, je recommande !"
+      },
+      {
+        "auteur": "Michael R.",
+        "note": 5,
+        "date": "Avis Google · août 2026",
+        "texte": "Magasin excellent, vendeur très agréable je recommande 👍"
+      }
+    ]
   },
   "galerie": []
 }
