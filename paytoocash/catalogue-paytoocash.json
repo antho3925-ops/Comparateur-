@@ -687,10 +687,16 @@
     "lien": "https://www.google.com/maps/search/?api=1&query=Paytoocash+Pontarlier",
     "liste": [
       {
-        "auteur": "Adam K.",
+        "auteur": "Arnaud M.",
         "note": 5,
-        "date": "Avis Google · août 2026",
-        "texte": "Incroyable magasin ! Le gérant est super sympa et m'a même montré l'arrière boutique quand je lui ai dit que ça collection est impressionnante. Vous pourrez trouver des game boy advesse au jeux ps5. Je recommande !"
+        "date": "Avis Google · janvier 2026",
+        "texte": "Propriétaire de la boutique très pro, contact facile et agréable. J’ai acheté une PS5, testée devant moi, prix très correct. Je recommande vivement c’est une vraie caverne d’alibaba il y en a pour tous les goûts."
+      },
+      {
+        "auteur": "Sophie M.",
+        "note": 5,
+        "date": "Avis Google · novembre 2025",
+        "texte": "Nous sommes venus estimer un iPhone 14 Pro Max, malheureusement en trop mauvais état mais nous avons énormément apprécié la franchise et l’honnêteté de la personne qui nous a reçu, explications claires, on retient l’adresse si besoin, je recommande vivement"
       },
       {
         "auteur": "Nadia B.",
@@ -703,6 +709,30 @@
         "note": 5,
         "date": "Avis Google · janvier 2026",
         "texte": "Suite à une arnaque sur Backmarket, je souhaitais avoir un VRAI service et des VRAIS êtres humains en face de moi. Voilà plus d'1 an que j'ai acheté un téléphone qui correspond à mes besoins. Aucun problème depuis. Dès que j'aurai besoin de changer d'ordinateur c'est ici que j'irai. Je suis ravie d'avoir franchi vos portes. Merci et à bientôt !"
+      },
+      {
+        "auteur": "Dan R.",
+        "note": 5,
+        "date": "Avis Google · novembre 2025",
+        "texte": "Vendeur super sympa et boutique qui regorge de belles choses pour passionnés de retro gaming, n'hésitez pas à demander si vous ne trouvez pas votre bonheur, l'arrière boutique regorge de trésors !"
+      },
+      {
+        "auteur": "Simon",
+        "note": 5,
+        "date": "Avis Google · 2025",
+        "texte": "Super petite boutique avec un bon choix et des produits de bonne qualité. Je suis venu pour chercher deux jeux vidéos en particulier et je les ai trouvés, à un prix honnête. En plus le patron est super sympa, donc si vous cherchez à acheter ou vendre un produit d'occaz, n'hésitez pas une seconde !"
+      },
+      {
+        "auteur": "Adam K.",
+        "note": 5,
+        "date": "Avis Google · août 2026",
+        "texte": "Incroyable magasin ! Le gérant est super sympa et m'a même montré l'arrière boutique quand je lui ai dit que ça collection est impressionnante. Vous pourrez trouver des game boy advesse au jeux ps5. Je recommande !"
+      },
+      {
+        "auteur": "Johanna G.",
+        "note": 5,
+        "date": "Avis Google · janvier 2026",
+        "texte": "C'est toujours un plaisir de pousser la porte de cette boutique, on y est toujours agréablement accueillis et conseillés ... On y trouve de tout, ce qui Ravi nos souvenirs d'enfance..... Nintendo, wii, DS, et autre jeux sont au rendez-vous...."
       },
       {
         "auteur": "Vincent J.",
