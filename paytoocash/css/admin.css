@@ -114,7 +114,7 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 /* Horaires */
 .hours-edit { display: grid; gap: 8px; margin-bottom: 12px; }
 .day { display: grid; grid-template-columns: minmax(0, 1fr) auto auto auto; align-items: center; gap: 8px; }
-.day input[type=time] { width: 6.6em; min-width: 0; min-height: 42px; border: 1px solid #D8D8D2; border-radius: 10px; padding: 6px 8px; background: #fff; }
+.day input[type=time] { width: 7.6em; min-width: 0; min-height: 42px; border: 1px solid #D8D8D2; border-radius: 10px; padding: 6px 8px; background: #fff; }
 .day:has(input[type=checkbox]:not(:checked)) input[type=time] { opacity: .35; }
 .vitrine-edit { border: 1px solid var(--line); border-radius: var(--radius-sm); padding: 12px; margin: 0 0 12px; }
 .vitrine-edit legend { font-weight: 700; padding: 0 6px; }
@@ -145,3 +145,11 @@ dialog::backdrop { background: rgba(0, 0, 0, .45); }
 .estim-photos { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
 .estim-photos img { width: 72px; height: 72px; object-fit: cover; border-radius: 8px; }
 .row-actions .btn { white-space: nowrap; }
+.demo-band { display: flex; gap: 10px; align-items: flex-start; margin: 12px 0 0; padding: 10px 14px; border-radius: var(--radius-sm); background: var(--gold-soft); border: 1px solid var(--gold); color: #5f4510; font-size: .9rem; }
+.demo-band .ico { color: var(--gold-dark); margin-top: 1px; }
+.day label.check { white-space: nowrap; }
+@media (max-width: 520px) {
+  .day { grid-template-columns: 1fr auto 1fr; row-gap: 4px; padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+  .day label.check { grid-column: 1 / -1; }
+  .day input[type=time] { width: 100%; }
+}

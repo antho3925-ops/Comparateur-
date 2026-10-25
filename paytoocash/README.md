@@ -37,8 +37,11 @@ http://localhost:8000/admin.html (l'adresse courte `/admin` marche une fois en l
 ## Mode démo / mode Supabase
 
 - **Sans Supabase** (`js/config.js` vide) : le site public lit
-  `catalogue-paytoocash.json` en lecture seule. L'admin s'ouvre en mode démo
-  et montre les articles « à vérifier ». Parfait pour faire valider le client.
+  `catalogue-paytoocash.json` en lecture seule. L'admin s'ouvre en **mode démo**
+  sans mot de passe : toutes les fonctions marchent (ajouter, vendre, modifier,
+  catégories, horaires, demandes…) sur une base en mémoire, mais rien n'est
+  enregistré et tout revient à zéro au rechargement. Parfait pour faire
+  valider le client avant de payer quoi que ce soit.
 - **Avec Supabase** : au premier passage dans l'admin, le JSON et les photos
   sont importés automatiquement ; ensuite tout se gère depuis `/admin`.
 

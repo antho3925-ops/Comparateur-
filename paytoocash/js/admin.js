@@ -2,6 +2,7 @@
 
 import { CONFIG } from './config.js';
 import { icon, CATEGORY_ICONS, ICONES_PAR_DEFAUT } from './icons.js';
+import { creerClientDemo } from './demo-client.js';
 import { isConfigured, getClient, loadFromSupabase, loadSeed, seedToData, relier, ARTICLE_FIELDS, HORAIRES_PAR_DEFAUT } from './store.js';
 import { esc, formatPrix, aConfirmer, aVerifier, slugify, norm, cap, reduire, estReserve, heureFin, telHref, whatsappHref, qs, qsa } from './util.js';
 
@@ -12,6 +13,7 @@ let state = { categories: [], articles: [], boutique: {}, reservations: [], esti
 let tab = 'articles';
 let recherche = '';
 let readonly = false;
+let demo = false;
 
 // ---------- Petits outils d'interface ----------
 
@@ -78,20 +80,12 @@ async function demarrer() {
   else ecranConnexion();
 }
 
+// Sans Supabase : l'admin complète tourne sur une base de démonstration en mémoire.
 async function modeDemo() {
-  readonly = true;
-  state = relier(seedToData(await loadSeed()));
-  app.innerHTML = `
-    ${barre(false)}
-    <div class="wrap admin-main">
-      <div class="notice notice-gold">
-        <h2>${icon('alert')}Mode démo (lecture seule)</h2>
-        <p>Supabase n'est pas encore configuré : le site affiche le catalogue de départ et l'administration ne peut rien enregistrer.
-        Suivez <strong>SUPABASE.md</strong> (≈ 15 minutes), collez les deux clés dans <code>js/config.js</code>, et cette page permettra d'ajouter, modifier et vendre des articles depuis le téléphone.</p>
-      </div>
-      <div id="tab-content"></div>
-    </div>`;
-  renderArticles();
+  demo = true;
+  sb = creerClientDemo(seedToData(await loadSeed()));
+  await recharger();
+  coquille();
 }
 
 function ecranConnexion(msg = '') {
@@ -216,7 +210,7 @@ function barre(connecte = true) {
         <img src="paytoocash-logo/logo.svg" alt="Paytoocash" width="142" height="36">
         <span class="admin-tag">Admin</span>
         <a class="btn btn-ghost btn-sm" href="index.html" target="_blank" rel="noopener">${icon('eye')}<span class="hide-xs">Voir le site</span></a>
-        ${connecte ? `<button class="icon-btn" type="button" data-act="logout" aria-label="Se déconnecter" title="Se déconnecter">${icon('logout')}</button>` : ''}
+        ${connecte && !demo ? `<button class="icon-btn" type="button" data-act="logout" aria-label="Se déconnecter" title="Se déconnecter">${icon('logout')}</button>` : ''}
       </div>
     </header>`;
 }
@@ -229,6 +223,7 @@ function coquille() {
       ${[['articles', 'Articles', state.articles.length], ['demandes', 'Demandes', nbDemandes()], ['categories', 'Catégories', state.categories.length], ['boutique', 'Infos du magasin', null]]
         .map(([k, l, n]) => `<button role="tab" type="button" class="tab${tab === k ? ' on' : ''}" data-tab="${k}" aria-selected="${tab === k}">${l}${n != null ? ` <small>${n}</small>` : ''}${(k === 'articles' && nbVerif) || (k === 'demandes' && n) ? '<i class="dot-warn"></i>' : ''}</button>`).join('')}
     </nav>
+    ${demo ? `<div class="wrap"><p class="demo-band">${icon('alert')}<span><strong>Mode démo</strong> : tout fonctionne, mais rien n'est enregistré, et tout revient à zéro au rechargement de la page.</span></p></div>` : ''}
     <div class="wrap admin-main" id="tab-content"></div>`;
   ({ articles: renderArticles, demandes: renderDemandes, categories: renderCategories, boutique: renderBoutique })[tab]();
 }
