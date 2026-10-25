@@ -15,7 +15,7 @@ export function renderHeader(active) {
   header.innerHTML = `
     <div class="wrap header-in">
       <a class="brand" href="index.html" aria-label="Paytoocash, accueil">
-        <img src="paytoocash-logo/logo.svg" alt="Paytoocash" width="168" height="40">
+        <img src="paytoocash-logo/logo.svg" alt="Paytoocash" width="190" height="48">
       </a>
       <nav class="nav" id="nav" aria-label="Navigation principale">
         ${NAV.map(([k, href, label]) => `<a href="${href}"${k === active ? ' aria-current="page"' : ''}>${label}</a>`).join('')}
@@ -37,7 +37,7 @@ export function renderFooter(b) {
   footer.innerHTML = `
     <div class="wrap footer-in">
       <div>
-        <img class="footer-logo" src="paytoocash-logo/logo.svg" alt="Paytoocash" width="150" height="36">
+        <img class="footer-logo" src="paytoocash-logo/logo.svg" alt="Paytoocash" width="170" height="43">
         <p>${esc(pub(b.slogan) || 'Achat, vente et rachat d’occasion')}</p>
       </div>
       <ul class="footer-list">

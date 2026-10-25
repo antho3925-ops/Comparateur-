@@ -36,7 +36,7 @@
 .ix-logo { position: absolute; inset: 0; justify-content: center; z-index: 2; display: flex; flex-direction: column; align-items: center; gap: 12px; animation: ix-logo 1s cubic-bezier(.2, .8, .2, 1) 6.35s both; }
 .ix-logo img { width: min(300px, 68vw); height: auto; background: #fff; border-radius: 18px; padding: 14px 18px; box-shadow: 0 0 0 1px rgba(232, 181, 48, .6), 0 18px 50px rgba(0, 0, 0, .45), 0 0 60px rgba(232, 181, 48, .35); }
 .ix-logo span { color: #f3e3b3; font: 700 .78rem/1 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; letter-spacing: .32em; text-transform: uppercase; animation: ix-fade-up .6s ease 6.8s both; }
-.ix-logo i { position: absolute; left: 50%; top: 50%; width: min(300px, 68vw); aspect-ratio: 336 / 80; transform: translate(-50%, calc(-50% - 13px)); padding: 14px 18px; box-sizing: content-box; border-radius: 18px; pointer-events: none;
+.ix-logo i { position: absolute; left: 50%; top: 50%; width: min(300px, 68vw); aspect-ratio: 436 / 110; transform: translate(-50%, calc(-50% - 13px)); padding: 14px 18px; box-sizing: content-box; border-radius: 18px; pointer-events: none;
   background: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, .85) 50%, transparent 65%) no-repeat; background-size: 250% 100%; background-position: 130% 0; animation: ix-shine 1s ease 6.85s both; mix-blend-mode: overlay; }
 
 .ix-skip { position: absolute; right: 16px; bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 3; background: rgba(255, 255, 255, .12); color: #fff; border: 1px solid rgba(255, 255, 255, .3); border-radius: 999px; padding: 8px 16px; font: 600 .85rem system-ui, sans-serif; cursor: pointer; backdrop-filter: blur(6px); animation: ix-fade-up .4s ease .6s both; }

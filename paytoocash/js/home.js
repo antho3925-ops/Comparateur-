@@ -53,7 +53,7 @@ try {
   main.innerHTML = `
     <section class="hero">
       <div class="wrap hero-in">
-        <img class="hero-logo" src="paytoocash-logo/logo.svg" alt="Paytoocash" width="320" height="76">
+        <img class="hero-logo" src="paytoocash-logo/logo.svg" alt="Paytoocash" width="340" height="86">
         <h1 class="hero-title">${esc(pub(b.slogan) || 'Nous rachetons tous vos objets en cash')}</h1>
         <p class="hero-sub">Achat-vente d'occasion à Pontarlier : high-tech, gaming, outillage pro, luxe et bien plus, vérifiés et garantis.${pub(b.atout) ? ` ${esc(b.atout)} à visiter.` : ''}</p>
         <div class="btn-row hero-ctas">

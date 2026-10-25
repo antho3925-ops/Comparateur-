@@ -80,7 +80,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
   backdrop-filter: saturate(1.4) blur(8px); border-bottom: 1px solid var(--line);
 }
 .header-in { display: flex; align-items: center; gap: 12px; height: var(--header-h); }
-.brand img { height: 38px; width: auto; }
+.brand img { height: 44px; width: auto; }
 .nav { display: none; }
 .header-call { margin-left: auto; }
 .menu-btn { display: inline-grid; place-items: center; width: 44px; height: 44px; border: 0; background: none; cursor: pointer; color: var(--grey); border-radius: 50%; }

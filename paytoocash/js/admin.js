@@ -99,7 +99,7 @@ function ecranConnexion(msg = '') {
   app.innerHTML = `
     <div class="login">
       <form class="login-card" id="login">
-        <img src="paytoocash-logo/logo.svg" alt="Paytoocash" width="200" height="48">
+        <img src="paytoocash-logo/logo.svg" alt="Paytoocash" width="210" height="53">
         <h1>Administration</h1>
         ${msg ? `<p class="form-err">${esc(msg)}</p>` : ''}
         <label class="field ${avecEmail ? '' : 'hidden'}"><span>E-mail</span>
@@ -213,7 +213,7 @@ function barre(connecte = true) {
   return `
     <header class="admin-bar">
       <div class="wrap admin-bar-in">
-        <img src="paytoocash-logo/logo.svg" alt="Paytoocash" width="130" height="31">
+        <img src="paytoocash-logo/logo.svg" alt="Paytoocash" width="142" height="36">
         <span class="admin-tag">Admin</span>
         <a class="btn btn-ghost btn-sm" href="index.html" target="_blank" rel="noopener">${icon('eye')}<span class="hide-xs">Voir le site</span></a>
         ${connecte ? `<button class="icon-btn" type="button" data-act="logout" aria-label="Se déconnecter" title="Se déconnecter">${icon('logout')}</button>` : ''}
