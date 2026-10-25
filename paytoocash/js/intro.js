@@ -205,7 +205,7 @@
     SCENES.map(function (sc, i) {
       return '<div class="ix-scene ix-s' + i + '" style="--t0:' + sc[1] + 's;--du:' + sc[2] + 's">' + sc[0] + '<span class="ix-cap">' + sc[3] + '</span></div>';
     }).join('') +
-    '<div class="ix-logo"><img src="paytoocash-logo/logo.svg" alt=""><i></i><span>Achat · Vente · Rachat cash</span></div>' +
+    '<div class="ix-logo"><img src="paytoocash-logo/logo.svg" alt=""><i></i></div>' +
     '<button class="ix-skip" type="button">Passer</button>' +
     '</div>';
   document.body.insertAdjacentHTML('afterbegin', html);

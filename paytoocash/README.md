@@ -16,8 +16,8 @@ sans étape de compilation, pensé d'abord pour le mobile.
 ## À faire avant la mise en ligne
 
 1. **Photos** : copier les photos dans `paytoocash-photos/`.
-2. **Logo** : remplacer les fichiers *provisoires* de `paytoocash-logo/`
-   (`logo.svg`, `icone.svg`, `icone-512.png`) par ceux du client, avec les mêmes noms.
+2. **Logo** : `paytoocash-logo/` contient le logo du magasin (bonhomme aux
+   pouces levés), redessiné en vectoriel d'après la carte de visite.
 3. **Supabase** (pour l'administration) : suivre [SUPABASE.md](SUPABASE.md).
 4. **Mentions légales** : compléter SIRET, forme juridique, hébergeur.
 
@@ -99,7 +99,7 @@ paytoocash/
 ├── *.html                    Pages
 ├── catalogue-paytoocash.json Données de départ (démo + import initial)
 ├── paytoocash-photos/        Photos du catalogue de départ
-├── paytoocash-logo/          Logo et icônes (provisoires à remplacer)
+├── paytoocash-logo/          Logo et icônes
 ├── css/style.css, admin.css
 ├── js/config.js              Clés Supabase (à remplir)
 ├── js/store.js               Lecture des données (Supabase ou JSON)
