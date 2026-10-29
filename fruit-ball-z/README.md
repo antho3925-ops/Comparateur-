@@ -31,6 +31,15 @@ cd out && ffmpeg -y -i render.mp4 -c:v libx264 -preset slow -tune animation -b:v
 
 ## Prochaine étape : voix edge-tts
 
-Remplacer les voix Piper par edge-tts (`pip install edge-tts`) en gardant la même sortie : `fbz/public/audio/lN.wav`
-(mono 44,1 kHz) et `fbz/src/voices.json` (`text`, `frames`, `mouth`, `cuts`), au format produit par `make_voices2.py`.
-Puis `make_timeline.py`, `make_audio.py`, rendu, compression, et republier la page à la même URL.
+`make_voices3.py` remplace les voix Piper par edge-tts, réglées pour rappeler la VF de Dragon Ball Z :
+Pomgoku = `fr-FR-HenriNeural` plus rapide et plus aigu (réplique finale plus grave et lente), Raditz =
+`fr-FR-RemyMultilingualNeural` plus lent et plus grave (hauteur réglée par edge-tts, petit écho). Même sortie que
+`make_voices2.py` ; une réplique trop longue pour sa scène est accélérée automatiquement.
+
+Il faut que l'environnement autorise `speech.platform.bing.com` (`edge-tts --list-voices` doit répondre), puis :
+
+```bash
+pip install edge-tts && python3 make_voices3.py . && python3 make_timeline.py . && python3 make_audio.py .
+```
+
+puis rendu, compression, et republier la page à la même URL.
