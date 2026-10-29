@@ -1,0 +1,242 @@
+{
+ "total": 2265,
+ "scenes": {
+  "open": [
+   0,
+   60
+  ],
+  "recap": [
+   60,
+   240
+  ],
+  "s1": [
+   240,
+   580
+  ],
+  "s2": [
+   580,
+   940
+  ],
+  "s3": [
+   940,
+   1150
+  ],
+  "s4": [
+   1150,
+   1585
+  ],
+  "s5": [
+   1585,
+   1945
+  ],
+  "suivre": [
+   1945,
+   2035
+  ],
+  "teaser": [
+   2035,
+   2265
+  ]
+ },
+ "kiwiLand": 300,
+ "s2shots": [
+  580,
+  630,
+  680,
+  730,
+  790
+ ],
+ "s2hits": [
+  648,
+  664,
+  700,
+  716,
+  748,
+  764,
+  776
+ ],
+ "bite": 990,
+ "shakeOff": 1100,
+ "musicBack": 1115,
+ "grabbed": 1185,
+ "closeup": 1215,
+ "holdShot": 1356,
+ "fire": 1505,
+ "hit": 1550,
+ "s5close": 1650,
+ "eyesClose": [
+  1830,
+  1870
+ ],
+ "fade": [
+  1875,
+  1915
+ ],
+ "teaserShots": [
+  2035,
+  2100,
+  2165
+ ],
+ "voices": {
+  "n1": {
+   "start": 64,
+   "who": "nar",
+   "end": 234,
+   "subs": [
+    {
+     "text": "Pr\u00e9c\u00e9demment dans Fruit Ball Z...",
+     "from": 64,
+     "to": 112
+    },
+    {
+     "text": "Raditz, un guerrier venu de l'espace, a enlev\u00e9 Petit-Poirsan, le fils de Pomgoku\u00a0!",
+     "from": 112,
+     "to": 234
+    }
+   ]
+  },
+  "l1": {
+   "start": 350,
+   "who": "kiwi",
+   "end": 461,
+   "subs": [
+    {
+     "text": "On oublie nos diff\u00e9rends.",
+     "from": 350,
+     "to": 395
+    },
+    {
+     "text": "Aujourd'hui, on se bat ensemble.",
+     "from": 395,
+     "to": 461
+    }
+   ]
+  },
+  "l2": {
+   "start": 498,
+   "who": "pom",
+   "end": 558,
+   "subs": [
+    {
+     "text": "Je ne le laisserai pas repartir avec mon fils.",
+     "from": 498,
+     "to": 558
+    }
+   ]
+  },
+  "l3": {
+   "start": 808,
+   "who": "rad",
+   "end": 894,
+   "subs": [
+    {
+     "text": "Vous croyez vraiment",
+     "from": 808,
+     "to": 849
+    },
+    {
+     "text": "pouvoir m'arr\u00eater \u00e0 deux\u00a0?",
+     "from": 849,
+     "to": 894
+    }
+   ]
+  },
+  "p1": {
+   "start": 944,
+   "who": "pp",
+   "end": 984,
+   "subs": [
+    {
+     "text": "Laisse mon papa tranquille\u00a0!",
+     "from": 944,
+     "to": 984
+    }
+   ]
+  },
+  "l4": {
+   "start": 1000,
+   "who": "rad",
+   "end": 1099,
+   "subs": [
+    {
+     "text": "A\u00cf\u00cf\u00cf\u00cfE\u00a0!",
+     "from": 1000,
+     "to": 1034
+    },
+    {
+     "text": "L\u00e2che ma jambe, sale p\u00e9pin\u00a0!",
+     "from": 1034,
+     "to": 1099
+    }
+   ]
+  },
+  "l5": {
+   "start": 1270,
+   "who": "kiwi",
+   "end": 1353,
+   "subs": [
+    {
+     "text": "Pomgoku, tiens-le\u00a0!",
+     "from": 1270,
+     "to": 1313
+    },
+    {
+     "text": "Je n'ai qu'un seul tir\u00a0!",
+     "from": 1313,
+     "to": 1353
+    }
+   ]
+  },
+  "l6": {
+   "start": 1400,
+   "who": "rad",
+   "end": 1500,
+   "subs": [
+    {
+     "text": "L\u00e2che-moi, idiot\u00a0!",
+     "from": 1400,
+     "to": 1443
+    },
+    {
+     "text": "Tu vas y passer, toi aussi\u00a0!",
+     "from": 1443,
+     "to": 1500
+    }
+   ]
+  },
+  "l7": {
+   "start": 1700,
+   "who": "pom",
+   "end": 1819,
+   "subs": [
+    {
+     "text": "Prot\u00e8ge-le...",
+     "from": 1700,
+     "to": 1748
+    },
+    {
+     "text": "prot\u00e8ge tout le monde...",
+     "from": 1748,
+     "to": 1819
+    }
+   ]
+  },
+  "n2": {
+   "start": 2045,
+   "who": "nar",
+   "end": 2144,
+   "subs": [
+    {
+     "text": "Dans le prochain \u00e9pisode...",
+     "from": 2045,
+     "to": 2096
+    },
+    {
+     "text": "Voyage vers Namek\u00a0!",
+     "from": 2096,
+     "to": 2144
+    }
+   ]
+  }
+ }
+}

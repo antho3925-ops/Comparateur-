@@ -45,3 +45,23 @@ pip install edge-tts && python3 make_voices3.py . && python3 make_timeline.py . 
 
 puis rendu, compression, et republier la page à la même URL. Derrière un proxy TLS, le script ajoute le
 certificat de `SSL_CERT_FILE` au contexte SSL d'edge-tts (qui n'utilise sinon que certifi).
+
+# Épisode 2 — Sacrifice au verger
+
+75 s (2265 images), mêmes personnages et voix que l'épisode 1, plus Kiwikolo (kiwi façon Piccolo, voix
+`fr-BE-GerardNeural`), Petit-Poirsan (`fr-FR-EloiseNeural`) et un narrateur (`fr-CH-FabriceNeural`).
+Composition Remotion `Episode2` : `fbz/src/Episode2.tsx` (plans), `characters2.tsx` (Kiwikolo, fissures
+d'armure), `scenery2.tsx` (traits de vitesse, étoiles d'impact). Le « Précédemment » rejoue des plans de
+l'épisode 1 en accéléré (`<Episode recap />` dans un `<Freeze>`).
+
+```bash
+pip install edge-tts && python3 make_voices_ep2.py .   # fbz/public/audio/ep2/lN.wav + fbz/src/voices2.json
+python3 make_timeline_ep2.py . && python3 make_audio_ep2.py .
+cd fbz && npx remotion render src/index.ts Episode2 out/ep2_render.mp4 --concurrency=4 --crf=14 \
+  --browser-executable=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell
+COMP=Episode2 OUT=dossier node stills.mjs 300 990 1530   # images de contrôle
+```
+
+`make_voices_ep2.py . l4 l7` ne régénère que les répliques citées. Compression comme l'épisode 1 (H.264 Main 4.0,
+2 passes, audio repris de `fbz/public/audio/ep2/mix.wav`), vers `site/episode2_fruitballz.mp4` ; la page
+`site/index.html` présente les deux épisodes.

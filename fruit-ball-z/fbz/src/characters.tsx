@@ -28,13 +28,13 @@ const SPIKES: Array<[number, number, string, number]> = [
 	[16, 225, '#7A4A22', 56], [38, 200, '#3E9B3A', 54], [62, 165, '#7A4A22', 48], [82, 120, '#3E9B3A', 40],
 ];
 
-export const Pomgoku: React.FC<Common & {wind?: number; fistR?: boolean; noArms?: boolean; reachLen?: number}> = ({
+export const Pomgoku: React.FC<Common & {wind?: number; fistR?: boolean; noArms?: boolean; reachLen?: number; eyesClosed?: number}> = ({
 	x, y, scale = 1, flip, frame, mouth = 0, mood = 'happy', look = [0, 0], lean = 0, squash = 0,
-	shadow = true, armL = 25, armR = 25, wind = 0.2, darken = 0, fistR, noArms, reachLen = 120,
+	shadow = true, armL = 25, armR = 25, wind = 0.2, darken = 0, fistR, noArms, reachLen = 120, eyesClosed = 0,
 }) => {
 	const gid = useUid('pomg');
 	const did = useUid('pomd');
-	const blink = mood === 'shock' ? 0 : blinkAt(frame, 3);
+	const blink = Math.max(eyesClosed, mood === 'shock' ? 0 : blinkAt(frame, 3));
 	const anger = mood === 'angry' ? 0.55 : mood === 'determined' ? 0.75 : 0;
 	const browY = mood === 'shock' ? -342 : mood === 'happy' ? -330 : -312;
 	const browTilt = mood === 'angry' || mood === 'determined' ? 26 : mood === 'shock' ? -8 : -6;

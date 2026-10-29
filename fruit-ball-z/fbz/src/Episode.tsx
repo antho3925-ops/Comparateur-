@@ -391,7 +391,8 @@ const Subtitles: React.FC<{f: number}> = ({f}) => {
 	);
 };
 
-export const Episode: React.FC = () => {
+/** recap : sans son ni sous-titres (plans repris dans le « Précédemment » de l'ép.2). */
+export const Episode: React.FC<{recap?: boolean}> = ({recap}) => {
 	const f = useCurrentFrame();
 	const S = TL.scenes;
 	let scene: React.ReactNode;
@@ -405,8 +406,8 @@ export const Episode: React.FC = () => {
 	return (
 		<AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
 			{scene}
-			{f < TL.title && <Subtitles f={f} />}
-			<Audio src={staticFile('audio/mix.wav')} />
+			{f < TL.title && !recap && <Subtitles f={f} />}
+			{!recap && <Audio src={staticFile('audio/mix.wav')} />}
 		</AbsoluteFill>
 	);
 };

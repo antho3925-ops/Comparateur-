@@ -60,52 +60,79 @@
   .dl:disabled { opacity: 0.6; cursor: progress; }
   .dl:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
   video:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+  .episode { display: flex; flex-direction: column; gap: 14px; }
+  .episode + .episode { border-top: 2px dashed #4A3458; padding-top: 22px; }
+  h2 { font-family: var(--title); font-weight: 400; font-size: 1.25rem; letter-spacing: 0.05em; margin: 0; text-align: center; text-wrap: balance; }
+  h2 small { display: block; font-family: var(--body); font-weight: 800; font-size: 0.75rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .new { color: #000; background: #9BFF5A; border-radius: 999px; padding: 1px 8px; margin-left: 6px; font-size: 0.7rem; vertical-align: middle; }
+  .cast.four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 </style>
 
 <main>
   <header>
     <h1>Fruit Ball Z</h1>
-    <p class="ep">Épisode 1 · L'arrivée de Raditz</p>
+    <p class="ep">La saga des fruits</p>
   </header>
 
-  <div class="frame">
-    <video id="ep1" src="episode1_fruitballz.mp4" controls playsinline preload="metadata" poster="poster.jpg"></video>
-  </div>
-
-  <ul class="meta">
-    <li>39 s</li>
-    <li>1080 × 1920</li>
-    <li>VF sous-titrée</li>
-  </ul>
-
-  <section class="cast" aria-label="Personnages">
-    <div><i class="dot" style="background:#D22B2B"></i><b>Pomgoku</b><span>Pomme naïve au grand cœur</span></div>
-    <div><i class="dot" style="background:#BFD94A"></i><b>Petit-Poirsan</b><span>Son fils, enlevé</span></div>
-    <div><i class="dot" style="background:#4C2F18"></i><b>Raditz</b><span>Plantain venu de l'espace</span></div>
+  <section class="episode" aria-labelledby="t2">
+    <h2 id="t2"><small>Épisode 2 <span class="new">Nouveau</span></small>Sacrifice au verger</h2>
+    <div class="frame">
+      <video id="ep2" src="episode2_fruitballz.mp4" controls playsinline preload="metadata" poster="poster2.jpg"></video>
+    </div>
+    <ul class="meta">
+      <li>75 s</li>
+      <li>1080 × 1920</li>
+      <li>VF sous-titrée</li>
+    </ul>
+    <section class="cast four" aria-label="Personnages de l'épisode 2">
+      <div><i class="dot" style="background:#D22B2B"></i><b>Pomgoku</b><span>Prêt à tout pour son fils</span></div>
+      <div><i class="dot" style="background:#8ED43A"></i><b>Kiwikolo</b><span>Ancien rival, allié d'un jour</span></div>
+      <div><i class="dot" style="background:#BFD94A"></i><b>Petit-Poirsan</b><span>Petit mais il mord</span></div>
+      <div><i class="dot" style="background:#4C2F18"></i><b>Raditz</b><span>Plantain arrogant</span></div>
+    </section>
+    <button class="dl" data-file="episode2_fruitballz.mp4" type="button" hidden>Télécharger l'épisode 2 en MP4</button>
+    <p class="next">Prochainement : Voyage vers Namek</p>
   </section>
 
-  <button class="dl" id="dl" type="button" hidden>Télécharger en MP4</button>
-
-  <p class="next">À suivre…</p>
+  <section class="episode" aria-labelledby="t1">
+    <h2 id="t1"><small>Épisode 1</small>L'arrivée de Raditz</h2>
+    <div class="frame">
+      <video id="ep1" src="episode1_fruitballz.mp4" controls playsinline preload="metadata" poster="poster.jpg"></video>
+    </div>
+    <ul class="meta">
+      <li>39 s</li>
+      <li>1080 × 1920</li>
+      <li>VF sous-titrée</li>
+    </ul>
+    <section class="cast" aria-label="Personnages de l'épisode 1">
+      <div><i class="dot" style="background:#D22B2B"></i><b>Pomgoku</b><span>Pomme naïve au grand cœur</span></div>
+      <div><i class="dot" style="background:#BFD94A"></i><b>Petit-Poirsan</b><span>Son fils, enlevé</span></div>
+      <div><i class="dot" style="background:#4C2F18"></i><b>Raditz</b><span>Plantain venu de l'espace</span></div>
+    </section>
+    <button class="dl" data-file="episode1_fruitballz.mp4" type="button" hidden>Télécharger l'épisode 1 en MP4</button>
+  </section>
 </main>
 
 <script>
-  // Bouton MP4 : n'apparaît que si la page peut proposer un téléchargement
+  // Boutons MP4 : n'apparaissent que si la page peut proposer un téléchargement
   (async () => {
     const downloads = await window.claude?.use?.("downloads");
     if (!downloads) return;
-    const btn = document.getElementById("dl");
-    btn.hidden = false;
-    btn.addEventListener("click", async () => {
-      btn.disabled = true; btn.textContent = "Préparation…";
-      try {
-        const data = await (await fetch("episode1_fruitballz.mp4")).blob();
-        await downloads.save({ filename: "episode1_fruitballz.mp4", data });
-      } catch (e) {
-        if (e && e.code === "unavailable") btn.hidden = true;
-      } finally {
-        btn.disabled = false; btn.textContent = "Télécharger en MP4";
-      }
-    });
+    for (const btn of document.querySelectorAll(".dl")) {
+      const file = btn.dataset.file;
+      const label = btn.textContent;
+      btn.hidden = false;
+      btn.addEventListener("click", async () => {
+        btn.disabled = true; btn.textContent = "Préparation…";
+        try {
+          const data = await (await fetch(file)).blob();
+          await downloads.save({ filename: file, data });
+        } catch (e) {
+          if (e && e.code === "unavailable") btn.hidden = true;
+        } finally {
+          btn.disabled = false; btn.textContent = label;
+        }
+      });
+    }
   })();
 </script>
