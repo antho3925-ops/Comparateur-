@@ -52,6 +52,13 @@
   .cast b { font-family: var(--title); font-weight: 400; font-size: 0.95rem; letter-spacing: 0.02em; }
   .cast span { font-size: 0.78rem; color: var(--muted); line-height: 1.3; }
   p.next { text-align: center; margin: 4px 0 0; font-family: var(--title); color: var(--gold); font-size: 1.05rem; letter-spacing: 0.04em; }
+  .dl {
+    align-self: center; font-family: var(--title); font-size: 1rem; letter-spacing: 0.04em; text-decoration: none;
+    color: #000; background: var(--gold); border: 3px solid #000; border-radius: 999px; padding: 10px 22px;
+    box-shadow: 0 4px 0 var(--apple); cursor: pointer;
+  }
+  .dl:disabled { opacity: 0.6; cursor: progress; }
+  .dl:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
   video:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
 </style>
 
@@ -77,5 +84,28 @@
     <div><i class="dot" style="background:#4C2F18"></i><b>Raditz</b><span>Plantain venu de l'espace</span></div>
   </section>
 
+  <button class="dl" id="dl" type="button" hidden>Télécharger en MP4</button>
+
   <p class="next">À suivre…</p>
 </main>
+
+<script>
+  // Bouton MP4 : n'apparaît que si la page peut proposer un téléchargement
+  (async () => {
+    const downloads = await window.claude?.use?.("downloads");
+    if (!downloads) return;
+    const btn = document.getElementById("dl");
+    btn.hidden = false;
+    btn.addEventListener("click", async () => {
+      btn.disabled = true; btn.textContent = "Préparation…";
+      try {
+        const data = await (await fetch("episode1_fruitballz.mp4")).blob();
+        await downloads.save({ filename: "episode1_fruitballz.mp4", data });
+      } catch (e) {
+        if (e && e.code === "unavailable") btn.hidden = true;
+      } finally {
+        btn.disabled = false; btn.textContent = "Télécharger en MP4";
+      }
+    });
+  })();
+</script>
