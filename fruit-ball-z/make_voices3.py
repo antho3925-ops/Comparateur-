@@ -7,6 +7,11 @@ Usage : python3 make_voices3.py <dossier qui contient fbz/>
 import asyncio, json, os, subprocess, sys, wave
 import numpy as np
 import edge_tts
+import edge_tts.communicate
+
+# edge-tts n'utilise que certifi : derrière un proxy TLS, on ajoute le CA de SSL_CERT_FILE
+if os.environ.get('SSL_CERT_FILE'):
+    edge_tts.communicate._SSL_CTX.load_verify_locations(os.environ['SSL_CERT_FILE'])
 
 S = sys.argv[1]; OUT = S + '/fbz/public/audio'; SR = 44100; FPS = 30
 POM = 'fr-FR-HenriNeural'            # Goku VF : jeune, aigu, nasal, plein d'énergie

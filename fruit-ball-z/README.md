@@ -9,7 +9,8 @@ https://claude.ai/artifact/1tQhAtR4Xrh67eAhapuHbS
 - `fbz/src/timeline.json` : timing des scènes et des répliques (généré par `make_timeline.py`).
 - `fbz/src/voices.json` : amplitude de bouche image par image (généré par le script de voix).
 - `fbz/public/audio/l1..l5.wav` : répliques ; `mix.wav` (voix + musique + bruitages) est régénéré par `make_audio.py`.
-- `make_voices2.py` : voix Piper actuelles (Tom pour Pomgoku, Pierre pour Raditz).
+- `make_voices3.py` : voix edge-tts actuelles (Henri pour Pomgoku, Remy pour Raditz), façon VF de Dragon Ball Z.
+- `make_voices2.py` : anciennes voix Piper (Tom pour Pomgoku, Pierre pour Raditz).
 - `site/` : page du lecteur vidéo.
 
 Les scripts Python prennent en argument le dossier qui contient `fbz/` (ici `fruit-ball-z`).
@@ -29,7 +30,7 @@ cd out && ffmpeg -y -i render.mp4 -c:v libx264 -preset slow -tune animation -b:v
 
 `stills.mjs` sort des images fixes pour vérifier : `OUT=dossier node stills.mjs 60 300 650`.
 
-## Prochaine étape : voix edge-tts
+## Voix edge-tts
 
 `make_voices3.py` remplace les voix Piper par edge-tts, réglées pour rappeler la VF de Dragon Ball Z :
 Pomgoku = `fr-FR-HenriNeural` plus rapide et plus aigu (réplique finale plus grave et lente), Raditz =
@@ -42,4 +43,5 @@ Il faut que l'environnement autorise `speech.platform.bing.com` (`edge-tts --lis
 pip install edge-tts && python3 make_voices3.py . && python3 make_timeline.py . && python3 make_audio.py .
 ```
 
-puis rendu, compression, et republier la page à la même URL.
+puis rendu, compression, et republier la page à la même URL. Derrière un proxy TLS, le script ajoute le
+certificat de `SSL_CERT_FILE` au contexte SSL d'edge-tts (qui n'utilise sinon que certifi).
