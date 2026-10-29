@@ -1,0 +1,125 @@
+{
+ "total": 1170,
+ "scenes": {
+  "s1": [
+   0,
+   180
+  ],
+  "s2": [
+   180,
+   330
+  ],
+  "s3": [
+   330,
+   540
+  ],
+  "s4": [
+   540,
+   840
+  ],
+  "s5": [
+   840,
+   1035
+  ]
+ },
+ "crash": 272,
+ "grab": 600,
+ "fly": 612,
+ "freeze": 990,
+ "title": 1035,
+ "hops": [
+  10,
+  40,
+  70,
+  100,
+  130,
+  160
+ ],
+ "steps": [
+  392,
+  412,
+  432
+ ],
+ "voices": {
+  "l1": {
+   "start": 38,
+   "who": "pom",
+   "end": 135,
+   "subs": [
+    {
+     "text": "Encore une pomme bien juteuse aujourd'hui,",
+     "from": 38,
+     "to": 104
+    },
+    {
+     "text": "hein Petit-Poirsan !",
+     "from": 104,
+     "to": 135
+    }
+   ]
+  },
+  "l2": {
+   "start": 418,
+   "who": "rad",
+   "end": 505,
+   "subs": [
+    {
+     "text": "Tu ne sais m\u00eame pas ce que tu es vraiment...",
+     "from": 418,
+     "to": 481
+    },
+    {
+     "text": "Path\u00e9tique.",
+     "from": 481,
+     "to": 505
+    }
+   ]
+  },
+  "l3": {
+   "start": 626,
+   "who": "pom",
+   "end": 683,
+   "subs": [
+    {
+     "text": "Rends-moi mon fils tout de suite !",
+     "from": 626,
+     "to": 683
+    }
+   ]
+  },
+  "l4": {
+   "start": 700,
+   "who": "rad",
+   "end": 818,
+   "subs": [
+    {
+     "text": "Deviens plus fort, petit fr\u00e8re...",
+     "from": 700,
+     "to": 773
+    },
+    {
+     "text": "Ou regarde-le dispara\u00eetre.",
+     "from": 773,
+     "to": 818
+    }
+   ]
+  },
+  "l5": {
+   "start": 880,
+   "who": "pom",
+   "end": 971,
+   "subs": [
+    {
+     "text": "Je te jure...",
+     "from": 880,
+     "to": 917
+    },
+    {
+     "text": "que je vais te faire payer \u00e7a.",
+     "from": 917,
+     "to": 971
+    }
+   ]
+  }
+ }
+}
