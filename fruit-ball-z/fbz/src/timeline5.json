@@ -1,0 +1,240 @@
+{
+ "total": 2250,
+ "scenes": {
+  "open": [
+   0,
+   60
+  ],
+  "recap": [
+   60,
+   240
+  ],
+  "s1": [
+   240,
+   570
+  ],
+  "s2": [
+   570,
+   900
+  ],
+  "s3": [
+   900,
+   1230
+  ],
+  "s4": [
+   1230,
+   1620
+  ],
+  "s5": [
+   1620,
+   1950
+  ],
+  "suivre": [
+   1950,
+   2040
+  ],
+  "teaser": [
+   2040,
+   2250
+  ]
+ },
+ "s1shots": [
+  240,
+  345,
+  430,
+  472
+ ],
+ "open": 290,
+ "s2shots": [
+  570,
+  640,
+  700
+ ],
+ "land": 690,
+ "s3shots": [
+  900,
+  960,
+  1185
+ ],
+ "s4shots": [
+  1230,
+  1345,
+  1390,
+  1525,
+  1570
+ ],
+ "blows": [
+  1395,
+  1418,
+  1440,
+  1460,
+  1480,
+  1500
+ ],
+ "cracks": [
+  1660,
+  1690,
+  1722,
+  1736
+ ],
+ "fade": [
+  1905,
+  1950
+ ],
+ "teaserShots": [
+  2040,
+  2110,
+  2175
+ ],
+ "voices": {
+  "n1": {
+   "start": 64,
+   "who": "nar",
+   "end": 196,
+   "cuts": [
+    120
+   ],
+   "subs": [
+    {
+     "text": "Pr\u00e9c\u00e9demment dans Fruit Ball Z...",
+     "from": 64,
+     "to": 120
+    },
+    {
+     "text": "Litcheezer a r\u00e9duit en ruines le village des Namekiens.",
+     "from": 120,
+     "to": 196
+    }
+   ]
+  },
+  "c1": {
+   "start": 432,
+   "who": "pom",
+   "end": 459,
+   "cuts": [],
+   "subs": []
+  },
+  "l1": {
+   "start": 476,
+   "who": "pom",
+   "end": 554,
+   "cuts": [
+    522
+   ],
+   "subs": [
+    {
+     "text": "Qu'est-ce qui s'est pass\u00e9 ici...",
+     "from": 476,
+     "to": 522
+    },
+    {
+     "text": "qui a fait \u00e7a ?",
+     "from": 522,
+     "to": 554
+    }
+   ]
+  },
+  "l2": {
+   "start": 730,
+   "who": "kiwi",
+   "end": 826,
+   "cuts": [
+    767
+   ],
+   "subs": [
+    {
+     "text": "Litcheezer.",
+     "from": 730,
+     "to": 767
+    },
+    {
+     "text": "Et ce que tu vois n'est qu'un d\u00e9but.",
+     "from": 767,
+     "to": 826
+    }
+   ]
+  },
+  "l3": {
+   "start": 1000,
+   "who": "lit",
+   "end": 1175,
+   "cuts": [
+    1096,
+    1142
+   ],
+   "subs": [
+    {
+     "text": "Oh, une petite pomme qui vient jouer les h\u00e9ros.",
+     "from": 1000,
+     "to": 1096
+    },
+    {
+     "text": "Comme c'est mignon.",
+     "from": 1096,
+     "to": 1142
+    }
+   ]
+  },
+  "l4": {
+   "start": 1245,
+   "who": "pom",
+   "end": 1337,
+   "cuts": [
+    1302
+   ],
+   "subs": [
+    {
+     "text": "Je me fiche de ta puissance.",
+     "from": 1245,
+     "to": 1302
+    },
+    {
+     "text": "Je vais t'arr\u00eater.",
+     "from": 1302,
+     "to": 1337
+    }
+   ]
+  },
+  "l5": {
+   "start": 1752,
+   "who": "lit",
+   "end": 1893,
+   "cuts": [
+    1783,
+    1838
+   ],
+   "subs": [
+    {
+     "text": "Tu n'as encore rien vu",
+     "from": 1783,
+     "to": 1838
+    },
+    {
+     "text": "de ce dont je suis capable.",
+     "from": 1838,
+     "to": 1893
+    }
+   ]
+  },
+  "n2": {
+   "start": 2050,
+   "who": "nar",
+   "end": 2150,
+   "cuts": [
+    2101
+   ],
+   "subs": [
+    {
+     "text": "Dans le prochain \u00e9pisode...",
+     "from": 2050,
+     "to": 2101
+    },
+    {
+     "text": "Les formes de Litcheezer !",
+     "from": 2101,
+     "to": 2150
+    }
+   ]
+  }
+ }
+}

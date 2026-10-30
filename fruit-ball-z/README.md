@@ -83,3 +83,22 @@ cd fbz && npx remotion render src/index.ts Episode3 out/ep3_render.mp4 --concurr
 
 Compression comme les épisodes précédents (H.264 Main 4.0, 2 passes) mais à 1250 kb/s pour rester sous 15 Mo, audio
 AAC 128 kb/s repris de `fbz/public/audio/ep3/mix.wav`, vers `site/episode3_fruitballz.mp4`.
+
+# Épisode 5 — Pomgoku débarque
+
+75 s (2250 images). Composition `Episode5` : `fbz/src/Episode5.tsx` (village en ruines, fumée, feux, vaisseau de
+Pomgoku qui s'ouvre, combat). `fbz/src/characters5.tsx` : Litcheezer hors de sa capsule, même dessin que l'ép.4 avec
+des jambes, les bras croisés (`crossed`), un sourire qui s'élargit (`grin`) et le haut du corps qui se plie (`tilt`).
+Le « Précédemment » rejoue des plans de l'ép.4 (`<Episode4 recap />`) ; `<Episode5 recap />` coupe son et sous-titres.
+Voix : Pomgoku comme l'ép.1, Kiwikolo comme l'ép.2, Litcheezer comme l'ép.4 (Thierry chuchoté, petit rire
+« Ho ho ho... » sans sous-titre), cri de Pomgoku étiré avec `atempo`.
+
+```bash
+pip install edge-tts && python3 make_voices_ep5.py .   # fbz/public/audio/ep5/lN.wav + fbz/src/voices5.json
+python3 make_timeline_ep5.py . && python3 make_audio_ep5.py .
+cd fbz && npx remotion render src/index.ts Episode5 out/ep5_render.mp4 --concurrency=4 --crf=14 \
+  --browser-executable=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell
+```
+
+Compression comme l'ép.3 (H.264 Main 4.0, 2 passes, audio AAC 128 kb/s repris de `fbz/public/audio/ep5/mix.wav`),
+vers `site/episode5_fruitballz.mp4`.
