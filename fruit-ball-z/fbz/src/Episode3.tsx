@@ -800,7 +800,8 @@ const Subtitles: React.FC<{f: number}> = ({f}) => {
 	);
 };
 
-export const Episode3: React.FC = () => {
+/** recap : sans son ni sous-titres (plans repris dans le « Précédemment » de l'ép.4). */
+export const Episode3: React.FC<{recap?: boolean}> = ({recap}) => {
 	const f = useCurrentFrame();
 	let scene: React.ReactNode;
 	if (f < SC.recap[0]) scene = <OpeningCard f={f} />;
@@ -815,8 +816,8 @@ export const Episode3: React.FC = () => {
 	return (
 		<AbsoluteFill style={{background: '#000', overflow: 'hidden'}}>
 			{scene}
-			<Subtitles f={f} />
-			<Audio src={staticFile('audio/ep3/mix.wav')} />
+			{!recap && <Subtitles f={f} />}
+			{!recap && <Audio src={staticFile('audio/ep3/mix.wav')} />}
 		</AbsoluteFill>
 	);
 };

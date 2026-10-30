@@ -65,3 +65,21 @@ COMP=Episode2 OUT=dossier node stills.mjs 300 990 1530   # images de contrôle
 `make_voices_ep2.py . l4 l7` ne régénère que les répliques citées. Compression comme l'épisode 1 (H.264 Main 4.0,
 2 passes, audio repris de `fbz/public/audio/ep2/mix.wav`), vers `site/episode2_fruitballz.mp4` ; la page
 `site/index.html` présente les deux épisodes.
+
+# Épisode 3 — Voyage vers Namek
+
+73 s (2190 images). Nouveaux personnages dans `fbz/src/characters3.tsx` : Végénade (grenade façon Vegeta, fissures
+dorées, pépins qui brillent avec `rage`), Namekiens (`Namekian`, `elder` pour l'ancien), la gousse `PeaShip`, la
+capsule `VegPod`, les boules orange `OrangeBall`. Composition `Episode3` : `fbz/src/Episode3.tsx` ; le « Précédemment »
+rejoue des plans de l'ép.2 (`<Episode2 recap />`). Voix : Végénade `fr-FR-RemyMultilingualNeural` (sec, compressé,
+sans écho), Namekien `fr-CA-JeanNeural` (lent, chevrotant), Kiwikolo, Petit-Poirsan et narrateur comme l'ép.2.
+
+```bash
+pip install edge-tts && python3 make_voices_ep3.py .   # fbz/public/audio/ep3/lN.wav + fbz/src/voices3.json
+python3 make_timeline_ep3.py . && python3 make_audio_ep3.py .
+cd fbz && npx remotion render src/index.ts Episode3 out/ep3_render.mp4 --concurrency=4 --crf=14 \
+  --browser-executable=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell
+```
+
+Compression comme les épisodes précédents (H.264 Main 4.0, 2 passes) mais à 1250 kb/s pour rester sous 15 Mo, audio
+AAC 128 kb/s repris de `fbz/public/audio/ep3/mix.wav`, vers `site/episode3_fruitballz.mp4`.
