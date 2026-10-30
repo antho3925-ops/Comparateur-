@@ -1,0 +1,209 @@
+{
+ "total": 2190,
+ "scenes": {
+  "open": [
+   0,
+   60
+  ],
+  "recap": [
+   60,
+   240
+  ],
+  "s1": [
+   240,
+   540
+  ],
+  "s2": [
+   540,
+   940
+  ],
+  "s3": [
+   940,
+   1290
+  ],
+  "s4": [
+   1290,
+   1590
+  ],
+  "s5": [
+   1590,
+   1890
+  ],
+  "suivre": [
+   1890,
+   1980
+  ],
+  "teaser": [
+   1980,
+   2190
+  ]
+ },
+ "shadow": [
+  290,
+  400
+ ],
+ "tiltUp": 380,
+ "shipLand": 465,
+ "march": [
+  478,
+  535
+ ],
+ "s2shots": [
+  540,
+  590,
+  743,
+  909
+ ],
+ "fingerUp": 1125,
+ "flash": 1165,
+ "ruins": 1185,
+ "vegClose": 1345,
+ "fists": 1510,
+ "s5shots": [
+  1590,
+  1650,
+  1745
+ ],
+ "fade": [
+  1858,
+  1890
+ ],
+ "teaserShots": [
+  1980,
+  2045,
+  2110
+ ],
+ "voices": {
+  "n1": {
+   "start": 64,
+   "who": "nar",
+   "end": 235,
+   "subs": [
+    {
+     "text": "Pr\u00e9c\u00e9demment dans Fruit Ball Z...",
+     "from": 64,
+     "to": 116
+    },
+    {
+     "text": "Kiwikolo et Petit-Poirsan ont atteint Namek... mais V\u00e9g\u00e9nade arrive, lui aussi\u00a0!",
+     "from": 116,
+     "to": 235
+    }
+   ]
+  },
+  "l1": {
+   "start": 600,
+   "who": "ltz",
+   "end": 743,
+   "subs": [
+    {
+     "text": "Soyez raisonnables...",
+     "from": 600,
+     "to": 681
+    },
+    {
+     "text": "donnez-moi simplement ce que je veux.",
+     "from": 681,
+     "to": 743
+    }
+   ]
+  },
+  "l2": {
+   "start": 775,
+   "who": "nam",
+   "end": 909,
+   "subs": [
+    {
+     "text": "Jamais.",
+     "from": 775,
+     "to": 802
+    },
+    {
+     "text": "Ces boules ne sont pas faites pour des mains comme les tiennes.",
+     "from": 802,
+     "to": 909
+    }
+   ]
+  },
+  "l3": {
+   "start": 965,
+   "who": "ltz",
+   "end": 1119,
+   "subs": [
+    {
+     "text": "Quel dommage.",
+     "from": 965,
+     "to": 1030
+    },
+    {
+     "text": "J'aurais tellement pr\u00e9f\u00e9r\u00e9 faire \u00e7a dans le calme.",
+     "from": 1030,
+     "to": 1119
+    }
+   ]
+  },
+  "l4": {
+   "start": 1388,
+   "who": "veg",
+   "end": 1503,
+   "subs": [
+    {
+     "text": "Ce monstre...",
+     "from": 1388,
+     "to": 1421
+    },
+    {
+     "text": "il va tous nous d\u00e9truire si personne ne l'arr\u00eate.",
+     "from": 1421,
+     "to": 1503
+    }
+   ]
+  },
+  "n2": {
+   "start": 1662,
+   "who": "nar",
+   "end": 1780,
+   "subs": [
+    {
+     "text": "Et alors qu'un espoir semblait s'\u00e9teindre...",
+     "from": 1662,
+     "to": 1730
+    },
+    {
+     "text": "un nouveau venu approchait.",
+     "from": 1730,
+     "to": 1780
+    }
+   ]
+  },
+  "n3": {
+   "start": 1905,
+   "who": "nar",
+   "end": 1926,
+   "subs": [
+    {
+     "text": "\u00c0 suivre...",
+     "from": 1905,
+     "to": 1926
+    }
+   ]
+  },
+  "n4": {
+   "start": 1992,
+   "who": "nar",
+   "end": 2084,
+   "subs": [
+    {
+     "text": "Dans le prochain \u00e9pisode...",
+     "from": 1992,
+     "to": 2043
+    },
+    {
+     "text": "Pomgoku d\u00e9barque\u00a0!",
+     "from": 2043,
+     "to": 2084
+    }
+   ]
+  }
+ }
+}
