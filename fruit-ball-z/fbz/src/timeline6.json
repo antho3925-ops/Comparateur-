@@ -1,0 +1,211 @@
+{
+ "total": 2220,
+ "scenes": {
+  "open": [
+   0,
+   60
+  ],
+  "recap": [
+   60,
+   240
+  ],
+  "s1": [
+   240,
+   600
+  ],
+  "s2": [
+   600,
+   840
+  ],
+  "s3": [
+   840,
+   1230
+  ],
+  "s4": [
+   1230,
+   1590
+  ],
+  "s5": [
+   1590,
+   1920
+  ],
+  "suivre": [
+   1920,
+   2010
+  ],
+  "teaser": [
+   2010,
+   2220
+  ]
+ },
+ "s1shots": [
+  240,
+  330,
+  420,
+  480
+ ],
+ "grow": [
+  450,
+  570
+ ],
+ "charge": 958,
+ "flick": 1000,
+ "land": 1072,
+ "bounce": 1100,
+ "veins": [
+  1250,
+  1400
+ ],
+ "s4shots": [
+  1230,
+  1330,
+  1480
+ ],
+ "aura": 1600,
+ "s5shots": [
+  1590,
+  1680,
+  1810
+ ],
+ "flash": 1888,
+ "teaserShots": [
+  2010,
+  2080,
+  2150
+ ],
+ "voices": {
+  "n1": {
+   "start": 64,
+   "who": "nar",
+   "end": 232,
+   "subs": [
+    {
+     "text": "Pr\u00e9c\u00e9demment dans Fruit Ball Z...",
+     "from": 64,
+     "to": 116
+    },
+    {
+     "text": "Pomgoku a enfin d\u00e9barqu\u00e9 sur Namek, mais Litcheezer a esquiv\u00e9 tous ses coups en souriant.",
+     "from": 116,
+     "to": 232
+    }
+   ],
+   "cuts": [
+    116
+   ]
+  },
+  "l1": {
+   "start": 648,
+   "who": "lit",
+   "end": 791,
+   "subs": [
+    {
+     "text": "Voici ma deuxi\u00e8me forme.",
+     "from": 648,
+     "to": 708
+    },
+    {
+     "text": "J'esp\u00e8re que ton c\u0153ur tiendra le choc.",
+     "from": 708,
+     "to": 791
+    }
+   ],
+   "cuts": [
+    708
+   ]
+  },
+  "l2": {
+   "start": 878,
+   "who": "veg",
+   "end": 948,
+   "subs": [
+    {
+     "text": "Je n'ai pas fait tout ce chemin pour reculer devant toi !",
+     "from": 878,
+     "to": 948
+    }
+   ],
+   "cuts": []
+  },
+  "l3": {
+   "start": 1128,
+   "who": "lit",
+   "end": 1216,
+   "subs": [
+    {
+     "text": "Tu es fort...",
+     "from": 1128,
+     "to": 1164
+    },
+    {
+     "text": "pour un fruit ordinaire.",
+     "from": 1164,
+     "to": 1216
+    }
+   ],
+   "cuts": [
+    1164
+   ]
+  },
+  "l4": {
+   "start": 1388,
+   "who": "pom",
+   "end": 1455,
+   "subs": [
+    {
+     "text": "Arr\u00eate \u00e7a...",
+     "from": 1388,
+     "to": 1414
+    },
+    {
+     "text": "arr\u00eate \u00e7a tout de suite !",
+     "from": 1414,
+     "to": 1455
+    }
+   ],
+   "cuts": [
+    1414
+   ]
+  },
+  "l5": {
+   "start": 1700,
+   "who": "nar",
+   "end": 1806,
+   "subs": [
+    {
+     "text": "Et dans cette rage,",
+     "from": 1700,
+     "to": 1737
+    },
+    {
+     "text": "quelque chose d'ancien se r\u00e9veillait enfin.",
+     "from": 1737,
+     "to": 1806
+    }
+   ],
+   "cuts": [
+    1737
+   ]
+  },
+  "n2": {
+   "start": 2022,
+   "who": "nar",
+   "end": 2118,
+   "subs": [
+    {
+     "text": "Dans le prochain \u00e9pisode...",
+     "from": 2022,
+     "to": 2073
+    },
+    {
+     "text": "Super Pomgoku !",
+     "from": 2073,
+     "to": 2118
+    }
+   ],
+   "cuts": [
+    2073
+   ]
+  }
+ }
+}

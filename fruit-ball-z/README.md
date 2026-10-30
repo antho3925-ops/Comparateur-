@@ -121,3 +121,22 @@ cd fbz && npx remotion render src/index.ts Episode5 out/ep5_render.mp4 --concurr
 
 Compression comme l'ép.3 (H.264 Main 4.0, 2 passes, audio AAC 128 kb/s repris de `fbz/public/audio/ep5/mix.wav`),
 vers `site/episode5_fruitballz.mp4`.
+
+# Épisode 6 — Les formes de Litcheezer
+
+74 s (2220 images). Composition `Episode6` : `fbz/src/Episode6.tsx` (transformation, pichenette au ralenti, veines
+et aura dorées). `fbz/src/characters6.tsx` : Litcheezer avec `form` 0..1 (0 = dessin de l'ép.4/5, 1 = deuxième
+forme : plus large, peau de litchi rugueuse, épines aux épaules et sur la tête, `crack`, `flick` = pichenette),
+`PomVeins` et `GoldAura` pour Pomgoku. Le « Précédemment » (`Recap6.tsx`) rejoue des plans de l'ép.5
+(`<Episode5 recap />`). Voix : Litcheezer deuxième forme = voix de l'ép.4 (Thierry, 40 % chuchoté) avec la hauteur
+baissée à -16 Hz ; Végénade comme l'ép.3, Pomgoku comme l'ép.1, narrateur.
+
+```bash
+pip install edge-tts && python3 make_voices_ep6.py .   # fbz/public/audio/ep6/lN.wav + fbz/src/voices6.json
+python3 make_timeline_ep6.py . && python3 make_audio_ep6.py .
+cd fbz && npx remotion render src/index.ts Episode6 out/ep6_render.mp4 --concurrency=4 --crf=14 \
+  --browser-executable=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell
+```
+
+Compression comme l'ép.3 (H.264 Main 4.0, 2 passes, 1250 kb/s, AAC 128 kb/s depuis `fbz/public/audio/ep6/mix.wav`),
+vers `site/episode6_fruitballz.mp4`.
