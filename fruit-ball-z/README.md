@@ -84,6 +84,25 @@ cd fbz && npx remotion render src/index.ts Episode3 out/ep3_render.mp4 --concurr
 Compression comme les épisodes précédents (H.264 Main 4.0, 2 passes) mais à 1250 kb/s pour rester sous 15 Mo, audio
 AAC 128 kb/s repris de `fbz/public/audio/ep3/mix.wav`, vers `site/episode3_fruitballz.mp4`.
 
+# Épisode 4 — Litcheezer entre en scène
+
+73 s (2190 images). Nouveaux personnages dans `fbz/src/characters4.tsx` : `Litcheezer` (litchi nacré façon Freezer,
+assis dans sa capsule flottante, `finger` lève l'index), `DriedSoldier` (sbires raisins secs et dattes en armure),
+`NamekElder` (le vieux Namekien barbu), `SaucerShip` (vaisseau rond) et `PomShip` (vaisseau de Pomgoku, hublot).
+Décors de Namek de l'ép.3 avec variantes grise et détruite dans `scenery4.tsx`. Voix : Litcheezer =
+`fr-CA-ThierryNeural` doux, mélangé à sa version chuchotée, petit rire entre les phrases ; vieux Namekien =
+`fr-CA-JeanNeural` ; Végénade et narrateur comme l'ép.3.
+
+```bash
+pip install edge-tts && python3 make_voices_ep4.py .   # fbz/public/audio/ep4/*.wav + fbz/src/voices4.json
+python3 make_timeline_ep4.py . && python3 make_audio_ep4.py .
+cd fbz && npx remotion render src/index.ts Episode4 out/ep4_render.mp4 --concurrency=4 --crf=14 \
+  --browser-executable=/opt/pw-browsers/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell
+```
+
+Compression comme l'ép.3 (H.264 Main 4.0, 2 passes, 1250 kb/s, AAC 128 kb/s depuis `fbz/public/audio/ep4/mix.wav`),
+vers `site/episode4_fruitballz.mp4`.
+
 # Épisode 5 — Pomgoku débarque
 
 75 s (2250 images). Composition `Episode5` : `fbz/src/Episode5.tsx` (village en ruines, fumée, feux, vaisseau de

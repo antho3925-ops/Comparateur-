@@ -118,7 +118,7 @@ const OpeningCard: React.FC<{f: number}> = ({f}) => {
 
 /* ------------------------------------------------------------------ PRÉCÉDEMMENT (plans de l'ép.3 en accéléré) */
 // hologramme, Végénade en colère, descente sur Namek, village
-const RECAP_SHOTS = [318, 450, 1420, 1640];
+const RECAP_SHOTS = [318, 450, 1230, 1640];
 const Ep3 = Episode3 as React.FC<{recap?: boolean}>;
 const Recap: React.FC<{f: number}> = ({f}) => {
 	const s = SC.recap[0];
@@ -416,11 +416,11 @@ const Scene5: React.FC<{f: number}> = ({f}) => {
 				<GreyClouds f={f} />
 				{f >= b && (
 					<>
-						<circle cx={-200 + p * 1500} cy={1500 - p * 1100} r={400} fill="#FFD86A" opacity={0.35 * gold} filter="url(#blur20)" />
-						<PomShip x={-200 + p * 1500} y={1500 - p * 1100} scale={0.5} rot={-36} frame={f} />
+						<circle cx={80 + p * 1000} cy={1450 - p * 900} r={420} fill="#FFD86A" opacity={0.45 * gold} filter="url(#blur20)" />
+						<PomShip x={80 + p * 1000} y={1450 - p * 900} scale={0.55} rot={-36} frame={f} />
 					</>
 				)}
-				<g opacity={0.55}><GreyClouds f={f + 200} part={p} gold={gold} /></g>
+				<g opacity={0.3}><GreyClouds f={f + 200} part={p} gold={gold} /></g>
 				<Ash f={f} n={20} />
 			</Svg>
 		);
