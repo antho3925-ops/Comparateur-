@@ -1,0 +1,212 @@
+{
+ "total": 2190,
+ "scenes": {
+  "open": [
+   0,
+   60
+  ],
+  "recap": [
+   60,
+   240
+  ],
+  "s1": [
+   240,
+   540
+  ],
+  "s2": [
+   540,
+   810
+  ],
+  "s3": [
+   810,
+   1200
+  ],
+  "s4": [
+   1200,
+   1500
+  ],
+  "s5": [
+   1500,
+   1890
+  ],
+  "suivre": [
+   1890,
+   1980
+  ],
+  "teaser": [
+   1980,
+   2190
+  ]
+ },
+ "holo": 300,
+ "s1close": 330,
+ "glow": 470,
+ "s2shots": [
+  540,
+  630,
+  720
+ ],
+ "liftoff": 650,
+ "s3screen": [
+  935,
+  1010
+ ],
+ "s4shots": [
+  1200,
+  1300
+ ],
+ "s5shots": [
+  1500,
+  1570
+ ],
+ "fade": [
+  1855,
+  1890
+ ],
+ "teaserShots": [
+  1980,
+  2045,
+  2110
+ ],
+ "voices": {
+  "n1": {
+   "start": 64,
+   "who": "nar",
+   "end": 223,
+   "subs": [
+    {
+     "text": "Pr\u00e9c\u00e9demment dans Fruit Ball Z...",
+     "from": 64,
+     "to": 119
+    },
+    {
+     "text": "Pour vaincre Raditz, Pomgoku s'est sacrifi\u00e9 aux c\u00f4t\u00e9s de Kiwikolo.",
+     "from": 119,
+     "to": 223
+    }
+   ],
+   "cuts": [
+    119
+   ]
+  },
+  "l1": {
+   "start": 330,
+   "who": "veg",
+   "end": 512,
+   "subs": [
+    {
+     "text": "Sept boules...",
+     "from": 330,
+     "to": 362
+    },
+    {
+     "text": "et l'immortalit\u00e9 pour celui qui les r\u00e9unit.",
+     "from": 362,
+     "to": 445
+    },
+    {
+     "text": "Cette fois, c'est moi qui gagnerai.",
+     "from": 445,
+     "to": 512
+    }
+   ],
+   "cuts": [
+    362,
+    445
+   ]
+  },
+  "l2": {
+   "start": 875,
+   "who": "kiwi",
+   "end": 979,
+   "subs": [
+    {
+     "text": "On y va ensemble,",
+     "from": 875,
+     "to": 911
+    },
+    {
+     "text": "mais je ne te fais pas confiance une seconde.",
+     "from": 911,
+     "to": 979
+    }
+   ],
+   "cuts": [
+    911
+   ]
+  },
+  "l3": {
+   "start": 1045,
+   "who": "pp",
+   "end": 1098,
+   "subs": [
+    {
+     "text": "Et si on n'arrive pas \u00e0 temps pour Papa\u00a0?",
+     "from": 1045,
+     "to": 1098
+    }
+   ],
+   "cuts": []
+  },
+  "l4": {
+   "start": 1590,
+   "who": "nam",
+   "end": 1702,
+   "subs": [
+    {
+     "text": "Qui \u00eates-vous\u00a0?",
+     "from": 1590,
+     "to": 1622
+    },
+    {
+     "text": "Pourquoi venez-vous chercher nos boules sacr\u00e9es\u00a0?",
+     "from": 1622,
+     "to": 1702
+    }
+   ],
+   "cuts": [
+    1622
+   ]
+  },
+  "l5": {
+   "start": 1745,
+   "who": "kiwi",
+   "end": 1853,
+   "subs": [
+    {
+     "text": "Nous ne voulons pas de mal.",
+     "from": 1745,
+     "to": 1793
+    },
+    {
+     "text": "Nous voulons ramener un ami \u00e0 la vie.",
+     "from": 1793,
+     "to": 1853
+    }
+   ],
+   "cuts": [
+    1793
+   ]
+  },
+  "n2": {
+   "start": 1992,
+   "who": "nar",
+   "end": 2093,
+   "subs": [
+    {
+     "text": "Dans le prochain \u00e9pisode...",
+     "from": 1992,
+     "to": 2043
+    },
+    {
+     "text": "Litcheezer entre en sc\u00e8ne\u00a0!",
+     "from": 2043,
+     "to": 2093
+    }
+   ],
+   "cuts": [
+    2043
+   ]
+  }
+ }
+}
